@@ -1,4 +1,4 @@
-package org.sam.red.pruebas.nuevas;
+package org.sam.pruebas.red.nuevas;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

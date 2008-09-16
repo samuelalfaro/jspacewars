@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 
 import org.sam.gui.Marco;
 import org.sam.red.servidor.ServidorJuego;
-import org.sam.red.servidor3d.ServidorJuego3D;
 
 public class ClienteJuego{
 	
@@ -30,7 +29,7 @@ public class ClienteJuego{
 		}
 		
 		JFrame frame = new JFrame("Cliente Juego");
-		frame.setSize(ServidorJuego3D.ANCHO,ServidorJuego3D.ALTO);
+		frame.setSize(ServidorJuego.ANCHO,ServidorJuego.ALTO);
 		//frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
