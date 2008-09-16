@@ -115,7 +115,7 @@ implements GLEventListener, KeyListener, MouseMotionListener
 		zoomFactor = Math.min(((float)w)/checkImageWidth,((float)h)/checkImageHeight);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluOrtho2D(0.0, (double) w, 0.0, (double) h);
+		glu.gluOrtho2D(0.0, w, 0.0, h);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}

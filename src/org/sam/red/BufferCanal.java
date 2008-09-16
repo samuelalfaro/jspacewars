@@ -21,12 +21,12 @@ public abstract class BufferCanal {
 	}
 	
 	/**
-	 * Este mÈtodo enviar· el ByteBuffer por el canal correspondiente.
+	 * Este m√©todo enviar√° el ByteBuffer por el canal correspondiente.
 	 */
 	public abstract void enviar();
 	
 	/**
-	 * Este mÈtodo recibir· del ByteBuffer por el canal correspondiente.
+	 * Este m√©todo recibir√° del ByteBuffer por el canal correspondiente.
 	 */
 	public abstract void recibir();
 }

@@ -352,47 +352,47 @@ public class FastMath {
 		long tAnt, tAct;
 		
 		Random random = new Random();
-		tAnt = System.nanoTime();
-		for(int x = -4092; x < 4093; x++)
-			for(int y=-4092; y < 4093; y++){
-				random.nextInt(); random.nextInt();
-			}
-		tAct = System.nanoTime();
-		long tRandomInt = tAct-tAnt;
-		
-		tAnt = System.nanoTime();
-		for(int x = -4092; x < 4093; x++)
-			for(int y=-4092; y < 4093; y++){
-				random.nextFloat(); random.nextFloat();
-			}
-		tAct = System.nanoTime();
-		long tRandomFloat = tAct-tAnt;
+//		tAnt = System.nanoTime();
+//		for(int x = -4092; x < 4093; x++)
+//			for(int y=-4092; y < 4093; y++){
+//				random.nextInt(); random.nextInt();
+//			}
+//		tAct = System.nanoTime();
+//		long tRandomInt = tAct-tAnt;
+//		
+//		tAnt = System.nanoTime();
+//		for(int x = -4092; x < 4093; x++)
+//			for(int y=-4092; y < 4093; y++){
+//				random.nextFloat(); random.nextFloat();
+//			}
+//		tAct = System.nanoTime();
+//		long tRandomFloat = tAct-tAnt;
 		
 		tAnt = System.nanoTime();
 		for(int x = -4092; x < 4093; x++)
 			for(int y=-4092; y < 4093; y++){
 				int a = random.nextInt();
 				int b = random.nextInt();
-				Math.sqrt(a*a + b*b);
+				Math.atan2(a, b);
 			}
 		tAct = System.nanoTime();
-		long tMathAtan2 = tAct-tAnt - tRandomInt;
+		long tMathAtan2 = tAct-tAnt;
 		
 		tAnt = System.nanoTime();
 		for(int x = -4092; x < 4093; x++)
 			for(int y=-4092; y < 4093; y++){
-				len(random.nextFloat(), random.nextFloat());
+				atan(random.nextFloat(), random.nextFloat());
 			}
 		tAct = System.nanoTime();
-		long tAtanFloat = tAct-tAnt - tRandomFloat;
+		long tAtanFloat = tAct-tAnt;
 	
 		tAnt = System.nanoTime();
 		for(int x = -4092; x < 4093; x++)
 			for(int y=-4092; y < 4093; y++){
-				len(random.nextInt(), random.nextInt());
+				atan(random.nextInt(), random.nextInt());
 			}
 		tAct = System.nanoTime();
-		long tAtanInt = tAct-tAnt - tRandomInt;
+		long tAtanInt = tAct-tAnt;
 		
 		System.out.printf("Tiempo Math.atan2:            %,14d\n",tMathAtan2);
 		System.out.printf("Tiempo FastMath.atan (float): %,14d\n",tAtanFloat);

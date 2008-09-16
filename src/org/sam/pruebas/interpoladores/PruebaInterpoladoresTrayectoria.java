@@ -26,7 +26,6 @@ public class PruebaInterpoladoresTrayectoria{
 			this.addMouseListener(this);
 		}
 
-		@SuppressWarnings("unchecked")
 		private void rellenar(int w, int h){
 			for (int i = 0; i < N_PUNTOS; i++){
 				values[i][0] = (float)Math.random()*w;

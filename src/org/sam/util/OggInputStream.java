@@ -133,7 +133,7 @@ public class OggInputStream extends FilterInputStream {
 	}
 
 	public AudioFormat getAudioFormat(){
-		return new AudioFormat((float)getRate(), 16, getAudioChannels(), true, OggInputStream.BIG_ENDIAN );
+		return new AudioFormat(getRate(), 16, getAudioChannels(), true, OggInputStream.BIG_ENDIAN );
 	}
 	
 	/**

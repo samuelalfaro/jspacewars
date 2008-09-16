@@ -69,7 +69,7 @@ public class Test05ColisionPoligonos extends JPanel implements MouseListener, Mo
 		// Creamos el panel donde dibujaremos
 		Test05ColisionPoligonos panel=new Test05ColisionPoligonos();
 
-		// Lo añadimos a la ventana
+		// Lo aÃ±adimos a la ventana
 		frame.getContentPane().add(panel);
 		
 		// Mostramos la ventana

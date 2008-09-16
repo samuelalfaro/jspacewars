@@ -37,7 +37,7 @@ public class Test01LimiteRectangular extends JPanel implements MouseListener, Mo
 		// Creamos el panel donde dibujaremos
 		Test01LimiteRectangular panel=new Test01LimiteRectangular();
 
-		// Lo añadimos a la ventana
+		// Lo aÃ±adimos a la ventana
 		frame.getContentPane().add(panel);
 		
 		// Mostramos la ventana
@@ -52,6 +52,7 @@ public class Test01LimiteRectangular extends JPanel implements MouseListener, Mo
 		puntoAsignado = false;
 	}
 
+    @Override
 	public void paint(Graphics g){
 		g.setColor(Color.WHITE);
 		g.clearRect(0,0,getWidth(),getHeight());

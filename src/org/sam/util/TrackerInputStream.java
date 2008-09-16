@@ -48,7 +48,7 @@ public class TrackerInputStream extends FilterInputStream {
 			throw new IOException(INVALID_TRACKER_MESSAGE);
 
 		// Se carga el modulo
-		ibxm = new IBXM( 8363 );
+		ibxm = new IBXM( 48000 );
 		ibxm.set_module( module );
 		song_duration = ibxm.calculate_song_duration();
 	}
@@ -106,6 +106,6 @@ public class TrackerInputStream extends FilterInputStream {
 	}
 	
 	public AudioFormat getAudioFormat(){
-		return new AudioFormat( 8363, 16, 2, true, false );
+		return new AudioFormat ( 48000, 16, 2, true, true );
 	}
 }

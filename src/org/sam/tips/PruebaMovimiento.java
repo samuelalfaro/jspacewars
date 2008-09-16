@@ -12,8 +12,7 @@ import javax.swing.JPanel;
 import org.sam.interpoladores.*;
 import org.sam.red.Semaforo;
 import org.sam.red.XMLHandlerForma;
-import org.sam.util.Cache;
-import org.sam.util.Prototipo;
+import org.sam.util.*;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -64,7 +63,6 @@ public class PruebaMovimiento{
 			return code;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public Elemento clone() {
 			return new Elemento(this);
 		}
@@ -523,7 +521,6 @@ public class PruebaMovimiento{
 			this.posY = prototipo.posY;
 		}
 
-		@SuppressWarnings("unchecked")
 		public abstract Canion clone();
 		
 		public final void setPos(int posX, int posY){
@@ -557,7 +554,6 @@ public class PruebaMovimiento{
 			this.angulo = prototipo.angulo;
 		}
 
-		@SuppressWarnings("unchecked")
 		public Canion clone(){
 			return new CanionLineal(this);
 		}
@@ -699,11 +695,11 @@ public class PruebaMovimiento{
 			Graphics2D g2 = (Graphics2D)g;
 			while(pintado)
 				Thread.yield();
-			g2.setColor(new Color(0,0,0,40));
+			g2.setColor(new Color(0,0,0,5));
 			g2.fillRect(0,0,getWidth(),getHeight());
-			//Composite oldC = g2.getComposite();
+			Composite oldC = g2.getComposite();
 			
-//			g2.setComposite(Imagen.FUSIONAR_SUM);
+			g2.setComposite(Imagen.FUSIONAR_DIV);
 			
 			Iterator<Disparo> i = disparos.listIterator();
 			while(i.hasNext()){
@@ -716,10 +712,10 @@ public class PruebaMovimiento{
 				g2.fillPolygon(d.getForma());
 				g2.rotate(-angulo,x,y);
 			}
-			g2.setColor(Color.CYAN);
-			//g2.setColor(new Color(4,32,32,255));
+//			g2.setColor(Color.CYAN);
+			g2.setColor(new Color(4,32,32,255));
 			g2.fillPolygon(nave.getForma());
-			//g2.setComposite(oldC);
+			g2.setComposite(oldC);
 			pintado = true;
 			//semaforo.notificar();
 		}
@@ -774,7 +770,6 @@ public class PruebaMovimiento{
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	static public void main(String args[]){
 		
 		JFrame frame = new JFrame("Prueba Movimiento");
@@ -879,38 +874,38 @@ public class PruebaMovimiento{
 		
 		Polygon formaDisparo = formas.removeFirst();
 		Disparo disparo = new DisparoLineal(1, formaDisparo);
-		//disparo.setColor(new Color(4,32,4));
-		disparo.setColor(Color.YELLOW);
+		disparo.setColor(new Color(4,32,4));
+//		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 		
 		disparo = disparo.prototipoDerivado(2);
-		//disparo.setColor(new Color(8,32,4));
-		disparo.setColor(Color.YELLOW);
+		disparo.setColor(new Color(8,32,4));
+//		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 		
 		disparo = disparo.prototipoDerivado(3);
-		//disparo.setColor(new Color(16,32,4));
-		disparo.setColor(Color.YELLOW);
+		disparo.setColor(new Color(16,32,4));
+//		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
 		disparo = disparo.prototipoDerivado(4);
-		//disparo.setColor(new Color(24,32,4));
-		disparo.setColor(Color.YELLOW);
+		disparo.setColor(new Color(24,32,4));
+//		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
 		disparo = disparo.prototipoDerivado(5);
-		//disparo.setColor(new Color(32,32,4));
-		disparo.setColor(Color.YELLOW);
+		disparo.setColor(new Color(32,32,4));
+//		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
 		disparo = disparo.prototipoDerivado(6);
-		//disparo.setColor(new Color(32,32,8));
-		disparo.setColor(Color.YELLOW);
+		disparo.setColor(new Color(32,32,8));
+//		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 		
 		disparo = disparo.prototipoDerivado(7);
-		//disparo.setColor(new Color(32,32,16));
-		disparo.setColor(Color.YELLOW);
+		disparo.setColor(new Color(32,32,16));
+//		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
 		double values[][] = new double[][]{
@@ -947,13 +942,13 @@ public class PruebaMovimiento{
 		Trayectoria.Double<double[]> trayectoria = (Trayectoria.Double<double[]>)GettersFactory.Double.create(Keys.PROPORCIONALES, 2.5, 0.0, values, MetodoDeInterpolacion.Predefinido.BEZIER);
 		
 		disparo = new DisparoInterpolado(10,formaDisparo,trayectoria);
-		//disparo.setColor(new Color(32,8,4));
-		disparo.setColor(Color.ORANGE);
+		disparo.setColor(new Color(32,8,4));
+//		disparo.setColor(Color.ORANGE);
 		cache.addPrototipo(disparo);
 		
 		disparo = new Misil(20,formaDisparo);
-		//disparo.setColor(new Color(32,16,32));
-		disparo.setColor(Color.WHITE);
+		disparo.setColor(new Color(32,16,32));
+//		disparo.setColor(Color.WHITE);
 		cache.addPrototipo(disparo);
 
 		Semaforo semaforo = new Semaforo(1);

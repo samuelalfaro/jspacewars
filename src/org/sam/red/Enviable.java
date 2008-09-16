@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public interface Enviable {
 	
 	/**
-	 * Este método se encarga de enviar sus datos por un ByteBuffer.
+	 * Este mÃ©todo se encarga de enviar sus datos por un ByteBuffer.
 	 * 
 	 * @param buff ByteBuffer por el que se envian los datos.
 	 */

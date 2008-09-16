@@ -13,9 +13,9 @@ public class BufferSocket extends BufferCanal {
 	private DatagramPacket pack;
 
 	/**
-	 * Crea un canal de comunicacion UDP que atenderá peticiones a través de un determinado puerto.
+	 * Crea un canal de comunicacion UDP que atenderÃ¡ peticiones a travÃ©s de un determinado puerto.
 	 * 
-	 * @param port Puerto por el que se atenderán las comunicaciones.
+	 * @param port Puerto por el que se atenderÃ¡n las comunicaciones.
 	 * 
 	 * @throws SocketException No se ha podido crear el DatagramSocket.
 	 */
@@ -29,11 +29,11 @@ public class BufferSocket extends BufferCanal {
 	}
 	
 	/**
-	 * Crea un canal de comunicacion UDP que hará peticiones a una direccion de destino a través de un determinado 
+	 * Crea un canal de comunicacion UDP que harï¿½ peticiones a una direccion de destino a travÃ©s de un determinado 
 	 * puerto.
 	 * 
-	 * @param destino Direccion donde establecerá la comunicación.
-	 * @param port Puerto por el que establecerá la comunicación.
+	 * @param destino Direccion donde establecerï¿½ la comunicaciï¿½n.
+	 * @param port Puerto por el que establecerï¿½ la comunicaciï¿½n.
 	 * 
 	 * @throws SocketException No se ha podido crear el DatagramSocket.
 	 * @throws UnknownHostException La direccion de destino no se conoce.
