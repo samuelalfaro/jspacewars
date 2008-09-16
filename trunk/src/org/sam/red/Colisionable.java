@@ -1,44 +1,44 @@
 package org.sam.red;
 
 /**
- * Este interface proporciona, los métodos para tratar las colisones entre objetos.
+ * Este interface proporciona, los mÃ©todos para tratar las colisones entre objetos.
  */
 public interface Colisionable{
 	
 	/**
-	 * Este método evalua si hay una colisión, entre el objeto y otro objeto <code>Colisionable</code>.
+	 * Este mÃ©todo evalua si hay una colisiï¿½n, entre el objeto y otro objeto <code>Colisionable</code>.
 	 * 
-	 * @param otro El otro objeto con el que se evalua si hay una colisión.
+	 * @param otro El otro objeto con el que se evalua si hay una colisiï¿½n.
 	 * 
-	 * @return <ul><li><code>true</code>, cuando hay una colisión. <li><code>false</code>, en caso contrario.</ul>
+	 * @return <ul><li><code>true</code>, cuando hay una colisiï¿½n. <li><code>false</code>, en caso contrario.</ul>
 	 */
 	public boolean hayColision(Colisionable otro);
 	
 	/**
-	 * Este método trata la colisión, entre el objeto y otro objeto <code>Colisionable</code>.
+	 * Este mÃ©todo trata la colisiï¿½n, entre el objeto y otro objeto <code>Colisionable</code>.
 	 * 
-	 * @param otro El otro objeto con el que se produce la colisión.
+	 * @param otro El otro objeto con el que se produce la colisiï¿½n.
 	 */
 	public void colisionar(Colisionable otro);
 	
 	/**
-	 * Este método devuleve la fuerza con la que impacta el objeto sobre otro.
+	 * Este mÃ©todo devuleve la fuerza con la que impacta el objeto sobre otro.
 	 * 
 	 * @return Valor de dicha fuerza.
 	 */
 	public int getFuerzaImpacto();
 	
 	/**
-	 * Este método aplica el daño causado por un impacto al objeto.
+	 * Este mÃ©todo aplica el daï¿½o causado por un impacto al objeto.
 	 * 
 	 * @param fuerzaDeImpacto Fuerza de impacto recibida. 
 	 */
 	public void recibirImpacto(int fuerzaDeImpacto);
 
 	/**
-	 * Este método indica si un objeto <code>Colisionable</code> está destruido.
+	 * Este mÃ©todo indica si un objeto <code>Colisionable</code> estï¿½ destruido.
 	 * 
-	 * @return <ul><li><code>true</code>, cuando está destruido. <li><code>false</code>, en caso contrario.</ul>
+	 * @return <ul><li><code>true</code>, cuando estï¿½ destruido. <li><code>false</code>, en caso contrario.</ul>
 	 */
 	public boolean isDestruido();
 

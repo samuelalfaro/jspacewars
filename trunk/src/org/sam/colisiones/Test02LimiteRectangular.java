@@ -36,7 +36,7 @@ public class Test02LimiteRectangular extends JPanel implements MouseListener, Mo
 		// Creamos el panel donde dibujaremos
 		Test02LimiteRectangular panel=new Test02LimiteRectangular();
 
-		// Lo añadimos a la ventana
+		// Lo aÃ±adimos a la ventana
 		frame.getContentPane().add(panel);
 		
 		// Mostramos la ventana

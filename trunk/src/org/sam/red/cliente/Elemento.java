@@ -48,7 +48,6 @@ abstract class Elemento implements Prototipo<Elemento>, Recibible{
 		setPosicion(buff.getInt(),buff.getInt());
 	}
 	
-	@SuppressWarnings("unchecked")
 	public abstract Elemento clone();
 }
 

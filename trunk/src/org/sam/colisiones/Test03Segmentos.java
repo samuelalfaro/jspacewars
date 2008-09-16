@@ -51,7 +51,7 @@ public class Test03Segmentos extends JPanel implements MouseListener, MouseMotio
 		// Creamos el panel donde dibujaremos
 		Test03Segmentos panel=new Test03Segmentos();
 
-		// Lo añadimos a la ventana
+		// Lo aÃ±adimos a la ventana
 		frame.getContentPane().add(panel);
 		
 		// Mostramos la ventana

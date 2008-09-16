@@ -83,8 +83,8 @@ public class Sounds{
 		output_line.open();
 
 		// Reproduccion
-		new Thread(){
-			public void run(){
+//		new Thread(){
+//			public void run(){
 				output_line.start();
 				int tBuff = 4<<10; 
 				byte[] output_buffer = new byte[ tBuff ];
@@ -98,14 +98,15 @@ public class Sounds{
 				}
 				output_line.drain();
 				output_line.close();
-			}
-		}.start();
+//			}
+//		}.start();
 	}
 	
 	public static void main(String arrgs[]){
 //		playMidi("resources/sounds/midis/AC-DC_-_Thunderstruck.mid");
-		playWav("Riff.wav");
-		playVorbisOgg("delinquentes.ogg");
+//		playVorbisOgg("delinquentes.ogg");
+//		playWav("Riff.wav");
+		playTracker("snow.xm");
 		playTracker("side effects.mod");
 	}
 }

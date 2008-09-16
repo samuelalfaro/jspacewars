@@ -47,14 +47,14 @@ public class PruebaConsolaConPipes{
 				synchronized(this){
 					Thread.yield();
 					try {
-						// Se añade el texto al  documento
+						// Se aÃ±ade el texto al  documento
 						doc.insertString(doc.getLength(), new String(buf, 0, len), null);
 					} catch (BadLocationException e) {
 					}
 					// Cambia el Caret para que lo ultimo insertado sea visible 
 					tc.setCaretPosition(doc.getLength());
 					if(tamIdeal >0){
-						// Se calcula el tamaño del docueneto y se compara con el tamaño ideal
+						// Se calcula el tamaÃ±o del docueneto y se compara con el tamaÃ±o ideal
 						int exceso = doc.getLength() - tamIdeal;
 						// Para no estar continumente eliminando se deja de margen maxExceso
 						if (exceso >= maxExceso){

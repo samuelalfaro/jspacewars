@@ -18,7 +18,7 @@ final class ArraySelector{
 		}
 
 		Double(double scale, double translation, T[] values) {
-			this.scale = (double)(values.length-1)/ scale;
+			this.scale = (values.length-1)/ scale;
 			this.translation = -translation;
 			this.values = values;
 		}
@@ -44,7 +44,7 @@ final class ArraySelector{
 		}
 
 		Float(float scale, float translation, T[] values) {
-			this.scale = (float)(values.length-1)/ scale;
+			this.scale = (values.length-1)/ scale;
 			this.translation = -translation;
 			this.values = values;
 		}

@@ -20,7 +20,6 @@ import org.sam.red.KeysState;
 import org.sam.red.Sincronizador;
 import org.sam.util.*;
 
-@SuppressWarnings("serial")
 public class VisorCliente3D implements KeyListener{
 	
 	private final static int K_SUBE		= KeyEvent.VK_UP;
@@ -102,12 +101,12 @@ public class VisorCliente3D implements KeyListener{
 					sincronizador.esperar();
 				datosRecibidos = false;
 				pantalla.display();
+				Thread.yield();
 				try{
 					Thread.sleep(1);
 				}catch(InterruptedException e){
 				}
 				pantallaPintada = true;
-				Thread.yield();
 				sincronizador.notificar();
 			}
 		}

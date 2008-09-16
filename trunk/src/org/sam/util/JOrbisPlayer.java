@@ -36,7 +36,6 @@ import javax.sound.sampled.*;
 import com.jcraft.jogg.*;
 import com.jcraft.jorbis.*;
 
-@SuppressWarnings("serial")
 public class JOrbisPlayer implements Runnable{
 
 	static final int BUFSIZE=4096*2;
@@ -76,7 +75,7 @@ public class JOrbisPlayer implements Runnable{
 	private void init_audio(int channels, int rate){
 		try {
 			AudioFormat audioFormat = new AudioFormat(
-					(float)rate, 
+					rate, 
 					16,
 					channels,
 					true,  // PCM_Signed

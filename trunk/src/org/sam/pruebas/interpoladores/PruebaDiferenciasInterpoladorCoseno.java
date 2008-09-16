@@ -68,7 +68,7 @@ public class PruebaDiferenciasInterpoladorCoseno {
 			System.out.println("Angulo:\t"+alfa+(Math.abs(Math.cos(alfa)-FastMath.cosRadians(alfa))>0.01?"\tMal"+"\n\tcos(alfa):"+Math.cos(alfa)+"\n\tcFM(alfa):"+FastMath.cosRadians(alfa):"\tBien") );
 		
 		for(float alfa=0.0f, pi2 = (float)Math.PI*2; alfa <= pi2; alfa+=0.0001f){
-			double dif = Math.abs(Math.cos(alfa)-FastMath.cosRadians((float)alfa));
+			double dif = Math.abs(Math.cos(alfa)-FastMath.cosRadians(alfa));
 			if ( dif > difMaxima)
 				difMaxima = dif;
 		}

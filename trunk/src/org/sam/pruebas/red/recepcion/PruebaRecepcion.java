@@ -114,7 +114,7 @@ public class PruebaRecepcion {
 					}
 					almacenado = iConsumidor.next();
 				}else if(almacenado.mayorQue(producto)){
-					//logOp.print("     1.2 AÒadiendo "+((ProductoConcreto)producto).valor+"\n");
+					//logOp.print("     1.2 A√±adiendo "+((ProductoConcreto)producto).valor+"\n");
 					iConsumidor.add(producto);
 					if(i == nElementos){
 						iConsumidor.remove();
@@ -136,7 +136,7 @@ public class PruebaRecepcion {
 			// Si se reciben mas elementos de los q hay, se crean.
 			do{
 				i++;
-				//logOp.print("2 AÒadiendo nuevos ( "+i+" / "+nElementos+" )\n");
+				//logOp.print("2 A√±adiendo nuevos ( "+i+" / "+nElementos+" )\n");
 				Producto nuevo = unProductor.producir();
 				nuevo.tratar();
 				unConsumidor.add(nuevo);
@@ -216,7 +216,7 @@ public class PruebaRecepcion {
 //		tResultados.setColumns(5);
 //		logRe = Consola.getLog(tResultados);
 //
-//		// Area donde se mostrar· System.err
+//		// Area donde se mostrar√° System.err
 //		JTextArea tErr = new JTextArea();
 //		tErr.setEditable(false);
 //		tErr.setForeground(Color.RED);

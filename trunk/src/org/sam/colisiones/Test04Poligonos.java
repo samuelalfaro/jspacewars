@@ -60,7 +60,7 @@ public class Test04Poligonos extends JPanel{
 		// Creamos el panel donde dibujaremos
 		Test04Poligonos panel=new Test04Poligonos();
 
-		// Lo añadimos a la ventana
+		// Lo aÃ±adimos a la ventana
 		frame.getContentPane().add(panel);
 		
 		// Mostramos la ventana
