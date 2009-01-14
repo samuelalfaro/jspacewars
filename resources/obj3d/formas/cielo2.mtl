@@ -1,0 +1,9 @@
+# OBJ (Wavefront) MTL file
+# Output from Right Hemisphere's OBJ/MTL Saver.
+# http://www.righthemisphere.com
+
+
+newmtl material
+ks 1.0000 1.0000 1.0000
+ka 0.0000 0.0000 0.0000
+map_kd E:\proyectos\Pruebas\resources\obj3d\formas/../texturas/skycube/sky_posx.jpg

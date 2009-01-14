@@ -1,0 +1,13 @@
+<?xml-stylesheet version = "1.0"?>
+<Interpoladores>
+	<!-- Interpolador usado para interpolar colores -->
+	<!-- Los valores x, y, z representan  a los valores rgb -->
+	<!-- entre 0.0 (valor minimo) y 1.0 (valor maximo) -->
+	<Interpolador nKeys="5" contenido="CONTENIDO_PUNTOS_3D" modo="CATMULL_ROM_SPLINE">
+		<Key>0.0</Key> <Punto3D x="120.0" y="25.0" z="1.0" />
+		<Key>0.2</Key> <Punto3D x="50.0" y="35.0" z="0.0" />
+		<Key>0.7</Key> <Punto3D x="70.8" y="27.0" z="58.0" />
+		<Key>0.9</Key> <Punto3D x="200.0" y="12.0" z="0.0" />
+		<Key>1.0</Key> <Punto3D x="500.0" y="79.0" z="0.0" />
+	</Interpolador >
+</Interpoladores>

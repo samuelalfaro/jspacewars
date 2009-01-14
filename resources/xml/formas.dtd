@@ -1,0 +1,11 @@
+<!-- formas.dtd -->
+<!ELEMENT Forma (Punto2D+)>
+<!ATTLIST Forma 
+	nombre CDATA #IMPLIED
+	nPuntos CDATA #REQUIRED
+>
+<!ELEMENT Punto2D EMPTY >
+<!ATTLIST Punto2D 
+	x CDATA #REQUIRED
+	y CDATA #REQUIRED
+>

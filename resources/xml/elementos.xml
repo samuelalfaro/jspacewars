@@ -1,0 +1,35 @@
+<?xml-stylesheet version = "1.0"?>
+<Formas>
+	<Forma nombre="Nave" nPuntos="22">
+		<Punto2D x="2" y="5"/>
+		<Punto2D x="2" y="0"/>
+		<Punto2D x="10" y="0"/>
+		<Punto2D x="19" y="5"/>
+		<Punto2D x="20" y="5"/>
+		<Punto2D x="26" y="6"/>
+		<Punto2D x="34" y="10"/>
+		<Punto2D x="52" y="12"/>
+		<Punto2D x="53" y="13"/>
+		<Punto2D x="52" y="17"/>
+		<Punto2D x="51" y="18"/>
+		<Punto2D x="32" y="19"/>
+		<Punto2D x="17" y="23"/>
+		<Punto2D x="7" y="23"/>
+		<Punto2D x="2" y="20"/>
+		<Punto2D x="2" y="19"/>
+		<Punto2D x="0" y="17"/>
+		<Punto2D x="0" y="15"/>
+		<Punto2D x="2" y="13"/>
+		<Punto2D x="2" y="11"/>
+		<Punto2D x="0" y="9"/>
+		<Punto2D x="0" y="7"/>
+	</Forma>
+	<Forma nombre="Disparo" nPuntos="6">
+		<Punto2D x="-3" y="0"/>
+		<Punto2D x="2" y="-2"/>
+		<Punto2D x="10" y="-4"/>
+		<Punto2D x="13" y="0"/>
+		<Punto2D x="10" y="4"/>
+		<Punto2D x="2" y="2"/>
+	</Forma>
+</Formas>
