@@ -1,0 +1,12 @@
+<?xml-stylesheet version = "1.0"?>
+<Interpoladores>
+	<!-- Interpolador usado para interpolar transparencias -->
+	<!-- entre 0.0 (totalmente transparente) y 1.0 (completamente opaco) -->
+	<Interpolador nKeys="5" contenido="CONTENIDO_VALORES" modo="COSENOIDAL">
+		<Key>0.0</Key> <Value>1.0</Value>
+		<Key>0.2</Key> <Value>1.0</Value>
+		<Key>0.7</Key> <Value>0.7</Value>
+		<Key>0.9</Key> <Value>0.5</Value>
+		<Key>1.0</Key> <Value>0.0</Value>
+	</Interpolador>
+</Interpoladores>
