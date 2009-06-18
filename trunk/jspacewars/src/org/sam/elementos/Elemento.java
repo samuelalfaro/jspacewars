@@ -3,7 +3,6 @@ package org.sam.elementos;
 import java.nio.ByteBuffer;
 import java.util.Comparator;
 
-import org.sam.red.Enviable;
 import org.sam.util.Cacheable;
 import org.sam.util.Prototipo;
 

@@ -1,4 +1,4 @@
-package org.sam.red;
+package org.sam.tips;
 
 public class Semaforo {
 	

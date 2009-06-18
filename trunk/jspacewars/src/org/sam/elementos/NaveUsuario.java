@@ -151,7 +151,7 @@ public class NaveUsuario extends Nave{
 		float v = velocidad*nanos;
 		float nX = posX;
 		float nY = posY;
-		if((key_state & KeyState.SUBE) != 0){
+		if((key_state & KeysState.SUBE) != 0){
 			posY += v;
 			if (posY > alto)
 				posY = alto;
@@ -160,7 +160,7 @@ public class NaveUsuario extends Nave{
 			if(angulo < -0.5f)
 				angulo = -0.5f;
 			anguloModificado = true;
-		}else if ((key_state & KeyState.BAJA) != 0){
+		}else if ((key_state & KeysState.BAJA) != 0){
 			posY -= v;
 			if (posY < -alto)
 				posY = -alto;
@@ -182,17 +182,17 @@ public class NaveUsuario extends Nave{
 					angulo = 0.0f;
 			}
 		}
-		if((key_state & KeyState.ACELERA) != 0){
+		if((key_state & KeysState.ACELERA) != 0){
 			posX += v;
 			if (posX > ancho)
 				posX = ancho;
-		}else if ((key_state & KeyState.FRENA) != 0){
+		}else if ((key_state & KeysState.FRENA) != 0){
 			posX -= v;
 			if (posX < -ancho)
 				posX = -ancho;
 		}
 		
-		if( (key_state & KeyState.DISPARO) != 0){
+		if( (key_state & KeysState.DISPARO) != 0){
 //			System.out.println("hola");
 			float mX = (posX - nX) / nanos;
 			float mY = (posY - nY) / nanos;

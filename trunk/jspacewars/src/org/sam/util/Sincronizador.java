@@ -1,4 +1,4 @@
-package org.sam.red;
+package org.sam.util;
 
 /**
  * Esta clase proporciona un objeto para que varios objetos de otras clases lo compartan y se puedan sincronizar.

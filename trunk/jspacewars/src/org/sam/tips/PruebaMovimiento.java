@@ -11,8 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.sam.interpoladores.*;
-import org.sam.red.Semaforo;
-import org.sam.red.XMLHandlerForma;
 import org.sam.util.*;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;

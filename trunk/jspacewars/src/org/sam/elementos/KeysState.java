@@ -1,9 +1,6 @@
-package org.sam.red;
+package org.sam.elementos;
 
-/**
- * Clase donde estan definidos los distintos estados de las teclas del juego.
- */
-public class KeysState {
+public interface KeysState {
 	public static final int SUBE	= (1<<0);
 	public static final int BAJA	= (1<<1);
 	public static final int ACELERA	= (1<<2);

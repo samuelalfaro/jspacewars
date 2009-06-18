@@ -1,4 +1,4 @@
-package org.sam.util;
+package org.sam.util.sound;
 
 /*
  * Copyright (c) 2003-2006 jMonkeyEngine

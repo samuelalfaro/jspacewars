@@ -1,4 +1,4 @@
-package org.sam.red;
+package org.sam.tips;
 
 /**
  * @author Samuel
@@ -7,34 +7,38 @@ package org.sam.red;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 
+import java.awt.Polygon;
+import java.util.Queue;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class XMLHandlerPunto2D extends DefaultHandler {
+public class XMLHandlerForma extends DefaultHandler {
 	
+	private Queue<Polygon> instancias;
 	private XMLReader parser;
 	private DefaultHandler handlerPadre;
+	private XMLHandlerPunto2D handlerPunto2D;
 	private int coordenadasX[], coordenadasY[];
-	private int i;
 
-	public XMLHandlerPunto2D (XMLReader parser, DefaultHandler handlerPadre){
+	public XMLHandlerForma (XMLReader parser, DefaultHandler handlerPadre, Queue<Polygon> instancias){
 		this.parser = parser;
 		this.handlerPadre = handlerPadre;
+		this.instancias = instancias;
+		this.handlerPunto2D = new XMLHandlerPunto2D( parser, this);
 	}
 
-	public void setDst(int coordenadasX[], int coordenadasY[]){
-		this.i = 0;
-		this.coordenadasX = coordenadasX;
-		this.coordenadasY = coordenadasY;
-	}
-	
 	public void startElement( String namespaceURI, String localName, String qName, Attributes attr )
 	throws SAXException {
-		if(localName.equals("Punto2D")){
-			this.coordenadasX[i] = Integer.parseInt(attr.getValue("x"));
-			this.coordenadasY[i] = Integer.parseInt(attr.getValue("y"));
+		if (localName.equals("Forma")){
+			int nPuntos = Integer.parseInt(attr.getValue("nPuntos"));
+			coordenadasX = new int[nPuntos];
+			coordenadasY = new int[nPuntos];
+
+			handlerPunto2D.setDst(coordenadasX,coordenadasY);
+			parser.setContentHandler( handlerPunto2D );
 		}else{
 			try{
 				handlerPadre.startElement ( namespaceURI, localName, qName, attr );
@@ -46,8 +50,8 @@ public class XMLHandlerPunto2D extends DefaultHandler {
 
 	public void endElement (String namespaceURI, String localName, String rawName)
 	throws SAXException{
-		if(localName.equals("Punto2D"))
-			i++;
+		if (localName.equals("Forma"))
+			instancias.offer(new Polygon(coordenadasX, coordenadasY,coordenadasX.length));
 		else{
 			try{
 				handlerPadre.endElement ( namespaceURI, localName, rawName);

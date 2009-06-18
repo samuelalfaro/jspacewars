@@ -1,6 +1,8 @@
-package org.sam.red;
+package org.sam.pruebas.red;
 
 import java.nio.ByteBuffer;
+
+import org.sam.util.Sincronizador;
 
 /**
  * Esta clase se encarga de bloquear a las hebras que llaman a sus m�todos enviar/recibir simulando una comunicaci�n
