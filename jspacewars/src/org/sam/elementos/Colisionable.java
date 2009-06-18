@@ -1,4 +1,4 @@
-package org.sam.red;
+package org.sam.elementos;
 
 /**
  * Este interface proporciona, los métodos para tratar las colisones entre objetos.

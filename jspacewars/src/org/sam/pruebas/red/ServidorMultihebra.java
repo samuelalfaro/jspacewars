@@ -2,9 +2,7 @@ package org.sam.pruebas.red;
 
 import java.nio.ByteBuffer;
 
-import org.sam.red.BufferBloqueante;
-import org.sam.red.BufferCanal;
-import org.sam.red.Sincronizador;
+import org.sam.util.Sincronizador;
 
 public class ServidorMultihebra{
 

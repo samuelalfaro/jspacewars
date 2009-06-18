@@ -4,8 +4,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
-import org.sam.red.BufferCanal;
-import org.sam.red.BufferSocket;
 
 public class Cliente{
 

@@ -3,8 +3,6 @@ package org.sam.pruebas.red;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
-import org.sam.red.BufferCanal;
-import org.sam.red.BufferSocket;
 
 public class Servidor{
 

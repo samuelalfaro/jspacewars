@@ -1,4 +1,4 @@
-package org.sam.gui;
+package org.sam.red.cliente;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
@@ -15,11 +15,11 @@ import javax.swing.JPanel;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import org.sam.elementos.KeysState;
+import org.sam.gui.Marco;
 import org.sam.jogl.*;
 import org.sam.jogl.ObjLoader.ParsingErrorException;
 import org.sam.jogl.particulas.*;
-import org.sam.red.KeysState;
-import org.sam.red.Sincronizador;
 import org.sam.util.*;
 
 import com.thoughtworks.xstream.XStream;

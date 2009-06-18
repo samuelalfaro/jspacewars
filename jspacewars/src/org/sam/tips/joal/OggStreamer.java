@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import net.java.games.joal.*;
 import net.java.games.joal.util.ALut;
 
-import org.sam.util.OggInputStream;
+import org.sam.util.sound.OggInputStream;
 
 /**
  * 

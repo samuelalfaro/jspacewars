@@ -5,14 +5,12 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.nio.channels.Pipe.SinkChannel;
+import java.nio.channels.Pipe.SourceChannel;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import javax.swing.JFrame;
-
 import org.sam.elementos.*;
-import org.sam.gui.Visor3D;
-import org.sam.red.Colisionable;
 import org.sam.util.Cache;
 
 import com.thoughtworks.xstream.XStream;
@@ -104,17 +102,24 @@ public class ServidorJuego{
 		}
 	}
 	
-	private Cache<Elemento> cache;
-	private Collection <Nave> naves;
-	private Collection <Collection <Disparo>> listasDeDisparos;
-	private SortedSet <Elemento> elementosOrdenados;
-	@SuppressWarnings("unused")
-	private ComprobadorDeColisones comprobador;
-	private NaveUsuario nave1, nave2;
-	
-	private ServidorJuego() throws IOException{
+	public ServidorJuego(boolean localOnly) throws IOException{
 		loadData();
-		initChannels();
+		initData(localOnly);
+		initChannels(localOnly);
+	}
+	
+	private transient Cache<Elemento> cache;
+	
+	private void loadData() throws FileNotFoundException, IOException{
+		
+		cache = new Cache<Elemento>(500);
+		Canion.setCache(cache);
+		
+		XStream xStream = new XStream(new DomDriver());
+		ElementosConverters.register(xStream);
+		
+		loadToCache(cache, xStream.createObjectInputStream(new FileReader("naves.xml")));
+		loadToCache(cache, xStream.createObjectInputStream(new FileReader("disparos.xml")));
 	}
 	
 	private static void loadToCache(Cache<Elemento> cache, ObjectInputStream in) throws IOException{
@@ -127,25 +132,18 @@ public class ServidorJuego{
 		}
 	}
 	
-	private void loadData(){
-		
-		cache = new Cache<Elemento>(500);
-		Canion.setCache(cache);
+	private transient NaveUsuario nave1, nave2;
+	private transient Collection <Nave> naves;
+	private transient Collection <Collection <Disparo>> listasDeDisparos;
+	
+	private transient SortedSet <Elemento> elementosOrdenados;
+	@SuppressWarnings("unused")
+	private transient ComprobadorDeColisones comprobador;
+	
+	private void initData(boolean localOnly){
 		
 		elementosOrdenados = new TreeSet<Elemento>(Elemento.COMPARADOR);
 		comprobador = new ComprobadorDeColisones(250);
-		
-		XStream xStream = new XStream(new DomDriver());
-		ElementosConverters.register(xStream);
-		
-		try{
-			loadToCache(cache, xStream.createObjectInputStream(new FileReader("naves.xml")));
-			loadToCache(cache, xStream.createObjectInputStream(new FileReader("disparos.xml")));
-		}catch( FileNotFoundException e ){
-			e.printStackTrace();
-		}catch( IOException e ){
-			e.printStackTrace();
-		}
 		
 		naves = new LinkedList<Nave>();
 		listasDeDisparos = new LinkedList<Collection <Disparo>>();
@@ -162,15 +160,17 @@ public class ServidorJuego{
 		nave1.setLimitesPantalla(4.5f, 3);
 		naves.add(nave1);
 		
-		nave2 = (NaveUsuario)cache.newObject(0x01);
-		nave2.setId((short)2);
-		disparosNave = new LinkedList<Disparo>();
-		nave2.setDstDisparos(disparosNave);
-		listasDeDisparos.add(disparosNave);
-		nave2.iniciar();
-		nave2.setPosicion(0,-1);
-		nave2.setLimitesPantalla(4.5f, 3);
-		naves.add(nave2);
+		if( !localOnly ){
+			nave2 = (NaveUsuario)cache.newObject(0x01);
+			nave2.setId((short)2);
+			disparosNave = new LinkedList<Disparo>();
+			nave2.setDstDisparos(disparosNave);
+			listasDeDisparos.add(disparosNave);
+			nave2.iniciar();
+			nave2.setPosicion(0,-1);
+			nave2.setLimitesPantalla(4.5f, 3);
+			naves.add(nave2);
+		}
 		
 		NaveEnemiga bomber = (NaveEnemiga)cache.newObject(0x08);
 		bomber.setPosicion(4,-2);
@@ -178,57 +178,67 @@ public class ServidorJuego{
 		naves.add(bomber);
 	}
 	
-	Pipe pipeServer;
-	Pipe pipeClient;
+	private transient Selector selector;
 	
-	Selector selector;
+	private transient SourceChannel localChannelClientIn;
 	
-	Pipe.SourceChannel pipeIn;
-	Pipe.SinkChannel pipeOut;
+	public SourceChannel getLocalChannelClientIn() {
+		return localChannelClientIn;
+	}
 	
-	DatagramChannel canalServer;
+	private transient SinkChannel	localChannelClientOut;
 	
-	private void initChannels() throws IOException{
-		pipeServer = Pipe.open();
-		pipeClient = Pipe.open();
-		
+	public SinkChannel getLocalChannelClientOut() {
+		return localChannelClientOut;
+	}
+	
+	private transient SourceChannel localChannelServerIn;
+	private transient SinkChannel 	localChannelServerOut;
+	
+	private transient DatagramChannel remoteChannelInOut;
+	
+	private void initChannels(boolean localOnly) throws IOException{
 		selector = Selector.open();
 		
-		pipeIn = pipeClient.source();
-		pipeIn.configureBlocking(false);
-		pipeOut = pipeServer.sink();
+		Pipe pipeServer = Pipe.open();
+		Pipe pipeClient = Pipe.open();
 		
-		pipeIn.register(selector, SelectionKey.OP_READ);
+		localChannelClientIn = pipeServer.source();
+		localChannelClientOut = pipeClient.sink();
 		
-		canalServer = DatagramChannel.open();
-		canalServer.configureBlocking(false);
-		canalServer.socket().bind(new InetSocketAddress(PORT));
-
-		canalServer.register(selector, SelectionKey.OP_READ);
+		localChannelServerIn = pipeClient.source();
+		localChannelServerIn.configureBlocking(false);
+		localChannelServerOut = pipeServer.sink();
+		
+		localChannelServerIn.register(selector, SelectionKey.OP_READ);
+		
+		if( !localOnly ){
+			remoteChannelInOut = DatagramChannel.open();
+			remoteChannelInOut.configureBlocking(false);
+			remoteChannelInOut.socket().bind(new InetSocketAddress(PORT));
+	
+			remoteChannelInOut.register(selector, SelectionKey.OP_READ);
+		}
 	}
 	
 	private void calcularAcciones(long milis){
-			
-			for(Collection<Disparo> listaDisparo: listasDeDisparos){
-				Iterator <Disparo> iDisparo = listaDisparo.iterator();
-				while(iDisparo.hasNext()){
-					Disparo d = iDisparo.next();
-					//if (d.getX() > ANCHO || d.getY() < 0 || d.getY() > ALTO || d.isDestruido()){
-					if (d.getX() > 10 || d.getY() < -4.0 || d.getY() > 4.0  || d.finalizado()){
-						iDisparo.remove();
-						cache.cached(d);
-					}else
-						d.actua(milis);
-				}
+		for(Collection<Disparo> listaDisparo: listasDeDisparos){
+			Iterator <Disparo> iDisparo = listaDisparo.iterator();
+			while(iDisparo.hasNext()){
+				Disparo d = iDisparo.next();
+				if (d.getX() > 10 || d.getY() < -4.0 || d.getY() > 4.0  || d.finalizado()){
+					iDisparo.remove();
+					cache.cached(d);
+				}else
+					d.actua(milis);
 			}
-			
-			for(Nave nave: naves)
-				nave.actua(milis);
-			
-	//		iListaDisparos = listasDeDisparos.iterator();
-	//		while(iListaDisparos.hasNext())
-	//			comprobador.comprobarColisiones(naves,iListaDisparos.next());
 		}
+		for(Nave nave: naves)
+			nave.actua(milis);
+//		iListaDisparos = listasDeDisparos.iterator();
+//		while(iListaDisparos.hasNext())
+//			comprobador.comprobarColisiones(naves,iListaDisparos.next());
+	}
 
 	private void almacenarElementos( ByteBuffer buff ){
 		buff.clear();
@@ -249,7 +259,7 @@ public class ServidorJuego{
 		buff.flip();
 	}
 
-	private void atenderClientes() throws IOException{
+	public void atenderClientes() throws IOException{
 		
 		ByteBuffer buffIn = ByteBuffer.allocateDirect(TAM_DATAGRAMA);
 		ByteBuffer buffOut = ByteBuffer.allocateDirect(TAM_DATAGRAMA);
@@ -257,61 +267,61 @@ public class ServidorJuego{
 		long tActual = System.nanoTime();
 		long tAnterior = tActual;
 		
-		while (true) {
-			selector.select();
-			Iterator<SelectionKey> it = selector.selectedKeys().iterator();
-			while(it.hasNext()){
-				SelectionKey key = it.next();
-				if(key.channel() == pipeIn){
+		if(nave2 == null){ // La nave2 no se ha inciado porque solo hay un jugador
+			while (true) {
+				selector.select();
+				Set<SelectionKey> selectedKeys = selector.selectedKeys();
+				if(!selectedKeys.isEmpty()){
+					selectedKeys.clear();
 					buffIn.clear();
-					pipeIn.read(buffIn);
+					localChannelServerIn.read(buffIn);
 					buffIn.flip();
 					nave1.setKeyState(buffIn.getInt());
-					
+
 					tAnterior = tActual;
 					tActual = System.nanoTime();
 					calcularAcciones( tActual - tAnterior );
 					almacenarElementos(buffOut);
 
-					pipeOut.write(buffOut);
+					localChannelServerOut.write(buffOut);
 				}
-				else if( key.channel() == canalServer){
+			}
+		}
+		while (true) {
+			selector.select();
+			Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+			while(it.hasNext()){
+				SelectionKey key = it.next();
+				if(key.channel() == localChannelServerIn){
 					buffIn.clear();
-					SocketAddress sa = canalServer.receive(buffIn);
+					localChannelServerIn.read(buffIn);
+					buffIn.flip();
+					nave1.setKeyState(buffIn.getInt());
+
+					tAnterior = tActual;
+					tActual = System.nanoTime();
+					calcularAcciones( tActual - tAnterior );
+					almacenarElementos(buffOut);
+
+					localChannelServerOut.write(buffOut);
+				}
+				else if( key.channel() == remoteChannelInOut){
+					buffIn.clear();
+					SocketAddress sa = remoteChannelInOut.receive(buffIn);
 					if (sa != null) {
 						buffIn.flip();
 						nave2.setKeyState(buffIn.getInt());
-						
+
 						tAnterior = tActual;
 						tActual = System.nanoTime();
 						calcularAcciones( tActual - tAnterior );
-						
+
 						almacenarElementos(buffOut);
-						canalServer.send(buffOut,sa);
+						remoteChannelInOut.send(buffOut,sa);
 					}
 				}
 				it.remove();
 			}
-		}
-	}
-	
-	static public void main(String args[]){
-		try{
-			ServidorJuego me = new ServidorJuego();
-			Visor3D visor = new Visor3D( me.pipeServer.source(), me.pipeClient.sink() );
-			
-			JFrame frame = new JFrame("Servidor Juego");
-			frame.setSize(ServidorJuego.ANCHO, ServidorJuego.ALTO);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			frame.setContentPane(visor.getPanel());
-			frame.setVisible(true);
-			visor.start();
-
-			me.atenderClientes();
-
-		}catch( IOException e ){
-			e.printStackTrace();
 		}
 	}
 }

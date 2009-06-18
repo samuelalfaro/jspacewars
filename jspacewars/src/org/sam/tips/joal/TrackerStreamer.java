@@ -12,7 +12,7 @@ import javax.sound.sampled.AudioFormat;
 import net.java.games.joal.*;
 import net.java.games.joal.util.ALut;
 
-import org.sam.util.TrackerInputStream;
+import org.sam.util.sound.TrackerInputStream;
 
 public class TrackerStreamer {
 
