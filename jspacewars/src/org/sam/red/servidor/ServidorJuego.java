@@ -19,10 +19,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 public class ServidorJuego{
 	
 	private static final int TAM_DATAGRAMA = 8192;
-	public static final int PORT = 1111;
-	
-	public static final int ANCHO = 640;	// TODO Borrar es por comodidad
-	public static final int ALTO = 480;		// TODO Borrar es por comodidad
 	
 	private static class ComprobadorDeColisones{
 		
@@ -49,70 +45,75 @@ public class ServidorJuego{
 			//return ((Elemento)c1).posX - (((Elemento)c2).posX + 10);
 		}
 		
-		public void comprobarColisiones(Collection<? extends Colisionable> unConjuntoA, Collection<? extends Colisionable> unConjuntoB){
-			if(unConjuntoA.size() == 0 || unConjuntoB.size() == 0)
+		public void comprobarColisiones(
+				Collection<? extends Colisionable> unConjuntoA,
+				Collection<? extends Colisionable> unConjuntoB
+		) {
+			if( unConjuntoA.size() == 0 || unConjuntoB.size() == 0 )
 				return;
 
 			Queue<Colisionable> conjuntoA = colaConjuntoA;
 			conjuntoA.clear();
 			conjuntoA.addAll(unConjuntoA);
-			
+
 			Queue<Colisionable> conjuntoB = colaConjuntoB;
 			conjuntoB.clear();
 			conjuntoB.addAll(unConjuntoB);
-			
+
 			Queue<Colisionable> activosA = colaActivosA;
 			activosA.clear();
 			Queue<Colisionable> activosB = colaActivosB;
 			activosB.clear();
-			
+
 			do{
-				if( conjuntoA.size()>0 && ( conjuntoB.size()==0 || compararInicios(conjuntoA.peek(),conjuntoB.peek() ) < 0 ) ){
+				if( conjuntoA.size() > 0 && (conjuntoB.size() == 0 || compararInicios(conjuntoA.peek(), conjuntoB.peek()) < 0) ){
 					Colisionable actual = conjuntoA.poll();
 					// Se eliminan los elementos activos que han salido cuando llega el nuevo
-					while( activosA.size()>0 && compararInicioFin(activosA.peek(),actual)>0)
+					while( activosA.size() > 0 && compararInicioFin(activosA.peek(), actual) > 0 )
 						activosA.poll();
-					while( activosB.size()>0 && compararInicioFin(activosB.peek(),actual)>0)
+					while( activosB.size() > 0 && compararInicioFin(activosB.peek(), actual) > 0 )
 						activosB.poll();
 					activosA.offer(actual);
-					Iterator<Colisionable> i = activosB.iterator();
-					while(i.hasNext()){
-						Colisionable otro = i.next();
-						if (actual.hayColision(otro)){
+					for( Colisionable otro: activosB )
+						if( actual.hayColision(otro) )
 							actual.colisionar(otro);
-						}
-					}
 				}else{
 					Colisionable actual = conjuntoB.poll();
 					// Se eliminan los elementos activos que han salido cuando llega el nuevo
-					while( activosA.size() >0 && compararInicioFin(activosA.peek(),actual)>0 )
+					while( activosA.size() > 0 && compararInicioFin(activosA.peek(), actual) > 0 )
 						activosA.poll();
-					while( activosB.size() >0 && compararInicioFin(activosB.peek(),actual)>0 )
+					while( activosB.size() > 0 && compararInicioFin(activosB.peek(), actual) > 0 )
 						activosB.poll();
 					activosB.offer(actual);
-					Iterator<Colisionable> i = activosA.iterator();
-					while(i.hasNext()){
-						Colisionable otro = i.next();
-						if (actual.hayColision(otro)){
+					for( Colisionable otro: activosA )
+						if( actual.hayColision(otro) )
 							actual.colisionar(otro);
-						}
-					}
 				}
 			}while( conjuntoA.size() > 0 || conjuntoB.size() > 0 );
 		}
 	}
 	
-	public ServidorJuego(boolean localOnly) throws IOException{
+	public ServidorJuego() throws IOException {
+		this(true, 0);
+	}
+
+	public ServidorJuego(int port) throws IOException {
+		this(false, port);
+	}
+	
+	private ServidorJuego(boolean localOnly, int port) throws IOException{
 		loadData();
 		initData(localOnly);
-		initChannels(localOnly);
+		initLocalChannel();
+		if(!localOnly)
+			initRemoteChannel(port);
 	}
 	
 	private transient Cache<Elemento> cache;
 	
 	private void loadData() throws FileNotFoundException, IOException{
 		
-		cache = new Cache<Elemento>(500);
+		cache = new Cache<Elemento>(1000);
 		Canion.setCache(cache);
 		
 		XStream xStream = new XStream(new DomDriver());
@@ -158,7 +159,7 @@ public class ServidorJuego{
 		listasDeDisparos.add(disparosNave);
 		nave1.iniciar();
 		nave1.setPosicion(0, 0);
-		nave1.setLimitesPantalla(4.5f, 3);
+		nave1.setLimites(4.5f, 3);
 		naves.add(nave1);
 		
 		if( !localOnly ){
@@ -169,7 +170,7 @@ public class ServidorJuego{
 			listasDeDisparos.add(disparosNave);
 			nave2.iniciar();
 			nave2.setPosicion(0,-1);
-			nave2.setLimitesPantalla(4.5f, 3);
+			nave2.setLimites(4.5f, 3);
 			naves.add(nave2);
 		}
 		
@@ -198,7 +199,7 @@ public class ServidorJuego{
 	
 	private transient DatagramChannel remoteChannelInOut;
 	
-	private void initChannels(boolean localOnly) throws IOException{
+	private void initLocalChannel() throws IOException{
 		selector = Selector.open();
 		
 		Pipe pipeServer = Pipe.open();
@@ -213,16 +214,17 @@ public class ServidorJuego{
 		
 		localChannelServerIn.register(selector, SelectionKey.OP_READ);
 		
-		if( !localOnly ){
-			remoteChannelInOut = DatagramChannel.open();
-			remoteChannelInOut.configureBlocking(false);
-			remoteChannelInOut.socket().bind(new InetSocketAddress(PORT));
-	
-			remoteChannelInOut.register(selector, SelectionKey.OP_READ);
-		}
 	}
 	
-	private void calcularAcciones(long milis){
+	private void initRemoteChannel(int port) throws IOException{
+		remoteChannelInOut = DatagramChannel.open();
+		remoteChannelInOut.configureBlocking(false);
+		remoteChannelInOut.socket().bind(new InetSocketAddress(port));
+
+		remoteChannelInOut.register(selector, SelectionKey.OP_READ);
+	}
+	
+	private void calcularAcciones(long nanos){
 		for(Collection<Disparo> listaDisparo: listasDeDisparos){
 			Iterator <Disparo> iDisparo = listaDisparo.iterator();
 			while(iDisparo.hasNext()){
@@ -231,11 +233,11 @@ public class ServidorJuego{
 					iDisparo.remove();
 					cache.cached(d);
 				}else
-					d.actua(milis);
+					d.actua(nanos);
 			}
 		}
 		for(Nave nave: naves)
-			nave.actua(milis);
+			nave.actua(nanos);
 //		iListaDisparos = listasDeDisparos.iterator();
 //		while(iListaDisparos.hasNext())
 //			comprobador.comprobarColisiones(naves,iListaDisparos.next());
