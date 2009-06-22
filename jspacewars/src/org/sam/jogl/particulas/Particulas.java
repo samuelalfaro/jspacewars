@@ -198,6 +198,8 @@ public abstract class Particulas extends ObjetoAbstracto implements Prototipo<Pa
 	}
 	
 	public final void setEmisor(Emisor emisor) {
+		if(emisor == null)
+			throw new NullPointerException();
 		this.emisor = emisor;
 	}
 	

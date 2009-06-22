@@ -1,8 +1,9 @@
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
@@ -26,8 +27,8 @@ public class LoaderExample
 	private Apariencia utFondo;
 	private transient int index = 0;
 	private Instancia3D[] instancias;
-
-	public LoaderExample(){
+	
+    public LoaderExample(){
 		super("Loader Example");
 		canvas = new GLCanvas(new GLCapabilities());
 		canvas.addGLEventListener(this);
@@ -84,7 +85,30 @@ public class LoaderExample
 			XStream xStream = new XStream(new DomDriver());
 			xStream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 			GrafoEscenaConverters.register(xStream);
-			instancias =  (Instancia3D[])xStream.fromXML(new FileReader("instancias3D.xml"));
+			GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
+			
+			Collection<Instancia3D> intanciasCollection = new LinkedList<Instancia3D>();
+			ObjectInputStream in = xStream.createObjectInputStream(new FileReader("instancias3D-stream.xml"));
+			try{
+				while( true )
+					intanciasCollection.add((Instancia3D) in.readObject());
+			}catch( ClassNotFoundException e ){
+				e.printStackTrace();
+			}catch( EOFException eof ){
+				in.close();
+			}
+			instancias = intanciasCollection.toArray(new Instancia3D[intanciasCollection.size()]);
+			
+			StringWriter output = new StringWriter();
+			try{
+				ObjectOutputStream out = xStream.createObjectOutputStream(output);
+				for(Instancia3D instancia: instancias)
+					out.writeObject(instancia);
+				out.close();
+			}catch( IOException e ){
+				e.printStackTrace();
+			}
+			System.out.println(output);
 			
 			canvas.addKeyListener(new KeyListener(){
 				@Override
@@ -115,14 +139,11 @@ public class LoaderExample
 			
 			instancias[index].reset();
 			
-			xStream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
-			System.out.println(xStream.toXML(instancias));
-			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (ObjLoader.ParsingErrorException e) {
+		}catch( IOException e ){
 			e.printStackTrace();
-		}
+		} 
 		
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LESS);

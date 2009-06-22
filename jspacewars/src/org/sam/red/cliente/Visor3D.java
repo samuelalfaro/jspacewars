@@ -170,29 +170,184 @@ public class Visor3D implements KeyListener{
 		}
 	}
 	
-	private class Renderer implements GLEventListener{
+	private Apariencia fondo;
+	private Particulas[] estrellas = new Particulas[20];
+	
+	private class Loader implements GLEventListener{
 
 		private final Sincronizador sincronizador;
-		private boolean datos_cargados = false;
 		
-		Renderer(Sincronizador sincronizador){
+		Loader(Sincronizador sincronizador){
 			this.sincronizador = sincronizador;
 		}
 
-		private GLU glu;
-		private Apariencia fondo;
-		private Particulas[] estrellas = new Particulas[20];
-		
-		private float s1, s2, proporcionesPantalla;
-		private transient long tAnterior, tActual;
-		
 		public void init(GLAutoDrawable drawable){
 			System.out.println("iniciando");
 
 			GL gl = drawable.getGL();
-			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+			
+			gl.glShadeModel(GL.GL_SMOOTH);
 
-			glu = new GLU();
+			gl.glEnable(GL.GL_DEPTH_TEST);
+			gl.glDepthFunc(GL.GL_LESS);
+
+			gl.glEnable(GL.GL_LIGHT0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION,
+					new float[]{ 0.5f, 1.0f, 1.0f, 0.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,
+					new float[]{ 0.4f, 0.6f, 0.6f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,
+					new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+			gl.glEnable(GL.GL_LIGHT1);
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION,
+					new float[]{ -0.5f, -1.0f, 1.0f, 0.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE,
+					new float[]{ 0.6f, 0.4f, 0.4f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR,
+					new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+			gl.glEnable(GL.GL_LIGHT2);
+			gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION,
+					new float[]{ 0.0f, 0.0f, 1.0f, 0.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT2, GL.GL_DIFFUSE,
+					new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT2, GL.GL_SPECULAR,
+					new float[]{ 0.95f, 0.95f, 0.95f, 1.0f }, 0);
+			gl.glEnable(GL.GL_LIGHTING);
+			gl.glEnable(GL.GL_CULL_FACE);
+			
+			gl.glFlush();
+		}
+		
+		public void display(GLAutoDrawable drawable){
+			GL gl = drawable.getGL();
+			try {
+				fondo = new Apariencia(); 
+				fondo.setTextura(
+						new Textura(gl, Textura.Format.RGB, Imagen.cargarImagen("resources/texturas/cielo1.jpg"), true)
+				);
+				fondo.setAtributosTextura(new AtributosTextura());
+				fondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
+
+				Apariencia apEstrellas = new Apariencia();
+				apEstrellas.setTextura(
+						new Textura(gl, Textura.Format.ALPHA, Imagen.cargarImagen("resources/texturas/spark.jpg"), true)
+				);
+				apEstrellas.setAtributosTransparencia(
+						new AtributosTransparencia(
+								AtributosTransparencia.Equation.ADD,
+								AtributosTransparencia.SrcFunc.SRC_ALPHA,
+								AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA)
+				);
+
+				Matrix4f tEmisor = new Matrix4f();
+				tEmisor.setIdentity();
+				tEmisor.rotZ((float)Math.PI);
+				tEmisor.setTranslation(new Vector3f(2.05f,0.5f,0.0f));
+				Emisor emisor = new Emisor.Cache(new Emisor.Lineal(1.0f,0.0f),tEmisor,1024);
+
+				// TODO check
+				FactoriaDeParticulas.setPointSpritesEnabled(true);
+				for(int i = 0, len = estrellas.length; i< len; i++){
+					estrellas[i] = FactoriaDeParticulas.createParticulas((int)( Math.pow(8*(len-i)/len, 2) + 1 ));
+					estrellas[i].setEmisor(emisor);
+					estrellas[i].setEmision(Particulas.Emision.CONTINUA);
+					estrellas[i].setRangoDeEmision(1.0f);
+//					estrellas[i].setRadio(4.0f + (12.0f * (i+1) )/len);
+					estrellas[i].setRadio(0.004f + (0.012f * (i+1) )/len);
+					float vel = 0.1f*i +  0.05f;
+					float tVida = 2.05f/(vel*0.95f);
+					estrellas[i].setTiempoVida(tVida);
+					estrellas[i].setVelocidad(vel, vel*0.05f, false);
+					estrellas[i].setGiroInicial(0, 180, true);
+					estrellas[i].setColor(
+							0.65f + (0.35f * (i+1))/len,
+							0.35f + (0.65f * (i+1))/len,
+							0.85f + (0.15f * (i+1))/len,
+							1.0f
+					);
+					estrellas[i].setPertubacionColor(0.25f, false, false);
+					estrellas[i].setApariencia(apEstrellas);
+					estrellas[i].reset();
+					estrellas[i].getModificador().modificar(tVida);
+				}
+				FactoriaDeParticulas.setPointSpritesEnabled(false);
+
+				XStream xStream = new XStream(new DomDriver());
+				xStream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
+				GrafoEscenaConverters.register(xStream);
+				GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
+				
+				ObjectInputStream in = xStream.createObjectInputStream(new FileReader("instancias3D-stream.xml"));
+				try{
+					while( true )
+						cache.addPrototipo((Instancia3D) in.readObject());
+				}catch( ClassNotFoundException e ){
+					e.printStackTrace();
+				}catch( EOFException eof ){
+					in.close();
+				}
+				
+//				Instancia3D[] instancias =  (Instancia3D[])xStream.fromXML(new FileReader("instancias3D.xml"));
+//				StringWriter writer = new StringWriter();
+//				try{
+//					ObjectOutputStream out = xStream.createObjectOutputStream(writer);
+//					for(Instancia3D instancia: instancias)
+//						out.writeObject(instancia);
+//				}catch( IOException e ){
+//					e.printStackTrace();
+//				}
+//				System.out.println(writer.toString());
+//				for(Instancia3D instancia: instancias)
+//					cache.addPrototipo( instancia );
+				
+				System.out.println("ok");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ParsingErrorException e) {
+				e.printStackTrace();
+			} catch (GLException e) {
+				e.printStackTrace();
+			}
+
+			synchronized(iniciado){
+				iniciado.notifyAll();
+			}
+			
+			gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+			
+			canvas.removeGLEventListener(this);
+			canvas.addGLEventListener(new Renderer(sincronizador));
+		}
+
+		public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged){}
+
+		public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h){
+		}
+	}
+	
+	private class Renderer implements GLEventListener{
+
+		private final Sincronizador sincronizador;
+		
+		private Renderer(Sincronizador sincronizador){
+			this.sincronizador = sincronizador;
+		}
+
+		private GLU glu = new GLU();
+		
+		private float s1, s2, proporcionesPantalla;
+		private transient long tAnterior, tActual;
+		
+		
+		public void init(GLAutoDrawable drawable){
+			/*
+			System.out.println("iniciando");
+
+			GL gl = drawable.getGL();
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
 			try {
 				fondo = new Apariencia(); 
@@ -298,13 +453,10 @@ public class Visor3D implements KeyListener{
 			}
 			tActual = System.nanoTime();
 			datos_cargados = true;
+			*/
 		}
 		
 		public void display(GLAutoDrawable drawable){
-			if(!datos_cargados){
-				System.out.println("Cargando datos");
-				return;
-			}
 			
 			tAnterior = tActual;
 			tActual = System.nanoTime();
@@ -416,7 +568,8 @@ public class Visor3D implements KeyListener{
 
 		canvas.setIgnoreRepaint(true);
 		canvas.addKeyListener(this);
-		canvas.addGLEventListener(new Renderer(sincronizador));
+		canvas.addGLEventListener(new Loader(sincronizador));
+//		canvas.addGLEventListener(new Renderer(sincronizador));
 		
 		marco = Marco.getNewMarco(0);
 		marco.add(canvas,BorderLayout.CENTER);

@@ -36,7 +36,7 @@ public class Launcher {
 		}
 	}
 	
-	private static void lanzarDosJugadoresAnfitrion(){
+	private static void lanzarAnfitrion(){
 		try{
 			ServidorJuego server = new ServidorJuego(false);
 			Visor3D visor = new Visor3D( server.getLocalChannelClientIn(), server.getLocalChannelClientOut() );
@@ -55,7 +55,7 @@ public class Launcher {
 		}
 	}
 	
-	private static void lanzarDosJugadoresInvitado(){
+	private static void lanzarInvitado(){
 		try{
 			DatagramChannel canalCliente = DatagramChannel.open();
 			canalCliente.connect(new InetSocketAddress("localhost", ServidorJuego.PORT));
@@ -78,5 +78,14 @@ public class Launcher {
 		}catch( IOException e ){
 			e.printStackTrace();
 		}
+	}
+	
+	public static void main(String... args){
+		if(args.length == 0)
+			lanzarUnJugador();
+		else if(args[0].equals("server"))
+			lanzarAnfitrion();
+		else if(args[0].equals("client"))
+			lanzarInvitado();
 	}
 }

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import org.sam.util.FastMath;
 
+@SuppressWarnings("deprecation")
 public class TestLen extends JPanel {
 	private static final long serialVersionUID = 1L;
 	

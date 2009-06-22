@@ -16,6 +16,7 @@ class ParticulasQuads2 extends Particulas{
 
 	private static final Random aleatorio = new Random();
 	
+	@SuppressWarnings("unused")
 	private static class Particula{
 		float vida;
 		float posIniX, posIniY, posIniZ;
