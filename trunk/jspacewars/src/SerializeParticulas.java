@@ -45,8 +45,6 @@ public class SerializeParticulas{
 		Matrix4f t3d = new Matrix4f();
 		t3d.rotY((float)Math.PI/2);
 		t3d.setTranslation(new Vector3f( 0.12f, -0.15f, -0.5f));
-//		particulas.setTExterna(mt);
-//		particulas.setTLocal(t3d);
 		
 		XStream xStream = new XStream(new DomDriver());
 		System.out.println(xStream.toXML(particulas));

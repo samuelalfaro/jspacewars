@@ -8,9 +8,8 @@ import javax.swing.JPanel;
 
 import org.sam.util.FastMath;
 
-
+@SuppressWarnings({ "serial", "deprecation" })
 public class Test02Misil extends JPanel implements MouseListener, MouseMotionListener{
-	private static final long serialVersionUID = 1L;
 	
 	class Animador extends Thread{
 		public void run(){

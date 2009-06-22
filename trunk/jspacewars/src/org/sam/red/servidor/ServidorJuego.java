@@ -129,6 +129,7 @@ public class ServidorJuego{
 		}catch( ClassNotFoundException e ){
 			e.printStackTrace();
 		}catch( EOFException eof ){
+			in.close();
 		}
 	}
 	
@@ -150,7 +151,7 @@ public class ServidorJuego{
 		
 		Collection <Disparo> disparosNave;
 		
-		nave1 = (NaveUsuario)cache.newObject(0x00);
+		nave1 = (NaveUsuario)cache.newObject(0x02);
 		nave1.setId((short)1);
 		disparosNave = new LinkedList<Disparo>();
 		nave1.setDstDisparos(disparosNave);

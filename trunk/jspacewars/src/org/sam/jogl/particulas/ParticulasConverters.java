@@ -150,9 +150,10 @@ public class ParticulasConverters{
 		public Particulas unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context){
 			String att = reader.getAttribute(S.nParticulas);
 			Particulas particulas = FactoriaDeParticulas.createParticulas((att!= null) ? Integer.parseInt(att) : 0);
-			try {
-				while(reader.hasMoreChildren()){
-					reader.moveDown();
+
+			while(reader.hasMoreChildren()){
+				reader.moveDown();
+				try {
 					String nodeName = reader.getNodeName();
 					if(nodeName.equals(S.Emisor)){
 						particulas.setEmisor((Emisor)context.convertAnother(null, Emisor.class));
@@ -216,15 +217,15 @@ public class ParticulasConverters{
 					}else if(nodeName.equals(S.Apariencia)){
 						particulas.setApariencia((Apariencia)context.convertAnother(null, Apariencia.class));
 					}
+				} catch (Exception e) {
+					e.printStackTrace();
 					reader.moveUp();
-				}
-				return particulas;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			} 
+					return null;
+				} 
+				reader.moveUp();
+			}
+			return particulas;
 		}
-
 	}
 	
 	public static void register(XStream xStream) {

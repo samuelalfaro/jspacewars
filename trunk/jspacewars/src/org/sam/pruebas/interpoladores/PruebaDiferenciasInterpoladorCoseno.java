@@ -1,21 +1,9 @@
-/*
- * Created on 30-ene-2005
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 package org.sam.pruebas.interpoladores;
 
 import org.sam.interpoladores.*;
 import org.sam.util.FastMath;
 
-
-/**
- * @author Samuel
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
+@SuppressWarnings("deprecation")
 public class PruebaDiferenciasInterpoladorCoseno {
 
 	public strictfp static void main(String[] args) {
