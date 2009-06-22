@@ -135,7 +135,7 @@ public class NaveUsuario extends Nave{
 	}
 	
 	private transient float ancho, alto;
-	public void setLimitesPantalla(float ancho, float alto){
+	public void setLimites(float ancho, float alto){
 		this.ancho = ancho;
 		this.alto = alto;
 	}
@@ -192,18 +192,16 @@ public class NaveUsuario extends Nave{
 				posX = -ancho;
 		}
 		
-		if( (key_state & KeysState.DISPARO) != 0){
-//			System.out.println("hola");
+		if( (key_state & KeysState.DISPARO) != 0 ){
 			float mX = (posX - nX) / nanos;
 			float mY = (posY - nY) / nanos;
 
-			for(Canion canion: caniones[I_PRIMARIO])
-				canion.dispara( mX, nX, mY, nY, nanos, getDstDisparos());
-			
-			if(caniones[I_SECUNDARIO]!=null)
-				for(Canion canion: caniones[I_SECUNDARIO])
-					canion.dispara( mX, nX, mY, nY, nanos, getDstDisparos());
-			
+			for( Canion canion: caniones[I_PRIMARIO] )
+				canion.dispara(mX, nX, mY, nY, nanos, getDstDisparos());
+
+			if( caniones[I_SECUNDARIO] != null )
+				for( Canion canion: caniones[I_SECUNDARIO] )
+					canion.dispara(mX, nX, mY, nY, nanos, getDstDisparos());
 		}
 	}
 }
