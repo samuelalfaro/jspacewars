@@ -8,8 +8,8 @@ public class CanionInterpolado extends Canion{
 	 */
 	private float scaleX, scaleY;
 
-	public CanionInterpolado(CanionData data, int grado) {
-		super(data, grado);
+	public CanionInterpolado(CanionData data) {
+		super(data);
 	}
 
 	private CanionInterpolado(CanionInterpolado prototipo){
