@@ -67,7 +67,7 @@ public class NaveUsuario extends Nave{
 			// y copiamos los niveles guardados a los actuales.
 			System.arraycopy(niveles[I_FIJO],0,niveles[I_ACTUAL],0,5);
 
-		velocidad = velocidadesDisponibles[niveles[I_ACTUAL][I_VELOCIDAD]];
+		velocidad = velocidadesDisponibles[ niveles[I_ACTUAL][I_VELOCIDAD] ];
 		
 		if(this.caniones == null)
 			this.caniones = new Canion[2][];

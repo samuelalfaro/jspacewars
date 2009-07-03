@@ -8,8 +8,8 @@ public class LanzaMisiles extends Canion{
 	 */
 	private float angulo;
 	
-	public LanzaMisiles(CanionData data, int grado) {
-		super(data, grado);
+	public LanzaMisiles(CanionData data) {
+		super(data);
 	}
 
 	private LanzaMisiles(LanzaMisiles prototipo){

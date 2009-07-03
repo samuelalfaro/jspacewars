@@ -37,9 +37,9 @@ public abstract class Canion implements Cloneable{
 	 */
 	protected transient long tTranscurrido;
 	
-	protected Canion(CanionData data, int grado){
+	protected Canion(CanionData data){
 		this.data = data;
-		this.grado = grado;
+		this.grado = 0;
 	}
 
 	protected Canion(Canion prototipo){

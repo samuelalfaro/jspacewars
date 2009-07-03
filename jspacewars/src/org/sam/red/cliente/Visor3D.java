@@ -463,8 +463,13 @@ public class Visor3D implements KeyListener{
 			case K_DISPARO:	key_state &= ~KeysState.DISPARO;	break;
 			case K_BOMBA:	key_state &= ~KeysState.BOMBA;		break;
 			case K_UPGRADE:	key_state &= ~KeysState.UPGRADE;	break;
-			case KeyEvent.VK_C: System.out.println(cache);
+			case KeyEvent.VK_C: System.out.println(cache);		break;
 			default:
+				if ((keyCode == KeyEvent.VK_ESCAPE)
+						|| (keyCode == KeyEvent.VK_Q)
+						|| (keyCode == KeyEvent.VK_END)
+						|| ((keyCode == KeyEvent.VK_C) && keyEvent.isControlDown()) )
+						System.exit(0);
 		}
 	}
 	

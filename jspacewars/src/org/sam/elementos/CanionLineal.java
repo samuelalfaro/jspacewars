@@ -8,8 +8,8 @@ public class CanionLineal extends Canion{
 	 */
 	private float angulo;
 	
-	public CanionLineal(CanionData data, int grado) {
-		super(data, grado);
+	public CanionLineal(CanionData data) {
+		super(data);
 	}
 
 	private CanionLineal(CanionLineal prototipo){

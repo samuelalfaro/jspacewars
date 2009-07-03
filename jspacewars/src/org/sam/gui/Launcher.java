@@ -3,6 +3,7 @@
  */
 package org.sam.gui;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.*;
 import java.nio.channels.DatagramChannel;
@@ -18,23 +19,43 @@ import org.sam.red.servidor.ServidorJuego;
  */
 public class Launcher {
 	
-	public static final int ANCHO = 640;	// TODO Borrar es por comodidad
-	public static final int ALTO = 480;		// TODO Borrar es por comodidad
+	private static void mostrarFrame(Container contentPane) {
+
+		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		JFrame frame = new JFrame(myDevice.getDefaultConfiguration());
+		frame.setUndecorated(true);
+		frame.setResizable(false);
+
+		if( myDevice.isFullScreenSupported() ){
+			myDevice.setFullScreenWindow(frame);
+			if( myDevice.isDisplayChangeSupported() ){
+				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
+
+//				currentDisplayMode = new DisplayMode(640, 400, currentDisplayMode.getBitDepth(), 85);
+				try{
+					myDevice.setDisplayMode(currentDisplayMode);
+					frame.setSize(currentDisplayMode.getWidth(), currentDisplayMode.getHeight());
+				}catch( IllegalArgumentException e ){
+					System.err.println("Display Mode: not supported!!");
+				}
+			}
+			frame.setContentPane(contentPane);
+			frame.validate();
+		}else{
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			frame.setBounds(0, 0, dim.width, dim.height);
+			frame.setContentPane(contentPane);
+			frame.setVisible(true);
+		}
+	}
 	
-	private static void lanzarUnJugador(){
+	private static void lanzarUnJugador() {
 		try{
 			ServidorJuego server = new ServidorJuego();
-			Visor3D visor = new Visor3D( server.getLocalChannelClientIn(), server.getLocalChannelClientOut() );
-			
-			JFrame frame = new JFrame("jSpaceWars");
-			frame.setSize(ANCHO, ALTO);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			frame.setContentPane(visor.getPanel());
-			frame.setVisible(true);
+			Visor3D visor = new Visor3D(server.getLocalChannelClientIn(), server.getLocalChannelClientOut());
+			mostrarFrame( visor.getPanel() );
 			visor.start();
 			server.atenderClientes();
-
 		}catch( IOException e ){
 			e.printStackTrace();
 		}
@@ -45,12 +66,7 @@ public class Launcher {
 			ServidorJuego server = new ServidorJuego(port);
 			Visor3D visor = new Visor3D( server.getLocalChannelClientIn(), server.getLocalChannelClientOut() );
 			
-			JFrame frame = new JFrame("jSpaceWars Anfitrión");
-			frame.setSize(ANCHO, ALTO);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			frame.setContentPane(visor.getPanel());
-			frame.setVisible(true);
+			mostrarFrame( visor.getPanel() );
 			visor.start();
 			server.atenderClientes();
 
@@ -63,16 +79,9 @@ public class Launcher {
 		try{
 			DatagramChannel canalCliente = DatagramChannel.open();
 			canalCliente.connect(new InetSocketAddress(hostname, port));
-
 			Visor3D visor = new Visor3D(canalCliente, canalCliente);
 
-			JFrame frame = new JFrame("jSpaceWars Invitado");
-			frame.setSize(ANCHO, ALTO);
-			// frame.setResizable(false);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			frame.setContentPane(visor.getPanel());
-			frame.setVisible(true);
+			mostrarFrame( visor.getPanel() );
 			visor.start();
 
 		}catch( SocketException e ){
