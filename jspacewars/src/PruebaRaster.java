@@ -44,7 +44,7 @@ implements GLEventListener, KeyListener, MouseMotionListener
 	public PruebaRaster(){
 		super("Prueba Raster");
 		
-		bf = Imagen.toBufferedImage(Imagen.cargarImagen("resources/obj3d/nave02/t01.jpg"));
+		bf = Imagen.cargarToBufferedImage("resources/texturas/disparos.png");
 //		textureData = new TextureData(0,0,false,bf);
 		checkImage = Imagen.toBuffer(bf, true);
 		
@@ -102,8 +102,19 @@ implements GLEventListener, KeyListener, MouseMotionListener
 		gl.glRasterPos2i(0,0);
 
 		gl.glPixelZoom(zoomFactor, zoomFactor);
-		gl.glDrawPixels(checkImageWidth, checkImageHeight, GL.GL_BGRA,
-				GL.GL_UNSIGNED_INT_8_8_8_8_REV, checkImage);
+	
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendEquation(GL.GL_FUNC_ADD);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+		
+		gl.glDrawPixels(
+				checkImageWidth, checkImageHeight, 
+				GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
+//				GL.GL_BGRA, GL.GL_UNSIGNED_BYTE,
+//				GL.GL_LUMINANCE, GL.GL_UNSIGNED_BYTE,
+				checkImage);
+		
+		gl.glDepthMask(false);
 		gl.glFlush();
 	}
 

@@ -1,9 +1,3 @@
-/*
- * Created on 26-dic-2004
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 package org.sam.gui;
 
 import java.awt.Color;
@@ -12,14 +6,9 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
-/**
- * @author Samuel
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
+
+@SuppressWarnings("serial")
 public class FloatComponent extends JComponent{
-	private static final long serialVersionUID = 1L;
 	
 	private double x, y, ancho, alto;
 	

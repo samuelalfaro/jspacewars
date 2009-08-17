@@ -15,7 +15,7 @@ public class PruebaBrillo extends JComponent{
 	ConvolveOp convolve;
 	
 	public PruebaBrillo(){
-		img1 = Imagen.toBufferedImage(Imagen.cargarImagen("resources/img/texturas/oxido.jpg"));
+		img1 = Imagen.cargarToBufferedImage("resources/img/texturas/oxido.jpg");
 		img2 = Imagen.toBufferedImage(Imagen.brightPass(img1,0.5f,1.0f));
 		img3 = new BufferedImage(img2.getWidth(), img2.getHeight(), BufferedImage.TYPE_INT_ARGB);
 //		Kernel kernel = new Kernel(3, 3, new float[]{

@@ -1,6 +1,6 @@
 package org.sam.jogl;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 
 import javax.media.opengl.GL;
@@ -907,10 +907,11 @@ public class GrafoEscenaConverters {
 		 */
 		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+//			System.err.println(reader.getAttribute(S.format) + " " +reader.getAttribute(S.image));
 			Textura.MinFilter minFilter = Enum.valueOf(Textura.MinFilter.class, reader.getAttribute(S.minFilter));
 			Textura.MagFilter magFilter = Enum.valueOf(Textura.MagFilter.class, reader.getAttribute(S.magFilter));
 			Textura.Format format = Enum.valueOf(Textura.Format.class, reader.getAttribute(S.format));
-			Image image = Imagen.cargarImagen(reader.getAttribute(S.image));
+			BufferedImage image = Imagen.cargarToBufferedImage(reader.getAttribute(S.image));
 			boolean flipY = reader.getAttribute(S.flipY) != null && S.TRUE.equalsIgnoreCase(reader.getAttribute(S.flipY));
 			Textura textura = new Textura(GLU.getCurrentGL(), minFilter, magFilter, format, image, flipY);
 			textura.setWrap_s(Enum.valueOf(Textura.Wrap.class, reader.getAttribute(S.wrapS)));

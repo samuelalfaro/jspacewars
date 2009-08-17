@@ -48,13 +48,13 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 
 		try{
 			fondo = new UnidadTextura();
-			fondo.setTextura(new Textura(gl, MinFilter.NEAREST, MagFilter.NEAREST, Textura.Format.RGB, Imagen.cargarImagen("resources/fondo.png"), true));
+			fondo.setTextura(new Textura(gl, MinFilter.NEAREST, MagFilter.NEAREST, Textura.Format.RGB, Imagen.cargarToBufferedImage("resources/fondo.png"), true));
 			fondo.setAtributosTextura(new AtributosTextura());
 			fondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
 			texture1 = new UnidadTextura();
 			texture1.setTextura(new Textura(gl, Textura.Format.ALPHA, Imagen
-					.cargarImagen("resources/texturas/smok.png"), true));
+					.cargarToBufferedImage("resources/texturas/smok.png"), true));
 			texture1.getTextura().setWrap_s(Textura.Wrap.CLAMP_TO_BORDER);
 			texture1.getTextura().setWrap_t(Textura.Wrap.CLAMP_TO_BORDER);
 			texture1.setAtributosTextura(new AtributosTextura());
@@ -75,7 +75,7 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 
 			texture2 = new UnidadTextura();
 			texture2.setTextura(new Textura(gl, Textura.Format.ALPHA, Imagen
-					.cargarImagen("resources/texturas/flecha.jpg"), true));
+					.cargarToBufferedImage("resources/texturas/flecha.jpg"), true));
 			texture2.getTextura().setWrap_s(Textura.Wrap.CLAMP_TO_BORDER);
 			texture2.getTextura().setWrap_t(Textura.Wrap.CLAMP_TO_BORDER);
 			texture2.setAtributosTextura(new AtributosTextura());
