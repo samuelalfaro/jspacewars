@@ -24,6 +24,8 @@ public class NaveUsuario extends Nave{
 	private final Canion[][][] canionesDisponibles;
 	private transient Canion[][] caniones;
 	
+	private transient int aumentadoresDeNivel = 0;
+	
 	/**
 	 * @param code
 	 * @param limitesDeNiveles
@@ -48,7 +50,8 @@ public class NaveUsuario extends Nave{
 		this.limitesDeNiveles = prototipo.limitesDeNiveles;
 		this.velocidadesDisponibles = prototipo.velocidadesDisponibles;
 		this.canionesDisponibles = prototipo.canionesDisponibles;
-		this.gradoNave = prototipo.gradoNave;
+//		this.gradoNave = prototipo.gradoNave;
+		this.gradoNave = 1;
 		iniciar();
 	}
 	
@@ -95,45 +98,6 @@ public class NaveUsuario extends Nave{
 				canion.setGrado(grado);
 	}
 
-	public boolean nivelAumentable(int index){
-		return niveles[I_ACTUAL][index] < limitesDeNiveles[gradoNave][index];
-	}
-	
-	public void aumentarNivel(int index){
-		niveles[I_ACTUAL][index]++;
-		switch(index){
-		case I_VELOCIDAD:
-			velocidad = velocidadesDisponibles[niveles[I_ACTUAL][I_VELOCIDAD]];
-			break;
-		case I_NUM_CANIONES_PRI:
-			setCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_NUM_CANIONES_PRI]);
-			setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
-			break;
-		case I_POW_CANIONES_PRI:
-			setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
-			break;
-		case I_NUM_CANIONES_SEC:
-			setCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_NUM_CANIONES_SEC]);
-			setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
-			break;
-		case I_POW_CANIONES_SEC:
-			setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
-			break;
-		}
-	}
-	
-	public boolean nivelGuardable(int index){
-		return niveles[I_FIJO][index] < niveles[I_ACTUAL][index];
-	}
-	
-	public void guardarNivel(int index){
-		niveles[I_FIJO][index]++;
-	}
-
-	public void aumentarGradoNave(){
-		gradoNave++;
-	}
-	
 	private transient float ancho, alto;
 	public void setLimites(float ancho, float alto){
 		this.ancho = ancho;
@@ -141,16 +105,46 @@ public class NaveUsuario extends Nave{
 	}
 	
 	private transient int key_state;
+	
 	public void setKeyState(int key_state){
 		this.key_state = key_state;
 	}
 	
+	public int[] getNivelesFijos(){
+		return niveles[I_FIJO];
+	}
+	
+	public int[] getNivelesActuales(){
+		return niveles[I_ACTUAL];
+	}
+	
+	public int[] getNivelesDisponibles(){
+		return limitesDeNiveles[gradoNave];
+	}
+	
+	public int getAumentadoresDeNivel() {
+		return aumentadoresDeNivel;
+	}
+
+	public int getGradoNave() {
+		return gradoNave;
+	}
+
 	public void actua(long nanos){
+		mover( nanos );
+		if( (key_state & KeysState.DISPARO) != 0 )
+			dispara( nanos );
+		if( (key_state & KeysState.BOMBA) != 0 )
+			lanzarBomba( nanos );
+		if( (key_state & KeysState.UPGRADE) != 0  && aumentadoresDeNivel > 0)
+			upgrade();
+	}
+
+	private void mover( long nanos ){
 		boolean anguloModificado = false; 
 		
 		float v = velocidad*nanos;
-		float nX = posX;
-		float nY = posY;
+
 		if((key_state & KeysState.SUBE) != 0){
 			posY += v;
 			if (posY > alto)
@@ -191,17 +185,107 @@ public class NaveUsuario extends Nave{
 			if (posX < -ancho)
 				posX = -ancho;
 		}
+	}
+	
+	private void dispara(long nanos){
+		float nX = posX;
+		float nY = posY;
 		
-		if( (key_state & KeysState.DISPARO) != 0 ){
-			float mX = (posX - nX) / nanos;
-			float mY = (posY - nY) / nanos;
+		float mX = (posX - nX) / nanos;
+		float mY = (posY - nY) / nanos;
 
-			for( Canion canion: caniones[I_PRIMARIO] )
+		for( Canion canion: caniones[I_PRIMARIO] )
+			canion.dispara(mX, nX, mY, nY, nanos, getDstDisparos());
+
+		if( caniones[I_SECUNDARIO] != null )
+			for( Canion canion: caniones[I_SECUNDARIO] )
 				canion.dispara(mX, nX, mY, nY, nanos, getDstDisparos());
+	}
+	
+	private void lanzarBomba(long nanos){
+		// TODO Cambiar
+		incAumentadoresDeNivel( nanos );
+	}
+	
+	private transient long tUltimoAumento = 0;
+	private void incAumentadoresDeNivel(long nanos){
+		tUltimoAumento += nanos;
+		if(tUltimoAumento >= 250000000){
+			tUltimoAumento = 0;
+			aumentadoresDeNivel++;
+			if( aumentadoresDeNivel == 12 ){
+				aumentadoresDeNivel = 0;
+//				vidas ++;
+			}
+				
+			/*if((gradoNave < 3 && aumentadoresDeNivel == 12)|| (gradoNave == 3 && aumentadoresDeNivel == 11)){
+				aumentadoresDeNivel = 0;
+				//			vidas ++;
+			}*/
+		}
+	}
+	
+	
+	private boolean nivelAumentable(int index){
+			return niveles[I_ACTUAL][index] < limitesDeNiveles[gradoNave][index];
+		}
 
-			if( caniones[I_SECUNDARIO] != null )
-				for( Canion canion: caniones[I_SECUNDARIO] )
-					canion.dispara(mX, nX, mY, nY, nanos, getDstDisparos());
+	private void aumentarNivel(int index){
+		niveles[I_ACTUAL][index]++;
+		switch(index){
+		case I_VELOCIDAD:
+			velocidad = velocidadesDisponibles[niveles[I_ACTUAL][I_VELOCIDAD]];
+			break;
+		case I_NUM_CANIONES_PRI:
+			setCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_NUM_CANIONES_PRI]);
+			setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
+			break;
+		case I_POW_CANIONES_PRI:
+			setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
+			break;
+		case I_NUM_CANIONES_SEC:
+			setCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_NUM_CANIONES_SEC]);
+			setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
+			break;
+		case I_POW_CANIONES_SEC:
+			setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
+			break;
+		}
+	}
+
+	private boolean nivelGuardable(int index){
+		return niveles[I_FIJO][index] < niveles[I_ACTUAL][index];
+	}
+
+	private void guardarNivel(int index){
+		niveles[I_FIJO][index]++;
+	}
+
+	private void aumentarGradoNave(){
+		gradoNave++;
+	}
+
+	private void upgrade(){
+		
+		if(aumentadoresDeNivel == 11){
+			if( gradoNave < 3 ){
+				aumentarGradoNave();
+				aumentadoresDeNivel = 0;
+			}
+		}else {
+			int nivel = (aumentadoresDeNivel -1) / 2;
+			
+			if( aumentadoresDeNivel % 2 == 0 ){
+				if( nivelAumentable(nivel) ){
+					aumentarNivel(nivel);
+					aumentadoresDeNivel = 0;
+				}
+			}else{
+				if( nivelGuardable(nivel) ){
+					guardarNivel(nivel);
+					aumentadoresDeNivel = 0;
+				}
+			}
 		}
 	}
 }

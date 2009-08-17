@@ -243,8 +243,21 @@ public class ServidorJuego{
 //			comprobador.comprobarColisiones(naves,iListaDisparos.next());
 	}
 
+	private void almacenarDatosNave( ByteBuffer buff, int vidas, int bombas, int puntos, NaveUsuario nave ){
+		buff.putInt(vidas);
+		buff.putInt(bombas);
+		buff.putInt(puntos);
+		for(int n:nave.getNivelesFijos())
+			buff.putInt(n);
+		for(int n:nave.getNivelesActuales())
+			buff.putInt(n);
+		for(int n:nave.getNivelesDisponibles())
+			buff.putInt(n);
+		buff.putInt(nave.getAumentadoresDeNivel());
+		buff.putInt(nave.getGradoNave());
+	}
+	
 	private void almacenarElementos( ByteBuffer buff ){
-		buff.clear();
 		elementosOrdenados.clear();
 		for(Elemento elemento: naves){
 			//if (!d.isDestruido())
@@ -258,8 +271,6 @@ public class ServidorJuego{
 		buff.putInt(elementosOrdenados.size());
 		for(Elemento elemento: elementosOrdenados)
 			elemento.enviar(buff);
-		
-		buff.flip();
 	}
 
 	public void atenderClientes() throws IOException{
@@ -284,7 +295,16 @@ public class ServidorJuego{
 					tAnterior = tActual;
 					tActual = System.nanoTime();
 					calcularAcciones( tActual - tAnterior );
+					
+					
+					int vidas = 2;
+					int bombas = 1;
+					int puntos = 0;
+					
+					buffOut.clear();
+					almacenarDatosNave(buffOut, vidas, bombas, puntos, nave1);
 					almacenarElementos(buffOut);
+					buffOut.flip();
 
 					localChannelServerOut.write(buffOut);
 				}
@@ -304,7 +324,15 @@ public class ServidorJuego{
 					tAnterior = tActual;
 					tActual = System.nanoTime();
 					calcularAcciones( tActual - tAnterior );
+					
+					int vidas = 2;
+					int bombas = 1;
+					int puntos = 0;
+					
+					buffOut.clear();
+					almacenarDatosNave(buffOut, vidas, bombas, puntos, nave1);
 					almacenarElementos(buffOut);
+					buffOut.flip();
 
 					localChannelServerOut.write(buffOut);
 				}
@@ -319,7 +347,15 @@ public class ServidorJuego{
 						tActual = System.nanoTime();
 						calcularAcciones( tActual - tAnterior );
 
+						int vidas = 2;
+						int bombas = 1;
+						int puntos = 0;
+						
+						buffOut.clear();
+						almacenarDatosNave(buffOut, vidas, bombas, puntos, nave2);
 						almacenarElementos(buffOut);
+						buffOut.flip();
+						
 						remoteChannelInOut.send(buffOut,sa);
 					}
 				}

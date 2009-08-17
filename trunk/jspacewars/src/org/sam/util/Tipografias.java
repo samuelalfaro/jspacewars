@@ -44,18 +44,13 @@ public class Tipografias{
 	 * Carga una tipografía a partir de un fichero <b>True Type Font</b>, <i>.ttf</i>
 	 * 
 	 * @param file Fichero donde se encuentra la fuente.
-	 * @param style Estilo de la fuente. Los valores aceptados son:<ul>
-	 * <li>Font.PLAIN
-	 * <li>Font.BOLD
-	 * <li>Font.ITALIC</ul>
-	 * @param size Tamaño de la fuente.
 	 * @return La fuente cargada.
 	 */
-	public static Font load(String file, int style, float size ){
+	public static Font load( String file ){
 		Font font = null;
 		try{
 			FileInputStream f = new FileInputStream(file);
-			font = Font.createFont(Font.TRUETYPE_FONT,f).deriveFont(style,size);
+			font = Font.createFont(Font.TRUETYPE_FONT,f);
 			f.close();
 		}catch(FileNotFoundException e){
 			System.err.println("Fichero no encontrado" + e);
@@ -65,5 +60,20 @@ public class Tipografias{
 			System.err.println("Error de IO" + e);
 		}
 		return font;
+	}
+	
+	/**
+	 * Carga una tipografía a partir de un fichero <b>True Type Font</b>, <i>.ttf</i>
+	 * 
+	 * @param file Fichero donde se encuentra la fuente.
+	 * @param style Estilo de la fuente. Los valores aceptados son:<ul>
+	 * <li>Font.PLAIN
+	 * <li>Font.BOLD
+	 * <li>Font.ITALIC</ul>
+	 * @param size Tamaño de la fuente.
+	 * @return La fuente cargada.
+	 */
+	public static Font load(String file, int style, float size ){
+		return load(file).deriveFont(style,size);
 	}
 }

@@ -11,7 +11,143 @@ import org.sam.util.Imagen;
 public abstract class Marco extends JPanel{
 
 	private static class Marco1 extends Marco{
+		
+		private static class LedsNiveles extends BarraImagenes{
+			
+			private int vFijos, vActuales, vDisponibles;
+			private boolean hayCambios = false;
+			
+			public LedsNiveles(double x, double y, double ancho, double alto, double bordeH, double bordeV, int nValores, Image imgs[]) {
+				super(x, y, ancho, alto, bordeH, bordeV, nValores, imgs);
+			}
+			
+			public void setVFijos(int fijos) {
+				if( vFijos != fijos ){
+					hayCambios = true;
+					vFijos = fijos;
+				}
+			}
 
+			public void setVActuales(int actuales) {
+				if(vActuales != actuales){
+					hayCambios = true;
+					vActuales = actuales;
+				}
+			}
+
+			public void setVDisponibles(int disponibles) {
+				if( vDisponibles != disponibles ){
+					hayCambios = true;
+					vDisponibles = disponibles;
+				}
+			}
+			
+			public boolean actualizar(){
+				if( !hayCambios )
+					return false;
+
+				hayCambios = false;
+				assert(vFijos <= vActuales && vActuales <= vDisponibles && vDisponibles <= getNValues());
+				
+				for(int i= 0, len = getNValues(); i< len; i++){
+					if(i < vFijos)
+						setValueAt( i, 3 );
+					else if(i < vActuales)
+						setValueAt( i, 2 );
+					else if(i < vDisponibles)
+						setValueAt( i, 1 );
+					else
+						setValueAt( i, 0 );
+				}
+				return true;
+			}
+		}
+		
+		private static class LedsIndicadores extends BarraImagenes{
+			
+			private final LedsNiveles indicadorAsociado;
+			
+			private int iluminados;
+			private boolean activo;
+			
+			private boolean hayCambios = false;
+			
+			public LedsIndicadores(double x, double y, double ancho, double alto, double bordeH, double bordeV, Image imgs[], LedsNiveles indicadorAsociado) {
+				super(x, y, ancho, alto, bordeH, bordeV, 2, imgs);
+				this.indicadorAsociado = indicadorAsociado;
+			}
+			
+			public void setIluminados(int iluminados) {
+				if(this.iluminados != iluminados){
+					hayCambios = true;
+					this.iluminados = iluminados;
+				}
+			}
+
+			public void setActivo(boolean activo) {
+				if(this.activo != activo){
+					hayCambios = true;
+					this.activo = activo;
+				}
+			}
+
+			private boolean seleccionable(int i){
+				if(i == 0)
+					return indicadorAsociado.vFijos < indicadorAsociado.vActuales;
+				return indicadorAsociado.vActuales < indicadorAsociado.vDisponibles;
+			}
+			
+			public boolean actualizar(){
+				hayCambios = indicadorAsociado.actualizar() || hayCambios;
+				if(!hayCambios )
+					return false;
+				assert(iluminados <= 2);
+
+				hayCambios = false;
+				for(int i= 0; i< 2; i++){
+					if(i >= iluminados)
+						setValueAt( i, seleccionable(i) ? 1 : 0 );
+					else if( activo && (i+1) == iluminados)
+						setValueAt( i, seleccionable(i) ? 3 : 4 );
+					else
+						setValueAt( i, 2 );
+				}
+				return true;
+			}
+		}
+
+		private static class LedIndicadorGrado extends BarraImagenes{
+			
+			private final LedsNiveles indicadorAsociado;
+			private boolean iluminado;
+			private boolean hayCambios = false;
+			
+			public LedIndicadorGrado(double x, double y, double ancho, double alto, double bordeH, double bordeV, Image imgs[], LedsNiveles indicadorAsociado) {
+				super(x, y, ancho, alto, bordeH, bordeV, 1, imgs);
+				this.indicadorAsociado = indicadorAsociado;
+			}
+			
+			public void setIluminado(boolean iluminado) {
+				if(this.iluminado != iluminado){
+					hayCambios = true;
+					this.iluminado = iluminado;
+				}
+			}
+			
+			public  boolean actualizar(){
+				hayCambios = indicadorAsociado.actualizar() || hayCambios;
+				if(!hayCambios )
+					return false;
+
+				hayCambios = false;
+				if( !iluminado )
+					setValueAt( 0, (indicadorAsociado.vFijos < indicadorAsociado.vDisponibles) ? 1 : 0 );
+				else
+					setValueAt( 0, (indicadorAsociado.vFijos < indicadorAsociado.vDisponibles) ? 3 : 4 );
+				return true;
+			}
+		}
+		
 		private static class Superior extends JComponent{
 			private final Image img;
 			private Dimension dim;
@@ -104,31 +240,12 @@ public abstract class Marco extends JPanel{
 		private final transient Contador bombas;
 		private final transient Contador puntos;
 
-		private transient int velocidadFija,			velocidadActual,  		velocidadDisponible;
-		private transient int numeroDisparosFijos,	numeroDisparosActuales, numeroDisparosDisponibles;
-		private transient int potenciaDisparosFija, 	potenciaDisparosActual, potenciaDisparosDisponible;
-		private transient int numeroMisilesFijos,		numeroMisilesActuales,	numeroMisilesDisponibles;
-		private transient int potenciaMisilesFija,	potenciaMisilesActual,	potenciaMisilesDisponible;
-		private transient int nivel;
-		private transient int indicador;
-
-		private final transient int[] lvelocidad;
-		private final transient int[] lnDisparos;
-		private final transient int[] lpDisparos;
-		private final transient int[] lnMisiles;
-		private final transient int[] lpMisiles;
-		private final transient int[] lupgrade;
-
-		private final transient int[] ivelocidad;
-		private final transient int[] inDisparos;
-		private final transient int[] ipDisparos;
-		private final transient int[] inMisiles;
-		private final transient int[] ipMisiles;
-		private final transient int[] iupgrade;
-
-		private final transient int indicadoresLen;
-		private final transient int[] indicadores[];
-
+		private final transient LedsNiveles[]		ledsNiveles;
+		private final transient LedsIndicadores[]	ledsIndicadores;
+		
+		private final transient LedsNiveles			ledsGrado;
+		private final transient LedIndicadorGrado	ledIndicadorGrado;
+		
 		private Marco1(LayoutManager layout){
 			super(layout);
 
@@ -143,39 +260,6 @@ public abstract class Marco extends JPanel{
 			puntos = new Contador(7.0/256,7.0/128,17.0/128,3.0/128,numeros);
 			puntos.setNDigitos(6);
 
-			lvelocidad = new int[5];
-			lnDisparos = new int[5];
-			lpDisparos = new int[5];
-			lnMisiles = new int[5];
-			lpMisiles = new int[5];
-			lupgrade = new int[3];
-
-			ivelocidad = new int[2];
-			inDisparos = new int[2];
-			ipDisparos = new int[2];
-			inMisiles = new int[2];
-			ipMisiles = new int[2];
-			iupgrade = new int[1];
-
-			indicadoresLen = 
-				ivelocidad.length +
-				inDisparos.length +
-				ipDisparos.length +
-				inMisiles.length +
-				ipMisiles.length +
-				iupgrade.length;
-
-			indicadores = new int[][]{
-					ivelocidad,
-					inDisparos,
-					ipDisparos,
-					inMisiles,
-					ipMisiles,
-					iupgrade
-			};
-			
-			indicador = -1; // Valor inicial para que se actualice con 0
-
 			panelSuperior = new Superior(Imagen.cargarImagen("resources/img/interface/if01.png"));
 
 			panelSuperior.add(vidas);
@@ -183,35 +267,61 @@ public abstract class Marco extends JPanel{
 			panelSuperior.add(puntos);
 
 			Image[] imgLeds = new Image[4];
-			imgLeds[0]= Imagen.cargarImagen("resources/img/leds/bt00.png");
-			imgLeds[1]= Imagen.cargarImagen("resources/img/leds/bt01.png");
-			imgLeds[2]= Imagen.cargarImagen("resources/img/leds/bt02.png");
-			imgLeds[3]= Imagen.cargarImagen("resources/img/leds/bt03.png");
+			imgLeds[0]= Imagen.cargarImagen("resources/img/leds/bt00.png"); // No seleccionable
+			imgLeds[1]= Imagen.cargarImagen("resources/img/leds/bt01.png"); // Seleccionable
+			imgLeds[2]= Imagen.cargarImagen("resources/img/leds/bt02.png"); // Activado
+			imgLeds[3]= Imagen.cargarImagen("resources/img/leds/bt03.png"); // Guardado
 
-			Image[] imgIndicadores = new Image[6];
-			imgIndicadores[0]= Imagen.cargarImagen("resources/img/indicadores/mr00.png"); // inactivo no seleccionable
-			imgIndicadores[1]= Imagen.cargarImagen("resources/img/indicadores/mr01.png"); // inactivo seleccionable
-			imgIndicadores[2]= Imagen.cargarImagen("resources/img/indicadores/mr02.png"); // activo seleccionable
-			imgIndicadores[3]= Imagen.cargarImagen("resources/img/indicadores/mr03.png"); // activo no seleccionable
+			Image[] imgIndicadores = new Image[5];
+			imgIndicadores[0]= Imagen.cargarImagen("resources/img/indicadores/mr00.png"); // apagado no seleccionable
+			imgIndicadores[1]= Imagen.cargarImagen("resources/img/indicadores/mr01.png"); // apagado seleccionable
+			imgIndicadores[2]= Imagen.cargarImagen("resources/img/indicadores/mr02.png"); // iluminado
+			imgIndicadores[3]= Imagen.cargarImagen("resources/img/indicadores/mr03.png"); // actual seleccionable
+			imgIndicadores[4]= Imagen.cargarImagen("resources/img/indicadores/mr04.png"); // actual no seleccionable
 
-			panelSuperior.add(new BarraLeds(24.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, lvelocidad, imgLeds));
-			panelSuperior.add(new BarraLeds(24.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, ivelocidad, imgIndicadores));
+			ledsNiveles = new LedsNiveles[5];
+			ledsIndicadores = new LedsIndicadores[5];
+			
+			ledsNiveles[0] =
+				new LedsNiveles(24.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, 5, imgLeds);
+			ledsIndicadores[0] = 
+				new LedsIndicadores(24.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, imgIndicadores, ledsNiveles[0]);
+			
+			ledsNiveles[1] = 
+				new LedsNiveles(42.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, 5, imgLeds);
+			ledsIndicadores[1] =
+				new LedsIndicadores(42.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, imgIndicadores, ledsNiveles[1]);
 
-			panelSuperior.add(new BarraLeds(42.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, lnDisparos, imgLeds));
-			panelSuperior.add(new BarraLeds(42.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, inDisparos, imgIndicadores));
+			ledsNiveles[2] =
+				new LedsNiveles(60.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, 5, imgLeds);
+			ledsIndicadores[2] =
+				new LedsIndicadores(60.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, imgIndicadores, ledsNiveles[2]);
 
-			panelSuperior.add(new BarraLeds(60.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, lpDisparos, imgLeds));
-			panelSuperior.add(new BarraLeds(60.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, ipDisparos, imgIndicadores));
+			ledsNiveles[3] =
+				new LedsNiveles(78.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, 5, imgLeds);
+			ledsIndicadores[3] =
+				new LedsIndicadores(78.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, imgIndicadores, ledsNiveles[3]);
 
-			panelSuperior.add(new BarraLeds(78.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, lnMisiles, imgLeds));
-			panelSuperior.add(new BarraLeds(78.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, inMisiles, imgIndicadores));
+			ledsNiveles[4] =
+				new LedsNiveles(96.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, 5, imgLeds);
+			ledsIndicadores[4] =
+				new LedsIndicadores(96.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, imgIndicadores, ledsNiveles[4]);
 
-			panelSuperior.add(new BarraLeds(96.0 / 128, 15.0 / 256, 14.0 / 128, 3.0 / 256, 1.0 / 21, 0.2, lpMisiles, imgLeds));
-			panelSuperior.add(new BarraLeds(96.0 / 128, 19.0 / 256, 14.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, ipMisiles, imgIndicadores));
-
-			panelSuperior.add(new BarraLeds(114.0 / 128, 15.0 / 256, 10.0 / 128, 3.0 / 256, 1.0 / 13, 0.2, lupgrade, imgLeds));
-			panelSuperior.add(new BarraLeds(114.0 / 128, 19.0 / 256, 10.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, iupgrade, imgIndicadores));
-
+			for(Component c: ledsNiveles)
+				panelSuperior.add(c);
+			for(Component c: ledsIndicadores)
+				panelSuperior.add(c);
+			
+			ledsGrado = 
+				new LedsNiveles(114.0 / 128, 15.0 / 256, 10.0 / 128, 3.0 / 256, 1.0 / 13, 0.2, 3, imgLeds);
+			ledsGrado.setVDisponibles(3);
+			
+			ledIndicadorGrado =
+				new LedIndicadorGrado(114.0 / 128, 19.0 / 256, 10.0 / 128, 2.0 / 128, 1.0 / 21, 0.1, imgIndicadores, ledsGrado);
+			
+			panelSuperior.add(ledsGrado);
+			panelSuperior.add(ledIndicadorGrado);
+			
 			add(panelSuperior,BorderLayout.NORTH);
 			add(new Lateral(Imagen.cargarImagen("resources/img/interface/if02.png")),BorderLayout.WEST);
 			add(new Lateral(Imagen.cargarImagen("resources/img/interface/if03.png")),BorderLayout.EAST);
@@ -224,7 +334,7 @@ public abstract class Marco extends JPanel{
 		 * @see org.sam.gui.Marco#setVidas(int)
 		 */
 		@Override
-		public void setVidas(int valor) {
+		public void setNumVidas(int valor) {
 			if(this.vidas.getValor() != valor){
 				this.hayCambios = true;
 				this.vidas.setValor(valor);
@@ -235,7 +345,7 @@ public abstract class Marco extends JPanel{
 		 * @see org.sam.gui.Marco#setBombas(int)
 		 */
 		@Override
-		public void setBombas(int valor) {
+		public void setNumBombas(int valor) {
 			if(this.bombas.getValor() != valor){
 				this.hayCambios = true;
 				this.bombas.setValor(valor);
@@ -254,253 +364,83 @@ public abstract class Marco extends JPanel{
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setVelocidadFija(int)
+		 * @see org.sam.gui.Marco#setNivelesFijos(int[])
 		 */
 		@Override
-		public void setVelocidadFija(int valor){
-			if(this.velocidadFija != valor){
-				this.hayCambios = true;
-				this.velocidadFija = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setVelocidadActual(int)
-		 */
-		@Override
-		public void setVelocidadActual(int valor){
-			if(this.velocidadActual != valor){
-				this.hayCambios = true;
-				this.velocidadActual = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setVelocidadDisponible(int)
-		 */
-		@Override
-		public void setVelocidadDisponible(int valor){
-			if(this.velocidadDisponible != valor){
-				this.hayCambios = true;
-				this.velocidadDisponible = valor;
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setNumeroDisparosFijos(int)
-		 */
-		@Override
-		public void setNumeroDisparosFijos(int valor){
-			if(this.numeroDisparosFijos != valor){
-				this.hayCambios = true;
-				this.numeroDisparosFijos = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setNumeroDisparosActuales(int)
-		 */
-		@Override
-		public void setNumeroDisparosActuales(int valor){
-			if(this.numeroDisparosActuales != valor){
-				this.hayCambios = true;
-				this.numeroDisparosActuales = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setNumeroDisparosDisponibles(int)
-		 */
-		@Override
-		public void setNumeroDisparosDisponibles(int valor){
-			if(this.numeroDisparosDisponibles != valor){
-				this.hayCambios = true;
-				this.numeroDisparosDisponibles = valor;
-			}
+		public void setNivelesFijos(int[] valores) {
+			assert ( ledsNiveles.length == valores.length );
+			for(int i= 0, len = ledsNiveles.length; i < len; i ++)
+				ledsNiveles[i].setVFijos( valores [i] );
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setPotenciaDisparosFija(int)
+		 * @see org.sam.gui.Marco#setNivelesActuales(int[])
 		 */
 		@Override
-		public void setPotenciaDisparosFija(int valor){
-			if(this.potenciaDisparosFija != valor){
-				this.hayCambios = true;
-				this.potenciaDisparosFija = valor;
-			}
+		public void setNivelesActuales(int[] valores) {
+			assert ( ledsNiveles.length == valores.length );
+			for(int i= 0, len = ledsNiveles.length; i < len; i ++)
+				ledsNiveles[i].setVActuales( valores [i] );
 		}
+
 		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setPotenciaDisparosActual(int)
+		 * @see org.sam.gui.Marco#setNivelesDisponibles(int[])
 		 */
 		@Override
-		public void setPotenciaDisparosActual(int valor){
-			if(this.potenciaDisparosActual != valor){
-				this.hayCambios = true;
-				this.potenciaDisparosActual = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setPotenciaDisparosDisponible(int)
-		 */
-		@Override
-		public void setPotenciaDisparosDisponible(int valor){
-			if(this.potenciaDisparosDisponible != valor){
-				this.hayCambios = true;
-				this.potenciaDisparosDisponible = valor;
-			}
+		public void setNivelesDisponibles(int[] valores) {
+			assert ( ledsNiveles.length == valores.length );
+			for(int i= 0, len = ledsNiveles.length; i < len; i ++)
+				ledsNiveles[i].setVDisponibles( valores [i] );
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setNumeroMisilesFijos(int)
-		 */
-		@Override
-		public void setNumeroMisilesFijos(int valor){
-			if(this.numeroMisilesFijos != valor){
-				this.hayCambios = true;
-				this.numeroMisilesFijos = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setNumeroMisilesActuales(int)
-		 */
-		@Override
-		public void setNumeroMisilesActuales(int valor){
-			if(this.numeroMisilesActuales != valor){
-				this.hayCambios = true;
-				this.numeroMisilesActuales = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setNumeroMisilesDisponibles(int)
-		 */
-		@Override
-		public void setNumeroMisilesDisponibles(int valor){
-			if(this.numeroMisilesDisponibles != valor){
-				this.hayCambios = true;
-				this.numeroMisilesDisponibles = valor;
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setPotenciaMisilesFija(int)
-		 */
-		@Override
-		public void setPotenciaMisilesFija(int valor){
-			if(this.potenciaMisilesFija != valor){
-				this.hayCambios = true;
-				this.potenciaMisilesFija = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setPotenciaMisilesActual(int)
-		 */
-		@Override
-		public void setPotenciaMisilesActual(int valor){
-			if(this.potenciaMisilesActual != valor){
-				this.hayCambios = true;
-				this.potenciaMisilesActual = valor;
-			}
-		}
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setPotenciaMisilesDisponible(int)
-		 */
-		@Override
-		public void setPotenciaMisilesDisponible(int valor){
-			if(this.potenciaMisilesDisponible != valor){
-				this.hayCambios = true;
-				this.potenciaMisilesDisponible = valor;
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.gui.Marco#setNivel(int)
-		 */
-		@Override
-		public void setNivel(int valor){
-			if(this.nivel != valor){
-				this.hayCambios = true;
-				this.nivel = valor;
-			}
-		}
-
-		private boolean seleccionable(int v){
-			switch(v){
-			case 0: // aumentar velocidad
-				return velocidadActual < velocidadDisponible;
-			case 1: // grabar velocidad
-				return velocidadFija < velocidadActual;
-			case 2: // aumentar disparos
-				return numeroDisparosActuales < numeroDisparosDisponibles;
-			case 3: // grabar disparos
-				return numeroDisparosFijos < numeroDisparosActuales;
-			case 4: // aumentar potencia disparos
-				return potenciaDisparosActual < potenciaDisparosDisponible;
-			case 5: // grabar potencia disparos
-				return potenciaDisparosFija < potenciaDisparosActual;
-			case 6: // aumentar misiles
-				return numeroMisilesActuales < numeroMisilesDisponibles;
-			case 7: // grabar misiles
-				return numeroMisilesFijos < numeroMisilesActuales;
-			case 8: // aumentar potencia misiles
-				return potenciaMisilesActual < potenciaMisilesDisponible;
-			case 9: // grabar potencia misiles
-				return potenciaMisilesFija < potenciaMisilesActual;
-			case 10: // aumentar nivel
-				return nivel < lupgrade.length;
-			}
-			return false;
-		}
-
 		/* (non-Javadoc)
 		 * @see org.sam.gui.Marco#setIndicador(int)
 		 */
 		@Override
-		public void setIndicador(int valor){
-			if(this.indicador != valor){
-				this.hayCambios = true;
-				this.indicador = valor;
-				
-				valor --;
-				for(int i=0, j=0, k=0; i < indicadoresLen; i++){
-					if( i < valor){
-						indicadores[j][k] = 2;
-					}else if( i== valor){
-						indicadores[j][k] = seleccionable(i)?2:3;
+		public void setIndicador(int valor) {
+			for( int i = 0; i < ledsIndicadores.length; i++ ){
+				if( valor > 0 ){
+					valor -= 2;
+					if( valor < 0 ){
+						ledsIndicadores[i].setIluminados(1);
+						ledsIndicadores[i].setActivo(true);
+					}else if( valor == 0 ){
+						ledsIndicadores[i].setIluminados(2);
+						ledsIndicadores[i].setActivo(true);
 					}else{
-						indicadores[j][k] = seleccionable(i)?1:0;
+						ledsIndicadores[i].setIluminados(2);
+						ledsIndicadores[i].setActivo(false);
 					}
-					if(++k == indicadores[j].length){
-						k = 0;
-						j++;
-					}
+				}else{
+					ledsIndicadores[i].setIluminados(0);
+					ledsIndicadores[i].setActivo(false);
 				}
 			}
+			ledIndicadorGrado.setIluminado( valor > 0 );
 		}
 		
-		private static void updateLeds(int fijos, int actuales, int disponibles, int[] leds){
-			assert(fijos <= actuales && actuales <= disponibles && disponibles <= leds.length);
-			for(int i= 0, len = leds.length; i< len; i++){
-				if(i < fijos)
-					leds[i] = 3;
-				else if(i < actuales)
-					leds[i] = 2;
-				else if(i < disponibles)
-					leds[i] = 1;
-				else
-					leds[i] = 0;
-			}
+		/* (non-Javadoc)
+		 * @see org.sam.gui.Marco#setNivel(int)
+		 */
+		@Override
+		public void setGrado(int valor){
+			ledsGrado.setVActuales(valor);
+			ledsGrado.setVFijos(valor);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see org.sam.gui.Marco#actualizar()
 		 */
 		@Override
 		public void actualizar(){
-			if(hayCambios){
-				updateLeds(velocidadFija,        velocidadActual,        velocidadDisponible,        lvelocidad);
-				updateLeds(numeroDisparosFijos,  numeroDisparosActuales, numeroDisparosDisponibles,  lnDisparos);
-				updateLeds(potenciaDisparosFija, potenciaDisparosActual, potenciaDisparosDisponible, lpDisparos);
-				updateLeds(numeroMisilesFijos,   numeroMisilesActuales,  numeroMisilesDisponibles,   lnMisiles);
-				updateLeds(potenciaMisilesFija,  potenciaMisilesActual,  potenciaMisilesDisponible,  lpMisiles);
-				updateLeds(nivel,                nivel,                  lupgrade.length,            lupgrade);
-				panelSuperior.repaint();
-			}
+			for(LedsIndicadores l: ledsIndicadores)
+				hayCambios =  l.actualizar() || hayCambios ;
+			hayCambios =  ledIndicadorGrado.actualizar() || hayCambios ;
+				
+			if( !hayCambios )
+				return;
+			hayCambios = false;
+			panelSuperior.repaint();
 		}
 	}
 
@@ -508,33 +448,17 @@ public abstract class Marco extends JPanel{
 		super(layout);
 	}
 
-	public abstract void setVidas(int valor);
-	public abstract void setBombas(int valor);
+	public abstract void setNumVidas(int valor);
+	public abstract void setNumBombas(int valor);
 	public abstract void setPuntos(int valor);
 	
-	public abstract void setVelocidadFija(int valor);
-	public abstract void setVelocidadActual(int valor);
-	public abstract void setVelocidadDisponible(int valor);
-	
-	public abstract void setNumeroDisparosFijos(int valor);
-	public abstract void setNumeroDisparosActuales(int valor);
-	public abstract void setNumeroDisparosDisponibles(int valor);
-	
-	public abstract void setPotenciaDisparosFija(int valor);
-	public abstract void setPotenciaDisparosActual(int valor);
-	public abstract void setPotenciaDisparosDisponible(int valor);
-	
-	public abstract void setNumeroMisilesFijos(int valor);
-	public abstract void setNumeroMisilesActuales(int valor);
-	public abstract void setNumeroMisilesDisponibles(int valor);
-	
-	public abstract void setPotenciaMisilesFija(int valor);
-	public abstract void setPotenciaMisilesActual(int valor);
-	public abstract void setPotenciaMisilesDisponible(int valor);
-	
-	public abstract void setNivel(int valor);
+	public abstract void setNivelesFijos(int valores[]);
+	public abstract void setNivelesActuales(int valores[]);
+	public abstract void setNivelesDisponibles(int valores[]);
 	
 	public abstract void setIndicador(int valor);
+	
+	public abstract void setGrado(int valor);
 	
 	public abstract void actualizar();
 	

@@ -12,7 +12,7 @@ import org.sam.util.*;
  * @author samuel
  *
  */
-public class CieloEstrellado implements Dibujable, Modificable, Modificador{
+public class CieloEstrellado implements Fondo, Modificador{
 	
 	private transient final Apariencia apFondo;
 	private transient final float proporcionesTextura;
@@ -22,7 +22,7 @@ public class CieloEstrellado implements Dibujable, Modificable, Modificador{
 	public CieloEstrellado(GL gl, String texturePath, String starstexturePath){
 		apFondo = new Apariencia(); 
 		apFondo.setTextura(
-				new Textura(gl, Textura.Format.RGB, Imagen.cargarImagen(texturePath), true)
+				new Textura(gl, Textura.Format.RGB, Imagen.cargarToBufferedImage(texturePath), true)
 		);
 		apFondo.setAtributosTextura(new AtributosTextura());
 		apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
@@ -31,7 +31,7 @@ public class CieloEstrellado implements Dibujable, Modificable, Modificador{
 
 		Apariencia apEstrellas = new Apariencia();
 		apEstrellas.setTextura(
-				new Textura(gl, Textura.Format.ALPHA, Imagen.cargarImagen(starstexturePath), true)
+				new Textura(gl, Textura.Format.ALPHA, Imagen.cargarToBufferedImage(starstexturePath), true)
 		);
 		apEstrellas.setAtributosTransparencia(
 				new AtributosTransparencia(
@@ -75,6 +75,9 @@ public class CieloEstrellado implements Dibujable, Modificable, Modificador{
 		FactoriaDeParticulas.setPointSpritesEnabled(false);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.fondos.Fondo#setProporcionesPantalla(float)
+	 */
 	public void setProporcionesPantalla(float proporcionesPantalla) {
 		this.proporcionesPantalla = proporcionesPantalla;
 		this.s2 = proporcionesPantalla / proporcionesTextura;
@@ -97,6 +100,7 @@ public class CieloEstrellado implements Dibujable, Modificable, Modificador{
 		
 		apFondo.usar(gl);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+//		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glDepthMask(false);
 		gl.glBegin(GL.GL_QUADS);
 			gl.glTexCoord2f(s1,0.0f);

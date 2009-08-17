@@ -3,7 +3,7 @@ package org.sam.red.cliente;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.*;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
@@ -16,12 +16,9 @@ import javax.swing.JPanel;
 import org.sam.elementos.KeysState;
 import org.sam.gui.Marco;
 import org.sam.jogl.*;
-import org.sam.jogl.ObjLoader.ParsingErrorException;
-import org.sam.jogl.fondos.CieloEstrellado;
+import org.sam.jogl.fondos.Fondo;
 import org.sam.util.*;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Visor3D implements KeyListener{
 	
@@ -39,24 +36,48 @@ public class Visor3D implements KeyListener{
 	private final WritableByteChannel channelOut;
 	private ByteBuffer buff;
 	
-	private Cache<Instancia3D> cache;
+	private DataGame dataGame;
 	private List<Instancia3D> elementos;
 	private final Collection<Modificador> modificadores;
 	
 	private	int	key_state = 0;
 	
 	private boolean pantallaPintada;
-	private ModificableBoolean loading = new ModificableBoolean(true);
+//	private ModificableBoolean loading = new ModificableBoolean(true);
 	
 	private class Lector extends Thread{
 		
+		private final Cache<Instancia3D> cache = dataGame.getCache();
 		private final Sincronizador sincronizador;
+		
+		private final transient int[] nivelesFijos = new int[5];
+		private final transient int[] nivelesActuales = new int[5];
+		private final transient int[] nivelesDisponibles = new int[5];
 		
 		public Lector(Sincronizador sincronizador){
 			this.sincronizador = sincronizador;
 		}
 		
 		private void recibir(ByteBuffer productor, List<Instancia3D> consumidor){
+			marco.setNumBombas(productor.getInt());
+			marco.setNumVidas(productor.getInt());
+			marco.setPuntos(productor.getInt());
+			
+			for(int i= 0; i< nivelesFijos.length; i++)
+				nivelesFijos[i] = productor.getInt();
+			marco.setNivelesFijos(nivelesFijos);
+			
+			for(int i= 0; i< nivelesActuales.length; i++)
+				nivelesActuales[i] = productor.getInt();
+			marco.setNivelesActuales(nivelesActuales);
+			
+			for(int i= 0; i< nivelesDisponibles.length; i++)
+				nivelesDisponibles[i] = productor.getInt();
+			marco.setNivelesDisponibles(nivelesDisponibles);
+			
+			marco.setIndicador( productor.getInt() );
+			marco.setGrado( productor.getInt() );
+			
 			int i = 0, nElementos = productor.getInt();
 			ListIterator<Instancia3D> iConsumidor = consumidor.listIterator();
 		
@@ -133,12 +154,12 @@ public class Visor3D implements KeyListener{
 		}
 
 		public void run(){
-			synchronized(loading){
-				try {
-					loading.wait();
-				} catch (InterruptedException e) {
-				}
-			}
+//			synchronized(loading){
+//				try {
+//					loading.wait();
+//				} catch (InterruptedException e) {
+//				}
+//			}
 			while(true){
 //				datosRecibidos = false;
 				buff.clear();
@@ -168,24 +189,22 @@ public class Visor3D implements KeyListener{
 		}
 	}
 	
-	private CieloEstrellado fondo;
-	
-	private class Loader implements GLEventListener{
+	private class Renderer implements GLEventListener{
 
 		private final Sincronizador sincronizador;
-//		private transient long tAnterior, tActual;
+		private final transient GLU glu = new GLU();
+		private transient long tAnterior, tActual;
 		
-		private Loader(Sincronizador sincronizador){
+		private final transient Fondo fondo;
+		
+		private Renderer(Sincronizador sincronizador){
 			this.sincronizador = sincronizador;
-//			tActual = System.nanoTime();
+			this.fondo = dataGame.getFondo();
+			tActual = System.nanoTime();
 		}
-
+		
 		public void init(GLAutoDrawable drawable){
-			System.out.println("iniciando");
-
 			GL gl = drawable.getGL();
-			
-			fondo = new CieloEstrellado(gl, "resources/texturas/cielo1.jpg", "resources/texturas/spark.jpg");
 			
 			gl.glShadeModel(GL.GL_SMOOTH);
 
@@ -193,113 +212,22 @@ public class Visor3D implements KeyListener{
 			gl.glDepthFunc(GL.GL_LESS);
 
 			gl.glEnable(GL.GL_LIGHT0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION,
-					new float[]{ 0.5f, 1.0f, 1.0f, 0.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,
-					new float[]{ 0.4f, 0.6f, 0.6f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,
-					new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, new float[]{  0.5f,  1.0f,  1.0f,  0.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,  new float[]{  0.4f,  0.6f,  0.6f,  1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, new float[]{  0.0f,  0.0f,  0.0f,  1.0f }, 0);
+
 			gl.glEnable(GL.GL_LIGHT1);
-			gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION,
-					new float[]{ -0.5f, -1.0f, 1.0f, 0.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE,
-					new float[]{ 0.6f, 0.4f, 0.4f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR,
-					new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, new float[]{ -0.5f, -1.0f,  1.0f,  0.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE,  new float[]{  0.6f,  0.4f,  0.4f,  1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, new float[]{  0.0f,  0.0f,  0.0f,  1.0f }, 0);
+
 			gl.glEnable(GL.GL_LIGHT2);
-			gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION,
-					new float[]{ 0.0f, 0.0f, 1.0f, 0.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT2, GL.GL_DIFFUSE,
-					new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT2, GL.GL_SPECULAR,
-					new float[]{ 0.95f, 0.95f, 0.95f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT2, GL.GL_POSITION, new float[]{  0.0f,  0.0f,  1.0f,  0.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT2, GL.GL_DIFFUSE,  new float[]{  0.0f,  0.0f,  0.0f,  1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT2, GL.GL_SPECULAR, new float[]{  0.95f, 0.95f, 0.95f, 1.0f }, 0);
+
 			gl.glEnable(GL.GL_LIGHTING);
 			gl.glEnable(GL.GL_CULL_FACE);
-		}
-		
-		private transient ObjectInputStream in;
-		private transient boolean eof;
-		
-		public void display(GLAutoDrawable drawable){
-			GL gl = drawable.getGL();
-			try {
-				if(in == null){
-					XStream xStream = new XStream(new DomDriver());
-					xStream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
-					GrafoEscenaConverters.register(xStream);
-					GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
-
-					in = xStream.createObjectInputStream(new FileReader("instancias3D-stream.xml"));
-				}
-				
-				if( !eof )
-					try{
-						cache.addPrototipo((Instancia3D) in.readObject());
-					}catch( ClassNotFoundException e ){
-						e.printStackTrace();
-					}catch( EOFException eofEx ){
-						eof = true;
-						in.close();
-					}
-				
-//				Instancia3D[] instancias =  (Instancia3D[])xStream.fromXML(new FileReader("instancias3D.xml"));
-//				StringWriter writer = new StringWriter();
-//				try{
-//					ObjectOutputStream out = xStream.createObjectOutputStream(writer);
-//					for(Instancia3D instancia: instancias)
-//						out.writeObject(instancia);
-//				}catch( IOException e ){
-//					e.printStackTrace();
-//				}
-//				System.out.println(writer.toString());
-//				for(Instancia3D instancia: instancias)
-//					cache.addPrototipo( instancia );
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ParsingErrorException e) {
-				e.printStackTrace();
-			} catch (GLException e) {
-				e.printStackTrace();
-			}
-			
-//			tAnterior = tActual;
-//			tActual = System.nanoTime();
-//			fondo.modificar((float)(tActual - tAnterior)/ 100000000);
-			fondo.draw(gl);
-			gl.glFlush();
-			
-			if(eof){
-				synchronized(loading){
-					loading.setFalse();
-					loading.notifyAll();
-				}
-				canvas.removeGLEventListener(this);
-				canvas.addGLEventListener(new Renderer(sincronizador));
-			}
-		}
-
-		public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged){}
-
-		public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h){
-			System.out.println("reescalando 1");
-			Visor3D.this.reshape(drawable.getGL(), x, y, w, h);
-		}
-	}
-	
-	private class Renderer implements GLEventListener{
-
-		private final Sincronizador sincronizador;
-		private final transient GLU glu = new GLU();
-		private transient long tAnterior, tActual;
-		
-		private Renderer(Sincronizador sincronizador){
-			this.sincronizador = sincronizador;
-			tActual = System.nanoTime();
-		}
-		
-		public void init(GLAutoDrawable drawable){
 		}
 		
 		public void display(GLAutoDrawable drawable){
@@ -309,9 +237,10 @@ public class Visor3D implements KeyListener{
 			float incT = (float)(tActual - tAnterior)/ 1000000000;
 			
 			pantallaPintada = false;
+			
 			GL gl = drawable.getGL();
 			
-			fondo.modificar(incT);
+			fondo.getModificador().modificar(incT);
 			fondo.draw(gl);
 			
 			gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -326,6 +255,7 @@ public class Visor3D implements KeyListener{
 				elemento.draw( gl );
 
 			gl.glFlush();
+			marco.actualizar();
 			
 			pantallaPintada = true;
 			sincronizador.notificar();
@@ -334,16 +264,27 @@ public class Visor3D implements KeyListener{
 		public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged){}
 
 		public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h){
-			System.out.println("reescalando 2");
-			Visor3D.this.reshape(drawable.getGL(), x, y, w, h);
+			GL gl = drawable.getGL();
+			fondo.setProporcionesPantalla((float)w/h);
+			gl.glViewport(0, 0, w, h);
+			gl.glMatrixMode(GL.GL_PROJECTION);
+			gl.glLoadIdentity();
+			double near = 0.5;
+			double far  = 240.0;
+			double a1 = 35.0;			// angulo en grados
+			double a2 = a1/360*Math.PI; // mitad del angulo en radianes
+			double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
+			//gl.glFrustum(-d,((2.0*w)/h -1.0)*d, -d, d, near, far);
+			double anchovisible = 4.5/3.0;
+			gl.glFrustum(-anchovisible*d,((2.0*w)/h -anchovisible)*d, -d, d, near, far);
+			ObjetosOrientables.loadProjectionMatrix();
+			gl.glMatrixMode(GL.GL_MODELVIEW);
 		}
 	}
 	
-	private Thread lector;
-	
-	public Visor3D(ReadableByteChannel channelIn,  WritableByteChannel channelOut){
+	public Visor3D(DataGame dataGame, ReadableByteChannel channelIn,  WritableByteChannel channelOut){
 		//ComparadorDeElementos comparador = new ComparadorDeElementos();
-		cache = new Cache<Instancia3D>(500);
+		this.dataGame = dataGame;
 
 		elementos = new Lista<Instancia3D>();
 		modificadores = new LinkedList<Modificador>();
@@ -354,44 +295,22 @@ public class Visor3D implements KeyListener{
 		
 		key_state = 0;
 		
-//		datosRecibidos = false;
-//		pantallaPintada = false;
-		
-		Sincronizador sincronizador = new Sincronizador();
-		lector = new Lector(sincronizador);
-		
-		canvas = new GLCanvas(new GLCapabilities());
-
+		canvas = new GLCanvas(new GLCapabilities(), null,dataGame.getGLContext(),null );
 		canvas.setIgnoreRepaint(true);
 		canvas.addKeyListener(this);
-		canvas.addGLEventListener(new Loader(sincronizador));
-//		canvas.addGLEventListener(new Renderer(sincronizador));
-		
+
 		marco = Marco.getNewMarco(0);
-		marco.add(canvas,BorderLayout.CENTER);
-		
-//		pantalla.setFocusable(true);
-//		pantalla.setFocusTraversalKeysEnabled(false);
-//		pantalla.requestFocusInWindow();
-//		pantalla.getContext().getGL();
+		marco.add(canvas, BorderLayout.CENTER);
 	}
 	
 	public void start(){
-		lector.start();
-		new Thread(){
-			@Override
-			public void run(){
-				while(loading.isTrue()){
-					canvas.display();
-					try{
-						Thread.sleep(5);
-					}catch( InterruptedException e){
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();
+		
+		Sincronizador sincronizador = new Sincronizador();
+		
+		new Lector(sincronizador).start();
+		canvas.addGLEventListener(new Renderer(sincronizador));
 		canvas.requestFocus();
+		
 		/*
 		new Thread(){
 			public void run(){
@@ -420,24 +339,6 @@ public class Visor3D implements KeyListener{
 	public JPanel getPanel(){
 		return marco;
 	}
-	
-	private void reshape(GL gl, int x, int y, int w, int h){
-//		if(fondo != null)
-		fondo.setProporcionesPantalla((float)w/h);
-		gl.glViewport(0, 0, w, h);
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		double near = 0.5;
-		double far  = 240.0;
-		double a1 = 35.0;			// angulo en grados
-		double a2 = a1/360*Math.PI; // mitad del angulo en radianes
-		double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
-		//gl.glFrustum(-d,((2.0*w)/h -1.0)*d, -d, d, near, far);
-		double anchovisible = 4.5/3.0;
-		gl.glFrustum(-anchovisible*d,((2.0*w)/h -anchovisible)*d, -d, d, near, far);
-		ObjetosOrientables.loadProjectionMatrix();
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-	}
 
 	public void keyPressed(KeyEvent keyEvent) {
 		int keyCode = keyEvent.getKeyCode();
@@ -463,7 +364,7 @@ public class Visor3D implements KeyListener{
 			case K_DISPARO:	key_state &= ~KeysState.DISPARO;	break;
 			case K_BOMBA:	key_state &= ~KeysState.BOMBA;		break;
 			case K_UPGRADE:	key_state &= ~KeysState.UPGRADE;	break;
-			case KeyEvent.VK_C: System.out.println(cache);		break;
+			case KeyEvent.VK_C: System.out.println(dataGame.getCache());		break;
 			default:
 				if ((keyCode == KeyEvent.VK_ESCAPE)
 						|| (keyCode == KeyEvent.VK_Q)

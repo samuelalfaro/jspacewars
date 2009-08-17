@@ -1,6 +1,6 @@
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -74,7 +74,7 @@ public class LoaderExample
 		gl.glClearColor(0.0f,0.0f,0.0f,0.0f);
 		
 		try {
-			Image img = Imagen.cargarImagen("resources/texturas/cielo512.jpg");
+			BufferedImage img = Imagen.cargarToBufferedImage("resources/texturas/cielo512.jpg");
 			proporcionesFondo = img.getHeight(null)/img.getWidth(null);
 			utFondo = new Apariencia();
 			

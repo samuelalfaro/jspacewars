@@ -1,9 +1,3 @@
-/*
- * Created on 03-ene-2005
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 package org.sam.gui;
 
 import java.awt.Color;
@@ -15,12 +9,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
 
-/**
- * @author Samuel
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 public final class EtiquetaAnimada extends JComponent implements MouseListener{
 	private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,6 @@
 package org.sam.jogl;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.nio.Buffer;
 
 import javax.media.opengl.GL;
@@ -61,11 +61,11 @@ public class Textura{
 	private Wrap wrapS;
 	private Wrap wrapT;
 	
-	public Textura(GL gl, Format format, Image image, boolean flipY){
+	public Textura(GL gl, Format format, BufferedImage image, boolean flipY){
 		this(gl, MinFilter.LINEAR, MagFilter.LINEAR, format, image, flipY);
 	}
 
-	public Textura(GL gl, MinFilter minFilter, MagFilter magFilter, Format format, Image image, boolean flipY){
+	public Textura(GL gl, MinFilter minFilter, MagFilter magFilter, Format format, BufferedImage image, boolean flipY){
 		this(gl, minFilter, magFilter, format, image.getWidth(null), image.getHeight(null),
 				(format == Format.LUMINANCE || format == Format.ALPHA || format == Format.INTENSITY)?
 						Imagen.toByteBuffer(image, flipY): 
@@ -92,13 +92,21 @@ public class Textura{
 					0,
 					format.value, GL.GL_UNSIGNED_BYTE,
 					pixels);
-		else if(format == Format.RGB || format == Format.RGBA)
+		else if(format == Format.RGB)
 			gl.glTexImage2D( GL.GL_TEXTURE_2D, 0,
 					format.value,
 					width,
 					height,
 					0,
-					GL.GL_BGRA, GL.GL_UNSIGNED_INT_8_8_8_8_REV,
+					GL.GL_BGR, GL.GL_UNSIGNED_BYTE,
+					pixels);
+		else if(format == Format.RGBA)
+			gl.glTexImage2D( GL.GL_TEXTURE_2D, 0,
+					format.value,
+					width,
+					height,
+					0,
+					GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
 					pixels);
 		else
 			throw new IllegalArgumentException("Formato: "+format+" no soportado");

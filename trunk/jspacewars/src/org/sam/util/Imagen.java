@@ -1,21 +1,13 @@
-/*
- * Created on 03-ene-2005
- *
- * To change the template for this generated file go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 package org.sam.util;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.*;
 
-/**
- * @author Samuel
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
+import javax.imageio.ImageIO;
+
 public class Imagen {
 
 	public static final int CANAL_ALFA  = 3;
@@ -1235,8 +1227,11 @@ public class Imagen {
 		int g = pixel >> 8  & BYTE;
 		int b = pixel       & BYTE;
 
-		// compute the luminance
 		return  (byte)(luminanceData[0][r] + luminanceData[1][g] + luminanceData[2][b]);
+	}
+	
+	private static byte rgb2luminance(byte r, byte g, byte b){
+		return  (byte)(luminanceData[0][r & BYTE] + luminanceData[1][g & BYTE ] + luminanceData[2][b & BYTE]);
 	}
 
 	private static void grayPass(int[] pixels) {
@@ -1307,43 +1302,49 @@ public class Imagen {
 		return toImage(pixels,w,h);
 	}
 
-	public static Buffer toBuffer(Image img, boolean flipY){
-		Raster     rt = toBufferedImage(img).getRaster();
+	public static Buffer toBuffer(BufferedImage img, boolean flipY){
+		Raster     rt = img.getRaster();
 		DataBuffer db = rt.getDataBuffer();
 		int type = db.getDataType();
+		
+//		System.out.println(rt.getNumBands());
+//		System.out.println(rt.getNumDataElements());
+//		System.out.println(db.getNumBanks());
+		
 		Buffer buff = null;
 		switch(type){
 		case DataBuffer.TYPE_BYTE:
 			ByteBuffer bb = ByteBuffer.allocateDirect(db.getSize());
 			DataBufferByte dbb = (DataBufferByte)db;
-			if(!flipY)
+
+			if(!flipY){
+//				System.out.println("TYPE_BYTE");
 				for(int i = 0, len = db.getNumBanks(); i< len; i++)
 					bb.put(dbb.getData(i));
-			else if(db.getNumBanks() == rt.getHeight())
-				for(int i = db.getNumBanks(); i > 0; )
-					bb.put(dbb.getData(--i));
-			else if(db.getNumBanks() == 1)
-				for(int i = (rt.getHeight()-1)*rt.getWidth(); i >= 0; i-= rt.getWidth())
-					bb.put(dbb.getData(), i, rt.getWidth());
-			else{
-				//TODO lo dificil.
+			}else if(db.getNumBanks() == 1){
+//				System.out.println("TYPE_BYTE flip");
+				int bytesWidth = rt.getWidth()*rt.getNumDataElements();
+				for(int i = (rt.getHeight()-1)*bytesWidth; i >= 0; i-= bytesWidth)
+					bb.put(dbb.getData(), i, bytesWidth);
+			}else{
+				throw new UnsupportedOperationException();
 			}
 			buff = bb;
 			break;
 		case DataBuffer.TYPE_INT:
 			IntBuffer ib = ByteBuffer.allocateDirect(db.getSize()*4).order(ByteOrder.nativeOrder()).asIntBuffer();
 			DataBufferInt dbi = (DataBufferInt)db;
-			if(!flipY)
+			if(!flipY){
+//				System.out.println("TYPE_INT");
 				for(int i = 0, len = db.getNumBanks(); i< len; i++)
 					ib.put(dbi.getData(i));
-			else if(db.getNumBanks() == rt.getHeight())
-				for(int i = db.getNumBanks(); i > 0; )
-					ib.put(dbi.getData(--i));
-			else if(db.getNumBanks() == 1)
-				for(int i = (rt.getHeight()-1)*rt.getWidth(); i >= 0; i-= rt.getWidth())
-					ib.put(dbi.getData(), i, rt.getWidth());
-			else{
-				//TODO lo dificil.
+			}else if(db.getNumBanks() == 1){
+//				System.out.println("TYPE_INT flip");
+				int bytesWidth = rt.getWidth()*rt.getNumDataElements();
+				for(int i = (rt.getHeight()-1)*bytesWidth; i >= 0; i-= bytesWidth)
+					ib.put(dbi.getData(), i, bytesWidth);
+			}else{
+				throw new UnsupportedOperationException();
 			}
 			buff = ib;
 			break;
@@ -1352,50 +1353,96 @@ public class Imagen {
 		return buff;
 	}
 
-	public static ByteBuffer toByteBuffer(Image img, boolean flipY){
-		Raster     rt = toBufferedImage(img).getRaster();
+	public static ByteBuffer toByteBuffer(BufferedImage img, boolean flipY){
+		Raster     rt = img.getRaster();
 		DataBuffer db = rt.getDataBuffer();
 		int type = db.getDataType();
 
-		ByteBuffer bb=null;
+//		System.out.println(rt.getNumBands());
+//		System.out.println(rt.getNumDataElements());
+//		System.out.println(db.getNumBanks());
+		
+		ByteBuffer bb = null;
 
 		switch(type){
 
 		case DataBuffer.TYPE_BYTE:
-			bb = ByteBuffer.allocateDirect(db.getSize());
-			DataBufferByte dbb = (DataBufferByte)db;
-			if(!flipY)
-				for(int i = 0, len = db.getNumBanks(); i< len; i++)
-					bb.put(dbb.getData(i));
-			else if(db.getNumBanks() == rt.getHeight())
-				for(int i = db.getNumBanks(); i > 0; )
-					bb.put(dbb.getData(--i));
-			else if(db.getNumBanks() == 1)
-				for(int i = (rt.getHeight()-1)*rt.getWidth(); i >= 0; i-= rt.getWidth())
-					bb.put(dbb.getData(), i, rt.getWidth());
-			else{
-				//TODO lo dificil.
+			if(rt.getNumBands() == 1){
+				bb = ByteBuffer.allocateDirect(db.getSize());
+				DataBufferByte dbb = (DataBufferByte)db;
+				if(!flipY){
+//					System.out.println("TYPE_BYTE TO TYPE_BYTE");
+					for(int i = 0, len = db.getNumBanks(); i< len; i++)
+						bb.put(dbb.getData(i));
+				}else if(db.getNumBanks() == 1){
+//					System.out.println("TYPE_BYTE TO TYPE_BYTE Flip");
+					int bytesWidth = rt.getWidth()*rt.getNumDataElements();
+					for(int i = (rt.getHeight()-1)*bytesWidth; i >= 0; i-= bytesWidth)
+						bb.put(dbb.getData(), i, bytesWidth);
+				}else{
+					throw new UnsupportedOperationException();
+				}
+			}else if(rt.getNumDataElements() == 3){
+				bb = ByteBuffer.allocateDirect(db.getSize()/3);
+				DataBufferByte dbb = (DataBufferByte)db;
+				if(!flipY){
+//					System.out.println("3 TYPE_BYTE TO TYPE_BYTE");
+					for(int i = 0, len = db.getNumBanks(); i< len; i++){
+						byte dataBank[] = dbb.getData(i);
+						for(int j = 0; j < dataBank.length; )
+							bb.put(rgb2luminance(dataBank[j++],dataBank[j++],dataBank[j++]));
+					}
+				}else if(db.getNumBanks() == 1){
+//					System.out.println("3 TYPE_BYTE TO TYPE_BYTE flip");
+					int bytesWidth = rt.getWidth()*3;
+					for(int i = (rt.getHeight()-1)*bytesWidth; i >= 0; i-= bytesWidth ){
+						byte dataBank[] = dbb.getData();
+						for(int j=i, len = i + bytesWidth; j < len; )
+							bb.put(rgb2luminance(dataBank[j++],dataBank[j++],dataBank[j++]));
+					}
+				}else{
+					throw new UnsupportedOperationException();
+				}
+			}else if(rt.getNumBands() == 4){
+				bb = ByteBuffer.allocateDirect(db.getSize()/4);
+				DataBufferByte dbb = (DataBufferByte)db;
+				if(!flipY){
+//					System.out.println("4 TYPE_BYTE TO TYPE_BYTE");
+					for(int i = 0, len = db.getNumBanks(); i< len; i++){
+						byte dataBank[] = dbb.getData(i);
+						for(int j = 0; j < dataBank.length; j++)
+							bb.put(rgb2luminance(dataBank[j++],dataBank[j++],dataBank[j++]));
+					}
+				}else if(db.getNumBanks() == 1){
+//					System.out.println("4 TYPE_BYTE TO TYPE_BYTE flip");
+					int bytesWidth = rt.getWidth()*4;
+					for(int i = (rt.getHeight()-1)*bytesWidth; i >= 0; i-= bytesWidth ){
+						byte dataBank[] = dbb.getData();
+						for(int j=i, len = i + bytesWidth; j < len; j++)
+							bb.put(rgb2luminance(dataBank[j++],dataBank[j++],dataBank[j++]));
+					}
+				}else{
+					throw new UnsupportedOperationException();
+				}
 			}
 			break;
 		case DataBuffer.TYPE_INT:
 			bb = ByteBuffer.allocateDirect(db.getSize());
 			DataBufferInt dbi = (DataBufferInt)db;
-			if(!flipY)
+			if(!flipY){
+//				System.out.println("TYPE_INT TO TYPE_BYTE");
 				for(int i = 0, len = db.getNumBanks(); i< len; i++)
 					for(int rgb: dbi.getData(i))
 						bb.put(rgb2luminance(rgb));
-			else if(db.getNumBanks() == rt.getHeight())
-				for(int i = db.getNumBanks(); i > 0; )
-					for(int rgb: dbi.getData(--i))
-						bb.put(rgb2luminance(rgb));
-			else if(db.getNumBanks() == 1)
+			}else if(db.getNumBanks() == 1){
+//				System.out.println("TYPE_INT TO TYPE_BYTE flip");
 				for(int i = (rt.getHeight()-1)*rt.getWidth(); i >= 0; i-= rt.getWidth()){
 					int dataBank[] = dbi.getData();
-					for(int j=i, k =0; k < rt.getWidth(); j++, k++)
+					for(int j=i, len = i + rt.getWidth(); j < len; j++)
 						bb.put(rgb2luminance(dataBank[j]));
 				}
-			else{
-				//TODO lo dificil.
+			}else{
+				throw new UnsupportedOperationException();
 			}
 			break;
 		}
@@ -1494,7 +1541,8 @@ public class Imagen {
 		synchronized(tracker) {
 			int id = getNextID();
 			tracker.addImage(image, id);
-			tracker.waitForID(id, 0);
+//			tracker.waitForID(id, 0);
+			tracker.waitForAll();
 			tracker.removeImage(image, id);
 		}
 	}
@@ -1503,6 +1551,24 @@ public class Imagen {
 		synchronized(tracker) {
 			return ++mediaTrackerID;
 		}
+	}
+	
+	public static BufferedImage cargarToBufferedImage(String filename){
+		BufferedImage img = null;
+		try{
+			img =  ImageIO.read( new File(filename) );
+		}catch( IOException ignorada ){
+		}
+		return img;
+	}
+	
+	public static BufferedImage cargarToBufferedImage(java.net.URL localizacion){
+		BufferedImage img = null;
+		try{
+			img =  ImageIO.read( localizacion );
+		}catch( IOException ignorada ){
+		}
+		return img;
 	}
 
 	/*

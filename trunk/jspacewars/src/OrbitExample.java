@@ -1,4 +1,4 @@
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -69,7 +69,7 @@ implements GLEventListener{
 		gl.glClearColor(0.0f,0.25f,0.25f,0.0f);
 
 		try {
-			Image img = Imagen.cargarImagen("resources/texturas/cielo512.jpg");
+			BufferedImage img = Imagen.cargarToBufferedImage("resources/texturas/cielo512.jpg");
 			proporcionesFondo = img.getHeight(null)/img.getWidth(null);
 			apFondo = new Apariencia();
 
@@ -79,7 +79,7 @@ implements GLEventListener{
 			
 			Apariencia apEstrellas = new Apariencia();
 			apEstrellas.setTextura(
-					new Textura(gl, Textura.Format.ALPHA, Imagen.cargarImagen("resources/texturas/spark.jpg"), true)
+					new Textura(gl, Textura.Format.ALPHA, Imagen.cargarToBufferedImage("resources/texturas/spark.jpg"), true)
 			);
 			apEstrellas.setAtributosTransparencia(
 					new AtributosTransparencia(
@@ -139,15 +139,15 @@ implements GLEventListener{
 				UnidadTextura[] unidadesTextura = new UnidadTextura[3];
 				unidadesTextura[0] = new UnidadTextura();
 				unidadesTextura[0].setTextura(
-						new Textura(gl, Textura.Format.RGB, Imagen.cargarImagen("resources/obj3d/bomber01/t01.jpg"), true)
+						new Textura(gl, Textura.Format.RGB, Imagen.cargarToBufferedImage("resources/obj3d/bomber01/t01.jpg"), true)
 				);
 				unidadesTextura[1] = new UnidadTextura();
 				unidadesTextura[1].setTextura(
-						new Textura(gl, Textura.Format.LUMINANCE, Imagen.cargarImagen("resources/obj3d/bomber01/t02.jpg"), true)
+						new Textura(gl, Textura.Format.LUMINANCE, Imagen.cargarToBufferedImage("resources/obj3d/bomber01/t02.jpg"), true)
 				);
 				unidadesTextura[2] = new UnidadTextura();
 				unidadesTextura[2].setTextura(
-						new Textura(gl, Textura.Format.RGB, Imagen.cargarImagen("resources/texturas/reflect.jpg"), true)
+						new Textura(gl, Textura.Format.RGB, Imagen.cargarToBufferedImage("resources/texturas/reflect.jpg"), true)
 				);
 				objetoNave.getApariencia().setUnidadesTextura(unidadesTextura);
 				
@@ -162,7 +162,7 @@ implements GLEventListener{
 				objetoNave.getApariencia().setShader(shader);
 			}else{
 				objetoNave.getApariencia().setTextura(
-						new Textura(gl, Textura.Format.RGB, Imagen.cargarImagen("resources/obj3d/bomber01/t01.jpg"), true)
+						new Textura(gl, Textura.Format.RGB, Imagen.cargarToBufferedImage("resources/obj3d/bomber01/t01.jpg"), true)
 				);
 			}
 			
