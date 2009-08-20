@@ -5,9 +5,9 @@ import java.util.LinkedList;
 
 import javax.vecmath.*;
 
+import org.sam.elementos.*;
 import org.sam.interpoladores.Getter;
 import org.sam.jogl.*;
-import org.sam.util.*;
 
 public abstract class Particulas extends ObjetoAbstracto implements Prototipo<Particulas>, Cacheable, Modificable{
 

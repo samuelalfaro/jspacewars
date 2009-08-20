@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.sam.elementos.*;
 import org.sam.interpoladores.*;
 import org.sam.util.*;
 import org.xml.sax.XMLReader;
@@ -741,7 +742,7 @@ public class PruebaMovimiento{
 				//semaforo.esperar();
 				while(pintado)
 					Thread.yield();
-				g2.setColor(new Color(0,0,0,5));
+				g2.setColor(new Color(0,0,0,16));
 				g2.fillRect(0,0,getWidth(),getHeight());
 				Composite oldC = g2.getComposite();
 
@@ -924,37 +925,37 @@ public class PruebaMovimiento{
 		
 		Polygon formaDisparo = formas.removeFirst();
 		Disparo disparo = new DisparoLineal(1, formaDisparo);
-		disparo.setColor(new Color(4,32,4));
+		disparo.setColor(new Color(8,64,8));
 //		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 		
 		disparo = disparo.prototipoDerivado(2);
-		disparo.setColor(new Color(8,32,4));
+		disparo.setColor(new Color(16,64,8));
 //		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 		
 		disparo = disparo.prototipoDerivado(3);
-		disparo.setColor(new Color(16,32,4));
+		disparo.setColor(new Color(32,64,8));
 //		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
 		disparo = disparo.prototipoDerivado(4);
-		disparo.setColor(new Color(24,32,4));
+		disparo.setColor(new Color(48,64,8));
 //		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
 		disparo = disparo.prototipoDerivado(5);
-		disparo.setColor(new Color(32,32,4));
+		disparo.setColor(new Color(64,64,8));
 //		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
 		disparo = disparo.prototipoDerivado(6);
-		disparo.setColor(new Color(32,32,8));
+		disparo.setColor(new Color(64,64,16));
 //		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 		
 		disparo = disparo.prototipoDerivado(7);
-		disparo.setColor(new Color(32,32,16));
+		disparo.setColor(new Color(64,64,32));
 //		disparo.setColor(Color.YELLOW);
 		cache.addPrototipo(disparo);
 
@@ -992,12 +993,12 @@ public class PruebaMovimiento{
 		Trayectoria.Double<double[]> trayectoria = (Trayectoria.Double<double[]>)GettersFactory.Double.create(Keys.PROPORCIONALES, 2.5, 0.0, values, MetodoDeInterpolacion.Predefinido.BEZIER);
 		
 		disparo = new DisparoInterpolado(10,formaDisparo,trayectoria);
-		disparo.setColor(new Color(32,8,4));
+		disparo.setColor(new Color(64,16,8));
 //		disparo.setColor(Color.ORANGE);
 		cache.addPrototipo(disparo);
 		
 		disparo = new Misil(20,formaDisparo);
-		disparo.setColor(new Color(32,16,32));
+		disparo.setColor(new Color(64,32,64));
 //		disparo.setColor(Color.WHITE);
 		cache.addPrototipo(disparo);
 

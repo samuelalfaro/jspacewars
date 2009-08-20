@@ -3,8 +3,8 @@
  */
 package org.sam.jogl.fondos;
 
+import org.sam.elementos.Modificable;
 import org.sam.jogl.Dibujable;
-import org.sam.util.Modificable;
 
 /**
  * @author samuel

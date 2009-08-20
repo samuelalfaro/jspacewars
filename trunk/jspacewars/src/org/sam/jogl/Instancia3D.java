@@ -6,8 +6,7 @@ import java.util.*;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Vector3f;
 
-import org.sam.elementos.Recibible;
-import org.sam.util.*;
+import org.sam.elementos.*;
 
 public class Instancia3D extends NodoTransformador implements Prototipo<Instancia3D>, Modificable, Recibible, Cacheable{
 

@@ -4,6 +4,7 @@ import javax.media.opengl.GL;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import org.sam.elementos.Modificador;
 import org.sam.jogl.*;
 import org.sam.jogl.particulas.*;
 import org.sam.util.*;

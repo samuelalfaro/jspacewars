@@ -6,9 +6,9 @@ import java.util.Random;
 import javax.media.opengl.GL;
 import javax.vecmath.Matrix4f;
 
+import org.sam.elementos.Modificador;
 import org.sam.interpoladores.Getter;
 import org.sam.jogl.ObjetosOrientables;
-import org.sam.util.Modificador;
 
 import com.sun.opengl.util.BufferUtil;
 

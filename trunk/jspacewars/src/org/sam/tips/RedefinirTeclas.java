@@ -31,7 +31,7 @@ public class RedefinirTeclas {
 		 */
 		@Override
 		public void keyPressed(KeyEvent e) {
-			System.out.println(e.getKeyChar()+" 0x"+Integer.toHexString(e.getKeyCode()).toUpperCase()+" : "+e.getKeyCode());
+			System.out.println( (Character.isDefined(e.getKeyChar())?e.getKeyChar():'?') +" 0x"+Integer.toHexString(e.getKeyCode()).toUpperCase()+" : "+e.getKeyCode());
 			this.setText(KeyEvent.getKeyText(e.getKeyCode()));
 			this.transferFocus();
 		}
