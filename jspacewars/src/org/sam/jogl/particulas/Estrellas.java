@@ -5,8 +5,8 @@ import java.util.Random;
 
 import javax.media.opengl.GL;
 
+import org.sam.elementos.Modificador;
 import org.sam.interpoladores.Getter;
-import org.sam.util.Modificador;
 
 import com.sun.opengl.util.BufferUtil;
 

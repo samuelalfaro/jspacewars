@@ -47,19 +47,19 @@ public class Lista<E> implements List<E>{
 		protected Nodo<E> it, lastReturned;
 		protected int index;
 		
-		public Iterador(){
+		private Iterador(){
 			this.gotoBegin();
 		}
 		
-		public void gotoBegin(){
+		private void gotoBegin(){
 			this.it = primero;
 			this.lastReturned = null;
 			this.index = 0;
 		}
 		
-		public void gotoIndex(final int index){
+		private void gotoIndex(final int index){
 			if (index<0 || index >=size)
-				  throw new IndexOutOfBoundsException("Indice fuera de los limites de la lista: "+index);
+				throw new NoSuchElementException("\nIndex: "+index+"\tSize:"+size);
 			
 			if(this.index == index)
 				return;
@@ -89,7 +89,7 @@ public class Lista<E> implements List<E>{
 			}
 		}
 		
-		public void gotoEnd(){
+		private void gotoEnd(){
 			this.it = ultimo;
 			this.lastReturned = null;
 			this.index = size-1;
@@ -273,10 +273,9 @@ public class Lista<E> implements List<E>{
 	/* (non-Javadoc)
 	 * @see java.util.Collection#containsAll(java.util.Collection)
 	 */
-	public boolean containsAll(Collection<?> c){
-		Iterator<?> i = c.iterator();
-		while (i.hasNext())
-			if(!contains(i.next()))
+	public boolean containsAll(Collection<?> collection){
+		for(Object o: collection)
+			if(!contains(o))
 				return false;
 		return true;
 	}
@@ -284,13 +283,11 @@ public class Lista<E> implements List<E>{
 	/* (non-Javadoc)
 	 * @see java.util.Collection#addAll(java.util.Collection)
 	 */
-	public boolean addAll(Collection<? extends E> c){
+	public boolean addAll(Collection<? extends E> collection){
 		boolean modified = false;
-		Iterator<? extends E> i = c.iterator();
-		while (i.hasNext()) {
-			if (add(i.next()))
+		for(E e: collection)
+			if (add(e))
 				modified = true;
-		}
 		return modified;
 	}
 	
@@ -463,7 +460,6 @@ public class Lista<E> implements List<E>{
 	 * @see java.util.List#subList(int, int)
 	 */
 	public List<E> subList(int fromIndex, int toIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 }
