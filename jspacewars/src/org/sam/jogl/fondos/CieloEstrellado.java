@@ -48,14 +48,12 @@ public class CieloEstrellado implements Fondo, Modificador{
 		tEmisor.setTranslation(new Vector3f(2.05f,0.5f,0.0f));
 		Emisor emisor = new Emisor.Cache(new Emisor.Lineal(1.0f,0.0f),tEmisor,1024);
 
-		// TODO check
-		FactoriaDeParticulas.setPointSpritesEnabled(true);
+		FactoriaDeParticulas.setOptimizedForStars(true);
 		for(int i = 0, len = estrellas.length; i< len; i++){
 			estrellas[i] = FactoriaDeParticulas.createParticulas((int)( Math.pow(8*(len-i)/len, 2) + 1 ));
 			estrellas[i].setEmisor(emisor);
 			estrellas[i].setEmision(Particulas.Emision.CONTINUA);
 			estrellas[i].setRangoDeEmision(1.0f);
-//			estrellas[i].setRadio(4.0f + (12.0f * (i+1) )/len);
 			estrellas[i].setRadio(0.004f + (0.012f * (i+1) )/len);
 			float vel = 0.1f*i +  0.05f;
 			float tVida = 2.05f/(vel*0.95f);
@@ -73,7 +71,7 @@ public class CieloEstrellado implements Fondo, Modificador{
 			estrellas[i].reset();
 			estrellas[i].getModificador().modificar(tVida);
 		}
-		FactoriaDeParticulas.setPointSpritesEnabled(false);
+		FactoriaDeParticulas.setOptimizedForStars(false);
 	}
 
 	/* (non-Javadoc)
@@ -101,7 +99,6 @@ public class CieloEstrellado implements Fondo, Modificador{
 		
 		apFondo.usar(gl);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-//		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glDepthMask(false);
 		gl.glBegin(GL.GL_QUADS);
 			gl.glTexCoord2f(s1,0.0f);

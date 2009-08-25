@@ -1,7 +1,6 @@
 package org.sam.jspacewars;
 
 import org.fenggui.Container;
-import org.fenggui.Display;
 import org.fenggui.decorator.background.GradientBackground;
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IButtonPressedListener;
@@ -15,85 +14,92 @@ public class GameMenu extends Container{
 	private final MyGameMenuButton player1, player2, options, quit;
 	private final MyGameMenuButton sound, graphics, network, back;
 	
-	public GameMenu( final MyGameMenuButton prototipo,  final Display display ) {
+	public GameMenu() {
 		
 		this.setLayoutManager( new RowLayout(false) );
 		this.getAppearance().add(
 				new GradientBackground( new Color(0.0f, 1.0f, 1.0f, 0.25f), new Color(0.0f, 0.0f, 1.0f, 0.5f) ) );
 		this.getAppearance().setPadding( new Spacing(10, 10) );
 		
-		player1 = prototipo.derive("1 Player");
+		player1 = MyGameMenuButton.derive("1 Player");
 		player1.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
 		
-		player2 = prototipo.derive("2 Players");
+		player2 = MyGameMenuButton.derive("2 Players");
 		player2.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
 
-		options = prototipo.derive("Options");
+		options = MyGameMenuButton.derive("Options");
 		options.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
-				buildOptionsMenu( display );
+				GameMenu.this.buildOptionsMenu();
 			}
 		});
 
-		sound =prototipo.derive("Sound");
+		sound = MyGameMenuButton.derive("Sound");
 		sound.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
 
-		graphics = prototipo.derive("Graphics ...");
+		graphics = MyGameMenuButton.derive("Graphics ...");
 		graphics.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
 		
-		network = prototipo.derive("Network");
+		network = MyGameMenuButton.derive("Network");
 		network.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
 
-		back = prototipo.derive("Back");
+		back = MyGameMenuButton.derive("Back");
 		back.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
-				buildMainMenu( display );
+				GameMenu.this.buildMainMenu();
 			}
 		});
 
-		quit = prototipo.derive("Quit");
+		quit = MyGameMenuButton.derive("Quit");
 		quit.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
-				display.removeWidget( GameMenu.this );
+				GameMenu.this.getDisplay().removeWidget( GameMenu.this );
 				System.exit(0);
 			}
 		});
-
-		buildMainMenu( display );
 	}
 
-	private void buildMainMenu( final Display display ) {
+	private void buildMainMenu() {
 		this.removeAllWidgets();
 		this.addWidget(player1);
 		this.addWidget(player2);
 		this.addWidget(options);
 		this.addWidget(quit);
 		this.pack();
-		StaticLayout.center( this, display );
+		StaticLayout.center( this, this.getDisplay() );
 	}
 
-	private void buildOptionsMenu( final Display display ) {
+	private void buildOptionsMenu() {
 		this.removeAllWidgets();
 		this.addWidget(graphics);
 		this.addWidget(sound);
 		this.addWidget(network);
 		this.addWidget(back);
 		this.pack();
-		StaticLayout.center( this, display );
+		StaticLayout.center( this, this.getDisplay() );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.fenggui.Container#addedToWidgetTree()
+	 */
+	@Override
+	public void addedToWidgetTree(){
+		super.addedToWidgetTree();
+		buildMainMenu();
 	}
 }
