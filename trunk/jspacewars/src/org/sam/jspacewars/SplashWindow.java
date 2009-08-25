@@ -1,3 +1,23 @@
+/* 
+ * SplashWindow.java
+ * 
+ * Copyright (c) 2009 Samuel Alfaro <samuelalfaro at gmail.com>. All rights reserved.
+ * 
+ * This file is part of jspacewars.
+ * 
+ * jspacewars is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * jspacewars is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with jspacewars.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.sam.jspacewars;
 
 import java.awt.*;
@@ -9,6 +29,10 @@ import javax.media.opengl.GLCapabilities;
 import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
 
+/**
+ *
+ * @author Samuel Alfaro
+ */
 @SuppressWarnings("serial")
 class SplashWindow extends Window{
 	
@@ -49,7 +73,7 @@ class SplashWindow extends Window{
 		final GLCanvas barra = new GLCanvas(new GLCapabilities ());
 		
 		loading = new ModificableBoolean(true);
-		barra.addGLEventListener( new Loader(dataGame, loading ) );
+		barra.addGLEventListener( new GLEventListenerLoader(dataGame, loading ) );
 		
 		this.setLayout( null);
 		barra.setBounds( 50, this.getBounds().height-10, this.getBounds().width-100, 5 );
@@ -57,13 +81,8 @@ class SplashWindow extends Window{
 		
 		new Thread(){
 			public void run(){
-				while(loading.isTrue()){
+				while(loading.isTrue())
 					barra.display();
-//					try{
-//						Thread.sleep(1);
-//					}catch( InterruptedException igonorada){
-//					}
-				}
 			}
 		}.start();
 	}
@@ -77,19 +96,23 @@ class SplashWindow extends Window{
 	}
 	
 	/**
-	 * Método que sobreescribe y llama al método de la clase padre {@code java.awt.Window#setVisible(boolean)}.
-     * @param visible
-     * 	<ul>
-     * 		<li>Si {@code true}, muestra la {@code Window}</li>
-     * 		<li>En otro caso oculta la {@code Window}, y en caso de que todavia esten cargandose datos, 
-     * 			bloquea a la hebra llamante hasta que dichos datos hallan sido cargados.</li>
-     *  </ul>
+	 * Método que sobreescribe y llama al método de la clase padre
+	 * {@link java.awt.Window#setVisible(boolean) setVisible(boolean)}.
+	 * 
+	 * @param visible
+	 *            <ul>
+	 *            <li>Si {@code true}, muestra la {@link java.awt.Window Window}
+	 *            </li>
+	 *            <li>En caso contrario oculta la {@link java.awt.Window Window}
+	 *            , y si todavía se están cargando datos, bloquea a la hebra
+	 *            llamante hasta que dichos datos hallan sido cargados.</li>
+	 *            </ul>
 	 * 
 	 * @see java.awt.Window#setVisible(boolean)
 	 */
-	public void setVisible(boolean visible){
+	public void setVisible(boolean visible) {
 		if( !visible && this.isVisible() && loading.isTrue() ){
-			synchronized(loading){
+			synchronized( loading ){
 				try{
 					loading.wait();
 				}catch( InterruptedException e ){

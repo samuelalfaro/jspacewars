@@ -242,8 +242,18 @@ public class MyGameMenuButton extends Button {
 		}
 	}
 	
-	public MyGameMenuButton derive(String text){
-		MyGameMenuButton result = (MyGameMenuButton) super.clone();
+	private static MyGameMenuButton prototipo;
+	
+	public static boolean hasPrototipo(){
+		return MyGameMenuButton.prototipo != null;
+	}
+	
+	public static void setPrototipo(MyGameMenuButton prototipo){
+		MyGameMenuButton.prototipo = prototipo;
+	}
+	
+	public static MyGameMenuButton derive(String text){
+		MyGameMenuButton result = (MyGameMenuButton) prototipo.clone();
 		result.setText(text);
 		return result;
 	}
