@@ -3,21 +3,20 @@
  */
 package org.sam.jspacewars.elementos;
 
-
 /**
  * @author samuel
- *
+ * 
  */
 public class NaveEnemiga extends Nave {
 
 	/**
 	 * @param tipo
 	 */
-	public NaveEnemiga(short tipo){
+	public NaveEnemiga(short tipo) {
 		super(tipo);
 		dstDisparos = null;
 	}
-	
+
 	/**
 	 * @param prototipo
 	 */
@@ -25,7 +24,9 @@ public class NaveEnemiga extends Nave {
 		super(prototipo);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.sam.elementos.Nave#clone()
 	 */
 	@Override
@@ -33,7 +34,9 @@ public class NaveEnemiga extends Nave {
 		return new NaveEnemiga(this);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.sam.elementos.Nave#iniciar()
 	 */
 	@Override
@@ -41,7 +44,9 @@ public class NaveEnemiga extends Nave {
 		// TODO Auto-generated method stub
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.sam.elementos.Dinamico#actua(long)
 	 */
 	public void actua(long nanos) {

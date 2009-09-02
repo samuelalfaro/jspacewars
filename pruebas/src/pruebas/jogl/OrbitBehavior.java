@@ -15,6 +15,7 @@ public class OrbitBehavior implements MouseListener, MouseMotionListener{
 	public transient final Point3f  eyePos =     new Point3f(0, 0, 5);
 	public transient final Point3f  targetPos =  new Point3f(0, 0, 0);
 	public transient final Vector3f upDir =      new Vector3f(0, 1, 0);
+	
 	private transient final Vector3f eyeDir =     new Vector3f();
 	private transient final Vector3f crossEyeUp = new Vector3f();
 	

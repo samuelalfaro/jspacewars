@@ -1,3 +1,23 @@
+/* 
+ * GameMenu.java
+ * 
+ * Copyright (c) 2009 Samuel Alfaro <samuelalfaro at gmail.com>. All rights reserved.
+ * 
+ * This file is part of jspacewars.
+ * 
+ * jspacewars is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * jspacewars is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with jspacewars.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.sam.jspacewars;
 
 import org.fenggui.Container;
@@ -9,24 +29,24 @@ import org.fenggui.layout.StaticLayout;
 import org.fenggui.util.Color;
 import org.fenggui.util.Spacing;
 
-public class GameMenu extends Container{
+public class GameMenu extends Container {
 
 	private final MyGameMenuButton player1, player2, options, quit;
 	private final MyGameMenuButton sound, graphics, network, back;
-	
+
 	public GameMenu() {
-		
-		this.setLayoutManager( new RowLayout(false) );
+
+		this.setLayoutManager(new RowLayout(false));
 		this.getAppearance().add(
-				new GradientBackground( new Color(0.0f, 1.0f, 1.0f, 0.25f), new Color(0.0f, 0.0f, 1.0f, 0.5f) ) );
-		this.getAppearance().setPadding( new Spacing(10, 10) );
-		
+				new GradientBackground(new Color(0.0f, 1.0f, 1.0f, 0.25f), new Color(0.0f, 0.0f, 1.0f, 0.5f)));
+		this.getAppearance().setPadding(new Spacing(10, 10));
+
 		player1 = MyGameMenuButton.derive("1 Player");
 		player1.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
-		
+
 		player2 = MyGameMenuButton.derive("2 Players");
 		player2.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
@@ -51,7 +71,7 @@ public class GameMenu extends Container{
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
-		
+
 		network = MyGameMenuButton.derive("Network");
 		network.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
@@ -68,7 +88,7 @@ public class GameMenu extends Container{
 		quit = MyGameMenuButton.derive("Quit");
 		quit.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
-				GameMenu.this.getDisplay().removeWidget( GameMenu.this );
+				GameMenu.this.getDisplay().removeWidget(GameMenu.this);
 				System.exit(0);
 			}
 		});
@@ -81,7 +101,7 @@ public class GameMenu extends Container{
 		this.addWidget(options);
 		this.addWidget(quit);
 		this.pack();
-		StaticLayout.center( this, this.getDisplay() );
+		StaticLayout.center(this, this.getDisplay());
 	}
 
 	private void buildOptionsMenu() {
@@ -91,14 +111,16 @@ public class GameMenu extends Container{
 		this.addWidget(network);
 		this.addWidget(back);
 		this.pack();
-		StaticLayout.center( this, this.getDisplay() );
+		StaticLayout.center(this, this.getDisplay());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.fenggui.Container#addedToWidgetTree()
 	 */
 	@Override
-	public void addedToWidgetTree(){
+	public void addedToWidgetTree() {
 		super.addedToWidgetTree();
 		buildMainMenu();
 	}

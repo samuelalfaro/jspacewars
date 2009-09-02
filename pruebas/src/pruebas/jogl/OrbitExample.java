@@ -95,7 +95,7 @@ implements GLEventListener{
 			tEmisor.setTranslation(new Vector3f(2.05f,0.5f,0.0f));
 			Emisor emisor = new Emisor.Cache(new Emisor.Lineal(1.0f,0.0f),tEmisor,1024);
 			
-//			FactoriaDeParticulas.setPointSpritesEnabled(true);
+			FactoriaDeParticulas.setOptimizedForStars(true);
 			for(int i = 0, len = estrellas.length; i< len; i++){
 				estrellas[i] = FactoriaDeParticulas.createParticulas((int)( Math.pow(8*(len-i)/len, 2) + 1 ));
 				estrellas[i].setEmisor(emisor);
@@ -121,7 +121,7 @@ implements GLEventListener{
 				estrellas[i].reset();
 				estrellas[i].getModificador().modificar(tVida);
 			}
-//			FactoriaDeParticulas.setPointSpritesEnabled(false);
+			FactoriaDeParticulas.setOptimizedForStars(false);
 
 			Grupo childs = new Grupo();
 
@@ -131,7 +131,7 @@ implements GLEventListener{
 
 			Objeto3D objetoNave = ObjLoader.loadToList("resources/obj3d/bomber01/forma.obj", mtd);
 			objetoNave.getApariencia().setMaterial(Material.DEFAULT);
-			
+		
 			//*
 			if( gl.glGetString(GL.GL_EXTENSIONS).indexOf("GL_ARB_vertex_shader") != -1 ){
 			/*/
@@ -166,6 +166,13 @@ implements GLEventListener{
 						new Textura(gl, Textura.Format.RGB, Imagen.cargarToBufferedImage("resources/obj3d/bomber01/t01.jpg"), true)
 				);
 			}
+			
+//			objetoNave = new Objeto3D(objetoNave.getForma3D(), objetoNave.getApariencia()){
+//				public void draw(GL gl) {
+//					super.draw(gl);
+//					gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+//				}
+//			};
 			
 			childs.add(objetoNave);
 

@@ -30,96 +30,118 @@ import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
 
 /**
- *
+ * 
  * @author Samuel Alfaro
  */
 @SuppressWarnings("serial")
-class SplashWindow extends Window{
-	
+class SplashWindow extends Window {
+
 	private final transient Image fondo;
 	private final transient ModificableBoolean loading;
+	private final transient GLCanvas barra;
 
-	SplashWindow(String ruta, final DataGame dataGame ){
+	SplashWindow(String ruta, DataGame dataGame) {
 		super(null);
-		
-		this.setBackground( new Color(128, 128, 128, 0) );
-		Image splashImage =  Imagen.cargarImagen(ruta) ;
-		
+		this.setLayout(null);
+
+		Image splashImage = Imagen.cargarImagen(ruta);
+
 		Rectangle maxWindowBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		this.setBounds( new Rectangle(
-				(maxWindowBounds.width - splashImage.getWidth(null))/2,
-				(maxWindowBounds.height - splashImage.getHeight(null))/2,
-				splashImage.getWidth(null), 
-				splashImage.getHeight(null) 
-		) );
-		
-//		if(( ruta.toLowerCase().endsWith(".jpg") || ((ToolkitImage)splashImage).getColorModel().getTransparency() == Transparency.OPAQUE ) )
-//		Al crearse una imagen compatible con la pantalla, la imagen resultante tendra transparecia,
-//		aunque el fichero no contenga informacion alpha. Por eso simplemente, nos basamos en la extension
-//		para considerarla opaca (jpg) o translucida (resto: png, gif)
+		int w = splashImage.getWidth(null);
+		int h = splashImage.getHeight(null);
+		this.setBounds(new Rectangle((maxWindowBounds.width - w) / 2, (maxWindowBounds.height - h) / 2, w, h));
+
 		if( ruta.toLowerCase().endsWith(".jpg") )
-			fondo =  splashImage;
+			/*
+			 * Sería más correcto algo parecido a esto:
+			 * ((ToolkitImage)splashImage).getColorModel().getTransparency() ==
+			 * Transparency.OPAQUE ) Pero al crearse una imagen compatible con
+			 * la pantalla, la imagen resultante tiene transparecia, aunque el
+			 * fichero no contenga informacion alpha. Por eso simplemente, se
+			 * comprueba la extensión para considerarla opaca (jpg) o
+			 * translucida (resto: png, gif)
+			 */
+			fondo = splashImage;
 		else{
-			BufferedImage aux = null;
+			BufferedImage captura = null;
 			try{
 				Robot robot = new Robot();
-				aux = robot.createScreenCapture( this.getBounds() );
-				aux.getGraphics().drawImage(splashImage, 0, 0, this);
+				captura = robot.createScreenCapture(this.getBounds());
+				captura.getGraphics().drawImage(splashImage, 0, 0, null);
 			}catch( AWTException ignorada ){
 			}
-			fondo = aux;
+			fondo = captura;
 		}
-		
-		final GLCanvas barra = new GLCanvas(new GLCapabilities ());
-		
+
 		loading = new ModificableBoolean(true);
-		barra.addGLEventListener( new GLEventListenerLoader(dataGame, loading ) );
-		
-		this.setLayout( null);
-		barra.setBounds( 50, this.getBounds().height-10, this.getBounds().width-100, 5 );
-		this.add( barra);
-		
-		new Thread(){
-			public void run(){
-				while(loading.isTrue())
-					barra.display();
-			}
-		}.start();
+
+		barra = new GLCanvas(new GLCapabilities());
+		barra.setBounds(50, h - 10, w - 100, 5);
+		barra.addGLEventListener(new GLEventListenerLoader(dataGame, loading));
+
+		this.add(barra);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
 	public void paint(Graphics g) {
 		g.drawImage(fondo, 0, 0, this);
-	    super.paint(g);
+		super.paint(g);
 	}
-	
+
 	/**
 	 * Método que sobreescribe y llama al método de la clase padre
 	 * {@link java.awt.Window#setVisible(boolean) setVisible(boolean)}.
 	 * 
 	 * @param visible
 	 *            <ul>
-	 *            <li>Si {@code true}, muestra la {@link java.awt.Window Window}
-	 *            </li>
-	 *            <li>En caso contrario oculta la {@link java.awt.Window Window}
-	 *            , y si todavía se están cargando datos, bloquea a la hebra
-	 *            llamante hasta que dichos datos hallan sido cargados.</li>
+	 *            <li>Si {@code true}, muestra la {@link java.awt.Window
+	 *            ventana}, si no hay datos cargados, crea una nueva hebra, que
+	 *            se encargará, de animar la barra de progreso.</li>
+	 *            <li>En caso contrario, si todavía se están cargando datos,
+	 *            bloquea la hebra llamante hasta que dichos datos hallan sido
+	 *            cargados y finalmente oculta la {@link java.awt.Window
+	 *            ventana}.</li>
 	 *            </ul>
 	 * 
 	 * @see java.awt.Window#setVisible(boolean)
 	 */
 	public void setVisible(boolean visible) {
-		if( !visible && this.isVisible() && loading.isTrue() ){
-			synchronized( loading ){
-				try{
-					loading.wait();
-				}catch( InterruptedException e ){
-					e.printStackTrace();
+
+		if( visible ){
+			super.setVisible(true);
+			if( loading.isTrue() ){
+				new Thread() {
+					public void run() {
+						long tActual = System.currentTimeMillis(), tAnterior;
+						do{
+							tAnterior = tActual;
+							barra.display();
+							tActual = System.currentTimeMillis();
+							long tRender = tActual - tAnterior;
+							if( tRender < 40 )
+								try{
+									Thread.sleep(40 - tRender);
+								}catch( InterruptedException ignorada ){
+								}
+						}while( loading.isTrue() );
+					}
+				}.start();
+			}
+		}else{
+			if( loading.isTrue() ){
+				synchronized( loading ){
+					try{
+						loading.wait();
+					}catch( InterruptedException e ){
+						e.printStackTrace();
+					}
 				}
 			}
+			super.setVisible(false);
 		}
-		super.setVisible(visible);
 	}
 }

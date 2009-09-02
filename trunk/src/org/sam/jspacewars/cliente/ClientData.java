@@ -55,7 +55,7 @@ public class ClientData {
 	transient int key_state;
 
 	/**
-	 * Entero donde se almacena el número de bombas que dispone el protagonista.	 
+	 * Entero donde se almacena el número de bombas que dispone el protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
@@ -65,7 +65,7 @@ public class ClientData {
 	 */
 	transient int nBombas;
 	/**
-	 * Entero donde se almacena el número de vidas que dispone el protagonista.	 
+	 * Entero donde se almacena el número de vidas que dispone el protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
@@ -75,7 +75,7 @@ public class ClientData {
 	 */
 	transient int nVidas;
 	/**
-	 * Entero donde se almacena los puntos conseguidos por el protagonista.	 
+	 * Entero donde se almacena los puntos conseguidos por el protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
@@ -87,7 +87,7 @@ public class ClientData {
 
 	/**
 	 * Vector de enteros donde se almacenan los valores de los niveles fijos de
-	 * la nave protagonista.	 
+	 * la nave protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
@@ -98,7 +98,7 @@ public class ClientData {
 	final transient int[] nivelesFijos;
 	/**
 	 * Vector de enteros donde se almacenan los valores de los niveles actuales
-	 * de la nave protagonista.	 
+	 * de la nave protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
@@ -109,7 +109,7 @@ public class ClientData {
 	final transient int[] nivelesActuales;
 	/**
 	 * Vector de enteros donde se almacenan los valores de los niveles
-	 * disponibles de la nave protagonista.	 
+	 * disponibles de la nave protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
@@ -121,7 +121,7 @@ public class ClientData {
 
 	/**
 	 * Entero donde se almacena el indicador que habilita las distintas mejoras
-	 * de la nave protagonista.	 
+	 * de la nave protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
@@ -131,7 +131,7 @@ public class ClientData {
 	 */
 	transient int indicador;
 	/**
-	 * Entero donde se almacena el grado de la nave protagonista.	 
+	 * Entero donde se almacena el grado de la nave protagonista.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
