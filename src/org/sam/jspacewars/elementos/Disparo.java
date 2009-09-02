@@ -4,19 +4,19 @@ import java.nio.ByteBuffer;
 
 import org.sam.elementos.Dinamico;
 
-public abstract class Disparo extends Elemento implements Dinamico{
+public abstract class Disparo extends Elemento implements Dinamico {
 
 	protected transient float angulo;
-	
-	protected Disparo(short code){
+
+	protected Disparo(short code) {
 		super(code);
 	}
 
-	protected Disparo(Disparo prototipo){
+	protected Disparo(Disparo prototipo) {
 		super(prototipo);
 	}
 
-	public boolean finalizado(){
+	public boolean finalizado() {
 		return false;
 	}
 

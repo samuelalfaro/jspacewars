@@ -5,12 +5,12 @@ package org.sam.jspacewars.elementos;
 
 /**
  * @author Samuel
- *
+ * 
  */
 public final class SingletonEnemigos {
-	
+
 	private static NaveEnemiga objetivo;
-	
+
 	public static NaveEnemiga getObjetivo() {
 		return objetivo;
 	}
@@ -19,6 +19,6 @@ public final class SingletonEnemigos {
 		SingletonEnemigos.objetivo = objetivo;
 	}
 
-	private SingletonEnemigos(){
+	private SingletonEnemigos() {
 	}
 }

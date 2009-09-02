@@ -9,17 +9,17 @@ import com.thoughtworks.xstream.XStream;
 
 /**
  * @author samuel
- *
+ * 
  */
 public class ElementosConverters {
 
-	private ElementosConverters(){
+	private ElementosConverters() {
 	}
-	
+
 	public static void register(XStream xStream) {
-		
+
 		InterpoladoresConverters.register(xStream);
-		
+
 		xStream.alias("NaveUsuario", NaveUsuario.class);
 		xStream.alias("Canion", Canion.class);
 		xStream.alias("CanionLineal", CanionLineal.class);
