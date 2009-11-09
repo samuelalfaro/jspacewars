@@ -63,41 +63,63 @@ public class MyGameMenuButton extends Button {
 	}
 	private static final ITextRenderer renderer3 = new DirectTextRenderer(font);
 
+//	private static Border generatePixmapBorder(Pixmap pixmap) {
+//		if( pixmap == null )
+//			return new PlainBorder();
+//
+//		ITexture sixteenSlicesTex = pixmap.getTexture();
+//		Pixmap[] pixmaps = new Pixmap[16];
+//
+//		pixmaps[0] = new Pixmap(sixteenSlicesTex, 0, 0, 9, 12); // upperLeftCorner
+//		pixmaps[1] = new Pixmap(sixteenSlicesTex, 9, 0, 9, 12); // topLeftJunction
+//		pixmaps[2] = new Pixmap(sixteenSlicesTex, 18, 0, 100, 12); // topEdge
+//		pixmaps[3] = new Pixmap(sixteenSlicesTex, 118, 0, 9, 12); // topRightJunction
+//		pixmaps[4] = new Pixmap(sixteenSlicesTex, 127, 0, 9, 12); // upperRightCorner
+//
+//		pixmaps[5] = new Pixmap(sixteenSlicesTex, 0, 12, 9, 4); // upperLeftJunction
+//		pixmaps[6] = new Pixmap(sixteenSlicesTex, 127, 12, 9, 4); // upperRightJunction
+//
+//		pixmaps[7] = new Pixmap(sixteenSlicesTex, 0, 16, 9, 8); // leftEdge
+//		pixmaps[8] = new Pixmap(sixteenSlicesTex, 127, 16, 9, 8); // rightEdge
+//
+//		pixmaps[9] = new Pixmap(sixteenSlicesTex, 0, 24, 9, 4); // lowerLeftJunction
+//		pixmaps[10] = new Pixmap(sixteenSlicesTex, 127, 24, 9, 4); // lowerRightJunction
+//
+//		pixmaps[11] = new Pixmap(sixteenSlicesTex, 0, 28, 9, 35); // lowerLeftCorner
+//		pixmaps[12] = new Pixmap(sixteenSlicesTex, 9, 28, 9, 35); // bottomLeftJunction
+//		pixmaps[13] = new Pixmap(sixteenSlicesTex, 18, 28, 100, 35); // bottomEdge
+//		pixmaps[14] = new Pixmap(sixteenSlicesTex, 118, 28, 9, 35); // bottomRightJunction
+//		pixmaps[15] = new Pixmap(sixteenSlicesTex, 127, 28, 9, 35); // lowerRightCorner
+//
+//		return new PixmapBorder16(pixmaps);
+//	}
+	
 	private static Border generatePixmapBorder(Pixmap pixmap) {
 		if( pixmap == null )
 			return new PlainBorder();
 
-		ITexture sixteenSlicesTex = pixmap.getTexture();
-		Pixmap[] pixmaps = new Pixmap[16];
+		ITexture texture = pixmap.getTexture();
+		Pixmap[] pixmaps = new Pixmap[8];
 
-		pixmaps[0] = new Pixmap(sixteenSlicesTex, 0, 0, 9, 12); // upperLeftCorner
-		pixmaps[1] = new Pixmap(sixteenSlicesTex, 9, 0, 9, 12); // topLeftJunction
-		pixmaps[2] = new Pixmap(sixteenSlicesTex, 18, 0, 100, 12); // topEdge
-		pixmaps[3] = new Pixmap(sixteenSlicesTex, 118, 0, 9, 12); // topRightJunction
-		pixmaps[4] = new Pixmap(sixteenSlicesTex, 127, 0, 9, 12); // upperRightCorner
+		pixmaps[PixmapBorder.TOP_LEFT]     = new Pixmap(texture,   0,  0,  18, 12);
+		pixmaps[PixmapBorder.TOP]          = new Pixmap(texture,  18,  0, 100, 12);
+		pixmaps[PixmapBorder.TOP_RIGHT]    = new Pixmap(texture, 118,  0,  18, 12);
 
-		pixmaps[5] = new Pixmap(sixteenSlicesTex, 0, 12, 9, 4); // upperLeftJunction
-		pixmaps[6] = new Pixmap(sixteenSlicesTex, 127, 12, 9, 4); // upperRightJunction
+		pixmaps[PixmapBorder.LEFT]         = new Pixmap(texture,   0, 12,  18, 16);
+		pixmaps[PixmapBorder.RIGHT]        = new Pixmap(texture, 118, 12,  18, 16);
+		
+		pixmaps[PixmapBorder.BOTTOM_LEFT]  = new Pixmap(texture,   0, 28,  18, 35);
+		pixmaps[PixmapBorder.BOTTOM]       = new Pixmap(texture,  18, 28, 100, 35);
+		pixmaps[PixmapBorder.BOTTOM_RIGHT] = new Pixmap(texture, 118, 28,  18, 35);
 
-		pixmaps[7] = new Pixmap(sixteenSlicesTex, 0, 16, 9, 8); // leftEdge
-		pixmaps[8] = new Pixmap(sixteenSlicesTex, 127, 16, 9, 8); // rightEdge
-
-		pixmaps[9] = new Pixmap(sixteenSlicesTex, 0, 24, 9, 4); // lowerLeftJunction
-		pixmaps[10] = new Pixmap(sixteenSlicesTex, 127, 24, 9, 4); // lowerRightJunction
-
-		pixmaps[11] = new Pixmap(sixteenSlicesTex, 0, 28, 9, 35); // lowerLeftCorner
-		pixmaps[12] = new Pixmap(sixteenSlicesTex, 9, 28, 9, 35); // bottomLeftJunction
-		pixmaps[13] = new Pixmap(sixteenSlicesTex, 18, 28, 100, 35); // bottomEdge
-		pixmaps[14] = new Pixmap(sixteenSlicesTex, 118, 28, 9, 35); // bottomRightJunction
-		pixmaps[15] = new Pixmap(sixteenSlicesTex, 127, 28, 9, 35); // lowerRightCorner
-
-		return new PixmapBorder16(pixmaps);
+		return new PixmapBorder(pixmaps);
 	}
+
 
 	private static Background generatePixmapBackground(Pixmap pixmap) {
 		if( pixmap == null )
 			return new PlainBackground();
-		return new PixmapBackground(new Pixmap(pixmap.getTexture(), 9, 12, 118, 16), true);
+		return new PixmapBackground(new Pixmap(pixmap.getTexture(), 18, 12, 100, 16), true);
 	}
 
 	/**

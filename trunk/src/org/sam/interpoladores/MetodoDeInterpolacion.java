@@ -120,7 +120,7 @@ public interface MetodoDeInterpolacion{
 						else
 							f1b = values.at( i+2, j ) - fa;
 
-						funciones[j][i] = gdf.generaFuncion(fa,f1a*tension,fb,f1b*tension);
+						funciones[j][i] = gdf.generaFuncion(fa, f1a * tension, fb, f1b * tension);
 					}
 				}
 				return funciones;
@@ -150,7 +150,7 @@ public interface MetodoDeInterpolacion{
 						else
 							f1b = values.at( i+2, j ) - fa;
 
-						funciones[j][i] = gdf.generaFuncion(fa,f1a*tension,fb,f1b*tension);
+						funciones[j][i] = gdf.generaFuncion(fa, f1a * tension, fb, f1b * tension);
 						funciones[j][i].scaleIn(s);
 						funciones[j][i].translateIn(t);
 					}

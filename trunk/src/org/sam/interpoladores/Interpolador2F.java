@@ -22,8 +22,8 @@ final class Interpolador2F  implements Trayectoria.Float<float[]>{
 	Interpolador2F(float keys[], float[][] values, MetodoDeInterpolacion mdi, Object... params) {
 		this.keys = keys;
 		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.E1F(keys), new ArrayExtractor.E2F(values), params );
-		this.funcionesX = Funcion.toFloatFunctions( funciones[0]);
-		this.funcionesY = Funcion.toFloatFunctions( funciones[1]);
+		this.funcionesX = Funcion.toFloatFunctions( funciones[0] );
+		this.funcionesY = Funcion.toFloatFunctions( funciones[1] );
 		this.valorInicial = tratarDatos(values[0]);
 		this.valorFinal = tratarDatos(values[values.length-1]);
 		this.compartido = new float[]{0, 0, 0};

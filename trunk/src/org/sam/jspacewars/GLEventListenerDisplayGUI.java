@@ -32,11 +32,11 @@ import org.fenggui.binding.render.jogl.*;
 class GLEventListenerDisplayGUI implements GLEventListener {
 
 	private transient Display display;
-	private final transient GameMenu gameMenu;
+//	private final transient GameMenu gameMenu;
 
-	GLEventListenerDisplayGUI(GameMenu gameMenu) {
-		this.gameMenu = gameMenu;
-	}
+//	GLEventListenerDisplayGUI(GameMenu gameMenu) {
+//		this.gameMenu = gameMenu;
+//	}
 
 	/*
 	 * (non-Javadoc)
@@ -45,8 +45,9 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
 	 * )
 	 */
+	@Override
 	public void init(GLAutoDrawable drawable) {
-		display = new Display(new JOGLBinding((GLCanvas) drawable, drawable.getGL(), new JOGLOpenGL(drawable.getGL())));
+		display = new Display(new JOGLBinding((GLCanvas) drawable, drawable.getGL()));
 		// try{
 		// FengGUI.setTheme( new XMLTheme("data/themes/QtCurve/QtCurve.xml") );
 		// }catch( IOException ignorada ){
@@ -54,7 +55,7 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 		// }
 		new EventBinding((GLCanvas) drawable, display);
 
-		display.addWidget(gameMenu);
+		display.addWidget(new GameMenu());
 	}
 
 	/*
@@ -64,6 +65,7 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable
 	 * )
 	 */
+	@Override
 	public void display(GLAutoDrawable drawable) {
 		display.display();
 	}
@@ -75,6 +77,7 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable
 	 * , int, int, int, int)
 	 */
+	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 	}
 
