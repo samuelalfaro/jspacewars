@@ -80,8 +80,8 @@ public class ExampleGameMenuJOGL {
 		splashFrame.setVisible(true);
 
 		Animator animator = new Animator();
-		animator.setRunAsFastAsPossible(true);
-		animator.setPrintExceptions(true);
+//		animator.setRunAsFastAsPossible(true);
+//		animator.setPrintExceptions(true);
 
 		splashFrame.setVisible(false);
 		splashFrame = null;
@@ -89,8 +89,9 @@ public class ExampleGameMenuJOGL {
 
 		GLCanvas canvas = new GLCanvas(new GLCapabilities(), null, dataGame.getGLContext(), null);
 		canvas.addGLEventListener(new GLEventListenerBackgroundRenderer(dataGame.getFondo()));
-		GameMenu gameMenu = new GameMenu();
-		canvas.addGLEventListener(new GLEventListenerDisplayGUI(gameMenu));
+		canvas.addGLEventListener(new GLEventListenerDisplayGUI());
+//		GameMenu gameMenu = new GameMenu();
+//		canvas.addGLEventListener(new GLEventListenerDisplayGUI(gameMenu));
 		animator.add(canvas);
 
 		mostrar(canvas);
