@@ -3,10 +3,10 @@ package org.sam.jspacewars.elementos;
 public class NaveUsuario extends Nave {
 
 	private static final int I_VELOCIDAD = 0;
-	private static final int I_NUM_CANIONES_PRI = 1;
-	private static final int I_POW_CANIONES_PRI = 2;
-	private static final int I_NUM_CANIONES_SEC = 3;
-	private static final int I_POW_CANIONES_SEC = 4;
+	private static final int I_POW_CANIONES_PRI = 1;
+	private static final int I_NUM_CANIONES_PRI = 2;
+	private static final int I_POW_CANIONES_SEC = 3;
+	private static final int I_NUM_CANIONES_SEC = 4;
 
 	private final int[][] limitesDeNiveles;
 	private transient int gradoNave;
@@ -215,9 +215,8 @@ public class NaveUsuario extends Nave {
 			aumentadoresDeNivel++;
 			if( aumentadoresDeNivel == 12 ){
 				aumentadoresDeNivel = 0;
-				// vidas ++;
+				//vidas ++;
 			}
-
 			/*
 			 * if((gradoNave < 3 && aumentadoresDeNivel == 12)|| (gradoNave == 3
 			 * && aumentadoresDeNivel == 11)){ aumentadoresDeNivel = 0; // vidas
@@ -236,18 +235,18 @@ public class NaveUsuario extends Nave {
 		case I_VELOCIDAD:
 			velocidad = velocidadesDisponibles[niveles[I_ACTUAL][I_VELOCIDAD]];
 			break;
+		case I_POW_CANIONES_PRI:
+			setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
+			break;
 		case I_NUM_CANIONES_PRI:
 			setCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_NUM_CANIONES_PRI]);
 			setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
 			break;
-		case I_POW_CANIONES_PRI:
-			setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
+		case I_POW_CANIONES_SEC:
+			setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
 			break;
 		case I_NUM_CANIONES_SEC:
 			setCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_NUM_CANIONES_SEC]);
-			setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
-			break;
-		case I_POW_CANIONES_SEC:
 			setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
 			break;
 		}

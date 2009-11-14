@@ -296,24 +296,26 @@ public abstract class PantallaCliente extends Container {
 			panelSuperior.add(puntos);
 
 			Image[] imgLeds = new Image[4];
-			imgLeds[0] = Imagen.cargarImagen("resources/img/leds/bt00.png"); // No
-																				// seleccionable
-			imgLeds[1] = Imagen.cargarImagen("resources/img/leds/bt01.png"); // Seleccionable
-			imgLeds[2] = Imagen.cargarImagen("resources/img/leds/bt02.png"); // Activado
-			imgLeds[3] = Imagen.cargarImagen("resources/img/leds/bt03.png"); // Guardado
+			// No seleccionable
+			imgLeds[0] = Imagen.cargarImagen("resources/img/leds/bt00.png");
+			// Seleccionable
+			imgLeds[1] = Imagen.cargarImagen("resources/img/leds/bt01.png");
+			// Activado
+			imgLeds[2] = Imagen.cargarImagen("resources/img/leds/bt02.png");
+			// Guardado
+			imgLeds[3] = Imagen.cargarImagen("resources/img/leds/bt03.png");
 
 			Image[] imgIndicadores = new Image[5];
-			imgIndicadores[0] = Imagen.cargarImagen("resources/img/indicadores/mr00.png"); // apagado
-																							// no
-																							// seleccionable
-			imgIndicadores[1] = Imagen.cargarImagen("resources/img/indicadores/mr01.png"); // apagado
-																							// seleccionable
-			imgIndicadores[2] = Imagen.cargarImagen("resources/img/indicadores/mr02.png"); // iluminado
-			imgIndicadores[3] = Imagen.cargarImagen("resources/img/indicadores/mr03.png"); // actual
-																							// seleccionable
-			imgIndicadores[4] = Imagen.cargarImagen("resources/img/indicadores/mr04.png"); // actual
-																							// no
-																							// seleccionable
+			// apagado no seleccionable
+			imgIndicadores[0] = Imagen.cargarImagen("resources/img/indicadores/mr00.png");
+			// apagado seleccionable
+			imgIndicadores[1] = Imagen.cargarImagen("resources/img/indicadores/mr01.png"); 
+			// iluminado
+			imgIndicadores[2] = Imagen.cargarImagen("resources/img/indicadores/mr02.png");
+			// actual seleccionable
+			imgIndicadores[3] = Imagen.cargarImagen("resources/img/indicadores/mr03.png");
+			// actual no seleccionable
+			imgIndicadores[4] = Imagen.cargarImagen("resources/img/indicadores/mr04.png");
 
 			ledsNiveles = new LedsNiveles[5];
 			ledsIndicadores = new LedsIndicadores[5];
@@ -445,7 +447,9 @@ public abstract class PantallaCliente extends Container {
 		 */
 		@Override
 		void update() {
+			System.out.println("Actualizando pantalla...");
 			canvas.display();
+			System.out.println(canvas);
 
 			setNumVidas(data.nVidas);
 			setNumBombas(data.nBombas);
@@ -462,6 +466,7 @@ public abstract class PantallaCliente extends Container {
 				hayCambios = l.actualizar() || hayCambios;
 			hayCambios = ledIndicadorGrado.actualizar() || hayCambios;
 
+			System.out.println(hayCambios);
 			if( !hayCambios )
 				return;
 			hayCambios = false;

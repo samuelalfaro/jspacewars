@@ -21,17 +21,24 @@
 package org.sam.jspacewars;
 
 import java.awt.*;
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.swing.JFrame;
 
+import org.fenggui.event.ButtonPressedEvent;
+import org.fenggui.event.IButtonPressedListener;
+import org.sam.jspacewars.cliente.*;
+import org.sam.jspacewars.servidor.ServidorJuego;
+
 import com.sun.opengl.util.Animator;
 
 public class ExampleGameMenuJOGL {
 
-	private static void mostrar(Component component) {
-
+	private static JFrame getFullScreenFrame(){
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		JFrame frame = new JFrame(myDevice.getDefaultConfiguration());
 		frame.setUndecorated(true);
@@ -51,35 +58,38 @@ public class ExampleGameMenuJOGL {
 					System.err.println("Display Mode: not supported!!");
 				}
 			}
-			if( Container.class.isAssignableFrom(component.getClass()) )
-				frame.setContentPane((Container) component);
-			else{
-				frame.getContentPane().setLayout(new BorderLayout());
-				frame.getContentPane().add(component, BorderLayout.CENTER);
-			}
-			frame.validate();
 		}else{
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			frame.setBounds(0, 0, dim.width, dim.height);
-			if( Container.class.isAssignableFrom(component.getClass()) )
-				frame.setContentPane((Container) component);
-			else{
+		}
+		return frame;
+	}
+	
+	private static void mostrar(JFrame frame, Component component) {
+		if( Container.class.isAssignableFrom(component.getClass()) )
+			frame.setContentPane((Container) component);
+		else{
+			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
 				frame.getContentPane().setLayout(new BorderLayout());
-				frame.getContentPane().add(component, BorderLayout.CENTER);
-			}
+			frame.getContentPane().removeAll();
+			frame.getContentPane().add(component, BorderLayout.CENTER);
+		}
+		frame.validate();
+		if(!frame.isVisible()){
+			System.out.println("eoo");
 			frame.setVisible(true);
 		}
 		component.requestFocus();
 	}
-
+	
 	public static void main(String[] args) {
 
-		DataGame dataGame = new DataGame();
+		final DataGame dataGame = new DataGame();
 
-		SplashWindow splashFrame = new SplashWindow("splash.png", dataGame);
+		SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
 		splashFrame.setVisible(true);
 
-		Animator animator = new Animator();
+		final Animator animator = new Animator();
 //		animator.setRunAsFastAsPossible(true);
 //		animator.setPrintExceptions(true);
 
@@ -87,15 +97,43 @@ public class ExampleGameMenuJOGL {
 		splashFrame = null;
 		System.gc();
 
+		final JFrame frame = getFullScreenFrame();
+		
+		Map<String,IButtonPressedListener> actions = new Hashtable<String,IButtonPressedListener>();
+		
+		IButtonPressedListener lanzarUnJugador =  new IButtonPressedListener() {
+			public void buttonPressed(ButtonPressedEvent event) {
+				try{
+					
+					ServidorJuego server = new ServidorJuego();
+					
+					ClientData dataCliente = new ClientData();
+					PantallaCliente pantalla = PantallaCliente.getNewPantalla(0, dataGame, dataCliente);
+					
+					animator.stop();
+					mostrar(frame, pantalla);
+					
+					Cliente cliente = new Cliente(
+							server.getLocalChannelClientIn(), server.getLocalChannelClientOut(),
+							dataGame.getCache(), dataCliente, pantalla
+					);
+					cliente.start();
+					server.atenderClientes();
+				}catch( IOException exception ){
+					exception.printStackTrace();
+				}
+			}
+		};
+		
+		actions.put("lanzarUnJugador", lanzarUnJugador);
+		
 		GLCanvas canvas = new GLCanvas(new GLCapabilities(), null, dataGame.getGLContext(), null);
 		canvas.addGLEventListener(new GLEventListenerBackgroundRenderer(dataGame.getFondo()));
-		canvas.addGLEventListener(new GLEventListenerDisplayGUI());
+		canvas.addGLEventListener(new GLEventListenerDisplayGUI(actions));
 //		GameMenu gameMenu = new GameMenu();
 //		canvas.addGLEventListener(new GLEventListenerDisplayGUI(gameMenu));
 		animator.add(canvas);
-
-		mostrar(canvas);
-
+		mostrar(frame, canvas);
 		animator.start();
 	}
 }

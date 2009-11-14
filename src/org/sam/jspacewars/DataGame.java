@@ -28,7 +28,7 @@ import org.sam.jogl.fondos.Fondo;
 
 /**
  * Clase que encapsula las referencias de los distintos elementos que necesitan
- * cargados para comenzar el juego.<br>
+ * ser cargados para comenzar el juego.<br>
  * De esta forma se podrá usar un {@link javax.media.opengl.GLAutoDrawable
  * GLAutoDrawable} para cargar los elementos, y otro distinto para mostrarlos.
  */

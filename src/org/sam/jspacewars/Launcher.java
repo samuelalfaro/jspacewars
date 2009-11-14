@@ -35,7 +35,7 @@ import org.sam.jspacewars.servidor.ServidorJuego;
  * @author Samuel Alfaro
  */
 public class Launcher {
-	// *
+	//*
 	private static void mostrar(Component component) {
 
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -55,9 +55,12 @@ public class Launcher {
 			myDevice.setFullScreenWindow(frame);
 			if( myDevice.isDisplayChangeSupported() ){
 				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
-				// currentDisplayMode = new DisplayMode(640, 400,
-				// currentDisplayMode.getBitDepth(),
-				// currentDisplayMode.getRefreshRate());
+					currentDisplayMode = new DisplayMode(640, 400,
+				 	currentDisplayMode.getBitDepth(),
+//					DisplayMode.BIT_DEPTH_MULTI,
+					currentDisplayMode.getRefreshRate()
+//					60
+					);
 				try{
 					myDevice.setDisplayMode(currentDisplayMode);
 					frame.setSize(currentDisplayMode.getWidth(), currentDisplayMode.getHeight());
@@ -73,22 +76,28 @@ public class Launcher {
 		}
 		component.requestFocus();
 	}
-
-	/*
-	 * / private static void mostrar(Component component) { JFrame frame = new
-	 * JFrame(); frame.setSize(800, 600); if( Container.class.isAssignableFrom(
-	 * component.getClass() ) ) frame.setContentPane( (Container)component );
-	 * else{ frame.getContentPane().setLayout( new BorderLayout() );
-	 * frame.getContentPane().add(component, BorderLayout.CENTER); }
-	 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	 * frame.setVisible(true); } //
-	 */
+	
+	/*/
+	private static void mostrar(Component component) {
+		JFrame frame = new JFrame();
+		frame.setSize(800, 600);
+		if( Container.class.isAssignableFrom(component.getClass()) )
+			frame.setContentPane((Container) component);
+		else{
+			frame.getContentPane().setLayout(new BorderLayout());
+			frame.getContentPane().add(component, BorderLayout.CENTER);
+		}
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		component.requestFocus();
+	} 
+	//*/
 
 	private static void lanzarUnJugador() {
 		try{
 			DataGame dataGame = new DataGame();
 
-			SplashWindow splashFrame = new SplashWindow("splash.png", dataGame);
+			SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
 			splashFrame.setVisible(true);
 
 			ServidorJuego server = new ServidorJuego();
@@ -114,7 +123,7 @@ public class Launcher {
 		try{
 			DataGame dataGame = new DataGame();
 
-			SplashWindow splashFrame = new SplashWindow("splash.png", dataGame);
+			SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
 			splashFrame.setVisible(true);
 
 			ServidorJuego server = new ServidorJuego(port);
@@ -140,7 +149,7 @@ public class Launcher {
 		try{
 			DataGame dataGame = new DataGame();
 
-			SplashWindow splashFrame = new SplashWindow("splash.png", dataGame);
+			SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
 			splashFrame.setVisible(true);
 
 			DatagramChannel canalCliente = DatagramChannel.open();
