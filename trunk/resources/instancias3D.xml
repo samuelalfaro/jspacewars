@@ -1,0 +1,1108 @@
+<Instancia3D-array>
+	<!-- 1 Nave Prota 1 -->
+	<Instancia3D>
+		<tipo>0x00</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/nave01/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>		<m10>0.0</m10>		<m20>-1.35</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>		<m11>1.35</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+							<m02>1.35</m02>		<m12>0.0</m12>		<m22>0.0</m22>		<m32>0.0</m32>
+							<m03>0.0</m03>		<m13>0.0</m13>		<m23>0.0</m23>		<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.25" g="0.25" b="0.25" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>32.0</shininess>
+							<specular r="0.25" g="0.25" b="0.25" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave01/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/texturas/reflect.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader vertex="resources/shaders/reflexion.vert" fragment="resources/shaders/reflexion.frag">
+							<Uniform name="difuseMap">
+								<int>0</int>
+							</Uniform>
+							<Uniform name="reflexionMap">
+								<int>1</int>
+							</Uniform>
+							<Uniform name="reflexionEnv">
+								<int>2</int>
+							</Uniform>
+						</Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.62</m03>	<m13>-0.12</m13>	<m23>-0.235</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas nParticulas="6">
+					<Emisor class="Emisor.Conico" cache="512">
+						<radio class="float">0.02</radio>
+						<altura class="float">1.5</altura>
+					</Emisor>
+					<Emision>CONTINUA</Emision>
+					<RangoDeEmision>1.0</RangoDeEmision>
+					<TiempoDeVida>0.015</TiempoDeVida>
+					<Radio class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="3">
+							<float>0.0</float>
+							<float>0.1666</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="3" class="[F">
+							<float>0.025</float>
+							<float>0.05</float>
+							<float>0.01</float>
+						</Values>
+					</Radio>
+					<SemiEje class="float">0.05</SemiEje>
+					<Color>
+						<r class="float">0.6</r>
+						<g class="float">0.3</g>
+						<b class="float">0.7</b>
+						<a class="float">1.0</a>
+					</Color>
+					<PertubacionColor p="0.75" homogenea="false" escalar="false"/>
+					<Velocidad v="15" p="0" s="false"/>
+					<GiroIncial v="0.0" p="180.0" s="true"/>
+					<Apariencia>
+						<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA"
+							dstFunc="ONE"/>
+						<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+							image="resources/texturas/smoke_particle.jpg" flipY="true" wrapS="CLAMP_TO_BORDER"
+							wrapT="CLAMP_TO_BORDER"/>
+					</Apariencia>
+				</Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.68</m03>	<m13>-0.06</m13>	<m23>0.0</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas nParticulas="6">
+					<Emisor reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+					<Emision>CONTINUA</Emision>
+					<RangoDeEmision>1.0</RangoDeEmision>
+					<TiempoDeVida>0.015</TiempoDeVida>
+					<Radio class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="3">
+							<float>0.0</float>
+							<float>0.15</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="3" class="[F">
+							<float>0.05</float>
+							<float>0.1</float>
+							<float>0.02</float>
+						</Values>
+					</Radio>
+					<SemiEje class="float">0.05</SemiEje>
+					<Color>
+						<rgb class="Getter.Float">
+							<MetodoDeInterpolacion predefinido="COSENOIDAL"/>
+							<Keys length="2">
+								<float>0.0</float>
+								<float>0.35</float>
+							</Keys>
+							<Values class="[[F" length="2">
+								<Color3F r="0.3" g="0.5" b="1.0"/>
+								<Color3F r="0.8" g="0.6" b="0.4"/>
+							</Values>
+						</rgb>
+						<a class="Getter.Float">
+							<MetodoDeInterpolacion predefinido="LINEAL"/>
+							<Keys length="2">
+								<float>0.75</float>
+								<float>1.0</float>
+							</Keys>
+							<Values length="2" class="[F">
+								<float>1.0</float>
+								<float>0.5</float>
+							</Values>
+						</a>
+					</Color>
+					<Velocidad v="30" p="1" s="false"/>
+					<GiroIncial v="0.0" p="180.0" s="true"/>
+					<VelocidadGiro v="360.0" p="180.0" s="true"/>
+					<Apariencia reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas/Apariencia" />
+				</Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.62</m03>	<m13>-0.12</m13>	<m23>0.235</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas" />
+			</NodoTransformador>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 2 Nave Prota 1 Texturas 2 -->
+	<Instancia3D>
+		<tipo>0x01</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<Forma3DFromObjFile reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Forma3DFromObjFile" />
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.25" g="0.25" b="0.25" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>32.0</shininess>
+							<specular r="0.25" g="0.25" b="0.25" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.62</m03>	<m13>-0.12</m13>	<m23>-0.235</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas" />
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.68</m03>	<m13>-0.06</m13>	<m23>0.0</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas" />
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.62</m03>	<m13>-0.12</m13>	<m23>0.235</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas" />
+			</NodoTransformador>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 3 Nave Prota 2 -->
+	<Instancia3D>
+		<tipo>0x02</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/nave02/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>	<m10>0.0</m10>	<m20>-1.0</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>	<m11>1.0</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+							<m02>1.0</m02>	<m12>0.0</m12>	<m22>0.0</m22>	<m32>0.0</m32>
+							<m03>0.0</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>8.0</shininess>
+							<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>-0.12</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>0.07</m13>		<m23>0.0</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>0.12</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 4 Nave Prota 2 Texturas 2 -->
+	<Instancia3D>
+		<tipo>0x03</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/nave02/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>	<m10>0.0</m10>	<m20>-1.0</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>	<m11>1.0</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+							<m02>1.0</m02>	<m12>0.0</m12>	<m22>0.0</m22>	<m32>0.0</m32>
+							<m03>0.0</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>8.0</shininess>
+							<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>-0.12</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>0.07</m13>		<m23>0.0</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>0.12</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 5 Nave Prota 3 -->
+	<Instancia3D>
+		<tipo>0x04</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/nave03/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>		<m10>0.0</m10>		<m20>-1.25</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>		<m11>1.25</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+							<m02>1.25</m02>		<m12>0.0</m12>		<m22>0.0</m22>		<m32>0.0</m32>
+							<m03>0.0</m03>		<m13>0.0</m13>		<m23>0.0</m23>		<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.25" g="0.25" b="0.25" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>32.0</shininess>
+							<specular r="0.25" g="0.25" b="0.25" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave03/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>0.135</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas nParticulas="9">
+					<Emisor reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+					<Emision>CONTINUA</Emision>
+					<RangoDeEmision>1.0</RangoDeEmision>
+					<TiempoDeVida>0.015</TiempoDeVida>
+					<Radio class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="3">
+							<float>0.0</float>
+							<float>0.1666</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="3" class="[F">
+							<float>0.025</float>
+							<float>0.05</float>
+							<float>0.01</float>
+						</Values>
+					</Radio>
+					<SemiEje class="float">0.1</SemiEje>
+					<Color>
+						<r class="float">0.5</r>
+						<g class="float">0.3</g>
+						<b class="float">0.15</b>
+						<a class="float">1.0</a>
+					</Color>
+					<PertubacionColor p="0.75" homogenea="false" escalar="true"/>
+					<Velocidad v="10" p="0" s="false"/>
+					<GiroIncial v="0.0" p="180.0" s="true"/>
+					<Apariencia reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas/Apariencia" />
+				</Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>-0.135</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
+			</NodoTransformador>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 6 Nave Prota 3 Texturas 2 -->
+	<Instancia3D>
+		<tipo>0x05</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/nave03/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>		<m10>0.0</m10>		<m20>-1.25</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>		<m11>1.25</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+							<m02>1.25</m02>		<m12>0.0</m12>		<m22>0.0</m22>		<m32>0.0</m32>
+							<m03>0.0</m03>		<m13>0.0</m13>		<m23>0.0</m23>		<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.25" g="0.25" b="0.25" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>32.0</shininess>
+							<specular r="0.25" g="0.25" b="0.25" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>0.135</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>-0.135</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
+			</NodoTransformador>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 7 Bombardero 1 -->
+	<Instancia3D>
+		<tipo>0x08</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/bomber01/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>	<m10>0.0</m10>	<m20>-2.5</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>	<m11>2.5</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+							<m02>2.5</m02>	<m12>0.0</m12>	<m22>0.0</m22>	<m32>0.0</m32>
+							<m03>0.0</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>DEFAULT</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/bomber01/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/bomber01/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D-array/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-1.25</m03>	<m13>-0.12</m13>	<m23>-0.82</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-1.25</m03>	<m13>-0.12</m13>	<m23>-0.62</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-1.25</m03>	<m13>-0.12</m13>	<m23>0.62</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-1.25</m03>	<m13>-0.12</m13>	<m23>0.82</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"/>
+	</Instancia3D>
+	<!-- 8 Misil 1 -->
+	<Instancia3D>
+		<tipo>0x40</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Grupo>
+					<Objeto3D>
+						<Forma3DFromObjFile path="resources/obj3d/misil/forma.obj">
+							<transformMatrix>
+								<m00>0.01</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
+								<m01>0.0</m01>	<m11>0.01</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.01</m22>	<m32>0.0</m32>
+								<m03>0.0</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+							</transformMatrix>
+						</Forma3DFromObjFile>
+						<Apariencia>
+							<Material>DEFAULT</Material>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGB" image="resources/obj3d/misil/t01.jpg" flipY="true"
+									wrapS="REPEAT" wrapT="REPEAT"
+							/>
+						</Apariencia>
+					</Objeto3D>
+					<Objeto3D>
+						<TexturedQuad x1="-0.5" y1="-0.125" x2="0.0" y2="0.125" u1="0.25" v1="0.625" u2="0.5" v2="0.75" />
+						<Apariencia>
+							<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+							<AtributosTextura>
+								<mode>REPLACE</mode>
+							</AtributosTextura>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGBA" image="resources/texturas/disparos.png" flipY="true"
+									wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"
+							/>
+						</Apariencia>
+					</Objeto3D>
+				</Grupo>
+			</NodoCompartido>
+			<Particulas nParticulas="25">
+				<Emisor reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+				<Emision>CONTINUA</Emision>
+				<RangoDeEmision>1.0</RangoDeEmision>
+				<TiempoDeVida>0.25</TiempoDeVida>
+				<Radio class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="3">
+						<float>0.0</float>
+						<float>0.1666</float>
+						<float>1.0</float>
+					</Keys>
+					<Values length="3" class="[F">
+						<float>0.05</float>
+						<float>0.3</float>
+						<float>0.1</float>
+					</Values>
+				</Radio>
+				<Color>
+					<r class="float">0.11</r>
+					<g class="float">0.26</g>
+					<b class="float">0.44</b>
+					<a class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="2">
+							<float>0.0</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="2" class="[F">
+							<float>1.0</float>
+							<float>0.0</float>
+						</Values>
+					</a>
+				</Color>
+				<PertubacionColor p="0.75" homogenea="true" escalar="false"/>
+				<Velocidad v="-5" p="0" s="false"/>
+				<GiroIncial v="0.0" p="180.0" s="true"/>
+				<VelocidadGiro v="360.0" p="0.0" s="true"/>
+				<Apariencia>
+					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+				</Apariencia>
+			</Particulas>
+		</Grupo>
+	</Instancia3D>
+	<!-- 9 Disparo con Particulas 1 -->
+	<Instancia3D>
+		<tipo>0x60</tipo>
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
+					<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0" u2="0.25" v2="0.125" />
+					<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+				</Objeto3D>
+			</NodoCompartido>
+			<Particulas nParticulas="100">
+				<Emisor reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+				<Emision>CONTINUA</Emision>
+				<RangoDeEmision>1.0</RangoDeEmision>
+				<TiempoDeVida>0.5</TiempoDeVida>
+				<Radio class="float">0.3</Radio>
+				<Color>
+					<r class="float">0.88</r>
+					<g class="float">0.52</g>
+					<b class="float">0.22</b>
+					<a class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="2">
+							<float>0.0</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="2" class="[F">
+							<float>1.0</float>
+							<float>0.0</float>
+						</Values>
+					</a>
+				</Color>
+				<PertubacionColor p="0.5" homogenea="true" escalar="false"/>
+				<Velocidad v="-0.75" p="0.15" s="false"/>
+				<GiroIncial v="0.0" p="180.0" s="true"/>
+				<VelocidadGiro v="180.0" p="90.0" s="true"/>
+				<Apariencia reference="/Instancia3D-array/Instancia3D/Grupo/NodoTransformador/Particulas/Apariencia" />
+				<Apariencia>
+					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+				</Apariencia>
+			</Particulas>
+		</Grupo>
+	</Instancia3D>
+	<!-- 10 Disparos-->
+	<Instancia3D>
+		<tipo>0x80</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0" u2="0.25" v2="0.125" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 11 Disparos-->
+	<Instancia3D>
+		<tipo>0x81</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.125" u2="0.25" v2="0.25" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 12 Disparos-->
+	<Instancia3D>
+		<tipo>0x82</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.25" u2="0.25" v2="0.375" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 13 Disparos-->
+	<Instancia3D>
+		<tipo>0x83</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.375" u2="0.25" v2="0.5" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 14 Disparos-->
+	<Instancia3D>
+		<tipo>0x84</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.5" u2="0.25" v2="0.625" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 15 Disparos-->
+	<Instancia3D>
+		<tipo>0x85</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.625" u2="0.25" v2="0.75" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 16 Disparos-->
+	<Instancia3D>
+		<tipo>0x86</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.75" u2="0.25" v2="0.875" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 17 Disparos-->
+	<Instancia3D>
+		<tipo>0x87</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.875" u2="0.25" v2="1.0" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 18 Disparos-->
+	<Instancia3D>
+		<tipo>0x88</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.0" u2="0.25" v2="0.125" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 19 Disparos-->
+	<Instancia3D>
+		<tipo>0x89</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.125" u2="0.25" v2="0.25" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 20 Disparos-->
+	<Instancia3D>
+		<tipo>0x8A</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.25" u2="0.25" v2="0.375" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 21 Disparos-->
+	<Instancia3D>
+		<tipo>0x8B</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.375" u2="0.25" v2="0.5" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 22 Disparos-->
+	<Instancia3D>
+		<tipo>0x8C</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.5" u2="0.25" v2="0.625" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 23 Disparos-->
+	<Instancia3D>
+		<tipo>0x8D</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.625" u2="0.25" v2="0.75" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 24 Disparos-->
+	<Instancia3D>
+		<tipo>0x8E</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.75" u2="0.25" v2="0.875" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 25 Disparos-->
+	<Instancia3D>
+		<tipo>0x8F</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.875" u2="0.25" v2="1.0" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 26 Disparos-->
+	<Instancia3D>
+		<tipo>0x90</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.0" u2="0.25" v2="0.125" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 27 Disparos-->
+	<Instancia3D>
+		<tipo>0x91</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.125" u2="0.25" v2="0.25" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 28 Disparos-->
+	<Instancia3D>
+		<tipo>0x92</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.25" u2="0.25" v2="0.375" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 29 Disparos-->
+	<Instancia3D>
+		<tipo>0x93</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.375" u2="0.25" v2="0.5" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 30 Disparos-->
+	<Instancia3D>
+		<tipo>0x94</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.5" u2="0.25" v2="0.625" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 31 Disparos-->
+	<Instancia3D>
+		<tipo>0x95</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.625" u2="0.25" v2="0.75" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 32 Disparos-->
+	<Instancia3D>
+		<tipo>0x96</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.75" u2="0.25" v2="0.875" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 33 Disparos-->
+	<Instancia3D>
+		<tipo>0x97</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.875" u2="0.25" v2="1.0" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 34 Disparos-->
+	<Instancia3D>
+		<tipo>0x98</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.0" u2="0.25" v2="0.125" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 35 Disparos-->
+	<Instancia3D>
+		<tipo>0x99</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.125" u2="0.25" v2="0.25" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 36 Disparos-->
+	<Instancia3D>
+		<tipo>0x9A</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.25" u2="0.25" v2="0.375" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 37 Disparos-->
+	<Instancia3D>
+		<tipo>0x9B</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.375" u2="0.25" v2="0.5" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 38 Disparos-->
+	<Instancia3D>
+		<tipo>0x9C</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.5" u2="0.25" v2="0.625" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 39 Disparos-->
+	<Instancia3D>
+		<tipo>0x9D</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.625" u2="0.25" v2="0.75" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 40 Disparos-->
+	<Instancia3D>
+		<tipo>0x9E</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.75" u2="0.25" v2="0.875" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 41 Disparos-->
+	<Instancia3D>
+		<tipo>0x9F</tipo>
+		<NodoCompartido>
+			<Objeto3D>
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.875" u2="0.25" v2="1.0" />
+				<Apariencia reference="/Instancia3D-array/Instancia3D[8]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
+			</Objeto3D>
+		</NodoCompartido>
+	</Instancia3D>
+	<!-- 42 Explosion-->
+	<Instancia3D>
+		<tipo>0x0100</tipo>
+		<Particulas nParticulas="50">
+			<Emisor class="Emisor.Puntual" cache="256"/>
+			<Emision>UNICA</Emision>
+			<RangoDeEmision>0.5</RangoDeEmision>
+			<TiempoDeVida>0.5</TiempoDeVida>
+			<Radio class="Getter.Float">
+				<MetodoDeInterpolacion predefinido="COSENOIDAL"/>
+				<Keys length="2">
+					<float>0.0</float>
+					<float>0.35</float>
+				</Keys>
+				<Values length="2" class="[F">
+					<float>0.0</float>
+					<float>0.4</float>
+				</Values>
+			</Radio>
+			<Velocidad v="1.25" p="0.15" s="false"/>
+			<GiroIncial v="0.0" p="180.0" s="true"/>
+			<VelocidadGiro v="90.0" p="30.0" s="true"/>
+			<Color>
+				<!-- 
+				<r class="float">0.176</r>
+				<g class="float">0.104</g>
+				<b class="float">0.044</b>
+				-->
+				<rgb class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="2">
+						<float>0.0</float>
+						<float>0.5</float>
+					</Keys>
+					<Values class="[[F" length="2">
+						<Color3F r="0.104" g="0.044" b="0.176"/>
+						<Color3F r="0.104" g="0.176" b="0.044" />
+						<!--<Color3F r="0.176" g="0.104" b="0.044"/> -->
+					</Values>
+				</rgb>
+				<a class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="4">
+						<float>0.0</float>
+						<float>0.25</float>
+						<float>0.65</float>
+						<float>1.0</float>
+					</Keys>
+					<Values length="4" class="[F">
+						<float>0.0</float>
+						<float>1.0</float>
+						<float>1.0</float>
+						<float>0.0</float>
+					</Values>
+				</a>
+			</Color>
+			<Apariencia>
+				<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+				<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA" image="resources/texturas/smoke4.jpg"
+					flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+			</Apariencia>
+		</Particulas>
+	</Instancia3D>
+</Instancia3D-array>

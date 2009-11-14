@@ -1,0 +1,62 @@
+<Particulas nParticulas="6">
+  <Emisor class="org.sam.jogl.particulas.Emisor$Conico" cache="512">
+  	<radio class="float">0.025</radio>
+	<altura class="float">10.0</altura>
+  </Emisor>
+  <Emision>CONTINUA</Emision>
+  <RangoDeEmision>1.0</RangoDeEmision>
+  <TiempoDeVida>0.015</TiempoDeVida>
+  <Radio class="Getter.Float">
+    <MetodoDeInterpolacion predefinido="LINEAL"/>
+    <Keys length="3">
+      <float>0.0</float>
+      <float>0.15</float>
+      <float>1.0</float>
+    </Keys>
+    <Values length="3" class="[F">
+      <float>0.05</float>
+      <float>0.1</float>
+      <float>0.02</float>
+    </Values>
+  </Radio>
+  <SemiEje class="float">0.05</SemiEje>
+  <Color>
+<!--
+    <r class="float">0.8</r>
+    <g class="float">0.6</g>
+    <b class="float">0.4</b>
+-->
+    <rgb class="Getter.Float">
+      <MetodoDeInterpolacion predefinido="COSENOIDAL"/>
+      <Keys length="2">
+        <float>0.0</float>
+        <float>0.35</float>
+      </Keys>
+      <Values class="[[F" length="2">
+        <Color3F r="0.3" g="0.5" b="1.0"/>
+        <Color3F r="0.8" g="0.6" b="0.4"/>
+      </Values>
+    </rgb>
+    <a class="Getter.Float">
+      <MetodoDeInterpolacion predefinido="LINEAL"/>
+      <Keys length="2">
+        <float>0.75</float>
+        <float>1.0</float>
+      </Keys>
+      <Values length="2" class="[F">
+        <float>1.0</float>
+        <float>0.5</float>
+      </Values>
+    </a>
+  </Color>
+<!--
+  <PertubacionColor p="0.5" homogenea="false" escalar="true"/>
+-->
+  <Velocidad v="30" p="1" s="false" />
+  <GiroIncial v="0.0" p="180.0" s="true" />
+  <VelocidadGiro v="360.0" p="180.0" s="true" />
+  <Apariencia>
+    <AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+    <Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA" image="resources/texturas/smoke_particle.jpg" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+  </Apariencia>
+</Particulas>

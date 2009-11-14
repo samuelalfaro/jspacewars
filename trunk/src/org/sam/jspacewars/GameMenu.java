@@ -20,6 +20,8 @@
  */
 package org.sam.jspacewars;
 
+import java.util.Map;
+
 import org.fenggui.Container;
 import org.fenggui.decorator.background.GradientBackground;
 import org.fenggui.event.ButtonPressedEvent;
@@ -34,7 +36,7 @@ public class GameMenu extends Container {
 	private final MyGameMenuButton player1, player2, options, quit;
 	private final MyGameMenuButton sound, graphics, network, back;
 
-	public GameMenu() {
+	public GameMenu(Map<String,IButtonPressedListener> actions) {
 
 		this.setLayoutManager(new RowLayout(false));
 		this.getAppearance().add(
@@ -42,10 +44,7 @@ public class GameMenu extends Container {
 		this.getAppearance().setPadding(new Spacing(10, 10));
 
 		player1 = MyGameMenuButton.derive("1 Player");
-		player1.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
-			}
-		});
+		player1.addButtonPressedListener(actions.get("lanzarUnJugador"));
 
 		player2 = MyGameMenuButton.derive("2 Players");
 		player2.addButtonPressedListener(new IButtonPressedListener() {

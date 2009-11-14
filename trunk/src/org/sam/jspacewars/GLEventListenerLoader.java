@@ -47,7 +47,7 @@ class GLEventListenerLoader implements GLEventListener {
 	 * Implementación de la clase abstracta
 	 * {@link org.fenggui.binding.render.Binding Binding}.
 	 * <p>
-	 * Esta clase limita a encapsular una instancia del interface
+	 * Esta clase se limita a encapsular una instancia del interface
 	 * {@link javax.media.opengl.GL GL}, para poder cargar y almacenar en la
 	 * memoria de video las texturas empleadas por el GUI.
 	 * </p>
@@ -200,7 +200,7 @@ class GLEventListenerLoader implements GLEventListener {
 					GrafoEscenaConverters.register(xStream);
 					GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
 
-					in = xStream.createObjectInputStream(new FileReader("instancias3D-stream.xml"));
+					in = xStream.createObjectInputStream(new FileReader("resources/instancias3D-stream.xml"));
 				}
 				if( !eof )
 					try{

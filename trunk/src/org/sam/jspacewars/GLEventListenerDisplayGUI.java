@@ -20,10 +20,13 @@
  */
 package org.sam.jspacewars;
 
+import java.util.Map;
+
 import javax.media.opengl.*;
 
 import org.fenggui.Display;
 import org.fenggui.binding.render.jogl.*;
+import org.fenggui.event.IButtonPressedListener;
 
 /**
  * 
@@ -33,10 +36,11 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 
 	private transient Display display;
 //	private final transient GameMenu gameMenu;
+	Map<String,IButtonPressedListener> actions;
 
-//	GLEventListenerDisplayGUI(GameMenu gameMenu) {
-//		this.gameMenu = gameMenu;
-//	}
+	GLEventListenerDisplayGUI(Map<String,IButtonPressedListener> actions) {
+		this.actions = actions;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -55,7 +59,7 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 		// }
 		new EventBinding((GLCanvas) drawable, display);
 
-		display.addWidget(new GameMenu());
+		display.addWidget(new GameMenu(actions));
 	}
 
 	/*

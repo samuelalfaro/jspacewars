@@ -161,8 +161,9 @@ public class Cliente extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-
+		System.out.println("Iniciando cliente");
 		while( true ){
+			System.out.println("Enviando");
 			buff.clear();
 			buff.putInt(data.key_state);
 			buff.flip();
@@ -171,7 +172,7 @@ public class Cliente extends Thread {
 			}catch( IOException e ){
 				e.printStackTrace();
 			}
-
+			System.out.println("Leyendo");
 			buff.clear();
 			try{
 				channelIn.read(buff);
@@ -181,7 +182,7 @@ public class Cliente extends Thread {
 			buff.flip();
 
 			recibir(buff, cache, data);
-
+			System.out.println("pantalla.update()");
 			pantalla.update();
 		}
 	}
