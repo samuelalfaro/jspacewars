@@ -1,6 +1,7 @@
 package pruebas.jogl;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -29,6 +30,7 @@ import org.sam.jogl.Instancia3D;
 import org.sam.jogl.ObjLoader;
 import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.Textura;
+import org.sam.jspacewars.cliente.MarcoDeIndicadores;
 import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
 
@@ -36,11 +38,12 @@ import com.sun.opengl.util.Animator;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class LoaderExample{
+public class InterfaceExample{
 	
 	private static class Data{
 		GLContext context;
 		Apariencia apFondo;
+		MarcoDeIndicadores marco;
 		Instancia3D[] instancias;
 	}
 	
@@ -102,6 +105,11 @@ public class LoaderExample{
 				data.apFondo.setTextura(new Textura(gl, Textura.Format.RGB, img , true));
 				data.apFondo.setAtributosTextura(new AtributosTextura());
 				data.apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
+			}else if(data.marco == null ){
+				data.marco = MarcoDeIndicadores.getMarco(0);
+				data.marco.loadTexturas(gl);
+			}else if( !data.marco.isLoadComplete() ){
+				data.marco.loadTexturas(gl);
 			}else{
 				try{
 					if( in == null ){
@@ -206,8 +214,10 @@ public class LoaderExample{
 			this.data = data;
 			this.orbitBehavior = orbitBehavior;
 		}
-		
+			
 		private transient float proporcionesPantalla;
+		private transient float proporcionesArea;
+		
 		private transient long tAnterior, tActual;
 		private GLU glu;
 
@@ -257,29 +267,26 @@ public class LoaderExample{
 			gl.glLoadIdentity();
 			gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
 
-			/*
-			AtributosTransparencia.desactivar(gl);
-			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-			/*/
 			data.apFondo.usar(gl);
 			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
 			
 			float s1 = 0.75f;
-			float s2 = proporcionesPantalla * data.apFondo.getTextura().getProporciones() + s1;
+			float s2 = proporcionesArea * data.apFondo.getTextura().getProporciones() + s1;
+			
+			float p64 = proporcionesPantalla/64;
 			
 			gl.glDepthMask(false);
 			gl.glBegin(GL.GL_QUADS);
-				gl.glTexCoord2f(s1,0);
-				gl.glVertex3f(0,0,0);
-				gl.glTexCoord2f(s2,0);
-				gl.glVertex3f(proporcionesPantalla,0,0);
-				gl.glTexCoord2f(s2,1);
-				gl.glVertex3f(proporcionesPantalla,1,0);
-				gl.glTexCoord2f(s1,1);
-				gl.glVertex3f(0,1,0);
+				gl.glTexCoord2f(s1, 0);
+				gl.glVertex3f(      p64,        p64, 0);
+				gl.glTexCoord2f(s2, 0);
+				gl.glVertex3f( 63 * p64,        p64, 0);
+				gl.glTexCoord2f(s2, 1);
+				gl.glVertex3f(63 * p64, 1 - 5 * p64, 0);
+				gl.glTexCoord2f(s1, 1);
+				gl.glVertex3f(     p64, 1 - 5 * p64, 0);
 			gl.glEnd();
 			gl.glDepthMask(true);
-			//*/
 			
 			gl.glPopMatrix();
 			gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -294,17 +301,35 @@ public class LoaderExample{
 				data.instancias[index].getModificador().modificar(incT);
 			data.instancias[index].draw(gl);
 
+//			data.gui.draw(gl);
+			
 			gl.glFlush();
 		}
+		
+		private static final double W = 4.0;
+		private static final double H = 3.0;
+		private static final double H_A = H - (3.0 * W / 32);
+		private static final double OFF = 2*(H - H_A)/H_A;
+		private static final double wA43 = (2.0 + OFF)*W/H;
 
 		/* (non-Javadoc)
 		 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
 		 */
 		@Override
 		public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+			
 			GL gl = drawable.getGL();
 			gl.glViewport(0, 0, width, height);
 			proporcionesPantalla = (float)width/height;
+			data.marco.setBounds( 0, 0, width, height);
+			double aWidth = 31.0 * width / 32;
+			double aHeight = height - (3.0 * width / 32);
+			proporcionesArea = (float)(aWidth / aHeight);
+			
+//			gl.glViewport((width -(int)aWidth)/2, (height - (int)aHeight)/6, (int)aWidth, (int)aHeight);
+			
+			// Formato, offset GUI, 4/3 mínimo, panorámico a la derecha en caso contrario.
+			
 			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glLoadIdentity();
 			double near = 0.01;
@@ -313,27 +338,20 @@ public class LoaderExample{
 			double a2 = a1/360*Math.PI; // mitad del angulo en radianes
 			double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
 
-			/*
-			// formato zoom/recorte
-			double ratio = (double) w / h;
-			if( ratio > 1 )
-				gl.glFrustum(-d, d, -d / ratio, d / ratio, near, far);
-			else
-				gl.glFrustum(-d * ratio, d * ratio, -d, d, near, far);
-			//*/
-			//*
-			// formato panoramico Horizontal/Vertical centrado
-			double ratio = (double) width / height;
-			if( ratio < 1 )
-				gl.glFrustum(-d, d, -d / ratio, d / ratio, near, far);
-			else
-				gl.glFrustum(-d * ratio, d * ratio, -d, d, near, far);
-			//*/
+			// aHeight -> 2, [-d, d] => offset -> 2·(height - aHeight)/aHeight ;
+			double offH = 2*(height - aHeight)/aHeight;
+			// height -> 2.0 + offH => width -> (2.0 + offH)*width/height
+			double wA = (2.0 + offH)*width/height;
 			
-			/*
-			// formato recorte/panoramico derecha
-			gl.glFrustum(-d,((2.0*w)/h -1.0)*d, -d, d, near, far);
-			//*/
+			double offBottom = offH/6;
+			double offTop = 5*offH/6;
+			
+			// Si las proporciones de la pantalla son menores de 4/3 se centra el origen en la pantlla
+			if(wA <= wA43)
+				gl.glFrustum(-d * ( wA/2 ), d * ( wA/2 ), -d * ( 1 + offBottom ), d*( 1 + offTop ), near, far);
+			// Si no, se considera el centro igual que el de 4/3 desde la izqda, y se hace panoramica la dcha.
+			else
+				gl.glFrustum(-d * ( wA43/2 ), d * ( wA - wA43/2 ), -d * ( 1 + offBottom ), d*( 1 + offTop ), near, far);
 			
 			ObjetosOrientables.loadProjectionMatrix();
 			gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -383,7 +401,7 @@ public class LoaderExample{
 	
 	public static void main(String[] args){
 	
-		JFrame frame = new JFrame("Loader Example");
+		JFrame frame = new JFrame("Interface Example");
 		
 		Data data = new Data();
 		ModificableBoolean loading = new ModificableBoolean(true);
@@ -391,7 +409,12 @@ public class LoaderExample{
 		Animator animator = new Animator();
 //		animator.setRunAsFastAsPossible(true);
 
-		frame.setSize(500, 500);
+		//*
+		frame.getContentPane().setPreferredSize( new Dimension (800, 600));
+		frame.pack();
+		/*/
+		frame.setSize(800, 600);
+		//*/
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -431,20 +454,18 @@ public class LoaderExample{
 		canvas.addGLEventListener(renderer);
 		canvas.addKeyListener(renderer);
 
-
-		animator.add(canvas);
-		
 		frame.getContentPane().setLayout(new BorderLayout());
 		frame.getContentPane().add( canvas, BorderLayout.CENTER );
 		frame.validate();
 		canvas.requestFocusInWindow();
 		
-		try {
-			animator.remove(canvasLoader);
-			// Ñapa para no quitar el canvas loader antes de que se muestren el resto :S
-			Thread.sleep(100);
-			frame.getContentPane().remove(canvasLoader);
-		} catch (InterruptedException ignorada) {
-		}
+		animator.remove(canvasLoader);
+		// Se muestra por lo menos una vez el canvas antes de quitar el canvasLoader para que no
+		// se liberen las texturas de memoria, al eliminarlo.
+		canvas.display();
+		frame.getContentPane().remove(canvasLoader);
+		// Se añade despues el canvas al animator, para evitar dos llamadas simultaneas al
+		// metodo display()
+		animator.add(canvas);
 	}
 }

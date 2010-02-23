@@ -1,6 +1,7 @@
 package pruebas.jogl;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -21,9 +22,11 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.GrafoEscenaConverters;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.ObjLoader;
@@ -36,7 +39,8 @@ import com.sun.opengl.util.Animator;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class LoaderExample{
+@SuppressWarnings("unused")
+public class MultipleCanvasExample{ 
 	
 	private static class Data{
 		GLContext context;
@@ -47,7 +51,6 @@ public class LoaderExample{
 	private static class Loader implements GLEventListener{
 		
 		// Indices rgb
-		@SuppressWarnings("unused")
 		private static final transient int r = 0, g = 1, b = 2;
 		
 		private final transient Data data;
@@ -111,7 +114,7 @@ public class LoaderExample{
 						GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
 
 						intanciasCollection = new LinkedList<Instancia3D>();
-						in = xStream.createObjectInputStream(new FileReader("resources/instancias3D-stream-sh.xml"));
+						in = xStream.createObjectInputStream(new FileReader("resources/instancias3D-stream.xml"));
 					}
 					if( !eof )
 						try{
@@ -383,13 +386,14 @@ public class LoaderExample{
 	
 	public static void main(String[] args){
 	
-		JFrame frame = new JFrame("Loader Example");
+		JFrame frame = new JFrame("Multiple Canvas Example");
 		
 		Data data = new Data();
 		ModificableBoolean loading = new ModificableBoolean(true);
 		
 		Animator animator = new Animator();
-//		animator.setRunAsFastAsPossible(true);
+		animator.setRunAsFastAsPossible(true);
+		animator.setPrintExceptions(true);
 
 		frame.setSize(500, 500);
 		frame.setLocationRelativeTo(null);
@@ -418,33 +422,42 @@ public class LoaderExample{
 			}
 		}
 		
-		GLCanvas canvas = new GLCanvas(null, null, data.context, null);
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(0, 2, 5, 5));
+		
+		GLCanvas[] canvas = new GLCanvas[4];
+		
+		for(int i = 0; i < 4; i++){
+			canvas[i] = new GLCanvas(null, null, data.context, null);
 
-		OrbitBehavior orbitBehavior = new OrbitBehavior();
-		orbitBehavior.eyePos.x = 0.0f;
-		orbitBehavior.eyePos.y = 0.0f;
-		orbitBehavior.eyePos.z = 4.0f;
-		canvas.addMouseListener(orbitBehavior);
-		canvas.addMouseMotionListener(orbitBehavior);
+			OrbitBehavior orbitBehavior = new OrbitBehavior();
+			orbitBehavior.eyePos.x = 0.0f;
+			orbitBehavior.eyePos.y = 0.0f;
+			orbitBehavior.eyePos.z = 4.0f;
+			canvas[i].addMouseListener(orbitBehavior);
+			canvas[i].addMouseMotionListener(orbitBehavior);
 
-		Renderer renderer = new Renderer(data, orbitBehavior);
-		canvas.addGLEventListener(renderer);
-		canvas.addKeyListener(renderer);
+			Renderer renderer = new Renderer(data, orbitBehavior);
+			canvas[i].addGLEventListener(renderer);
+			canvas[i].addKeyListener(renderer);
 
-
-		animator.add(canvas);
+			panel.add(canvas[i]);
+		}
 		
 		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().add( canvas, BorderLayout.CENTER );
+		frame.getContentPane().add( panel, BorderLayout.CENTER );
 		frame.validate();
-		canvas.requestFocusInWindow();
-		
-		try {
-			animator.remove(canvasLoader);
-			// Ñapa para no quitar el canvas loader antes de que se muestren el resto :S
-			Thread.sleep(100);
-			frame.getContentPane().remove(canvasLoader);
-		} catch (InterruptedException ignorada) {
-		}
+	
+		animator.remove(canvasLoader);
+		// Se muestra por lo menos una vez el canvas antes de quitar el canvasLoader para que no
+		// se liberen las texturas de memoria, al eliminarlo.
+		for(GLCanvas c:canvas)
+			c.display();
+		frame.getContentPane().remove(canvasLoader);
+		// Se añade despues el canvas al animator, para evitar dos llamadas simultaneas al
+		// metodo display()
+		for(GLCanvas c:canvas)
+			animator.add(c);
+		canvas[0].requestFocusInWindow();
 	}
 }

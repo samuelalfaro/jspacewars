@@ -71,7 +71,7 @@ public class ShadersExample
 			
 			XStream xStream = new XStream(new DomDriver());
 			GrafoEscenaConverters.register(xStream);
-			Particulas humoNave =  (Particulas)xStream.fromXML(new FileReader("particulas.xml"));
+			Particulas humoNave =  (Particulas)xStream.fromXML(new FileReader("resources/particulas.xml"));
 			
 			mtd = new Matrix4d();
 			mtd.rotY(Math.PI/2);
@@ -262,7 +262,7 @@ public class ShadersExample
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		canvas.requestFocusInWindow();
-		canvas.getContext().getGL();
+//		canvas.getContext().getGL();
 	
 		setVisible(true);
 		new Thread(){

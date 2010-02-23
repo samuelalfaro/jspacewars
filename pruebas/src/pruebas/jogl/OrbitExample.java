@@ -178,7 +178,7 @@ implements GLEventListener{
 
 			XStream xStream = new XStream(new DomDriver());
 			GrafoEscenaConverters.register(xStream);
-			Particulas humoNave =  (Particulas)xStream.fromXML(new FileReader("particulas.xml"));
+			Particulas humoNave =  (Particulas)xStream.fromXML(new FileReader("resources/particulas.xml"));
 
 			Matrix4f mtf = new Matrix4f();
 			mtf.rotY((float)Math.PI);
