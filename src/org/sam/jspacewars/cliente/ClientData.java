@@ -40,7 +40,7 @@ import org.sam.util.Lista;
  * 
  * @author Samuel Alfaro.
  */
-public class ClientData {
+class ClientData {
 
 	/**
 	 * Entero que enmascara en sus distintos bits, los estados de las distintas
@@ -166,7 +166,7 @@ public class ClientData {
 	/**
 	 * Constructor que inicializa los distintos valores contenidos por la clase.
 	 */
-	public ClientData() {
+	ClientData() {
 
 		key_state = 0;
 

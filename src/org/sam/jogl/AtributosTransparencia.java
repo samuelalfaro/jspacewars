@@ -64,6 +64,7 @@ public class AtributosTransparencia {
 	}
 
 	private static AtributosTransparencia anterior;
+	
 	private final Equation	equation;
 	private final SrcFunc	srcFunc;
 	private final DstFunc	dstFunc;

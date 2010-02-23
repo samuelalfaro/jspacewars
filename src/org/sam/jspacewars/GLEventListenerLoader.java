@@ -21,17 +21,31 @@
 package org.sam.jspacewars;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.EOFException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 
 import javax.imageio.ImageIO;
-import javax.media.opengl.*;
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLException;
 
 import org.fenggui.binding.clipboard.IClipboard;
-import org.fenggui.binding.render.*;
+import org.fenggui.binding.render.Binding;
+import org.fenggui.binding.render.CursorFactory;
+import org.fenggui.binding.render.ITexture;
+import org.fenggui.binding.render.Pixmap;
 import org.fenggui.binding.render.jogl.JOGLOpenGL;
 import org.fenggui.binding.render.jogl.JOGLTexture;
-import org.sam.jogl.*;
+import org.sam.jogl.GrafoEscenaConverters;
+import org.sam.jogl.Instancia3D;
+import org.sam.jogl.ObjLoader;
 import org.sam.jogl.fondos.CieloEstrellado;
+import org.sam.jspacewars.cliente.MarcoDeIndicadores;
 import org.sam.util.ModificableBoolean;
 
 import com.thoughtworks.xstream.XStream;
@@ -42,7 +56,10 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  * @author Samuel Alfaro
  */
 class GLEventListenerLoader implements GLEventListener {
-
+	@SuppressWarnings("unused")
+	// Indices rgb
+	private final static transient int r = 0, g = 1, b = 2;
+	
 	/**
 	 * Implementación de la clase abstracta
 	 * {@link org.fenggui.binding.render.Binding Binding}.
@@ -131,8 +148,6 @@ class GLEventListenerLoader implements GLEventListener {
 
 	private transient float proporcionesPantalla;
 	private final transient float[] color1, color2;
-	@SuppressWarnings("unused")
-	private final transient int r = 0, g = 1, b = 2;
 
 	GLEventListenerLoader(DataGame dataGame, ModificableBoolean loading) {
 		this.dataGame = dataGame;
@@ -190,6 +205,10 @@ class GLEventListenerLoader implements GLEventListener {
 			}catch( IOException ignorada ){
 			}
 			MyGameMenuButton.setPrototipo(new MyGameMenuButton("Prototipo", defaultState, hoverState, pressedState));
+		}else if( dataGame.getGui() == null ){
+			dataGame.setGui( MarcoDeIndicadores.getMarco(0) );
+		}else if( !dataGame.getGui().isLoadComplete() ){
+			dataGame.getGui().loadTexturas(gl);
 		}else if( dataGame.getFondo() == null ){
 			dataGame.setFondo(new CieloEstrellado(gl, "resources/texturas/cielo1.jpg", "resources/texturas/spark.jpg"));
 		}else{

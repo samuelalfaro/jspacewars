@@ -20,18 +20,26 @@
  */
 package org.sam.jspacewars;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 
 import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
 import javax.swing.JFrame;
 
 import org.fenggui.event.ButtonPressedEvent;
 import org.fenggui.event.IButtonPressedListener;
-import org.sam.jspacewars.cliente.*;
+import org.sam.jspacewars.cliente.Cliente;
 import org.sam.jspacewars.servidor.ServidorJuego;
 
 import com.sun.opengl.util.Animator;
@@ -48,9 +56,11 @@ public class ExampleGameMenuJOGL {
 			myDevice.setFullScreenWindow(frame);
 			if( myDevice.isDisplayChangeSupported() ){
 				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
-				// currentDisplayMode = new DisplayMode(640, 400,
-				// currentDisplayMode.getBitDepth(),
-				// currentDisplayMode.getRefreshRate());
+				/*
+				 currentDisplayMode = new DisplayMode(640, 400,
+				 currentDisplayMode.getBitDepth(),
+				 currentDisplayMode.getRefreshRate());
+				 */
 				try{
 					myDevice.setDisplayMode(currentDisplayMode);
 					frame.setSize(currentDisplayMode.getWidth(), currentDisplayMode.getHeight());
@@ -62,13 +72,20 @@ public class ExampleGameMenuJOGL {
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			frame.setBounds(0, 0, dim.width, dim.height);
 		}
+//		CardLayout layout = new ;
+//		frame.setContentPane(contentPane)
+//		final JPanel escenario = new JPanel(layout);
+//		frame.getContentPane().setLayout(new CardLayout());
 		return frame;
 	}
 	
+	//*
 	private static void mostrar(JFrame frame, Component component) {
-		if( Container.class.isAssignableFrom(component.getClass()) )
+		if( Container.class.isAssignableFrom(component.getClass()) ){
+			System.out.println("Usando componente como ContentPane");
 			frame.setContentPane((Container) component);
-		else{
+		}else{
+			System.out.println("Añadiendo content pane");
 			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
 				frame.getContentPane().setLayout(new BorderLayout());
 			frame.getContentPane().removeAll();
@@ -79,46 +96,77 @@ public class ExampleGameMenuJOGL {
 			System.out.println("eoo");
 			frame.setVisible(true);
 		}
+//		frame.setVisible(true);
 		component.requestFocus();
 	}
+	//*/
+	
+	private static class ClientServer{
+		Cliente cliente;
+		ServidorJuego server;
+	}
+	
 	
 	public static void main(String[] args) {
 
+		final ClientServer clientServer= new ClientServer();
+		
 		final DataGame dataGame = new DataGame();
+		GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
 
-		SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
+		SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
 		splashFrame.setVisible(true);
 
 		final Animator animator = new Animator();
-//		animator.setRunAsFastAsPossible(true);
-//		animator.setPrintExceptions(true);
-
+		animator.setRunAsFastAsPossible(true);
+		animator.setPrintExceptions(true);
+		splashFrame.waitForLoading();
 		splashFrame.setVisible(false);
+
+//		canvas.removeAllGLEventListeners();
+		final GLCanvas canvas = new GLCanvas(null, null, canvas1.getContext(), null);
+		
+		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer(dataGame.getFondo());
+		Map<String,IButtonPressedListener> actions = new Hashtable<String,IButtonPressedListener>();
+		final GLEventListener displayGUI = new GLEventListenerDisplayGUI(actions);
+		
+		canvas.addGLEventListener(backgroundRenderer);
+		canvas.addGLEventListener(displayGUI);
+		
 		splashFrame = null;
 		System.gc();
 
 		final JFrame frame = getFullScreenFrame();
 		
-		Map<String,IButtonPressedListener> actions = new Hashtable<String,IButtonPressedListener>();
-		
 		IButtonPressedListener lanzarUnJugador =  new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent event) {
 				try{
-					
-					ServidorJuego server = new ServidorJuego();
-					
-					ClientData dataCliente = new ClientData();
-					PantallaCliente pantalla = PantallaCliente.getNewPantalla(0, dataGame, dataCliente);
-					
 					animator.stop();
-					mostrar(frame, pantalla);
+					animator.remove(canvas);
+					canvas.removeGLEventListener(backgroundRenderer);
+					canvas.removeGLEventListener(displayGUI);
 					
-					Cliente cliente = new Cliente(
-							server.getLocalChannelClientIn(), server.getLocalChannelClientOut(),
-							dataGame.getCache(), dataCliente, pantalla
+					clientServer.server = new ServidorJuego();
+					
+					clientServer.cliente = new Cliente(
+							clientServer.server.getLocalChannelClientIn(), clientServer.server.getLocalChannelClientOut(),
+							dataGame, canvas
 					);
-					cliente.start();
-					server.atenderClientes();
+					canvas.addGLEventListener(displayGUI);
+//					canvas.
+//					canvas.setSize(canvas.getSize());
+					clientServer.cliente.start();
+					
+					new Thread(){
+						public void run(){
+							try{
+								clientServer.server.atenderClientes();
+							}catch( IOException e ){
+								e.printStackTrace();
+							}
+						}
+					}.start();
+					
 				}catch( IOException exception ){
 					exception.printStackTrace();
 				}
@@ -127,12 +175,14 @@ public class ExampleGameMenuJOGL {
 		
 		actions.put("lanzarUnJugador", lanzarUnJugador);
 		
-		GLCanvas canvas = new GLCanvas(new GLCapabilities(), null, dataGame.getGLContext(), null);
-		canvas.addGLEventListener(new GLEventListenerBackgroundRenderer(dataGame.getFondo()));
-		canvas.addGLEventListener(new GLEventListenerDisplayGUI(actions));
+//		GLCanvas canvas = new GLCanvas(new GLCapabilities(), null, dataGame.getGLContext(), null);
+		
 //		GameMenu gameMenu = new GameMenu();
 //		canvas.addGLEventListener(new GLEventListenerDisplayGUI(gameMenu));
 		animator.add(canvas);
+//		frame.getContentPane().add( canvas, "0");
+//		frame.getContentPane().add( pantalla, "1");
+//		frame.validate();
 		mostrar(frame, canvas);
 		animator.start();
 	}

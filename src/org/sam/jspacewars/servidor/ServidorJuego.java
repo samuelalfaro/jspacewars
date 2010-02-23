@@ -45,6 +45,7 @@ public class ServidorJuego {
 			// return ((Elemento)c1).posX - (((Elemento)c2).posX + 10);
 		}
 
+		@SuppressWarnings("unused")
 		public void comprobarColisiones(Collection<? extends Colisionable> unConjuntoA,
 				Collection<? extends Colisionable> unConjuntoB) {
 			if( unConjuntoA.size() == 0 || unConjuntoB.size() == 0 )
@@ -153,6 +154,8 @@ public class ServidorJuego {
 
 		Collection<Disparo> disparosNave;
 
+		
+		
 		nave1 = (NaveUsuario) cache.newObject(0x02);
 		nave1.setId((short) 1);
 		disparosNave = new LinkedList<Disparo>();
@@ -160,7 +163,11 @@ public class ServidorJuego {
 		listasDeDisparos.add(disparosNave);
 		nave1.iniciar();
 		nave1.setPosicion(0, 0);
-		nave1.setLimites(4.5f, 3);
+		
+		float ratio = (30*4.0f/32) / (3.0f - 4*4.0f/32); // ratio 4/3 sin bordes GUI
+		float h = 2.9f;
+		float w = ratio * h;
+		nave1.setLimites(w, h);
 		naves.add(nave1);
 
 		if( !localOnly ){
@@ -171,7 +178,7 @@ public class ServidorJuego {
 			listasDeDisparos.add(disparosNave);
 			nave2.iniciar();
 			nave2.setPosicion(0, -1);
-			nave2.setLimites(4.5f, 3);
+			nave2.setLimites(w, h);
 			naves.add(nave2);
 		}
 

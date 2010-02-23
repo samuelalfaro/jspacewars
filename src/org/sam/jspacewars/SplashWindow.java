@@ -20,11 +20,16 @@
  */
 package org.sam.jspacewars;
 
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Window;
 import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLCapabilities;
 
 import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
@@ -40,7 +45,7 @@ class SplashWindow extends Window {
 	private final transient ModificableBoolean loading;
 	private final transient GLCanvas barra;
 
-	SplashWindow(String ruta, DataGame dataGame) {
+	SplashWindow( String ruta, GLCanvas barra, DataGame dataGame ) {
 		super(null);
 		this.setLayout(null);
 
@@ -75,9 +80,9 @@ class SplashWindow extends Window {
 
 		loading = new ModificableBoolean(true);
 
-		barra = new GLCanvas(new GLCapabilities());
-		barra.setBounds(50, h - 10, w - 100, 5);
-		barra.addGLEventListener(new GLEventListenerLoader(dataGame, loading));
+		this.barra = barra;
+		this.barra.setBounds(50, h - 10, w - 100, 5);
+		this.barra.addGLEventListener(new GLEventListenerLoader(dataGame, loading));
 
 		this.add(barra);
 	}
@@ -131,17 +136,19 @@ class SplashWindow extends Window {
 					}
 				}.start();
 			}
-		}else{
-			if( loading.isTrue() ){
-				synchronized( loading ){
-					try{
-						loading.wait();
-					}catch( InterruptedException e ){
-						e.printStackTrace();
-					}
+		}else
+			super.setVisible(false);
+	}
+	
+	public void waitForLoading(){
+		if( loading.isTrue() ){
+			synchronized( loading ){
+				try{
+					loading.wait();
+				}catch( InterruptedException e ){
+					e.printStackTrace();
 				}
 			}
-			super.setVisible(false);
 		}
 	}
 }
