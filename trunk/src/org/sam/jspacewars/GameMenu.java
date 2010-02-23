@@ -33,7 +33,7 @@ import org.fenggui.util.Spacing;
 
 public class GameMenu extends Container {
 
-	private final MyGameMenuButton player1, player2, options, quit;
+	private final MyGameMenuButton player1, player2, server, client, options, quit;
 	private final MyGameMenuButton sound, graphics, network, back;
 
 	public GameMenu(Map<String,IButtonPressedListener> actions) {
@@ -48,6 +48,19 @@ public class GameMenu extends Container {
 
 		player2 = MyGameMenuButton.derive("2 Players");
 		player2.addButtonPressedListener(new IButtonPressedListener() {
+			public void buttonPressed(ButtonPressedEvent e) {
+				buildTowPlayersMenu();
+			}
+		});
+		
+		server = MyGameMenuButton.derive("Server");
+		server.addButtonPressedListener(new IButtonPressedListener() {
+			public void buttonPressed(ButtonPressedEvent e) {
+			}
+		});
+		
+		client = MyGameMenuButton.derive("Client");
+		client.addButtonPressedListener(new IButtonPressedListener() {
 			public void buttonPressed(ButtonPressedEvent e) {
 			}
 		});
@@ -103,6 +116,15 @@ public class GameMenu extends Container {
 		StaticLayout.center(this, this.getDisplay());
 	}
 
+	private void buildTowPlayersMenu() {
+		this.removeAllWidgets();
+		this.addWidget(server);
+		this.addWidget(client);
+		this.addWidget(back);
+		this.pack();
+		StaticLayout.center(this, this.getDisplay());
+	}
+	
 	private void buildOptionsMenu() {
 		this.removeAllWidgets();
 		this.addWidget(graphics);

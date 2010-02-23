@@ -21,14 +21,18 @@
 
 package org.sam.jspacewars.cliente;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.ListIterator;
 
+import javax.media.opengl.GLCanvas;
+
 import org.sam.elementos.Cache;
 import org.sam.jogl.Instancia3D;
+import org.sam.jspacewars.DataGame;
 
 /**
  * 
@@ -134,7 +138,7 @@ public class Cliente extends Thread {
 
 	private final transient Cache<Instancia3D> cache;
 	private final transient ClientData data;
-	private final transient PantallaCliente pantalla;
+	private final transient GLCanvas canvas;
 
 	/**
 	 * @param channelIn
@@ -143,16 +147,20 @@ public class Cliente extends Thread {
 	 * @param data
 	 * @param pantalla
 	 */
-	public Cliente(ReadableByteChannel channelIn, WritableByteChannel channelOut, Cache<Instancia3D> cache,
-			ClientData data, PantallaCliente pantalla) {
+	public Cliente(ReadableByteChannel channelIn, WritableByteChannel channelOut, DataGame dataGame, GLCanvas canvas) {
 
 		this.channelIn = channelIn;
 		this.channelOut = channelOut;
 		this.buff = ByteBuffer.allocateDirect(8192);
 
-		this.cache = cache;
-		this.data = data;
-		this.pantalla = pantalla;
+		this.cache = dataGame.getCache();
+		this.data =  new ClientData();
+		this.canvas = canvas;
+		
+		this.canvas.setBackground(Color.BLACK);
+		this.canvas.setIgnoreRepaint(true);
+		this.canvas.addGLEventListener( new Renderer(dataGame.getFondo(), data, dataGame.getGui() ));
+		this.canvas.addKeyListener(new GameKeyListener(data));	
 	}
 
 	/*
@@ -161,9 +169,9 @@ public class Cliente extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		System.out.println("Iniciando cliente");
+//		System.out.println("Iniciando cliente");
 		while( true ){
-			System.out.println("Enviando");
+//			System.out.println("Enviando");
 			buff.clear();
 			buff.putInt(data.key_state);
 			buff.flip();
@@ -172,7 +180,7 @@ public class Cliente extends Thread {
 			}catch( IOException e ){
 				e.printStackTrace();
 			}
-			System.out.println("Leyendo");
+//			System.out.println("Leyendo");
 			buff.clear();
 			try{
 				channelIn.read(buff);
@@ -180,10 +188,10 @@ public class Cliente extends Thread {
 				e.printStackTrace();
 			}
 			buff.flip();
-
 			recibir(buff, cache, data);
-			System.out.println("pantalla.update()");
-			pantalla.update();
+			
+//			System.out.println("canvas.display()");
+			canvas.display();
 		}
 	}
 }

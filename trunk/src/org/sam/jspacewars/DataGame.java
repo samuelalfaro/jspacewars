@@ -25,6 +25,7 @@ import javax.media.opengl.GLContext;
 import org.sam.elementos.Cache;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.fondos.Fondo;
+import org.sam.jspacewars.cliente.MarcoDeIndicadores;
 
 /**
  * Clase que encapsula las referencias de los distintos elementos que necesitan
@@ -39,12 +40,14 @@ public class DataGame {
 	 * disitintos GLAutoDrawable
 	 */
 	private GLContext glContext;
+	
+	private MarcoDeIndicadores gui;
 
 	/**
 	 * Fondo de la pantalla.
 	 */
 	private Fondo fondo;
-
+	
 	/**
 	 * Caché que almacena las distintas instancias cargadas.
 	 */
@@ -61,6 +64,10 @@ public class DataGame {
 		return glContext;
 	}
 
+	public MarcoDeIndicadores getGui() {
+		return gui;
+	}
+	
 	/**
 	 * @return the fondo
 	 */
@@ -81,6 +88,10 @@ public class DataGame {
 	 */
 	public void setGLContext(GLContext glContext) {
 		this.glContext = glContext;
+	}
+	
+	public void setGui(MarcoDeIndicadores gui) {
+		this.gui = gui;
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class FloatComponent extends JComponent{
 		int anchoC = getParent().getWidth();
 		setLocation((int)(x*anchoC),(int)(y*anchoC));			
 		Dimension dim = super.getPreferredSize();
-		dim.setSize(ancho*anchoC,alto*anchoC);
+		dim.setSize( ancho*anchoC, alto*anchoC );
 		setSize(dim);
 		return dim;
 	}

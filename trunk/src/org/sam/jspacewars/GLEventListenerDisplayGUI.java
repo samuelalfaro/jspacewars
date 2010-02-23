@@ -51,7 +51,7 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 */
 	@Override
 	public void init(GLAutoDrawable drawable) {
-		display = new Display(new JOGLBinding((GLCanvas) drawable, drawable.getGL()));
+		display = new Display(new JOGLBinding((GLCanvas) drawable));
 		// try{
 		// FengGUI.setTheme( new XMLTheme("data/themes/QtCurve/QtCurve.xml") );
 		// }catch( IOException ignorada ){

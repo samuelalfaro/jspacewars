@@ -20,14 +20,26 @@
  */
 package org.sam.jspacewars;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.io.IOException;
-import java.net.*;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.channels.DatagramChannel;
 
+import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GLCapabilities;
 import javax.swing.JFrame;
 
-import org.sam.jspacewars.cliente.*;
+import org.sam.jspacewars.cliente.Cliente;
 import org.sam.jspacewars.servidor.ServidorJuego;
 
 /**
@@ -55,12 +67,14 @@ public class Launcher {
 			myDevice.setFullScreenWindow(frame);
 			if( myDevice.isDisplayChangeSupported() ){
 				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
+				/*
 					currentDisplayMode = new DisplayMode(640, 400,
 				 	currentDisplayMode.getBitDepth(),
 //					DisplayMode.BIT_DEPTH_MULTI,
 					currentDisplayMode.getRefreshRate()
 //					60
 					);
+					*/
 				try{
 					myDevice.setDisplayMode(currentDisplayMode);
 					frame.setSize(currentDisplayMode.getWidth(), currentDisplayMode.getHeight());
@@ -95,23 +109,23 @@ public class Launcher {
 
 	private static void lanzarUnJugador() {
 		try{
+			GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
 			DataGame dataGame = new DataGame();
 
-			SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
+			SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
 			splashFrame.setVisible(true);
 
 			ServidorJuego server = new ServidorJuego();
-			ClientData dataCliente = new ClientData();
-
+			splashFrame.waitForLoading();
+			
+			GLCanvas canvas2 = new GLCanvas(null, null, canvas1.getContext(), null);
+			
 			splashFrame.setVisible(false);
 			splashFrame = null;
 			System.gc();
 
-			PantallaCliente pantalla = PantallaCliente.getNewPantalla(0, dataGame, dataCliente);
-			mostrar(pantalla);
-
-			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame
-					.getCache(), dataCliente, pantalla);
+			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas2);
+			mostrar(canvas2);
 			cliente.start();
 			server.atenderClientes();
 		}catch( IOException e ){
@@ -121,23 +135,23 @@ public class Launcher {
 
 	private static void lanzarAnfitrion(int port) {
 		try{
+			GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
 			DataGame dataGame = new DataGame();
 
-			SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
+			SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
 			splashFrame.setVisible(true);
 
 			ServidorJuego server = new ServidorJuego(port);
-			ClientData dataCliente = new ClientData();
-
+			splashFrame.waitForLoading();
+			
+			GLCanvas canvas2 = new GLCanvas(null, null, canvas1.getContext(), null);
+			
 			splashFrame.setVisible(false);
 			splashFrame = null;
 			System.gc();
 
-			PantallaCliente pantalla = PantallaCliente.getNewPantalla(0, dataGame, dataCliente);
-			mostrar(pantalla);
-
-			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame
-					.getCache(), dataCliente, pantalla);
+			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas2);
+			mostrar(canvas2);
 			cliente.start();
 			server.atenderClientes();
 		}catch( IOException e ){
@@ -146,24 +160,27 @@ public class Launcher {
 	}
 
 	private static void lanzarInvitado(String hostname, int port) {
+		//*
 		try{
+			GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
 			DataGame dataGame = new DataGame();
 
-			SplashWindow splashFrame = new SplashWindow("splash.jpg", dataGame);
+			SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
 			splashFrame.setVisible(true);
-
-			DatagramChannel canalCliente = DatagramChannel.open();
-			canalCliente.connect(new InetSocketAddress(hostname, port));
-			ClientData clientData = new ClientData();
-
+			splashFrame.waitForLoading();
+			
+			GLCanvas canvas2 = new GLCanvas(null, null, canvas1.getContext(), null);
+			
 			splashFrame.setVisible(false);
 			splashFrame = null;
 			System.gc();
+			
+			DatagramChannel canalCliente = DatagramChannel.open();
+			canalCliente.connect(new InetSocketAddress(hostname, port));
 
-			PantallaCliente pantalla = PantallaCliente.getNewPantalla(0, dataGame, clientData);
-			mostrar(pantalla);
-
-			Cliente cliente = new Cliente(canalCliente, canalCliente, dataGame.getCache(), clientData, pantalla);
+			Cliente cliente = new Cliente(canalCliente, canalCliente, dataGame, canvas2);
+			mostrar(canvas2);
+			cliente.start();
 			cliente.run();
 
 		}catch( SocketException e ){
@@ -173,6 +190,7 @@ public class Launcher {
 		}catch( IOException e ){
 			e.printStackTrace();
 		}
+		//*/
 	}
 
 	public static void main(String... args) {
