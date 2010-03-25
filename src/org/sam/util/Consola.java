@@ -8,8 +8,8 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 /**
- * Clase que proporciona m�todos est�ticos para poder crear instancias de la clase encapsulada <i>OutputDocumentStream</i> que es
- * un OutputStream que permite mostrar el texto en un componente de texto a modo de consola.
+ * Clase que proporciona métodos estáticos para poder crear instancias de la clase encapsulada <i>OutputDocumentStream</i>
+ * que es un OutputStream que permite mostrar el texto en un componente de texto a modo de consola.
  */
 public class Consola {
 
@@ -17,10 +17,10 @@ public class Consola {
 		textAreaNull =
 		new IllegalArgumentException(
 			"\nError creando log:" +
-			"\n[ El componente que contendr� la consola no puede ser nulo ]");
+			"\n[ El componente que contendrá la consola no puede ser nulo ]");
 		
 	/**
-	 * Clase derivada de OutputStream que sobreescribe los m�todos: <ul>
+	 * Clase derivada de OutputStream que sobreescribe los métodos: <ul>
 	 * <li><code>public void write(int b)</code>
 	 * <li><code>public voidwrite(byte buf[], int off, int len)</code></ul>
 	 * para que ademas de mostrar el texto por su salida orignal, aparezca por un componente de texto asociado
@@ -53,10 +53,10 @@ public class Consola {
 					// Se cambia la posicion del JTextComponent para que muestre
 					// lo ultimo insertado
 					textComponent.setCaretPosition(doc.getLength());
-					// En caso de q se haya definido un tama�o de documento
+					// En caso de q se haya definido un tamaño de documento
 					// se comprueba si hay q eliminar algo
 					if(tamIdeal >0){
-						// Se calcula el tama�o del docueneto y se compara con el tama�o ideal
+						// Se calcula el tamaño del docueneto y se compara con el tamaño ideal
 						int exceso = doc.getLength() - tamIdeal;
 						//Para no estar continumente eliminando se deja de margen maxExceso
 						if (exceso >= excesoMax)
@@ -97,7 +97,7 @@ public class Consola {
 	}
 	
 	/**
-	 * M�todo que llama a <code>getLog( tc, null, -1, null)</code>
+	 * Método que llama a <code>getLog( tc, null, -1, null)</code>
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc){
@@ -105,7 +105,7 @@ public class Consola {
 	}
 
 	/**
-	 * M�todo que llama a <code>getLog( tc, at, -1, null)</code>
+	 * Método que llama a <code>getLog( tc, at, -1, null)</code>
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, AttributeSet at){
@@ -113,7 +113,7 @@ public class Consola {
 	}
 	
 	/**
-	 * M�todo que llama a <code>getLog( tc, null, tamDoc, null)</code>
+	 * Método que llama a <code>getLog( tc, null, tamDoc, null)</code>
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, int tamDoc){
@@ -121,7 +121,7 @@ public class Consola {
 	}
 
 	/**
-	 * M�todo que llama a <code>getLog( tc, at, tamDoc, null)</code>
+	 * Método que llama a <code>getLog( tc, at, tamDoc, null)</code>
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, AttributeSet at, int tamDoc){
@@ -129,7 +129,7 @@ public class Consola {
 	}
 	
 	/**
-	 * M�todo que llama a <code>getLog( tc, null, -1, mirror)</code>
+	 * Método que llama a <code>getLog( tc, null, -1, mirror)</code>
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, OutputStream mirror){
@@ -137,13 +137,13 @@ public class Consola {
 	}
 	
 	/**
-	 * M�todo que crea un PrintStream, que mostrar� su contenido por un componente de
+	 * Método que crea un PrintStream, que mostrará su contenido por un componente de
 	 * texto.
 	 * 
 	 * @param tc Componente de texto donde se va a mostrar el contenido
 	 * @param at Atributos del texto mostrado
-	 * @param tamDoc Tama�o maximo del documento, cuando el documento llega al tama�o maximo, se van eliminando
-	 * los caracteres m�s antiguos. Si el tamaño es menor de 0, y el tama�o maximo es indifenido, y no se elimina nada. 
+	 * @param tamDoc Tamaño máximo del documento, cuando el documento llega al tamaño maximo, se van eliminando
+	 * los caracteres más antiguos. Si el tamaño es menor de 0, y el tamaño máximo es indifenido, y no se elimina nada. 
 	 * @param mirror Indica el OutputStream en el que se copiara el texto mostrado en el componente.
 	 * @return El PrintStream creado
 	 */
