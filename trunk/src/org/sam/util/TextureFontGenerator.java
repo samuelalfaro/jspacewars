@@ -72,7 +72,6 @@ public class TextureFontGenerator {
 	private char[] ignorados;
 	
 	private Font   font;
-	private double correctorX, correctorY;
 	
 	public TextureFontGenerator(){
 		this(basicAlphabetCharArray, null);
@@ -88,21 +87,16 @@ public class TextureFontGenerator {
 		if (this.ignorados != null){
 			Arrays.sort(this.ignorados);
 		}
-		correctorX = 1.0;
-		correctorY = 1.0;
 	}
 	
 	public BufferedImage generate( int width, int height ){
-		return generate( width, height, (int)(Math.sqrt(alfabeto.length) + 0.5) );
+		return generate( width, height, 0, 0 );
 	}
 	
-	public BufferedImage generate( int width, int height, int columnas ){
-		return generate( width, height, columnas, 0, 0 );
-	}
-	
-	public BufferedImage generate( int width, int height, int columnas, int bordeH, int bordeV ){
+	public BufferedImage generate( int width, int height, int bordeH, int bordeV ){
 		
-		BufferedImage img = new BufferedImage( width, height, BufferedImage.TYPE_BYTE_GRAY);
+//		BufferedImage img = new BufferedImage( width, height, BufferedImage.TYPE_BYTE_GRAY);
+		BufferedImage img = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = img.createGraphics();
 		g2d.setBackground(Color.BLACK);
 		g2d.clearRect(0, 0, width, height);
@@ -117,52 +111,58 @@ public class TextureFontGenerator {
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON
 		);
 		
-		int filas    = alfabeto.length / columnas;
-		if( alfabeto.length % columnas != 0)
-			filas++;
+		int nChars = alfabeto.length;
+		if( ignorados != null)
+			nChars -= ignorados.length;
 		
 		if(font == null)
 			font = g2d.getFont();		
 		FontMetrics fontMetrics = g2d.getFontMetrics(font);
 		
-		double defaultWidth = fontMetrics.charWidth('W') * columnas;
+		double defaultWidth = 0;
+		for( int i= 0; i< alfabeto.length; i++ ){
+			char c = alfabeto[i];
+			if(ignorados == null || Arrays.binarySearch(ignorados, c) < 0 ){
+				defaultWidth += fontMetrics.charWidth(c);
+			}
+		}
 		System.out.println(defaultWidth);
 		
-		double defaultHeight = (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent()) * filas;
+		double defaultHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
 		System.out.println(defaultHeight);
 		
 		AffineTransform trasnform = new AffineTransform();
-		double scaleX = correctorX * ( img.getWidth() - bordeH * ( columnas + 1) )/defaultWidth;
-		System.out.println(scaleX);
-		double scaleY = correctorY * ( img.getHeight() - bordeV * ( filas + 1) )/defaultHeight;
-		System.out.println(scaleY);
+		double scaleX = ( img.getWidth() - 2 * bordeH * nChars )/defaultWidth;
+		System.out.println( scaleX + ": " + defaultWidth * scaleX + " + " + 2 * bordeH * nChars + " = " + ( defaultWidth * scaleX + 2 * bordeH * nChars) );
+		double scaleY = ( img.getHeight() - 2 * bordeV )/defaultHeight;
+		System.out.println( scaleY  + ": " + defaultHeight * scaleY + " + " + 2 * bordeV  + " = " + ( defaultHeight * scaleY  + 2 * bordeV ) );
 		trasnform.scale( scaleX, scaleY );
-		System.out.println(trasnform);
-		
 		Font font1 = font.deriveFont( trasnform );
 		fontMetrics = g2d.getFontMetrics(font1);
 		g2d.setFont(font1);
 		
-		defaultWidth = fontMetrics.charWidth('M') * columnas;
-		System.out.println(defaultWidth);
-		defaultHeight = (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent()) * filas;
-		System.out.println(defaultHeight);
+//		defaultWidth = fontMetrics.charWidth('M') * columnas;
+//		System.out.println(defaultWidth);
+//		defaultHeight = (fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent()) * filas;
+//		System.out.println(defaultHeight);
 		
-		double offX = (double)( img.getWidth() - bordeH ) / columnas;
-		double offY = (double)( img.getHeight() - bordeV ) / filas;
-		int charHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
+//		double offX = (double)( img.getWidth() - bordeH ) / columnas;
+//		double offY = (double)( img.getHeight() - bordeV ) / filas;
+//		int charHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
 		
-		for( int i = 0, j = 0; j < filas; j++ ){
-			for( int k=0; k < columnas && i < alfabeto.length; k++, i++){
-				char c = alfabeto[i];
-				if(ignorados == null || Arrays.binarySearch(ignorados, c) < 0 ){
-					int offCharX = (int)( k * offX + bordeH + ( offX - bordeH - fontMetrics.charWidth(c))/2);
-					int offCharY = (int)( j * offY + bordeV + fontMetrics.getMaxAscent() + (offY - bordeV - charHeight )/2 );
-					g2d.setColor(Color.DARK_GRAY);
-					g2d.drawRect(offCharX, (int)(j * offY + bordeV + (offY - bordeV - charHeight )/2), fontMetrics.charWidth(c), charHeight);
-					g2d.setColor(Color.WHITE);
-					g2d.drawChars( alfabeto, i, 1, offCharX, offCharY );
-				}
+		int offX = bordeH;
+//		int offY = img.getHeight() - bordeV;
+		int offY = bordeV + fontMetrics.getMaxAscent();
+		for( int i = 0; i < alfabeto.length; i++ ){
+			char c = alfabeto[i];
+			if(ignorados == null || Arrays.binarySearch(ignorados, c) < 0 ){
+//				g2d.setColor(Color.YELLOW);
+//				g2d.drawRect( offX-bordeH, 0, fontMetrics.charWidth(c)+2*bordeH, fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() + 2*bordeV );	
+//				g2d.setColor(Color.DARK_GRAY);
+//				g2d.drawRect( offX, bordeV, fontMetrics.charWidth(c), fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() );
+				g2d.setColor(Color.WHITE);
+				g2d.drawChars( alfabeto, i, 1, offX, offY );
+				offX +=  fontMetrics.charWidth(c) + 2 * bordeH;
 			}
 		}
 		return img;
@@ -196,13 +196,10 @@ public class TextureFontGenerator {
 			System.out.println();
 		}
 		TextureFontGenerator g = new TextureFontGenerator( latinAlphabetCharArray );
-//		g.ignorados = new char[]{'Æ','Ð','×','Ý','Þ','ß','æ','ð','ý', 'þ', 'ÿ'};
+		g.ignorados = new char[]{'Æ','Ð','×','Ý','Þ','ß','æ','ð','ý', 'þ', 'ÿ'};
 		g.font = Tipografias.load("resources/fonts/arbeka.ttf", Font.PLAIN, 64.0f);
 //		g.font = Tipografias.load("resources/fonts/smelo.ttf", Font.PLAIN, 64.0f);
 //		g.font = Tipografias.load("resources/fonts/saved.ttf", Font.PLAIN, 64.0f);
-		g.correctorX = 1.3;
-		g.correctorY = 1.3;
-		
-		export( g.generate( 512, 512, 16, 6, 6 ), "arbeka.png");
+		export( g.generate( 4096, 64, 5, 5 ), "arbeka.png");
 	}
 }
