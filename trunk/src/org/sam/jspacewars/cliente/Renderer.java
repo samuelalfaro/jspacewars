@@ -117,7 +117,7 @@ class Renderer implements GLEventListener {
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		float ratio = (30*4.0f/32) / (3.0f - 4*4.0f/32);
 		float h = 3.26f;
-		float w = (float)ratio * h;
+		float w = ratio * h;
 		gl.glVertex2f(-w,-h);
 		gl.glVertex2f( w,-h);
 		gl.glVertex2f( w, h);

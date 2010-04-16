@@ -72,7 +72,6 @@ public class ParticulasConverters{
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return Emisor.class.isAssignableFrom(clazz);
@@ -81,14 +80,12 @@ public class ParticulasConverters{
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
 		}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			String att = reader.getAttribute(S.clazz);
 			if( att == null)

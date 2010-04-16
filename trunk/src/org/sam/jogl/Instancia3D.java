@@ -21,7 +21,6 @@ public class Instancia3D extends NodoTransformador implements Prototipo<Instanci
 		/* (non-Javadoc)
 		 * @see org.sam.util.Modificador#modificar(float)
 		 */
-		@Override
 		public boolean modificar(float steep) {
 			boolean result = false;
 			for( Modificador  modificador: this.modificadores )
@@ -138,7 +137,6 @@ public class Instancia3D extends NodoTransformador implements Prototipo<Instanci
 	/* (non-Javadoc)
 	 * @see org.sam.util.Modificable#getModificador()
 	 */
-	@Override
 	public Modificador getModificador() {
 		return modificador;
 	}

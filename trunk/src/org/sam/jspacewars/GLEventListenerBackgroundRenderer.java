@@ -97,7 +97,6 @@ class GLEventListenerBackgroundRenderer implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl.
 	 * GLAutoDrawable, boolean, boolean)
 	 */
-	@Override
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 }

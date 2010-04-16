@@ -174,7 +174,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return Instancia3D.class.isAssignableFrom(clazz);
@@ -183,7 +182,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			Instancia3D instancia3D = (Instancia3D)value;
 			writer.startNode(S.tipo);
@@ -211,7 +209,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			int tipo = 0;
 			Nodo child = null;
@@ -245,7 +242,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return Grupo.class.isAssignableFrom(clazz);
@@ -254,7 +250,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			for( Nodo nodo: ((Grupo)value).getChilds() )
 				writeNodo( nodo, writer, context );
@@ -263,7 +258,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			Grupo grupo = new Grupo();
 			while (reader.hasMoreChildren()) {
@@ -280,7 +274,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return NodoCompartido.class.isAssignableFrom(clazz);
@@ -289,7 +282,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			writeNodo( ((NodoCompartido)value).getChilds()[0], writer, context );
 		}
@@ -297,7 +289,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			Nodo child = null;
 			if (reader.hasMoreChildren()) {
@@ -314,7 +305,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return NodoTransformador.class.equals(clazz);
@@ -323,7 +313,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			NodoTransformador nodoTransformador = (NodoTransformador)value;
 			writer.startNode( S.transformMatrix );
@@ -335,7 +324,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 		
 			Matrix4f transform = null;
@@ -368,7 +356,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class type) {
 			return type.equals(ObjLoaderData.class);
@@ -377,14 +364,12 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
 		}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			ObjLoaderData loaderData = new ObjLoaderData();
 			loaderData.path = reader.getAttribute(S.path);
@@ -440,7 +425,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class type) {
 			return type.equals(TexturedQuadData.class);
@@ -449,14 +433,12 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
 		}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			TexturedQuadData data = new TexturedQuadData();
 
@@ -487,7 +469,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return Objeto3D.class.isAssignableFrom(clazz);
@@ -497,7 +478,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			Objeto3D objeto3D = (Objeto3D)value;
 			if(objeto3D.getApariencia() != null){
@@ -510,7 +490,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			Objeto3D objeto3D = new Objeto3D();
 			while(reader.hasMoreChildren()){
@@ -534,7 +513,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return Apariencia.class.isAssignableFrom(clazz);
@@ -543,7 +521,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			Apariencia apariencia = (Apariencia)value;
 			if(apariencia.getAtributosColor() != null){
@@ -601,7 +578,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 
 			Apariencia apariencia = new Apariencia();
@@ -755,7 +731,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return AtributosTransparencia.class.isAssignableFrom(clazz);
@@ -764,7 +739,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			AtributosTransparencia atributosTransparencia = (AtributosTransparencia)value;
 			try{
@@ -795,7 +769,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			AtributosTransparencia.Equation equation = 
 				Enum.valueOf(AtributosTransparencia.Equation.class, reader.getAttribute(S.equation));
@@ -812,7 +785,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return UnidadTextura.class.isAssignableFrom(clazz);
@@ -821,7 +793,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			UnidadTextura unidadTextura = (UnidadTextura) value;
 			if( unidadTextura.getTextura() != null ){
@@ -845,7 +816,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			UnidadTextura unidadTextura = new UnidadTextura();
 			while (reader.hasMoreChildren()) {
@@ -870,7 +840,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return Textura.class.isAssignableFrom(clazz);
@@ -879,7 +848,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			Textura textura = (Textura)value;
 			// TODO almacenar estos datos en la textura para su serialización. (Prescindible)
@@ -905,7 +873,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 //			System.err.println(reader.getAttribute(S.format) + " " +reader.getAttribute(S.image));
 			Textura.MinFilter minFilter = Enum.valueOf(Textura.MinFilter.class, reader.getAttribute(S.minFilter));
@@ -925,7 +892,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return AtributosTextura.class.isAssignableFrom(clazz);
@@ -934,7 +900,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			AtributosTextura atributosTextura = (AtributosTextura)value;
 			try{
@@ -1036,7 +1001,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			AtributosTextura atributosTextura = new AtributosTextura();
 			while (reader.hasMoreChildren()) {
@@ -1100,7 +1064,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return GenCoordTextura.class.isAssignableFrom(clazz);
@@ -1109,7 +1072,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			GenCoordTextura genCoordTextura = (GenCoordTextura)value;
 			try{
@@ -1130,7 +1092,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			GenCoordTextura.Mode mode = 
 				Enum.valueOf(GenCoordTextura.Mode.class, reader.getAttribute(S.mode));
@@ -1145,7 +1106,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@Override
 		@SuppressWarnings(S.unchecked)
 		public boolean canConvert(Class clazz) {
 			return Shader.class.isAssignableFrom(clazz);
@@ -1154,7 +1114,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
-		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			// TODO guardar en la clase los datos de origen para su serializacion (prescindible)
 			writer.addAttribute(S.vertex, "vertex shader path");
@@ -1164,7 +1123,6 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
-		@Override
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			String vertexFile = reader.getAttribute(S.vertex);
 			String fragmentFile = reader.getAttribute(S.fragment);

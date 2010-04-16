@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.*;
 
 import javax.imageio.ImageIO;
 
@@ -1222,7 +1221,7 @@ public class Imagen {
 			luminanceData[2][i] = (int)(0.114f*i +.5f);
 	}
 
-	private static byte rgb2luminance(int pixel){
+	public static byte rgb2luminance(int pixel){
 		int r = pixel >> 16 & BYTE;
 		int g = pixel >> 8  & BYTE;
 		int b = pixel       & BYTE;
@@ -1230,10 +1229,6 @@ public class Imagen {
 		return  (byte)(luminanceData[0][r] + luminanceData[1][g] + luminanceData[2][b]);
 	}
 	
-	private static byte rgb2luminance(byte r, byte g, byte b){
-		return  (byte)(luminanceData[0][r & BYTE] + luminanceData[1][g & BYTE ] + luminanceData[2][b & BYTE]);
-	}
-
 	private static void grayPass(int[] pixels) {
 		int r, g, b;
 		int luminance;
@@ -1301,7 +1296,7 @@ public class Imagen {
 		brightPass(pixels, (int)(min * 255),(int)(max * 255));
 		return toImage(pixels,w,h);
 	}
-
+/*
 	public static Buffer toBuffer(BufferedImage img, boolean flipY){
 		Raster     rt = img.getRaster();
 		DataBuffer db = rt.getDataBuffer();
@@ -1352,7 +1347,9 @@ public class Imagen {
 		buff.rewind();
 		return buff;
 	}
-
+*/
+	
+/*
 	public static ByteBuffer toByteBuffer(BufferedImage img, boolean flipY){
 		Raster     rt = img.getRaster();
 		DataBuffer db = rt.getDataBuffer();
@@ -1449,6 +1446,8 @@ public class Imagen {
 		bb.rewind();
 		return bb;
 	}
+	
+	*/
 
 	public static BufferedImage toBufferedImage(Image img){
 		if(img instanceof BufferedImage)

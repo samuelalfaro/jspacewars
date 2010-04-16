@@ -85,7 +85,6 @@ public class CieloEstrellado implements Fondo, Modificador{
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL)
 	 */
-	@Override
 	public void draw(GL gl) {
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -123,7 +122,6 @@ public class CieloEstrellado implements Fondo, Modificador{
 	/* (non-Javadoc)
 	 * @see org.sam.util.Modificable#getModificador()
 	 */
-	@Override
 	public Modificador getModificador() {
 		return this;
 	}
@@ -131,7 +129,6 @@ public class CieloEstrellado implements Fondo, Modificador{
 	/* (non-Javadoc)
 	 * @see org.sam.util.Modificador#modificar(float)
 	 */
-	@Override
 	public boolean modificar(float steep) {
 		s1 += 0.02f * steep;
 		if(s1 > 1.0f)
