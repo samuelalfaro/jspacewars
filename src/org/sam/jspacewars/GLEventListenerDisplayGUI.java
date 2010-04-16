@@ -49,7 +49,6 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
 	 * )
 	 */
-	@Override
 	public void init(GLAutoDrawable drawable) {
 		display = new Display(new JOGLBinding((GLCanvas) drawable));
 		// try{
@@ -69,7 +68,6 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable
 	 * )
 	 */
-	@Override
 	public void display(GLAutoDrawable drawable) {
 		display.display();
 	}
@@ -81,7 +79,6 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable
 	 * , int, int, int, int)
 	 */
-	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 	}
 
@@ -92,7 +89,6 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl.
 	 * GLAutoDrawable, boolean, boolean)
 	 */
-	@Override
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 }
