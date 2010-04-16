@@ -49,6 +49,10 @@ public class Coulds {
 		this.harmonicScale = harmonicScale;
 	}
 
+	public void setAutoHarmonicScale() {
+		this.harmonicScale = Math.pow(1.0/frequency, 1.0/(octaves-1));
+	}
+	
 	double amplitude;
 	/**
 	 * @param amplitude the amplitude to set
@@ -63,6 +67,10 @@ public class Coulds {
 	 */
 	public void setPersistence(double persistence) {
 		this.persistence = persistence;
+	}
+	
+	public void setAutoPersistence(double amplitudeFinal) {
+		this.persistence = Math.pow(amplitudeFinal, 1.0/(octaves-1));
 	}
 
 	boolean absPartial;
@@ -88,8 +96,7 @@ public class Coulds {
 //		harmonicScale = Math.pow(1.0/frequency, 1.0/(octaves-1));
 		harmonicScale = 2.0;
 		amplitude = 1.0;
-		persistence = Math.pow(.02, 1.0/(octaves-1));
-//		persistence = .5;
+		persistence = .5;
 		absPartial = false;
 		z = 0;
 	}

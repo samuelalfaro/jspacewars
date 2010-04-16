@@ -39,7 +39,5 @@ public class TestRamps {
 					Ramp.DeceleradaAcelerada.compute(0, 1, i, 20)
 			);
 		}
-
 	}
-
 }

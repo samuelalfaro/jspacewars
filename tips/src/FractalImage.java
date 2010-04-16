@@ -91,7 +91,7 @@ public class FractalImage extends BufferedImage{
 				double c  = ( Math.sin( ( vn - 0.5) * Math.PI ) + 1.0 )/2.0;
 				
 				int pixel = ((int)Math.max(0, Math.min( a * 0xFF + 0.5, 255))<<24 & 0xFF000000) | colorRamp.computeToIntRGB(c);
-//				int pixel = colorRamp.computeToIntRGB( Math.sin(values[x][y] * 32 )/2 +0.5 );
+//				int pixel = ((int)Math.max(0, Math.min( a * 0xFF + 0.5, 255))<<24 & 0xFF000000) | colorRamp.computeToIntRGB(vn);
 				db.setElem(i, pixel);
 			}
 	}
@@ -172,7 +172,13 @@ public class FractalImage extends BufferedImage{
 	
 	public static void main(String... args) {
 		Image[] frames = new Image[16];
-//		noiseFunction.setAbsPartial(true);
+		noiseFunction.setAbsPartial(true);
+		noiseFunction.setOctaves(16);
+		noiseFunction.setFrequency(2.0/256);
+		noiseFunction.setAutoHarmonicScale();
+		noiseFunction.setAmplitude(1.0);
+		noiseFunction.setAutoPersistence(.01);
+		
 		for(int i = 0; i < frames.length; i ++){
 //			z = ramp( 0.65, 0.8, i, frames.length-1 );
 //			noiseFunction.setZ( ramp( -0.1, 1.0, i, frames.length-1 ) );
