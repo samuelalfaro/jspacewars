@@ -7,6 +7,7 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
+import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
 
 /**
@@ -30,31 +31,31 @@ implements GLEventListener, KeyListener, MouseMotionListener
 	private GLU glu;
 	//
 	//private ByteBuffer checkImageBuf = BufferUtil.newByteBuffer(checkImageHeight * checkImageWidth * rgb);
-	
-	
+
+
 	private BufferedImage bf;
-//	private TextureData textureData;
+	//	private TextureData textureData;
 	private Buffer checkImage;
-	
+
 	private int checkImageWidth;
 	private int checkImageHeight;
 
 	private static float zoomFactor = 1.0f;
 
-	//
+
 	public PruebaRaster(){
 		super("Prueba Raster");
-		
+
 		bf = Imagen.cargarToBufferedImage("resources/texturas/disparos.png");
-//		textureData = new TextureData(0,0,false,bf);
-		checkImage = Imagen.toBuffer(bf, true);
-		
+		//		textureData = new TextureData(0,0,false,bf);
+		checkImage = Textura.Util.toByteBuffer(bf, Textura.Format.RGBA, true);
+
 		checkImageWidth =  bf.getWidth();
 		checkImageHeight = bf.getHeight();
-		
+
 		//System.out.println(textureData.getBuffer());
 		//System.out.ln(checkImage);
-		
+
 		/*
 		 * display mode (single buffer and RGBA)
 		 */
@@ -91,8 +92,8 @@ implements GLEventListener, KeyListener, MouseMotionListener
 		GL gl = drawable.getGL();
 		glu = new GLU();
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-//		gl.glShadeModel(GL.GL_FLAT);
-//		gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
+		//		gl.glShadeModel(GL.GL_FLAT);
+		//		gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
 	}
 
 	public void display(GLAutoDrawable drawable){
@@ -103,18 +104,18 @@ implements GLEventListener, KeyListener, MouseMotionListener
 		gl.glRasterPos2i(0,0);
 
 		gl.glPixelZoom(zoomFactor, zoomFactor);
-	
+
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendEquation(GL.GL_FUNC_ADD);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
-		
+
 		gl.glDrawPixels(
 				checkImageWidth, checkImageHeight, 
 				GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
-//				GL.GL_BGRA, GL.GL_UNSIGNED_BYTE,
-//				GL.GL_LUMINANCE, GL.GL_UNSIGNED_BYTE,
+				//				GL.GL_BGRA, GL.GL_UNSIGNED_BYTE,
+				//				GL.GL_LUMINANCE, GL.GL_UNSIGNED_BYTE,
 				checkImage);
-		
+
 		gl.glDepthMask(false);
 		gl.glFlush();
 	}
@@ -123,7 +124,7 @@ implements GLEventListener, KeyListener, MouseMotionListener
 		GL gl = drawable.getGL();
 
 		gl.glViewport(0, 0, w, h);
-		
+
 		zoomFactor = Math.min(((float)w)/checkImageWidth,((float)h)/checkImageHeight);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
