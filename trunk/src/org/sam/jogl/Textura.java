@@ -10,6 +10,79 @@ import org.sam.util.Imagen;
 
 public class Textura{
 	
+	public static class Util{
+		
+		private Util(){
+		}
+
+		public static ByteBuffer toByteBuffer(BufferedImage img, Format format, boolean flipY){
+			
+			int nBands = 1;
+			if(format == Format.RGB)
+				nBands = 3;
+			else if(format == Format.RGBA)
+				nBands = 4;
+		
+			ByteBuffer bb = ByteBuffer.allocateDirect( img.getWidth() * img.getHeight() * nBands );
+			
+			switch(nBands){
+			case 1:
+				if(!flipY){
+					for(int y = 0; y < img.getHeight(); y++)
+						for(int x = 0; x < img.getWidth(); x++)
+							bb.put( Imagen.rgb2luminance(img.getRGB(x, y) ) );
+				}else{
+					for(int y = img.getHeight()-1; y >= 0; y--)
+						for(int x = 0; x < img.getWidth(); x++)
+							bb.put( Imagen.rgb2luminance(img.getRGB(x, y) ) );
+				}
+				break;
+			case 3:
+				if(!flipY){
+					for(int y = 0; y < img.getHeight(); y++)
+						for(int x = 0; x < img.getWidth(); x++){
+							int pixel = img.getRGB(x, y);
+							bb.put( (byte)( pixel>>16 & 0xFF) );
+							bb.put( (byte)( pixel>>8 & 0xFF) );
+							bb.put( (byte)( pixel & 0xFF) );
+						}
+				}else{
+					for(int y = img.getHeight()-1; y >= 0; y--)
+						for(int x = 0; x < img.getWidth(); x++){
+							int pixel = img.getRGB(x, y);
+							bb.put( (byte)( pixel>>16 & 0xFF) );
+							bb.put( (byte)( pixel>>8 & 0xFF) );
+							bb.put( (byte)( pixel & 0xFF) );
+						}
+				}
+				break;
+			case 4:
+				if(!flipY){
+					for(int y = 0; y < img.getHeight(); y++)
+						for(int x = 0; x < img.getWidth(); x++){
+							int pixel = img.getRGB(x, y);
+							bb.put( (byte)( pixel>>16 & 0xFF) );
+							bb.put( (byte)( pixel>>8 & 0xFF) );
+							bb.put( (byte)( pixel & 0xFF) );
+							bb.put( (byte)( pixel>>24 & 0xFF) );
+						}
+				}else{
+					for(int y = img.getHeight()-1; y >= 0; y--)
+						for(int x = 0; x < img.getWidth(); x++){
+							int pixel = img.getRGB(x, y);
+							bb.put( (byte)( pixel>>16 & 0xFF) );
+							bb.put( (byte)( pixel>>8 & 0xFF) );
+							bb.put( (byte)( pixel & 0xFF) );
+							bb.put( (byte)( pixel>>24 & 0xFF) );
+						}
+				}
+				break;
+			}
+			bb.rewind();
+			return bb;
+		}
+	}
+	
 	public enum MinFilter{
 		NEAREST		(GL.GL_NEAREST),
 		LINEAR		(GL.GL_LINEAR),
@@ -62,80 +135,13 @@ public class Textura{
 	private Wrap wrapS;
 	private Wrap wrapT;
 	
-	private static ByteBuffer toByteBuffer(BufferedImage img, Format format, boolean flipY){
-		
-		int nBands = 1;
-		if(format == Format.RGB)
-			nBands = 3;
-		else if(format == Format.RGBA)
-			nBands = 4;
-
-		ByteBuffer bb = ByteBuffer.allocateDirect( img.getWidth() * img.getHeight() * nBands );
-		
-		switch(nBands){
-		case 1:
-			if(!flipY){
-				for(int y = 0; y < img.getHeight(); y++)
-					for(int x = 0; x < img.getWidth(); x++)
-						bb.put( Imagen.rgb2luminance(img.getRGB(x, y) ) );
-			}else{
-				for(int y = img.getHeight()-1; y >= 0; y--)
-					for(int x = 0; x < img.getWidth(); x++)
-						bb.put( Imagen.rgb2luminance(img.getRGB(x, y) ) );
-			}
-			break;
-		case 3:
-			if(!flipY){
-				for(int y = 0; y < img.getHeight(); y++)
-					for(int x = 0; x < img.getWidth(); x++){
-						int pixel = img.getRGB(x, y);
-						bb.put( (byte)( pixel>>16 & 0xFF) );
-						bb.put( (byte)( pixel>>8 & 0xFF) );
-						bb.put( (byte)( pixel & 0xFF) );
-					}
-			}else{
-				for(int y = img.getHeight()-1; y >= 0; y--)
-					for(int x = 0; x < img.getWidth(); x++){
-						int pixel = img.getRGB(x, y);
-						bb.put( (byte)( pixel>>16 & 0xFF) );
-						bb.put( (byte)( pixel>>8 & 0xFF) );
-						bb.put( (byte)( pixel & 0xFF) );
-					}
-			}
-			break;
-		case 4:
-			if(!flipY){
-				for(int y = 0; y < img.getHeight(); y++)
-					for(int x = 0; x < img.getWidth(); x++){
-						int pixel = img.getRGB(x, y);
-						bb.put( (byte)( pixel>>16 & 0xFF) );
-						bb.put( (byte)( pixel>>8 & 0xFF) );
-						bb.put( (byte)( pixel & 0xFF) );
-						bb.put( (byte)( pixel>>24 & 0xFF) );
-					}
-			}else{
-				for(int y = img.getHeight()-1; y >= 0; y--)
-					for(int x = 0; x < img.getWidth(); x++){
-						int pixel = img.getRGB(x, y);
-						bb.put( (byte)( pixel>>16 & 0xFF) );
-						bb.put( (byte)( pixel>>8 & 0xFF) );
-						bb.put( (byte)( pixel & 0xFF) );
-						bb.put( (byte)( pixel>>24 & 0xFF) );
-					}
-			}
-			break;
-		}
-		bb.rewind();
-		return bb;
-	}
-	
 	public Textura(GL gl, Format format, BufferedImage image, boolean flipY){
 		this(gl, MinFilter.LINEAR, MagFilter.LINEAR, format, image, flipY);
 	}
 
 	public Textura(GL gl, MinFilter minFilter, MagFilter magFilter, Format format, BufferedImage image, boolean flipY){
 		this(gl, minFilter, magFilter, format, image.getWidth(null), image.getHeight(null),
-				toByteBuffer( image, format, flipY)
+				Util.toByteBuffer( image, format, flipY)
 		);
 	}
 
