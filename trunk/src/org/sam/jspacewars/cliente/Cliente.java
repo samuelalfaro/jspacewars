@@ -1,7 +1,8 @@
 /* 
  * Cliente.java
  * 
- * Copyright (c) 2009 Samuel Alfaro <samuelalfaro at gmail.com>. All rights reserved.
+ * Copyright (c) 2009 Samuel Alfaro <samuelalfaro at gmail.com>.
+ * All rights reserved.
  * 
  * This file is part of jspacewars.
  * 
@@ -18,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with jspacewars.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.sam.jspacewars.cliente;
 
 import java.awt.Color;
