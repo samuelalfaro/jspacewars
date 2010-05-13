@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.sam.jspacewars.elementos;
 
 /**
