@@ -73,7 +73,7 @@ public class Sounds{
 		}
 	}
 	
-	public static void playTracker( String filename){
+	public static void playTracker( String filename ){
 		try {
 			TrackerInputStream data_input_stream = new TrackerInputStream( new FileInputStream( filename ));
 			play(data_input_stream, data_input_stream.getAudioFormat());
@@ -86,7 +86,7 @@ public class Sounds{
 		}
 	}
 
-	public static void playVorbisOgg( String filename){
+	public static void playVorbisOgg( String filename ){
 		try {
 			OggInputStream data_input_stream = new OggInputStream( new FileInputStream( filename ));
 			play(data_input_stream, data_input_stream.getAudioFormat());
@@ -113,10 +113,10 @@ public class Sounds{
 	
 	public static void main(String arrgs[]){
 //		play("resources/sounds/midis/AC-DC_-_Thunderstruck.mid");
-//		play("Riff.wav");
-//		play("delinquentes.ogg");
-		play("nstalgia.s3m");
-		play("snow.xm");
-		play("side_effects.mod");
+//		play("resources/sounds/Riff.wav");
+//		play("resources/sounds/delinquentes.ogg");
+		play("resources/sounds/nstalgia.s3m");
+		play("resources/sounds/snow.xm");
+		play("resources/sounds/side_effects.mod");
 	}
 }

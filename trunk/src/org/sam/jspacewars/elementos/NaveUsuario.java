@@ -189,7 +189,7 @@ public class NaveUsuario extends Nave {
 	private void dispara(long nanos) {
 		float nX = posX;
 		float nY = posY;
-
+		// TODO check
 		float mX = (posX - nX) / nanos;
 		float mY = (posY - nY) / nanos;
 

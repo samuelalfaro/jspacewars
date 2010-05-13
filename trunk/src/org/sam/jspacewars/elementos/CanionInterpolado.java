@@ -47,7 +47,7 @@ public class CanionInterpolado extends Canion {
 			// disparo.setTime(t);
 			dst.add(disparo);
 			t += tRecarga;
-			tTranscurrido -= data.vTRecarga[grado];
+			tTranscurrido -= tRecarga;
 		}
 	}
 }
