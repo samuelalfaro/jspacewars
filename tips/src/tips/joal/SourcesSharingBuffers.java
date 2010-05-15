@@ -208,7 +208,7 @@ public class SourcesSharingBuffers {
 	}
 
 	public static void main(String[] args) {
-		boolean gui = false;
+		boolean gui = true;
 
 		for( int i = 0; i < args.length; i++ ){
 			if( args[i].equals("-gui") )

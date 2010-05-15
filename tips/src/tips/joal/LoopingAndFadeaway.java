@@ -83,7 +83,7 @@ public class LoopingAndFadeaway {
         al.alGetError();
 
         // Load the wav data.
-        if (loadALData("Riff.wav") == ALConstants.AL_FALSE)
+        if (loadALData("resources/sounds/Riff.wav") == ALConstants.AL_FALSE)
             System.exit(1);
  
 		setListenerValues();

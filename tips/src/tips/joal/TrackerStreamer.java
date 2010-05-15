@@ -69,7 +69,7 @@ public class TrackerStreamer {
 	public boolean open() {
 
 		try{
-			data_input_stream = new TrackerInputStream(new FileInputStream("side_effects.mod"), ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN);
+			data_input_stream = new TrackerInputStream(new FileInputStream("resources/sounds/side_effects.mod"), ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN);
 		}catch( FileNotFoundException e ){
 			e.printStackTrace();
 		}catch( IOException e ){

@@ -30,7 +30,7 @@ public class ObjetoPrueba {
 	}
 	
 	public void abrirVentanaPropiedades(){
-		// aki abriamos la ventana de propiedades
+		// aqui abriamos la ventana de propiedades
 		System.out.println("abriendo ventana del objeto "+campo1);
 	}
 }

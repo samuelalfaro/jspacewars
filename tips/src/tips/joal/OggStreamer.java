@@ -76,7 +76,7 @@ public class OggStreamer {
 	public boolean open() {
 
 		try{
-			data_input_stream = new OggInputStream(new FileInputStream("delinquentes.ogg"));
+			data_input_stream = new OggInputStream(new FileInputStream("resources/sounds/delinquentes.ogg"));
 		}catch( FileNotFoundException e ){
 			e.printStackTrace();
 		}catch( IOException e ){

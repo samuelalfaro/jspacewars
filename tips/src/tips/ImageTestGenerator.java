@@ -112,10 +112,18 @@ public class ImageTestGenerator {
 	}
 
 	public static void main(String args[]){
+		String outputDir = "test01";
+		try{
+			File dir = new File(outputDir);
+			if( !dir.exists() )
+				dir.mkdir();
+		}catch( SecurityException e ){
+			e.printStackTrace();
+		}
 		try{
 			for( int i = 20; i < 33; i++ )
-				export( i*16, i*9,"jpg", String.format("test/imgTest%03d.jpg", i));
-			export( 480, 240,"png", "test/imgTest480x240.png");
+				export( i*16, i*9,"jpg", String.format("%s/imgTest%03d.jpg", outputDir,i));
+			export( 480, 240,"png", outputDir + "/imgTest480x240.png");
 		}catch( IOException e ){
 			e.printStackTrace();
 		}
