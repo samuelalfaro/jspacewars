@@ -101,13 +101,13 @@ public class CieloEstrellado implements Fondo, Modificador{
 		gl.glDepthMask(false);
 		gl.glBegin(GL.GL_QUADS);
 			gl.glTexCoord2f(s1,0.0f);
-			gl.glVertex3f(0.0f,0.0f,0.0f);
+			gl.glVertex2f(0.0f,0.0f);
 			gl.glTexCoord2f(s2 + s1,0.0f);
-			gl.glVertex3f(proporcionesPantalla,0.0f,0.0f);
+			gl.glVertex2f(proporcionesPantalla,0.0f);
 			gl.glTexCoord2f(s2 + s1,1.0f);
-			gl.glVertex3f(proporcionesPantalla,1.0f,0.0f);
+			gl.glVertex2f(proporcionesPantalla,1.0f);
 			gl.glTexCoord2f(s1,1.0f);
-			gl.glVertex3f(0.0f,1.0f,0.0f);
+			gl.glVertex2f(0.0f,1.0f);
 		gl.glEnd();
 
 		for(Particulas p:estrellas )
