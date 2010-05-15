@@ -1213,20 +1213,21 @@ public class Imagen {
 	// pre-computations for conversion from RGB to Luminance
 	static int[][] luminanceData = new int[3][256];
 	static{
-		for (int i = 0; i < 256; i++)
+		for (int i = 0; i < 256; i++){
 			luminanceData[0][i] = (int)(0.299f*i +.5f);
-		for (int i = 0; i < 256; i++)
 			luminanceData[1][i] = (int)(0.587f*i +.5f);
-		for (int i = 0; i < 256; i++)
 			luminanceData[2][i] = (int)(0.114f*i +.5f);
+		}
 	}
 
 	public static byte rgb2luminance(int pixel){
 		int r = pixel >> 16 & BYTE;
 		int g = pixel >> 8  & BYTE;
 		int b = pixel       & BYTE;
-
-		return  (byte)(luminanceData[0][r] + luminanceData[1][g] + luminanceData[2][b]);
+		
+		if( r == g && g == b )
+			return (byte)r;
+		return (byte)(luminanceData[0][r] + luminanceData[1][g] + luminanceData[2][b]);
 	}
 	
 	private static void grayPass(int[] pixels) {

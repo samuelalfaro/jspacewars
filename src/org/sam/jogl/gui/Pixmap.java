@@ -25,13 +25,13 @@ public class Pixmap{
 	public void draw(GL gl, float x1, float y1, float x2, float y2){
 		gl.glBegin(GL.GL_QUADS);
 		gl.glTexCoord2f( u1, v1 );
-		gl.glVertex3f  ( x1, y1, 0 );
+		gl.glVertex2f  ( x1, y1 );
 		gl.glTexCoord2f( u2, v1 );
-		gl.glVertex3f  ( x2, y1, 0 );
+		gl.glVertex2f  ( x2, y1 );
 		gl.glTexCoord2f( u2, v2 );
-		gl.glVertex3f  ( x2, y2, 0 );
+		gl.glVertex2f  ( x2, y2 );
 		gl.glTexCoord2f( u1, v2 );
-		gl.glVertex3f  ( x1, y2, 0 );
+		gl.glVertex2f  ( x1, y2 );
 		gl.glEnd();
 	}
 }

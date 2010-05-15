@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.sam.jogl.gui;
 
 public class Contador extends BarraImagenes{

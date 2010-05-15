@@ -119,7 +119,6 @@ public class Textura{
 	public enum Format{
 		LUMINANCE	(GL.GL_LUMINANCE),
 		ALPHA		(GL.GL_ALPHA),
-		INTENSITY	(GL.GL_INTENSITY),
 		
 		RGB			(GL.GL_RGB),
 		RGBA		(GL.GL_RGBA);
@@ -156,33 +155,13 @@ public class Textura{
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, minFilter.value);
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, magFilter.value);
 		
-		if(format == Format.LUMINANCE || format == Format.ALPHA || format == Format.INTENSITY)
-			gl.glTexImage2D( GL.GL_TEXTURE_2D, 0,
-					format.value,
-					width,
-					height,
-					0,
-					format.value, GL.GL_UNSIGNED_BYTE,
-					pixels);
-		else if(format == Format.RGB)
-			gl.glTexImage2D( GL.GL_TEXTURE_2D, 0,
-					format.value,
-					width,
-					height,
-					0,
-					GL.GL_RGB, GL.GL_UNSIGNED_BYTE,
-					pixels);
-		else if(format == Format.RGBA)
-			gl.glTexImage2D( GL.GL_TEXTURE_2D, 0,
-					format.value,
-					width,
-					height,
-					0,
-					GL.GL_RGBA, GL.GL_UNSIGNED_BYTE,
-					pixels);
-		else
-			throw new IllegalArgumentException("Formato: "+format+" no soportado");
-		
+		gl.glTexImage2D( GL.GL_TEXTURE_2D, 0,
+				format.value,
+				width,
+				height,
+				0,
+				format.value, GL.GL_UNSIGNED_BYTE,
+				pixels);
 		wrapS = Wrap.REPEAT;
 		wrapT = Wrap.REPEAT;
 	}

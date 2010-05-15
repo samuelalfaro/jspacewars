@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.sam.jogl.gui;
 
 import javax.media.opengl.GL;
@@ -15,11 +12,6 @@ public class BarraImagenes extends GLComponent{
 			if( nValores < 1 )
 				throw new IllegalArgumentException();
 			valores = new int[nValores];
-//			for(int i=0, j=0; i < valores.length; i++){
-//				valores[i] = j;
-//				if( j < pixmaps.length - 1 )
-//					j++;
-//			}
 			this.pixmaps = pixmaps;
 		}
 		

@@ -16,16 +16,12 @@ class Estrellas extends Particulas{
 	
 	private class ModificadorDeParticulas implements Modificador{
 
-		private void setPos(
-				float p11x, float p11y, 
-				float p12x, float p12y,
-				float p1z
-				){
+		private void setPos( float p11x, float p11y, float p12x, float p12y ){
 			// Orden inverso a las agujas del reloj, normal hacia el observador
-			pos.put(p11x); pos.put(p11y); pos.put(p1z);
-			pos.put(p12x); pos.put(p11y); pos.put(p1z);
-			pos.put(p12x); pos.put(p12y); pos.put(p1z);
-			pos.put(p11x); pos.put(p12y); pos.put(p1z);
+			pos.put(p11x); pos.put(p11y);
+			pos.put(p12x); pos.put(p11y);
+			pos.put(p12x); pos.put(p12y); 
+			pos.put(p11x); pos.put(p12y);
 		}
 		
 		public boolean modificar(float steep){
@@ -61,17 +57,11 @@ class Estrellas extends Particulas{
 					
 					posIni[j]  =vec.posicion.x; velocidades[j]   = vec.direccion.x;
 					posIni[j+1]=vec.posicion.y; velocidades[j+1] = vec.direccion.y;
-					posIni[j+2]=vec.posicion.z; velocidades[j+2] = vec.direccion.z;
 				}
 				
 				float x = velocidades[j]*vida + posIni[j++];
 				float y = velocidades[j]*vida + posIni[j++];
-				float z = velocidades[j]*vida + posIni[j++];
-				setPos(
-						x - radio, y - radio,
-						x + radio, y + radio,
-						z
-				);
+				setPos( x - radio, y - radio, x + radio, y + radio );
 			}
 			return true;
 		}
@@ -91,12 +81,12 @@ class Estrellas extends Particulas{
 		super(nParticulas);
 		
 		vidas = new float[nParticulas];
-		posIni = new float[nParticulas*3];
-		velocidades = new float[nParticulas*3];
+		posIni = new float[nParticulas*2];
+		velocidades = new float[nParticulas*2];
 		
 		radio = 1.0f;
 
-		pos = ByteBuffer.allocateDirect(nParticulas*4*3*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		pos = ByteBuffer.allocateDirect(nParticulas*4*2*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		col = ByteBuffer.allocateDirect(nParticulas*4*4*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		tex = ByteBuffer.allocateDirect(nParticulas*4*2*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		
@@ -106,12 +96,12 @@ class Estrellas extends Particulas{
 	protected Estrellas(Estrellas me){
 		super(me);
 		vidas = new float[me.nParticulas];
-		posIni = new float[me.nParticulas*3];
-		velocidades = new float[me.nParticulas*3];
+		posIni = new float[me.nParticulas*2];
+		velocidades = new float[me.nParticulas*2];
 		
 		this.radio = me.radio;
 
-		pos = ByteBuffer.allocateDirect(nParticulas*4*3*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		pos = ByteBuffer.allocateDirect(nParticulas*4*2*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		col = ByteBuffer.allocateDirect(nParticulas*4*4*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		tex = ByteBuffer.allocateDirect(nParticulas*4*2*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		
@@ -125,10 +115,10 @@ class Estrellas extends Particulas{
 		particulasActivas = nParticulas;
 		
 		float[] posIni = new float[]{
-				0,0,0,
-				0,0,0,
-				0,0,0,
-				0,0,0 };
+				0,0,
+				0,0,
+				0,0,
+				0,0 };
 		pos.clear();
 		
 		float[] colIni = new float[]{
@@ -248,7 +238,7 @@ class Estrellas extends Particulas{
 		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 
 		pos.rewind();
-		gl.glVertexPointer(3, GL.GL_FLOAT, 0, pos);
+		gl.glVertexPointer(2, GL.GL_FLOAT, 0, pos);
 		col.rewind();
 		gl.glColorPointer(4, GL.GL_FLOAT, 0, col);
 		tex.rewind();
