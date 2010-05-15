@@ -278,13 +278,13 @@ public class InterfaceExample{
 			gl.glDepthMask(false);
 			gl.glBegin(GL.GL_QUADS);
 				gl.glTexCoord2f(s1, 0);
-				gl.glVertex3f(      p64,        p64, 0);
+				gl.glVertex2f(      p64,         p64);
 				gl.glTexCoord2f(s2, 0);
-				gl.glVertex3f( 63 * p64,        p64, 0);
+				gl.glVertex2f( 63 * p64,         p64);
 				gl.glTexCoord2f(s2, 1);
-				gl.glVertex3f(63 * p64, 1 - 5 * p64, 0);
+				gl.glVertex2f( 63 * p64, 1 - 5 * p64);
 				gl.glTexCoord2f(s1, 1);
-				gl.glVertex3f(     p64, 1 - 5 * p64, 0);
+				gl.glVertex2f(      p64, 1 - 5 * p64);
 			gl.glEnd();
 			gl.glDepthMask(true);
 			
@@ -301,7 +301,7 @@ public class InterfaceExample{
 				data.instancias[index].getModificador().modificar(incT);
 			data.instancias[index].draw(gl);
 
-//			data.gui.draw(gl);
+			data.marco.draw(gl);
 			
 			gl.glFlush();
 		}

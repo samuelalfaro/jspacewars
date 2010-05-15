@@ -20,7 +20,7 @@ public class PruebaFusion extends JComponent{
 		int alto  = 100;
 		int tam   = ancho * alto;
 
-		int intImg1[] = Imagen.toGrayPixels(Imagen.cargarImagen("resources/degradado.png"),100,100); 
+		int intImg1[] = Imagen.toPixels(Imagen.cargarImagen("resources/img/interface/InterfaceV2.png"),100,100); 
 		int intImg2[] = new int[tam];
 		
 		/* 
