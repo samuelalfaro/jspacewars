@@ -6,13 +6,35 @@ import java.nio.ByteBuffer;
 
 import javax.media.opengl.GL;
 
-import org.sam.util.Imagen;
-
 public class Textura{
 	
 	public static class Util{
 		
 		private Util(){
+		}
+		
+		private static byte rgb2luminance(int pixel){
+			int r = pixel >> 16 & 0xFF;
+			int g = pixel >> 8  & 0xFF;
+			int b = pixel       & 0xFF;
+			return (byte)(0.299f*r + 0.587f*g + 0.114f*b);
+		}
+		
+		private static transient final byte[] RGB = new byte[3];
+		private static byte[] rgb2ByteArray(int pixel){
+			RGB[0] = (byte)(pixel >> 16 & 0xFF);
+			RGB[1] = (byte)(pixel >> 8  & 0xFF);
+			RGB[2] = (byte)(pixel       & 0xFF);
+			return RGB;
+		}
+		
+		private static transient final byte[] RGBA = new byte[4];
+		private static byte[] rgba2ByteArray(int pixel){
+			RGBA[0] = (byte)(pixel >> 16 & 0xFF);
+			RGBA[1] = (byte)(pixel >> 8  & 0xFF);
+			RGBA[2] = (byte)(pixel       & 0xFF);
+			RGBA[3] = (byte)(pixel >> 24 & 0xFF);
+			return RGBA;
 		}
 
 		public static ByteBuffer toByteBuffer(BufferedImage img, Format format, boolean flipY){
@@ -27,54 +49,36 @@ public class Textura{
 			
 			switch(nBands){
 			case 1:
-				if(!flipY){
-					for(int y = 0; y < img.getHeight(); y++)
-						for(int x = 0; x < img.getWidth(); x++)
-							bb.put( Imagen.rgb2luminance(img.getRGB(x, y) ) );
-				}else{
+				if(flipY){
 					for(int y = img.getHeight()-1; y >= 0; y--)
 						for(int x = 0; x < img.getWidth(); x++)
-							bb.put( Imagen.rgb2luminance(img.getRGB(x, y) ) );
+							bb.put( rgb2luminance(img.getRGB(x, y) ) );
+				}else{
+					for(int y = 0; y < img.getHeight(); y++)
+						for(int x = 0; x < img.getWidth(); x++)
+							bb.put( rgb2luminance(img.getRGB(x, y) ) );
 				}
 				break;
 			case 3:
-				if(!flipY){
-					for(int y = 0; y < img.getHeight(); y++)
-						for(int x = 0; x < img.getWidth(); x++){
-							int pixel = img.getRGB(x, y);
-							bb.put( (byte)( pixel>>16 & 0xFF) );
-							bb.put( (byte)( pixel>>8 & 0xFF) );
-							bb.put( (byte)( pixel & 0xFF) );
-						}
-				}else{
+				if(flipY){
 					for(int y = img.getHeight()-1; y >= 0; y--)
-						for(int x = 0; x < img.getWidth(); x++){
-							int pixel = img.getRGB(x, y);
-							bb.put( (byte)( pixel>>16 & 0xFF) );
-							bb.put( (byte)( pixel>>8 & 0xFF) );
-							bb.put( (byte)( pixel & 0xFF) );
-						}
+						for(int x = 0; x < img.getWidth(); x++)
+							bb.put( rgb2ByteArray( img.getRGB(x, y) ) );
+				}else{
+					for(int y = 0; y < img.getHeight(); y++)
+						for(int x = 0; x < img.getWidth(); x++)
+							bb.put( rgb2ByteArray( img.getRGB(x, y) ) );
 				}
 				break;
 			case 4:
-				if(!flipY){
-					for(int y = 0; y < img.getHeight(); y++)
-						for(int x = 0; x < img.getWidth(); x++){
-							int pixel = img.getRGB(x, y);
-							bb.put( (byte)( pixel>>16 & 0xFF) );
-							bb.put( (byte)( pixel>>8 & 0xFF) );
-							bb.put( (byte)( pixel & 0xFF) );
-							bb.put( (byte)( pixel>>24 & 0xFF) );
-						}
-				}else{
+				if(flipY){
 					for(int y = img.getHeight()-1; y >= 0; y--)
-						for(int x = 0; x < img.getWidth(); x++){
-							int pixel = img.getRGB(x, y);
-							bb.put( (byte)( pixel>>16 & 0xFF) );
-							bb.put( (byte)( pixel>>8 & 0xFF) );
-							bb.put( (byte)( pixel & 0xFF) );
-							bb.put( (byte)( pixel>>24 & 0xFF) );
-						}
+						for(int x = 0; x < img.getWidth(); x++)
+							bb.put( rgba2ByteArray( img.getRGB(x, y) ) );
+				}else{
+					for(int y = 0; y < img.getHeight(); y++)
+						for(int x = 0; x < img.getWidth(); x++)
+							bb.put( rgba2ByteArray( img.getRGB(x, y) ) );
 				}
 				break;
 			}
