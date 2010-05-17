@@ -2,6 +2,42 @@ package org.sam.util;
 
 import java.util.Random;
 
+/**
+ * Clase para optimizar operaciones en coma flotante, mediante tablas precalculadas,
+ * algo no recomendable en Java. Puesto que en muchos casos es mas costoso el adceso
+ * a una posicion de memoria de forma segura a traves de un vector, que el calculo de
+ * dichas operaciones, mas aun, con la reduccion de coste computacional de estos calculos
+ * en los procesadores modernos y el cacheo de resultados anteriores.<br/>
+ * <br/>
+ * Por tanto practicas comunes en C sobre todo en la demoscene no son muy eficaces en Java.<br/>
+ * <br/>
+ * Estos resultados tambien pueden depender de la forma en que gestiona la memoria el
+ * sistema operativo:<br/>
+ * <br/>
+ * <table>
+ * <thead>Resultados:</thead>
+ * <tbody>
+ * <tr><td>Windows XP:</td></tr>
+ * <tr><td>Tiempo Math.atan2:            </td><td align=right>20.382.729.648 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.atan (float): </td><td align=right> 8.655.483.308 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.atan (int):   </td><td align=right>10.386.887.439 nSegundos</td></tr>
+ * <tr><td></td></tr>
+ * <tr><td>Tiempo Math.sqrt(a*a+b*b):    </td><td align=right> 8.574.624.149 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.len (f,f):    </td><td align=right> 8.718.444.663 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.len (i,i):    </td><td align=right> 9.164.339.043 nSegundos</td></tr>
+ * <tr><td></br></td></tr>
+ * <tr><td>Linux:</td></tr>
+ * <tr><td>Tiempo Math.atan2:            </td><td align=right>19.445.116.001 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.atan (float): </td><td align=right> 7.256.841.093 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.atan (int):   </td><td align=right> 8.337.504.290 nSegundos</td></tr>
+ * <tr><td></td></tr>
+ * <tr><td>Tiempo Math.sqrt(a*a+b*b):    </td><td align=right> 7.442.535.783 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.len (f,f):    </td><td align=right> 6.280.101.928 nSegundos</td></tr>
+ * <tr><td>Tiempo FastMath.len (i,i):    </td><td align=right> 7.982.940.708 nSegundos</td></tr>
+ * </tbody></table>
+ * 
+ * @author Samuel Alfaro
+ */
 @Deprecated
 public class FastMath {
 	
@@ -369,42 +405,45 @@ public class FastMath {
 //		tAct = System.nanoTime();
 //		long tRandomFloat = tAct-tAnt;
 		
-//		tAnt = System.nanoTime();
-//		for(int x = -4092; x < 4093; x++)
-//			for(int y=-4092; y < 4093; y++){
-//				int a = random.nextInt();
-//				int b = random.nextInt();
-//				Math.atan2(a, b);
-//			}
-//		tAct = System.nanoTime();
-//		long tMathAtan2 = tAct-tAnt;
-//		
-//		tAnt = System.nanoTime();
-//		for(int x = -4092; x < 4093; x++)
-//			for(int y=-4092; y < 4093; y++){
-//				atan(random.nextFloat(), random.nextFloat());
-//			}
-//		tAct = System.nanoTime();
-//		long tAtanFloat = tAct-tAnt;
-//	
-//		tAnt = System.nanoTime();
-//		for(int x = -4092; x < 4093; x++)
-//			for(int y=-4092; y < 4093; y++){
-//				atan(random.nextInt(), random.nextInt());
-//			}
-//		tAct = System.nanoTime();
-//		long tAtanInt = tAct-tAnt;
-//		
-//		System.out.printf("Tiempo Math.atan2:            %,14d\n",tMathAtan2);
-//		System.out.printf("Tiempo FastMath.atan (float): %,14d\n",tAtanFloat);
-//		System.out.printf("Tiempo FastMath.atan (int):   %,14d\n",tAtanInt);
+		int a1=0, a2=0, a3=0;
 		
+		tAnt = System.nanoTime();
+		for(int x = -4092; x < 4093; x++)
+			for(int y=-4092; y < 4093; y++){
+				int a = random.nextInt();
+				int b = random.nextInt();
+				a1 ^= ((int) Math.atan2(a, b) & 0x1);
+			}
+		tAct = System.nanoTime();
+		long tMathAtan2 = tAct-tAnt;
+		
+		tAnt = System.nanoTime();
+		for(int x = -4092; x < 4093; x++)
+			for(int y=-4092; y < 4093; y++){
+				a2 ^= ((int) atan(random.nextFloat(), random.nextFloat()) & 0x1);
+			}
+		tAct = System.nanoTime();
+		long tAtanFloat = tAct-tAnt;
+	
+		tAnt = System.nanoTime();
+		for(int x = -4092; x < 4093; x++)
+			for(int y=-4092; y < 4093; y++){
+				a3 ^= ((int) atan(random.nextInt(), random.nextInt()) & 0x1);
+			}
+		tAct = System.nanoTime();
+		long tAtanInt = tAct-tAnt;
+		
+		System.out.printf("Tiempo Math.atan2:            %,14d nSegundos\tResultado de control [%d]\n",tMathAtan2,a1);
+		System.out.printf("Tiempo FastMath.atan (float): %,14d nSegundos\tResultado de control [%d]\n",tAtanFloat,a2);
+		System.out.printf("Tiempo FastMath.atan (int):   %,14d nSegundos\tResultado de control [%d]\n",tAtanInt,a3);
+		
+		int l1=0, l2=0, l3=0;
 		tAnt = System.nanoTime();
 		for(int x = -4092; x < 4093; x++)
 			for(int y=-4092; y < 4093; y++){
 				float a = random.nextFloat();
 				float b = random.nextFloat();
-				Math.sqrt(a*a + b*b);
+				l1 ^= ((int)Math.sqrt(a*a + b*b) & 0x1);
 			}
 		tAct = System.nanoTime();
 		long tMathLen = tAct-tAnt;
@@ -412,7 +451,7 @@ public class FastMath {
 		tAnt = System.nanoTime();
 		for(int x = -4092; x < 4093; x++)
 			for(int y=-4092; y < 4093; y++){
-				len(random.nextInt(), random.nextInt());
+				l2 ^= ((int)len(random.nextInt(), random.nextInt()) & 0x1);
 			}
 		tAct = System.nanoTime();
 		long tLenInt = tAct-tAnt;
@@ -420,13 +459,13 @@ public class FastMath {
 		tAnt = System.nanoTime();
 		for(int x = -4092; x < 4093; x++)
 			for(int y=-4092; y < 4093; y++){
-				len(random.nextFloat(), random.nextFloat());				
+				l3 ^= ((int)len(random.nextFloat(), random.nextFloat()) & 0x1);				
 			}
 		tAct = System.nanoTime();
 		long tLenFloat = tAct-tAnt;
 		
-		System.out.printf("Tiempo Math.sqrt(a*a+b*b):    %,14d\n",tMathLen);
-		System.out.printf("Tiempo FastMath.len (f,f):    %,14d\n",tLenFloat);
-		System.out.printf("Tiempo FastMath.len (i,i):    %,14d\n",tLenInt);
+		System.out.printf("Tiempo Math.sqrt(a*a+b*b):    %,14d nSegundos\tResultado de control [%d]\n",tMathLen, l1);
+		System.out.printf("Tiempo FastMath.len (f,f):    %,14d nSegundos\tResultado de control [%d]\n",tLenFloat, l2);
+		System.out.printf("Tiempo FastMath.len (i,i):    %,14d nSegundos\tResultado de control [%d]\n",tLenInt, l3);
 	}
 }
