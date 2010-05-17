@@ -1210,40 +1210,20 @@ public class Imagen {
 		}
 	}
 
-	// pre-computations for conversion from RGB to Luminance
-	static int[][] luminanceData = new int[3][256];
-	static{
-		for (int i = 0; i < 256; i++){
-			luminanceData[0][i] = (int)(0.299f*i +.5f);
-			luminanceData[1][i] = (int)(0.587f*i +.5f);
-			luminanceData[2][i] = (int)(0.114f*i +.5f);
-		}
-	}
-
 	public static byte rgb2luminance(int pixel){
 		int r = pixel >> 16 & BYTE;
 		int g = pixel >> 8  & BYTE;
 		int b = pixel       & BYTE;
-		
-		if( r == g && g == b )
-			return (byte)r;
-		return (byte)(luminanceData[0][r] + luminanceData[1][g] + luminanceData[2][b]);
+		return (byte)(0.299f*r + 0.587f*g + 0.114f*b);
 	}
 	
 	private static void grayPass(int[] pixels) {
-		int r, g, b;
-		int luminance;
-
 		for (int index = 0,len = pixels.length; index<len; index++){
 			int pixel = pixels[index];
-
-			r = pixel >> 16 & BYTE;
-			g = pixel >> 8  & BYTE;
-			b = pixel       & BYTE;
-
-			// compute the luminance
-			luminance = luminanceData[0][r] + luminanceData[1][g] + luminanceData[2][b];
-
+			int r = pixel >> 16 & BYTE;
+			int g = pixel >> 8  & BYTE;
+			int b = pixel       & BYTE;
+			int luminance = (int)(0.299f*r + 0.587f*g + 0.114f*b);
 			pixels[index] = (pixel & A_MASK) | (luminance<<16) | (luminance<<8) | luminance;
 		}
 	}
@@ -1261,18 +1241,12 @@ public class Imagen {
 	}
 
 	private static void brightPass(int[] pixels, int min, int max) {
-		int r, g, b;
-		int luminance;
-
 		for (int index = 0,len = pixels.length; index<len; index++){
 			int pixel = pixels[index];
-
-			r = pixel >> 16 & BYTE;
-			g = pixel >> 8  & BYTE;
-			b = pixel       & BYTE;
-
-			// compute the luminance
-			luminance = luminanceData[0][r] + luminanceData[1][g] + luminanceData[2][b];
+			int r = pixel >> 16 & BYTE;
+			int g = pixel >> 8  & BYTE;
+			int b = pixel       & BYTE;
+			int luminance = (int)(0.299f*r + 0.587f*g + 0.114f*b);
 
 			if(luminance < min)
 				pixel &= A_MASK;
