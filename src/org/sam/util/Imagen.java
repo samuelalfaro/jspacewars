@@ -1210,13 +1210,6 @@ public class Imagen {
 		}
 	}
 
-	public static byte rgb2luminance(int pixel){
-		int r = pixel >> 16 & BYTE;
-		int g = pixel >> 8  & BYTE;
-		int b = pixel       & BYTE;
-		return (byte)(0.299f*r + 0.587f*g + 0.114f*b);
-	}
-	
 	private static void grayPass(int[] pixels) {
 		for (int index = 0,len = pixels.length; index<len; index++){
 			int pixel = pixels[index];
