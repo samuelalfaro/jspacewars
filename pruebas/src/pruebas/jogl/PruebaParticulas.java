@@ -58,7 +58,6 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 					.cargarToBufferedImage("resources/texturas/smok.png"), true));
 			texture1.getTextura().setWrap_s(Textura.Wrap.CLAMP_TO_BORDER);
 			texture1.getTextura().setWrap_t(Textura.Wrap.CLAMP_TO_BORDER);
-			texture1.setAtributosTextura(new AtributosTextura());
 
 			texture12 = new UnidadTextura();
 			texture12.setTextura(texture1.getTextura());
@@ -79,7 +78,6 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 					.cargarToBufferedImage("resources/texturas/flecha.jpg"), true));
 			texture2.getTextura().setWrap_s(Textura.Wrap.CLAMP_TO_BORDER);
 			texture2.getTextura().setWrap_t(Textura.Wrap.CLAMP_TO_BORDER);
-			texture2.setAtributosTextura(new AtributosTextura());
 		}catch( GLException e ){
 			e.printStackTrace();
 		}
@@ -235,9 +233,9 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 		explosion.draw(gl);
 
 		texture2.activar(gl, 0);
-		gl.glBlendEquation(GL.GL_FUNC_ADD);
+//		gl.glBlendEquation(GL.GL_FUNC_ADD);
 //		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
-		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+//		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		
 		fuente.getModificador().modificar(incT);
 		fuenteTransformada.draw(gl);

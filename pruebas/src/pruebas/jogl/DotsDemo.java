@@ -1,31 +1,14 @@
 package pruebas.jogl;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.util.Comparator;
-import java.util.Random;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
+import javax.media.opengl.*;
 import javax.swing.JFrame;
 
-import org.sam.jogl.AtributosTextura;
-import org.sam.jogl.Textura;
-import org.sam.jogl.UnidadTextura;
+import org.sam.jogl.*;
 import org.sam.util.Imagen;
 import org.sam.util.Tipografias;
 
