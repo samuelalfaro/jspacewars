@@ -32,7 +32,7 @@ public class Mover extends TareaAbs {
 	}
 	
 	@Override
-	public void realizar(long nanos, long desfase){
-		System.out.println("Moviendo nave... [ "+desfase+" : "+nanos+" nanosegundos]");
+	public void realizar(long nanos, long startTime, long stopTime){
+		System.out.println("Moviendo nave... [ "+startTime+" : "+nanos+" nanosegundos]");
 	}
 }

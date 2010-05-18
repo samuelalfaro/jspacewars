@@ -121,8 +121,8 @@ public class ServidorJuego {
 		XStream xStream = new XStream(new DomDriver());
 		ElementosConverters.register(xStream);
 
-		loadToCache(cache, xStream.createObjectInputStream(new FileReader("naves.xml")));
-		loadToCache(cache, xStream.createObjectInputStream(new FileReader("disparos.xml")));
+		loadToCache(cache, xStream.createObjectInputStream(new FileReader("resources/elementos.xml")));
+//		loadToCache(cache, xStream.createObjectInputStream(new FileReader("disparos.xml")));
 	}
 
 	private static void loadToCache(Cache<Elemento> cache, ObjectInputStream in) throws IOException {
@@ -154,8 +154,6 @@ public class ServidorJuego {
 
 		Collection<Disparo> disparosNave;
 
-		
-		
 		nave1 = (NaveUsuario) cache.newObject(0x02);
 		nave1.setId((short) 1);
 		disparosNave = new LinkedList<Disparo>();
@@ -167,6 +165,7 @@ public class ServidorJuego {
 		float ratio = (30*4.0f/32) / (3.0f - 4*4.0f/32); // ratio 4/3 sin bordes GUI
 		float h = 2.9f;
 		float w = ratio * h;
+		
 		nave1.setLimites(w, h);
 		naves.add(nave1);
 

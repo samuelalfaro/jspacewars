@@ -37,7 +37,7 @@ public class OrientarCanion extends TareaAbs {
 	}
 	
 	@Override
-	public void realizar(long nanos, long desfase){
-		System.out.println("Orientando cañon " + canion + " ... [ "+desfase+" : "+nanos+" nanosegundos]");
+	public void realizar(long nanos, long startTime, long stopTime){
+		System.out.println("Orientando cañon " + canion + " ... [ "+startTime+" : "+nanos+" nanosegundos]");
 	}
 }

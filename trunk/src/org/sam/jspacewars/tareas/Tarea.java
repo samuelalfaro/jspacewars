@@ -27,5 +27,5 @@ package org.sam.jspacewars.tareas;
  */
 public interface Tarea {
 	public long getDuracion();
-	public void realizar(long nanos, long desfase);
+	public void realizar(long nanos, long startTime, long stopTime);
 }

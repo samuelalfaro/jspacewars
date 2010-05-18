@@ -36,7 +36,7 @@ public final class Esperar extends TareaAbs {
 	}
 
 	@Override
-	public void realizar(long nanos, long desfase){
-		System.out.println("Esperando... [ "+desfase+" : "+nanos+" nanosegundos]");
+	public void realizar(long nanos, long startTime, long stopTime){
+		System.out.println("Esperando... [ "+startTime+" : "+nanos+" nanosegundos]");
 	}
 }

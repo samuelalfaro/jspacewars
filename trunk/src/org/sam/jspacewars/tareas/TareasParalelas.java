@@ -36,14 +36,14 @@ public final class TareasParalelas implements Tarea {
 	}
 	
 	@Override
-	public void realizar(long nanos, long desfase){
-		long tiempoTotal = desfase + nanos;
+	public void realizar(long nanos, long startTime, long stopTime){
+		long tiempoTotal = startTime + nanos;
 		for(Tarea t:tareas)
-			if(desfase < t.getDuracion()){
+			if(startTime < t.getDuracion()){
 				if(tiempoTotal < t.getDuracion())
-					t.realizar(nanos, desfase);
+					t.realizar(nanos, startTime, stopTime);
 				else
-					t.realizar(t.getDuracion() - desfase, desfase);
+					t.realizar(t.getDuracion() - startTime, startTime, stopTime);
 			}
 	}
 
