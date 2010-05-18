@@ -35,7 +35,7 @@ public class Disparar extends TareaAbs {
 	}
 	
 	@Override
-	public void realizar(long nanos, long desfase){
-		System.out.println("Disparando cañon " + canion + "... [ "+desfase+" : "+nanos+" nanosegundos]");
+	public void realizar(long nanos, long startTime, long stopTime){
+		System.out.println("Disparando cañon " + canion + "... [ "+startTime+" : "+nanos+" nanosegundos]");
 	}
 }

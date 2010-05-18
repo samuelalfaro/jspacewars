@@ -43,29 +43,29 @@ public final class Secuencia implements Tarea {
 	}
 	
 	@Override
-	public void realizar(long nanos, long desfase){
-		if(desfase < 0 || desfase >= duracion )
+	public void realizar(long nanos, long starTime, long stopTime){
+		if(starTime < 0 || starTime >= duracion )
 			return;
 		// Se realiza una búsqueda secuencial pues puede haber valores repetidos 
 		// y no es acosejable una búsqueda dicotómica.
 		int tarea = 0;
-		if(desfase > 0){
-			while(finales[tarea] <= desfase)
+		if(starTime > 0){
+			while(finales[tarea] <= starTime)
 				tarea ++;
 			if( tarea > 0)
-				desfase -= finales[tarea-1];
+				starTime -= finales[tarea-1];
 		}
 		
 		while(tarea < tareas.length){
-			if(desfase + nanos < tareas[tarea].getDuracion()){
+			if(starTime + nanos < tareas[tarea].getDuracion()){
 				if(nanos > 0 )
-					tareas[tarea].realizar(nanos, desfase);
+					tareas[tarea].realizar(nanos, starTime, stopTime);
 				break;
 			}else{
-				long tRestante = tareas[tarea].getDuracion() - desfase;
-				tareas[tarea].realizar(tRestante, desfase);
+				long tRestante = tareas[tarea].getDuracion() - starTime;
+				tareas[tarea].realizar(tRestante, starTime, stopTime);
 				nanos -= tRestante;
-				desfase = 0;
+				starTime = 0;
 				tarea++;
 			}
 		}

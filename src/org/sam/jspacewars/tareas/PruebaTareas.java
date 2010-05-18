@@ -62,8 +62,9 @@ public class PruebaTareas {
 		while(i <= 30){
 			System.out.println("\nInstante: " + i);
 			long t = r.nextInt(9) +1;
-			tarea.realizar(t, i);
-			i += t;
+			long s = i + t;
+			tarea.realizar(t, i, s);
+			i = s;
 		}
 	}
 }

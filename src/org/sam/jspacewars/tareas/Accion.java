@@ -31,9 +31,7 @@ public abstract class Accion extends TareaAbs {
 	}
 	
 	@Override
-	public final void realizar(long nanos, long desfase){
-		if(desfase < 0)
-			return;
+	public final void realizar(long nanos, long startTime, long stopTime){
 		realizar();
 	}
 	
