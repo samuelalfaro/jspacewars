@@ -31,29 +31,29 @@ public class PruebaTareas {
 		
 		/*/
 		Tarea tarea = new TareasParalelas( new Tarea[]{
-				new Mover(30),
-				new Secuencia( new Tarea[]{
-					new Esperar(10),
-					new Esperar(3,5),
-					new TareasParalelas( new Tarea[]{
-						new Secuencia( new Tarea[]{
-							new SetAnguloCanion(1,0),
-							new OrientarCanion(1, 1, 5),
-						}),
-						new Disparar(1,5)
-					})
-				}),
-				new Secuencia( new Tarea[]{
-					new Esperar(15),
-					new Esperar(3,5),
-					new TareasParalelas( new Tarea[]{
-						new Secuencia( new Tarea[]{
-							new SetAnguloCanion(2,0),
-							new OrientarCanion(2,-1,5),
-						}),
-						new Disparar(2,5)
-					})	
-				}),
+			new Mover(30),
+			new Secuencia( new Tarea[]{
+				new Esperar(10),
+				new Esperar(3,5),
+				new TareasParalelas( new Tarea[]{
+					new Secuencia( new Tarea[]{
+						new SetAnguloCanion(1,0),
+						new OrientarCanion(1, 1, 5),
+					}),
+					new Disparar(1,5)
+				})
+			}),
+			new Secuencia( new Tarea[]{
+				new Esperar(15),
+				new Esperar(3,5),
+				new TareasParalelas( new Tarea[]{
+					new Secuencia( new Tarea[]{
+						new SetAnguloCanion(2,0),
+						new OrientarCanion(2,-1,5),
+					}),
+					new Disparar(2,5)
+				})	
+			}),
 		});
 		//*/
 		

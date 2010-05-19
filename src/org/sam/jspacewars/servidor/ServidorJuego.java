@@ -137,7 +137,7 @@ public class ServidorJuego {
 	}
 
 	private transient NaveUsuario nave1, nave2;
-	private transient Collection<Nave> naves;
+	private transient Collection<ElementoDinamico> naves;
 	private transient Collection<Collection<Disparo>> listasDeDisparos;
 
 	private transient SortedSet<Elemento> elementosOrdenados;
@@ -149,7 +149,7 @@ public class ServidorJuego {
 		elementosOrdenados = new TreeSet<Elemento>(Elemento.COMPARADOR);
 		comprobador = new ComprobadorDeColisones(250);
 
-		naves = new LinkedList<Nave>();
+		naves = new LinkedList<ElementoDinamico>();
 		listasDeDisparos = new LinkedList<Collection<Disparo>>();
 
 		Collection<Disparo> disparosNave;
@@ -243,7 +243,7 @@ public class ServidorJuego {
 					d.actua(nanos);
 			}
 		}
-		for( Nave nave: naves )
+		for( ElementoDinamico nave: naves )
 			nave.actua(nanos);
 		// iListaDisparos = listasDeDisparos.iterator();
 		// while(iListaDisparos.hasNext())

@@ -25,7 +25,7 @@ public class LanzaMisiles extends Canion {
 		this.angulo = (float) (angulo / 180.0 * Math.PI);
 	}
 
-	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<Disparo> dst) {
+	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst){
 		int tRecarga = data.vTRecarga[grado];
 		int t = tRecarga - (int) tTranscurrido;
 

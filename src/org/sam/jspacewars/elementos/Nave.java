@@ -3,9 +3,7 @@ package org.sam.jspacewars.elementos;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 
-import org.sam.elementos.Dinamico;
-
-public abstract class Nave extends Elemento implements Dinamico {
+public abstract class Nave extends ElementoDinamico {
 
 	protected transient float angulo;
 	protected transient Collection<Disparo> dstDisparos;
@@ -27,13 +25,6 @@ public abstract class Nave extends Elemento implements Dinamico {
 	public final void setDstDisparos(Collection<Disparo> dstDisparos) {
 		this.dstDisparos = dstDisparos;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sam.elementos.Elemento#clone()
-	 */
-	public abstract Nave clone();
 
 	public abstract void iniciar();
 
