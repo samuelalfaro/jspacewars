@@ -21,20 +21,26 @@
  */
 package org.sam.jspacewars.tareas;
 
-public final class Secuencia implements Tarea {
+public final class Secuencia extends TareaAbs {
 	
 	private final Tarea[] tareas;
 	private final long[] finales;
-	private final long duracion;
 
+	private static long calcularDuracion(Tarea[] tareas){
+		long duracion = 0;
+		for(Tarea t:tareas)
+			duracion += t.getDuracion();
+		return duracion;
+	}
+	
 	Secuencia(Tarea[] tareas){
+		super( calcularDuracion(tareas) );
 		this.tareas = tareas;
 		this.finales = new long[tareas.length];
 		
 		finales[0] = tareas[0].getDuracion();
 		for(int i= 1; i < tareas.length; i++)
 			finales[i] = finales[i-1] + tareas[i].getDuracion();
-		this.duracion = finales[finales.length-1];
 		
 //		System.out.print("Finales: \t[");
 //		for(long f:finales)
@@ -42,37 +48,38 @@ public final class Secuencia implements Tarea {
 //		System.out.println(" ]");
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void realizar(long nanos, long starTime, long stopTime){
-		if(starTime < 0 || starTime >= duracion )
+	public void realizar(long startTime, long stopTime){
+		if(startTime < 0 || startTime >= this.getDuracion() )
 			return;
 		// Se realiza una búsqueda secuencial pues puede haber valores repetidos 
 		// y no es acosejable una búsqueda dicotómica.
 		int tarea = 0;
-		if(starTime > 0){
-			while(finales[tarea] <= starTime)
+
+		long startTimeTarea = startTime, stopTimeTarea = stopTime;
+		if(startTime > 0){
+			while(finales[tarea] <= startTime)
 				tarea ++;
-			if( tarea > 0)
-				starTime -= finales[tarea-1];
+			if( tarea > 0){
+				startTimeTarea -= finales[tarea-1];
+				stopTimeTarea  -= finales[tarea-1];
+			}
 		}
 		
 		while(tarea < tareas.length){
-			if(starTime + nanos < tareas[tarea].getDuracion()){
-				if(nanos > 0 )
-					tareas[tarea].realizar(nanos, starTime, stopTime);
+			if(stopTime < finales[tarea] ){
+				if(startTimeTarea != stopTimeTarea )
+					tareas[tarea].realizar(startTimeTarea, stopTimeTarea);
 				break;
 			}else{
-				long tRestante = tareas[tarea].getDuracion() - starTime;
-				tareas[tarea].realizar(tRestante, starTime, stopTime);
-				nanos -= tRestante;
-				starTime = 0;
+				tareas[tarea].realizar(startTimeTarea, stopTimeTarea);
+				stopTimeTarea  = stopTime - finales[tarea];
+				startTimeTarea = 0;
 				tarea++;
 			}
 		}
-	}
-
-	@Override
-	public long getDuracion() {
-		return duracion;
 	}
 }

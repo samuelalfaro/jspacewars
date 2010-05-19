@@ -36,8 +36,20 @@ public class OrientarCanion extends TareaAbs {
 		this.velocidadAngular = velocidadAngular;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void realizar(long nanos, long startTime, long stopTime){
-		System.out.println("Orientando cañon " + canion + " ... [ "+startTime+" : "+nanos+" nanosegundos]");
+	public void realizar(long startTime, long stopTime){
+		// TODO hacer realmente
+		realizarTest( startTime, stopTime);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString(){
+		return String.format("Orientando cañon %d ...",canion);
 	}
 }

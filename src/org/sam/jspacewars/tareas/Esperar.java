@@ -23,20 +23,32 @@ package org.sam.jspacewars.tareas;
 
 /**
  * @author samuel
- *
+ * 
  */
 public final class Esperar extends TareaAbs {
 
 	public Esperar(long duracion) {
 		super(duracion);
 	}
-	
+
 	public Esperar(long duracionMin, long duracionMax) {
-		super( (long)(Math.random()*(duracionMax - duracionMin) + 0.5) + duracionMin );
+		super( (long)(Math.random() * (duracionMax - duracionMin) + 0.5) + duracionMin );
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void realizar(long nanos, long startTime, long stopTime){
-		System.out.println("Esperando... [ "+startTime+" : "+nanos+" nanosegundos]");
+	public void realizar(long startTime, long stopTime) {
+		realizarTest(startTime, stopTime);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Esperando...";
+	}
+
 }

@@ -1,7 +1,7 @@
 /* 
  * Accion.java
  * 
- * Copyright (c) 2010 Samuel Alfaro <samuelalfaro at gmail.com>.
+ * Copyright (c) 2010 Samuel Alfaro <samuelalfaro at gmail dot com>.
  * All rights reserved
  * 
  * This file is part of jspacewars.
@@ -24,16 +24,44 @@ package org.sam.jspacewars.tareas;
 /**
  * @author samuel
  */
-public abstract class Accion extends TareaAbs {
+public abstract class Accion implements Tarea {
 
-	public Accion() {
-		super(0);
+	/**
+	 * {@inheritDoc}<br/>
+	 * Como una {@code Accion} se considera una {@code Tarea} instantenea, devuelve simpre 0.
+	 * @return 0
+	 */
+	@Override
+	final public long getDuracion() {
+		return 0;
 	}
 	
+	/**
+	 * {@inheritDoc}<br/>
+	 * Como una {@code Accion} se considera una {@code Tarea} instantenea, este metodo, encapsula una llamada
+	 * al metodo abstracto {@link org.sam.jspacewars.tareas.Accion#realizar() realizar()},
+	 * ignorando los parametros {@code startTime} y {@code stopTime}.
+	 * 
+	 * @param startTime ignorado
+	 * @param stopTime ignorado
+	 */
 	@Override
-	public final void realizar(long nanos, long startTime, long stopTime){
+	final public void realizar(long startTime, long stopTime){
 		realizar();
 	}
 	
+	/**
+	 * Realiza la  {@code Accion}.
+	 */
 	public abstract void realizar();
+	
+	/**
+	 * Metodo que muestra por consola las llamadas para test.
+	 * 
+	 * @see org.sam.jspacewars.tareas.Accion#realizar()
+	 */
+	final protected void realizarTest() {
+		System.out.println(" * "+this.toString());
+	}
+	
 }

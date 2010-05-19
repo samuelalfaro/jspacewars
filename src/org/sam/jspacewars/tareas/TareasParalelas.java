@@ -21,37 +21,32 @@
  */
 package org.sam.jspacewars.tareas;
 
-public final class TareasParalelas implements Tarea {
+public final class TareasParalelas extends TareaAbs {
 	
 	private final Tarea[] tareas;
-	private final long duracion;
 
-	public TareasParalelas(Tarea[] tareas){
-		this.tareas = tareas;
+	private static long calcularDuracion(Tarea[] tareas){
 		long max = -1;
 		for(Tarea t:tareas)
 			if(max < t.getDuracion())
 				max = t.getDuracion();
-		this.duracion = max;
+		return max;
 	}
 	
-	@Override
-	public void realizar(long nanos, long startTime, long stopTime){
-		long tiempoTotal = startTime + nanos;
-		for(Tarea t:tareas)
-			if(startTime < t.getDuracion()){
-				if(tiempoTotal < t.getDuracion())
-					t.realizar(nanos, startTime, stopTime);
-				else
-					t.realizar(t.getDuracion() - startTime, startTime, stopTime);
-			}
+	public TareasParalelas(Tarea[] tareas){
+		super( calcularDuracion(tareas) );
+		this.tareas = tareas;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.sam.jspacewars.acciones.Tarea#getDuracion()
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public long getDuracion() {
-		return duracion;
+	public void realizar(long startTime, long stopTime){
+		if( startTime >= this.getDuracion() )
+			return;
+		for(Tarea t:tareas)
+			if(startTime < t.getDuracion() )
+				t.realizar( startTime, stopTime );
 	}
 }
