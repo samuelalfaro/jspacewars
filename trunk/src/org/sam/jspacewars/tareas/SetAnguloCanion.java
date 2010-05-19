@@ -35,8 +35,21 @@ public class SetAnguloCanion extends Accion {
 		this.angulo = angulo;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void realizar() {
-		System.out.println("Asignando angulo " + angulo +" al  cañon " + canion);
+		// TODO hacer realmente
+		realizarTest();
 	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString(){
+		return String.format("Asignando angulo %4.1f al cañon %d", angulo, canion );
+	}
+	
 }

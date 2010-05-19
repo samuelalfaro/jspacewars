@@ -33,9 +33,22 @@ public class Disparar extends TareaAbs {
 		super(duracion);
 		this.canion = canion;
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void realizar(long nanos, long startTime, long stopTime){
-		System.out.println("Disparando cañon " + canion + "... [ "+startTime+" : "+nanos+" nanosegundos]");
+	public void realizar(long startTime, long stopTime){
+		// TODO hacer realmente
+		realizarTest( startTime, stopTime );
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString(){
+		return String.format("Disparando cañon %d ...",canion);
+	}
+	
 }

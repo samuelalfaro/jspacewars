@@ -26,6 +26,27 @@ package org.sam.jspacewars.tareas;
  *
  */
 public interface Tarea {
+	
+	/**
+	 * Devuelve la duracion de la {@code Tarea}.
+	 * @return duracion de la {@code Tarea}.
+	 */
 	public long getDuracion();
-	public void realizar(long nanos, long startTime, long stopTime);
+	
+	/**
+	 * Realiza la {@code Tarea} durante el periodo comprendido entre {@code startTime} y {@code stopTime},
+	 * ambos relativos a la duracion de dicha {@code Tarea}.
+	 * 
+	 * @param startTime Tiempo inicial.<br/>
+	 * Si es negativo, o mayor de {@code stopTime}, el comportamiento no esta definido.<br/>
+	 * Si es mayor de la duracion de la {@code Tarea}, se interpreta que dicha {@code Tarea},
+	 * se ha realizado en un periodo anterior, y no se hace nada.
+	 * 
+	 * @param stopTime Tiempo final.<br/>
+	 * Si negativo, o menor de {@code startTime}, el comportamiento no esta definido.<br/>
+	 * Si es mayor que la duracion que la {@code Tarea}, se completara dicha {@code Tarea},
+	 * teniendo en cuenta el tiempo transcurrido tras su finalizacion.
+	 */
+	public void realizar(long startTime, long stopTime);
+	
 }

@@ -8,7 +8,7 @@ public class PruebaTareas {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//*
+		/*
 		Tarea tarea = new Secuencia( new Tarea[]{
 			new SetAnguloCanion(1,0),
 			new Disparar(1, 2l),
@@ -61,10 +61,9 @@ public class PruebaTareas {
 		long i = 0;
 		while(i <= 30){
 			System.out.println("\nInstante: " + i);
-			long t = r.nextInt(9) +1;
-			long s = i + t;
-			tarea.realizar(t, i, s);
-			i = s;
+			long f = i + r.nextInt(4) +1;
+			tarea.realizar( i, f );
+			i = f;
 		}
 	}
 }
