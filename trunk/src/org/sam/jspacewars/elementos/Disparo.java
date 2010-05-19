@@ -2,9 +2,7 @@ package org.sam.jspacewars.elementos;
 
 import java.nio.ByteBuffer;
 
-import org.sam.elementos.Dinamico;
-
-public abstract class Disparo extends Elemento implements Dinamico {
+public abstract class Disparo extends ElementoDinamico {
 
 	protected transient float angulo;
 
@@ -19,8 +17,6 @@ public abstract class Disparo extends Elemento implements Dinamico {
 	public boolean finalizado() {
 		return false;
 	}
-
-	public abstract void actua(long milis);
 
 	public void enviar(ByteBuffer buff) {
 		super.enviar(buff);

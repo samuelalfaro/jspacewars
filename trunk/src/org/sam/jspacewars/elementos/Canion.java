@@ -72,5 +72,5 @@ public abstract class Canion implements Cloneable {
 		tTranscurrido = data.vTRecarga[grado] - data.vDesfases[grado];
 	}
 
-	public abstract void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<Disparo> dst);
+	public abstract void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst);
 }

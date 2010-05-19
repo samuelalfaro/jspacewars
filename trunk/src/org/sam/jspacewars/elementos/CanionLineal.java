@@ -31,7 +31,7 @@ public class CanionLineal extends Canion {
 	 * @see org.sam.elementos.Canion#dispara(float, float, float, float, long,
 	 * java.util.Collection)
 	 */
-	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<Disparo> dst) {
+	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst){
 		int tRecarga = data.vTRecarga[grado];
 		int t = tRecarga - (int) tTranscurrido;
 
