@@ -196,13 +196,6 @@
 								<int>100000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001500</float>
 								<float>0.00000001625</float>
@@ -326,12 +319,6 @@
 								<int>375000000</int>
 								<int>250000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000000010</float>
 								<float>0.00000000012</float>
@@ -363,9 +350,6 @@
 							<vTRecarga>
 								<int>1000000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.000000010</float>
 							</vVelocidades>
@@ -442,13 +426,6 @@
 								<int>100000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001500</float>
 								<float>0.00000001625</float>
@@ -572,12 +549,6 @@
 								<int>375000000</int>
 								<int>250000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000000010</float>
 								<float>0.00000000012</float>
@@ -609,9 +580,6 @@
 							<vTRecarga>
 								<int>1000000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.000000010</float>
 							</vVelocidades>
@@ -692,14 +660,6 @@
 								<int>88000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001500</float>
 								<float>0.00000001625</float>
@@ -747,14 +707,6 @@
 								<int>88000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001625</float>
 								<float>0.00000001750</float>
@@ -826,14 +778,6 @@
 								<int>88000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001750</float>
 								<float>0.00000001875</float>
@@ -890,12 +834,6 @@
 								<int>375000000</int>
 								<int>250000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000000010</float>
 								<float>0.00000000012</float>
@@ -927,9 +865,6 @@
 							<vTRecarga>
 								<int>1000000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.000000010</float>
 							</vVelocidades>
@@ -1006,13 +941,6 @@
 								<int>100000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001500</float>
 								<float>0.00000001625</float>
@@ -1136,12 +1064,6 @@
 								<int>375000000</int>
 								<int>250000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000000010</float>
 								<float>0.00000000012</float>
@@ -1173,9 +1095,6 @@
 							<vTRecarga>
 								<int>1000000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.000000010</float>
 							</vVelocidades>
@@ -1252,13 +1171,6 @@
 								<int>100000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001500</float>
 								<float>0.00000001625</float>
@@ -1382,12 +1294,6 @@
 								<int>375000000</int>
 								<int>250000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000000010</float>
 								<float>0.00000000012</float>
@@ -1419,9 +1325,6 @@
 							<vTRecarga>
 								<int>1000000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.000000010</float>
 							</vVelocidades>
@@ -1498,13 +1401,6 @@
 								<int>100000000</int>
 								<int>88000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000001500</float>
 								<float>0.00000001625</float>
@@ -1628,12 +1524,6 @@
 								<int>375000000</int>
 								<int>250000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.00000000010</float>
 								<float>0.00000000012</float>
@@ -1665,9 +1555,6 @@
 							<vTRecarga>
 								<int>1000000000</int>
 							</vTRecarga>
-							<vDesfases>
-								<int>0</int>
-							</vDesfases>
 							<vVelocidades>
 								<float>0.000000010</float>
 							</vVelocidades>
