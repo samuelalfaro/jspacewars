@@ -139,7 +139,7 @@ public class ShadersExample
 			mtf.setTranslation(new Vector3f(-0.60f, -0.075f, 0.0f));
 			childs.add(new NodoTransformador(mtf, humoNave));
 			
-			nave1 = new Instancia3D(0,childs);
+			nave1 = new Instancia3D((short)0,childs);
 			nave1.reset();
 			gestorDeParticulas.add(nave1.getModificador());
 			

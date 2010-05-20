@@ -200,7 +200,7 @@ implements GLEventListener{
 			mtf.setTranslation(new Vector3f(-1.25f,-0.12f, 0.82f));
 			childs.add( new NodoTransformador(mtf, humoNave.clone() ) );
 
-			nave = new Instancia3D(0,childs);
+			nave = new Instancia3D((short)0,childs);
 			nave.reset();
 
 			// TODO check
