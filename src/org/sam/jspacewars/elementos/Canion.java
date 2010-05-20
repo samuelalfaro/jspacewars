@@ -24,15 +24,38 @@ public abstract class Canion implements Cloneable {
 	protected final CanionData data;
 
 	/**
-	 * Grado del cañon, corresponde al indice de los vectores anteriores.
+	 * Id del {@code Disparo} que lanzara el {@code Canion}, con el {@code grado} actual.
 	 */
-	protected int grado;
+	protected int idDisparo;
+	
+	/**
+	 * Tiempo de recarga, en nanosegundos, del {@code Canion}, con el {@code grado} actual.
+	 */
+	protected int tRecarga;
+	
+	/**
+	 * Desfase, en nanosegundos, del {@code Canion}, con el {@code grado} actual.<br/>
+	 * Por ejemplo: una {@code Nave} puede tener varios {@code Canion}, de las mismas caracteristicas,
+	 * con el mismo grado, con el mismo tiempo de recarga, y que no disparen a la vez al estar desfasados.
+	 */
+	protected int tDesfase;
+	
+	/**
+	 *  Velocidad, en unidades por nanosegundo, a la que sale el {@code Disparo} del {@code Canion},
+	 *  con el {@code grado} actual.
+	 */
+	protected float velocidad;
 
 	/**
 	 * Posicion relativa del cañon respecto al elemento donde esta armado.
 	 */
 	protected float posX, posY;
-
+	
+	/**
+	 * Desfase, un valor fracional [0..1], que multiplicado por {@code tRecarga}, sirve para calcular {@code tDesfase}.
+	 */
+	protected float desfase;
+	
 	/**
 	 * Contador para acumular el tiempo trancurrido.
 	 */
@@ -40,15 +63,26 @@ public abstract class Canion implements Cloneable {
 
 	protected Canion(CanionData data) {
 		this.data = data;
-		this.grado = 0;
+		this.idDisparo = data.getIdDisparo(0);
+		this.tRecarga = data.getTRecarga(0);
+		this.tDesfase = 0;
+		this.velocidad = data.getVelocidad(0);
+		
+		this.posX = 0;
+		this.posY = 0;
+		this.desfase = 0;
 	}
 
 	protected Canion(Canion prototipo) {
 		this.data = prototipo.data;
-		this.grado = prototipo.grado;
+		this.idDisparo = prototipo.idDisparo;
+		this.tRecarga = prototipo.tRecarga;
+		this.tDesfase = prototipo.tDesfase;
+		this.velocidad = prototipo.velocidad;
 		this.posX = prototipo.posX;
 		this.posY = prototipo.posY;
-		tTranscurrido = data.vTRecarga[grado] - data.vDesfases[grado];
+		this.desfase = prototipo.desfase;
+		tTranscurrido = tRecarga - tDesfase;
 	}
 
 	public abstract Canion clone();
@@ -57,19 +91,23 @@ public abstract class Canion implements Cloneable {
 		this.posX = posX;
 		this.posY = posY;
 	}
-
-	public final void setGrado(int grado) {
-		this.grado = grado;
-		tTranscurrido = data.vTRecarga[grado] - data.vDesfases[grado];
+	
+	public final void setDesfase(float desfase) {
+		this.desfase = desfase;
+		this.tDesfase = (int)(desfase * tRecarga);
 	}
 
-	// public final void aumentarGrado(int incGrado){
-	// grado += incGrado;
-	// tTranscurrido = vTRecarga[grado]-vDesfases[grado];
-	// }
+	public final void setGrado(int grado) {
+		this.idDisparo = data.getIdDisparo(grado);
+		this.tRecarga = data.getTRecarga(grado);
+		this.tDesfase = (int)(desfase * tRecarga);
+		this.velocidad = data.getVelocidad(grado);
+		
+		tTranscurrido = tRecarga - tDesfase;
+	}
 
 	public final void cargar() {
-		tTranscurrido = data.vTRecarga[grado] - data.vDesfases[grado];
+		tTranscurrido = tRecarga - tDesfase;
 	}
 
 	public abstract void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst);

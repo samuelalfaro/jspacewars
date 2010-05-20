@@ -32,15 +32,15 @@ public class CanionLineal extends Canion {
 	 * java.util.Collection)
 	 */
 	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst){
-		int tRecarga = data.vTRecarga[grado];
+//		int tRecarga = data.vTRecarga[grado];
 		int t = tRecarga - (int) tTranscurrido;
 
 		tTranscurrido += nanos;
 		while( tTranscurrido >= tRecarga ){
-			DisparoLineal disparo = (DisparoLineal) cache.newObject(data.vIdDisparos[grado]);
+			DisparoLineal disparo = (DisparoLineal) cache.newObject(idDisparo);
 			disparo.setId(Canion.getId());
 
-			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, angulo, data.vVelocidades[grado]);
+			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, angulo, velocidad);
 			disparo.actua(nanos - t);
 			dst.add(disparo);
 			t += tRecarga;

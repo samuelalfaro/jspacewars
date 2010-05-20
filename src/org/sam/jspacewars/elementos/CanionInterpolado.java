@@ -34,12 +34,12 @@ public class CanionInterpolado extends Canion {
 	 * java.util.Collection)
 	 */
 	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst) {
-		int tRecarga = data.vTRecarga[grado];
+//		int tRecarga = data.vTRecarga[grado];
 		int t = tRecarga - (int) tTranscurrido;
 
 		tTranscurrido += nanos;
 		while( tTranscurrido >= tRecarga ){
-			DisparoInterpolado disparo = (DisparoInterpolado) cache.newObject(data.vIdDisparos[grado]);
+			DisparoInterpolado disparo = (DisparoInterpolado) cache.newObject(idDisparo);
 			disparo.setId(Canion.getId());
 
 			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, scaleX, scaleY);
