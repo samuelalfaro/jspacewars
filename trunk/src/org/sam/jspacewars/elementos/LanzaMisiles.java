@@ -26,15 +26,15 @@ public class LanzaMisiles extends Canion {
 	}
 
 	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst){
-		int tRecarga = data.vTRecarga[grado];
+//		int tRecarga = data.vTRecarga[grado];
 		int t = tRecarga - (int) tTranscurrido;
 
 		tTranscurrido += nanos;
 		while( tTranscurrido >= tRecarga ){
-			Misil disparo = (Misil) cache.newObject(data.vIdDisparos[grado]);
+			Misil disparo = (Misil) cache.newObject(idDisparo);
 			disparo.setId(Canion.getId());
 
-			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, angulo, data.vVelocidades[grado]);
+			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, angulo, velocidad);
 			// TODO cambiar esta ñapa
 			disparo.setObjetivo(SingletonEnemigos.getObjetivo());
 			disparo.actua(nanos - t);
