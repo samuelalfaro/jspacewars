@@ -17,6 +17,8 @@ public class ElementosConverters {
 
 		InterpoladoresConverters.register(xStream);
 
+		xStream.useAttributeFor(Elemento.class, "type");
+//		xStream.aliasField("codigo", Elemento.class, "type");
 		xStream.alias("NaveUsuario", NaveUsuario.class);
 		xStream.alias("Canion", Canion.class);
 		xStream.alias("CanionLineal", CanionLineal.class);

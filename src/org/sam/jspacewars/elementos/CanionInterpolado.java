@@ -34,8 +34,7 @@ public class CanionInterpolado extends Canion {
 	 * java.util.Collection)
 	 */
 	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst) {
-//		int tRecarga = data.vTRecarga[grado];
-		int t = tRecarga - (int) tTranscurrido;
+		long t = tRecarga - tTranscurrido;
 
 		tTranscurrido += nanos;
 		while( tTranscurrido >= tRecarga ){

@@ -72,8 +72,7 @@ public class InterpoladoresConverters {
 			return Punto2D.class == clazz;
 		}
 
-		public void marshal(Object value, HierarchicalStreamWriter writer,
-				MarshallingContext context) {
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 		}
 
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {

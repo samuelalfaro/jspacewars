@@ -1,7 +1,6 @@
 <Instancia3D-array>
 	<!-- 1 Nave Prota 1 -->
-	<Instancia3D>
-		<tipo>0x00</tipo>
+	<Instancia3D type="0x00">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -165,8 +164,7 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 2 Nave Prota 1 Texturas 2 -->
-	<Instancia3D>
-		<tipo>0x01</tipo>
+	<Instancia3D type="0x01">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -228,8 +226,7 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 3 Nave Prota 2 -->
-	<Instancia3D>
-		<tipo>0x02</tipo>
+	<Instancia3D type="0x02">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -298,8 +295,7 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 4 Nave Prota 2 Texturas 2 -->
-	<Instancia3D>
-		<tipo>0x03</tipo>
+	<Instancia3D type="0x03">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -368,8 +364,7 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 5 Nave Prota 3 -->
-	<Instancia3D>
-		<tipo>0x04</tipo>
+	<Instancia3D type="0x04">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -458,8 +453,7 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 6 Nave Prota 3 Texturas 2 -->
-	<Instancia3D>
-		<tipo>0x05</tipo>
+	<Instancia3D type="0x05">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -519,8 +513,7 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 7 Bombardero 1 -->
-	<Instancia3D>
-		<tipo>0x08</tipo>
+	<Instancia3D type="0x08">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -592,8 +585,7 @@
 		<axis x="1.0" y="0.0" z="0.0"/>
 	</Instancia3D>
 	<!-- 8 Misil 1 -->
-	<Instancia3D>
-		<tipo>0x40</tipo>
+	<Instancia3D type="0x40">
 		<Grupo>
 			<NodoCompartido>
 				<Grupo>
@@ -678,8 +670,7 @@
 		</Grupo>
 	</Instancia3D>
 	<!-- 9 Disparo con Particulas 1 -->
-	<Instancia3D>
-		<tipo>0x60</tipo>
+	<Instancia3D type="0x60">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -723,8 +714,7 @@
 		</Grupo>
 	</Instancia3D>
 	<!-- 10 Disparos-->
-	<Instancia3D>
-		<tipo>0x80</tipo>
+	<Instancia3D type="0x80">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0" u2="0.25" v2="0.125" />
@@ -733,8 +723,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 11 Disparos-->
-	<Instancia3D>
-		<tipo>0x81</tipo>
+	<Instancia3D type="0x81">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.125" u2="0.25" v2="0.25" />
@@ -743,8 +732,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 12 Disparos-->
-	<Instancia3D>
-		<tipo>0x82</tipo>
+	<Instancia3D type="0x82">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.25" u2="0.25" v2="0.375" />
@@ -753,8 +741,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 13 Disparos-->
-	<Instancia3D>
-		<tipo>0x83</tipo>
+	<Instancia3D type="0x83">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.375" u2="0.25" v2="0.5" />
@@ -763,8 +750,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 14 Disparos-->
-	<Instancia3D>
-		<tipo>0x84</tipo>
+	<Instancia3D type="0x84">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.5" u2="0.25" v2="0.625" />
@@ -773,8 +759,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 15 Disparos-->
-	<Instancia3D>
-		<tipo>0x85</tipo>
+	<Instancia3D type="0x85">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.625" u2="0.25" v2="0.75" />
@@ -783,8 +768,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 16 Disparos-->
-	<Instancia3D>
-		<tipo>0x86</tipo>
+	<Instancia3D type="0x86">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.75" u2="0.25" v2="0.875" />
@@ -793,8 +777,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 17 Disparos-->
-	<Instancia3D>
-		<tipo>0x87</tipo>
+	<Instancia3D type="0x87">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.25" alto="0.125" u1="0" v1="0.875" u2="0.25" v2="1.0" />
@@ -803,8 +786,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 18 Disparos-->
-	<Instancia3D>
-		<tipo>0x88</tipo>
+	<Instancia3D type="0x88">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.0" u2="0.25" v2="0.125" />
@@ -813,8 +795,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 19 Disparos-->
-	<Instancia3D>
-		<tipo>0x89</tipo>
+	<Instancia3D type="0x89">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.125" u2="0.25" v2="0.25" />
@@ -823,8 +804,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 20 Disparos-->
-	<Instancia3D>
-		<tipo>0x8A</tipo>
+	<Instancia3D type="0x8A">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.25" u2="0.25" v2="0.375" />
@@ -833,8 +813,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 21 Disparos-->
-	<Instancia3D>
-		<tipo>0x8B</tipo>
+	<Instancia3D type="0x8B">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.375" u2="0.25" v2="0.5" />
@@ -843,8 +822,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 22 Disparos-->
-	<Instancia3D>
-		<tipo>0x8C</tipo>
+	<Instancia3D type="0x8C">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.5" u2="0.25" v2="0.625" />
@@ -853,8 +831,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 23 Disparos-->
-	<Instancia3D>
-		<tipo>0x8D</tipo>
+	<Instancia3D type="0x8D">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.625" u2="0.25" v2="0.75" />
@@ -863,8 +840,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 24 Disparos-->
-	<Instancia3D>
-		<tipo>0x8E</tipo>
+	<Instancia3D type="0x8E">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.75" u2="0.25" v2="0.875" />
@@ -873,8 +849,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 25 Disparos-->
-	<Instancia3D>
-		<tipo>0x8F</tipo>
+	<Instancia3D type="0x8F">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.875" u2="0.25" v2="1.0" />
@@ -883,8 +858,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 26 Disparos-->
-	<Instancia3D>
-		<tipo>0x90</tipo>
+	<Instancia3D type="0x90">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.0" u2="0.25" v2="0.125" />
@@ -893,8 +867,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 27 Disparos-->
-	<Instancia3D>
-		<tipo>0x91</tipo>
+	<Instancia3D type="0x91">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.125" u2="0.25" v2="0.25" />
@@ -903,8 +876,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 28 Disparos-->
-	<Instancia3D>
-		<tipo>0x92</tipo>
+	<Instancia3D type="0x92">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.25" u2="0.25" v2="0.375" />
@@ -913,8 +885,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 29 Disparos-->
-	<Instancia3D>
-		<tipo>0x93</tipo>
+	<Instancia3D type="0x93">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.375" u2="0.25" v2="0.5" />
@@ -923,8 +894,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 30 Disparos-->
-	<Instancia3D>
-		<tipo>0x94</tipo>
+	<Instancia3D type="0x94">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.5" u2="0.25" v2="0.625" />
@@ -933,8 +903,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 31 Disparos-->
-	<Instancia3D>
-		<tipo>0x95</tipo>
+	<Instancia3D type="0x95">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.625" u2="0.25" v2="0.75" />
@@ -943,8 +912,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 32 Disparos-->
-	<Instancia3D>
-		<tipo>0x96</tipo>
+	<Instancia3D type="0x96">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.75" u2="0.25" v2="0.875" />
@@ -953,8 +921,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 33 Disparos-->
-	<Instancia3D>
-		<tipo>0x97</tipo>
+	<Instancia3D type="0x97">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.875" u2="0.25" v2="1.0" />
@@ -963,8 +930,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 34 Disparos-->
-	<Instancia3D>
-		<tipo>0x98</tipo>
+	<Instancia3D type="0x98">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.0" u2="0.25" v2="0.125" />
@@ -973,8 +939,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 35 Disparos-->
-	<Instancia3D>
-		<tipo>0x99</tipo>
+	<Instancia3D type="0x99">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.125" u2="0.25" v2="0.25" />
@@ -983,8 +948,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 36 Disparos-->
-	<Instancia3D>
-		<tipo>0x9A</tipo>
+	<Instancia3D type="0x9A">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.25" u2="0.25" v2="0.375" />
@@ -993,8 +957,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 37 Disparos-->
-	<Instancia3D>
-		<tipo>0x9B</tipo>
+	<Instancia3D type="0x9B">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.375" u2="0.25" v2="0.5" />
@@ -1003,8 +966,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 38 Disparos-->
-	<Instancia3D>
-		<tipo>0x9C</tipo>
+	<Instancia3D type="0x9C">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.5" u2="0.25" v2="0.625" />
@@ -1013,8 +975,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 39 Disparos-->
-	<Instancia3D>
-		<tipo>0x9D</tipo>
+	<Instancia3D type="0x9D">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.625" u2="0.25" v2="0.75" />
@@ -1023,8 +984,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 40 Disparos-->
-	<Instancia3D>
-		<tipo>0x9E</tipo>
+	<Instancia3D type="0x9E">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.75" u2="0.25" v2="0.875" />
@@ -1033,8 +993,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 41 Disparos-->
-	<Instancia3D>
-		<tipo>0x9F</tipo>
+	<Instancia3D type="0x9F">
 		<NodoCompartido>
 			<Objeto3D>
 				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.875" u2="0.25" v2="1.0" />
@@ -1043,8 +1002,7 @@
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 42 Explosion-->
-	<Instancia3D>
-		<tipo>0x0100</tipo>
+	<Instancia3D type="0x0100">
 		<Particulas nParticulas="50">
 			<Emisor class="Emisor.Puntual" cache="256"/>
 			<Emision>UNICA</Emision>

@@ -1,9 +1,7 @@
 <object-stream>
-	<Misil>
-		<code>0x40</code>
+	<Misil type="0x40">
 	</Misil>
-	<DisparoInterpolado>
-		<code>0x60</code>
+	<DisparoInterpolado type="0x60">
 		<trayectoria>
 			<Keys keyGen="PROPORCIONALES" scale="1000000000.0" translation="0.0"/>
 			<Values class="[[F" length="31">
@@ -42,104 +40,71 @@
 			<MetodoDeInterpolacion predefinido="BEZIER"/>
 		</trayectoria>
 	</DisparoInterpolado>
-	<DisparoLineal>
-		<code>0x80</code>
+	<DisparoLineal type="0x80">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x81</code>
+	<DisparoLineal type="0x81">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x82</code>
+	<DisparoLineal type="0x82">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x83</code>
+	<DisparoLineal type="0x83">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x84</code>
+	<DisparoLineal type="0x84">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x85</code>
+	<DisparoLineal type="0x85">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x86</code>
+	<DisparoLineal type="0x86">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x87</code>
+	<DisparoLineal type="0x87">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x88</code>
+	<DisparoLineal type="0x88">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x89</code>
+	<DisparoLineal type="0x89">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x8A</code>
+	<DisparoLineal type="0x8A">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x8B</code>
+	<DisparoLineal type="0x8B">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x8C</code>
+	<DisparoLineal type="0x8C">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x8D</code>
+	<DisparoLineal type="0x8D">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x8E</code>
+	<DisparoLineal type="0x8E">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x8F</code>
+	<DisparoLineal type="0x8F">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x90</code>
+	<DisparoLineal type="0x90">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x91</code>
+	<DisparoLineal type="0x91">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x92</code>
+	<DisparoLineal type="0x92">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x93</code>
+	<DisparoLineal type="0x93">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x94</code>
+	<DisparoLineal type="0x94">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x95</code>
+	<DisparoLineal type="0x95">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x96</code>
+	<DisparoLineal type="0x96">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x97</code>
+	<DisparoLineal type="0x97">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x98</code>
+	<DisparoLineal type="0x98">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x99</code>
+	<DisparoLineal type="0x99">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x9A</code>
+	<DisparoLineal type="0x9A">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x9B</code>
+	<DisparoLineal type="0x9B">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x9C</code>
+	<DisparoLineal type="0x9C">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x9D</code>
+	<DisparoLineal type="0x9D">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x9E</code>
+	<DisparoLineal type="0x9E">
 	</DisparoLineal>
-	<DisparoLineal>
-		<code>0x9F</code>
+	<DisparoLineal type="0x9F">
 	</DisparoLineal>
-	<NaveUsuario>
-		<code>0x00</code>
+	<NaveUsuario type="0x00">
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -190,11 +155,11 @@
 								<int>0x98</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001500</float>
@@ -314,10 +279,10 @@
 								<int>0x60</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>625000000</int>
-								<int>500000000</int>
-								<int>375000000</int>
-								<int>250000000</int>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000000010</float>
@@ -348,7 +313,7 @@
 								<int>0x40</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>1000000000</int>
+								<long>1000000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.000000010</float>
@@ -368,8 +333,7 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<NaveUsuario>
-		<code>0x01</code>
+	<NaveUsuario type="0x01">
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -420,11 +384,11 @@
 								<int>0x98</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001500</float>
@@ -544,10 +508,10 @@
 								<int>0x60</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>625000000</int>
-								<int>500000000</int>
-								<int>375000000</int>
-								<int>250000000</int>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000000010</float>
@@ -578,7 +542,7 @@
 								<int>0x40</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>1000000000</int>
+								<long>1000000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.000000010</float>
@@ -598,8 +562,7 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<NaveUsuario>
-		<code>0x02</code>
+	<NaveUsuario type="0x02">
 		<limitesDeNiveles>
 			<int-array>
 				<int>1</int>
@@ -653,12 +616,12 @@
 								<int>0x9A</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001500</float>
@@ -700,12 +663,12 @@
 								<int>0x99</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001625</float>
@@ -771,12 +734,12 @@
 								<int>0x98</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001750</float>
@@ -829,10 +792,10 @@
 								<int>0x60</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>625000000</int>
-								<int>500000000</int>
-								<int>375000000</int>
-								<int>250000000</int>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000000010</float>
@@ -863,7 +826,7 @@
 								<int>0x40</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>1000000000</int>
+								<long>1000000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.000000010</float>
@@ -883,8 +846,7 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<NaveUsuario>
-		<code>0x03</code>
+	<NaveUsuario type="0x03">
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -935,11 +897,11 @@
 								<int>0x98</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001500</float>
@@ -1059,10 +1021,10 @@
 								<int>0x60</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>625000000</int>
-								<int>500000000</int>
-								<int>375000000</int>
-								<int>250000000</int>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000000010</float>
@@ -1093,7 +1055,7 @@
 								<int>0x40</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>1000000000</int>
+								<long>1000000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.000000010</float>
@@ -1113,8 +1075,7 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<NaveUsuario>
-		<code>0x04</code>
+	<NaveUsuario type="0x04">
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -1165,11 +1126,11 @@
 								<int>0x98</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001500</float>
@@ -1289,10 +1250,10 @@
 								<int>0x60</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>625000000</int>
-								<int>500000000</int>
-								<int>375000000</int>
-								<int>250000000</int>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000000010</float>
@@ -1323,7 +1284,7 @@
 								<int>0x40</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>1000000000</int>
+								<long>1000000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.000000010</float>
@@ -1343,8 +1304,7 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<NaveUsuario>
-		<code>0x05</code>
+	<NaveUsuario type="0x05">
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -1395,11 +1355,11 @@
 								<int>0x98</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>136000000</int>
-								<int>124000000</int>
-								<int>112000000</int>
-								<int>100000000</int>
-								<int>88000000</int>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000001500</float>
@@ -1519,10 +1479,10 @@
 								<int>0x60</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>625000000</int>
-								<int>500000000</int>
-								<int>375000000</int>
-								<int>250000000</int>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.00000000010</float>
@@ -1553,7 +1513,7 @@
 								<int>0x40</int>
 							</vIdDisparos>
 							<vTRecarga>
-								<int>1000000000</int>
+								<long>1000000000</long>
 							</vTRecarga>
 							<vVelocidades>
 								<float>0.000000010</float>
@@ -1573,7 +1533,6 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<NaveEnemiga>
-		<code>0x08</code>
+	<NaveEnemiga type="0x08">
 	</NaveEnemiga>
 </object-stream>

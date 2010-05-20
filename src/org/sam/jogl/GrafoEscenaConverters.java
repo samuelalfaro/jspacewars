@@ -25,6 +25,17 @@ import com.thoughtworks.xstream.mapper.Mapper;
 @SuppressWarnings("deprecation")
 public class GrafoEscenaConverters {
 
+	private static int parseInt(String s){
+		int i= 0;
+		if(s != null){
+			if(s.substring(0, 2).equalsIgnoreCase("0x"))
+				i = Integer.parseInt(s.substring(2),16);
+			else
+				i = Integer.parseInt(s);
+		}
+		return i;
+	}
+	
 	private GrafoEscenaConverters(){}
 	
 	/**
@@ -44,7 +55,7 @@ public class GrafoEscenaConverters {
 		private static final String z = "z";
 		
 		private static final String Instancia3D = "Instancia3D";
-		private static final String tipo = "tipo";
+		private static final String type = "type";
 		private static final String rotation = "rotation";
 		private static final String axis = "axis";
 		
@@ -184,12 +195,8 @@ public class GrafoEscenaConverters {
 		 */
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			Instancia3D instancia3D = (Instancia3D)value;
-			writer.startNode(S.tipo);
-				context.convertAnother(instancia3D.getTipo());
-			writer.endNode();
-
+			writer.addAttribute(S.type, Short.toString(instancia3D.getType()));
 			writeNodo( instancia3D.getChilds()[0], writer, context );
-			
 			try{
 				Field field = Reflexion.findField(Instancia3D.class, S.rotation);
 				field.setAccessible(true);
@@ -210,16 +217,14 @@ public class GrafoEscenaConverters {
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			int tipo = 0;
+			short type = (short)parseInt( reader.getAttribute(S.type) );
 			Nodo child = null;
 			Vector3f axis = null;
+			
 			while (reader.hasMoreChildren()) {
 				reader.moveDown();
-
 				String nodeName = reader.getNodeName();
-				if (nodeName.equals(S.tipo))
-					tipo = (Integer)context.convertAnother(null, Integer.class);
-				else if (nodeName.equals(S.axis))
+				if (nodeName.equals(S.axis))
 					axis = new Vector3f(
 							Float.parseFloat(reader.getAttribute(S.x)),
 							Float.parseFloat(reader.getAttribute(S.y)),
@@ -229,7 +234,7 @@ public class GrafoEscenaConverters {
 					child = forName( nodeName, reader, context );
 				reader.moveUp();
 			}
-			Instancia3D instancia3D = new Instancia3D(tipo, child);
+			Instancia3D instancia3D = new Instancia3D(type, child);
 			if (axis != null)
 				instancia3D.setAxis(axis);
 			return instancia3D;
