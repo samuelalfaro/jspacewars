@@ -31,14 +31,14 @@ public abstract class Canion implements Cloneable {
 	/**
 	 * Tiempo de recarga, en nanosegundos, del {@code Canion}, con el {@code grado} actual.
 	 */
-	protected int tRecarga;
+	protected long tRecarga;
 	
 	/**
 	 * Desfase, en nanosegundos, del {@code Canion}, con el {@code grado} actual.<br/>
 	 * Por ejemplo: una {@code Nave} puede tener varios {@code Canion}, de las mismas caracteristicas,
 	 * con el mismo grado, con el mismo tiempo de recarga, y que no disparen a la vez al estar desfasados.
 	 */
-	protected int tDesfase;
+	protected long tDesfase;
 	
 	/**
 	 *  Velocidad, en unidades por nanosegundo, a la que sale el {@code Disparo} del {@code Canion},

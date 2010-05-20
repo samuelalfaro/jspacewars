@@ -6,8 +6,7 @@ package org.sam.jspacewars.elementos;
  */
 public class CanionData {
 	/**
-	 * Referencia a los distintos {@code Disparo} que puede lanzar para los distintos
-	 * grados del {@code Canion}.
+	 * Referencias al codigo de los distintos {@code Disparo}, que puede lanzar el {@code Canion}, segun su grado.
 	 */
 	private final int[] vIdDisparos;
 
@@ -15,15 +14,7 @@ public class CanionData {
 	 * Vector que contiene los tiempos de recarga, en nanosegundos, para los
 	 * distintos grados del {@code Canion}.
 	 */
-	private final int[] vTRecarga;
-
-//	/**
-//	 * Vector que contiene los desfases del disparo, en nanosegundos, para los
-//	 * distintos grados del cañon. Por ejemplo, una nave puede tener varios
-//	 * cañones del mismo grado, con el mismo tiempo de recarga, y que no
-//	 * disparen a la vez al estar desfasados.
-//	 */
-//	private final int[] vDesfases;
+	private final long[] vTRecarga;
 
 	/**
 	 * Vector que contiene las velocidades del disparo, en unidades por
@@ -31,12 +22,21 @@ public class CanionData {
 	 */
 	private final float[] vVelocidades;
 
-	public CanionData(int[] vIdDisparos, int[] vTRecarga, float[] vVelocidades) {
+	/**
+	 * Constructor con los valores correspondientes.
+	 * @param vIdDisparos {@link org.sam.jspacewars.elementos.CanionData#vIdDisparos vIdDisparos} a asignar.
+	 * @param vTRecarga {@link org.sam.jspacewars.elementos.CanionData#vTRecarga vTRecarga} a asignar.
+	 * @param vVelocidades {@link org.sam.jspacewars.elementos.CanionData#vVelocidades vVelocidades} a asignar.
+	 */
+	public CanionData(int[] vIdDisparos, long[] vTRecarga, float[] vVelocidades) {
+		if( vIdDisparos  == null || vTRecarga == null || vVelocidades == null )
+			throw new IllegalArgumentException("Vector nulo");
+		if( vIdDisparos.length == 0 || vTRecarga.length == 0 || vVelocidades.length == 0 )
+			throw new IllegalArgumentException("Vector vacio");
 		if( (vIdDisparos.length != vTRecarga.length) || (vTRecarga.length != vVelocidades.length) )
 			throw new IllegalArgumentException("Los vectores no tienen el mismo tamaño");
 		this.vIdDisparos = vIdDisparos;
 		this.vTRecarga = vTRecarga;
-//		this.vDesfases = vDesfases;
 		this.vVelocidades = vVelocidades;
 	}
 
@@ -61,7 +61,7 @@ public class CanionData {
 	 * @param grado indice del vector {@code vTRecarga}.
 	 * @return tiempo de recarga.
 	 */
-	public int getTRecarga(int grado) {
+	public long getTRecarga(int grado) {
 		try{
 			return vTRecarga[grado];
 		}catch(ArrayIndexOutOfBoundsException e){
@@ -71,22 +71,6 @@ public class CanionData {
 			return vTRecarga[vTRecarga.length -1];
 		}
 	}
-
-//	/**
-//	 * Devuelve el desfase del tiempo de recarga del {@code Canion} con el grado actual.
-//	 * @param grado indice del vector {@code vDesfases}.
-//	 * @return desfase del tiempo de recarga.
-//	 */
-//	public int getDesfase(int grado) {
-//		try{
-//			return vDesfases[grado];
-//		}catch(ArrayIndexOutOfBoundsException e){
-//			e.printStackTrace();
-//			if(grado < 0)
-//				return vDesfases[0];
-//			return vDesfases[vDesfases.length -1];
-//		}
-//	}
 
 	/**
 	 * Devuelve la velocidad a la que sale el {@code Disparo} del {@code Canion} con el {@code grado} actual.

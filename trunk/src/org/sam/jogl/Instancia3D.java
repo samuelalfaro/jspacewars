@@ -29,8 +29,8 @@ public class Instancia3D extends NodoTransformador implements Prototipo<Instanci
 		}
 	}
 
-	private final int tipo;
-	private transient int id;
+	private final short type;
+	private transient short id;
 	
 	private final transient AxisAngle4f rotation;
 	private final transient Vector3f translation;
@@ -38,7 +38,7 @@ public class Instancia3D extends NodoTransformador implements Prototipo<Instanci
 	private final transient Modificador modificador;
 	private final transient Cacheable cacheableChilds[];
 
-	public Instancia3D(int tipo, Nodo child){
+	public Instancia3D(short type, Nodo child){
 		super(child);
 
 		Deque<Nodo> stack = new LinkedList<Nodo>();
@@ -65,7 +65,7 @@ public class Instancia3D extends NodoTransformador implements Prototipo<Instanci
 		else
 			this.cacheableChilds = null;
 		
-		this.tipo = tipo;
+		this.type = type;
 		this.rotation = new AxisAngle4f();
 		this.translation = new Vector3f();
 	}
@@ -98,20 +98,20 @@ public class Instancia3D extends NodoTransformador implements Prototipo<Instanci
 		else
 			this.cacheableChilds = null;
 		
-		this.tipo = prototipo.tipo;
+		this.type = prototipo.type;
 		this.rotation = new AxisAngle4f(prototipo.rotation);
 		this.translation = new Vector3f();
 	}
 	
-	public int getTipo(){
-		return tipo;
+	public short getType(){
+		return type;
 	}
 	
 	public int hashCode(){
-		return tipo;
+		return type;
 	}
 	
-	public final void setId(int id){
+	public final void setId(short id){
 		this.id = id;
 	}
 	

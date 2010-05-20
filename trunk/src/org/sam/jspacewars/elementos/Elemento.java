@@ -9,25 +9,25 @@ public class Elemento implements Prototipo<Elemento>, Enviable, Cacheable {
 
 	public static Comparator<Elemento> COMPARADOR = new Comparator<Elemento>() {
 		public int compare(Elemento e1, Elemento e2) {
-			int comparacion = e1.code - e2.code;
+			int comparacion = e1.type - e2.type;
 			if( comparacion != 0 )
 				return comparacion;
 			return e1.id - e2.id;
 		}
 	};
 
-	private final short code;
+	private final short type;
 	private short id;
 	protected transient float posX, posY;
 
-	Elemento(short code) {
-		this.code = code;
+	Elemento(short type) {
+		this.type = type;
 		this.posX = 0.0f;
 		this.posY = 0.0f;
 	}
 
 	protected Elemento(Elemento prototipo) {
-		this.code = prototipo.code;
+		this.type = prototipo.type;
 		this.posX = prototipo.posX;
 		this.posY = prototipo.posY;
 	}
@@ -37,7 +37,7 @@ public class Elemento implements Prototipo<Elemento>, Enviable, Cacheable {
 	}
 
 	public final int hashCode() {
-		return code;
+		return type;
 	}
 
 	public Elemento clone() {
@@ -58,7 +58,7 @@ public class Elemento implements Prototipo<Elemento>, Enviable, Cacheable {
 	}
 
 	public void enviar(ByteBuffer buff) {
-		buff.putShort(code);
+		buff.putShort(type);
 		buff.putShort(id);
 		buff.putFloat(posX);
 		buff.putFloat(posY);
@@ -71,6 +71,5 @@ public class Elemento implements Prototipo<Elemento>, Enviable, Cacheable {
 	 */
 	public void reset() {
 		// TODO Auto-generated method stub
-
 	}
 }

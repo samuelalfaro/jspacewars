@@ -67,7 +67,7 @@ public class Cliente extends Thread {
 			Instancia3D almacenado = iConsumidor.next();
 
 			do{
-				if( almacenado.getTipo() < tipo || (almacenado.getTipo() == tipo && almacenado.getId() < id) ){
+				if( almacenado.getType() < tipo || (almacenado.getType() == tipo && almacenado.getId() < id) ){
 					if( almacenado.getModificador() != null )
 						consumidor.modificadores.remove(almacenado.getModificador());
 					cache.cached(almacenado);
@@ -82,7 +82,7 @@ public class Cliente extends Thread {
 						break;
 					}
 					almacenado = iConsumidor.next();
-				}else if( almacenado.getTipo() > tipo || (almacenado.getTipo() == tipo && almacenado.getId() > id) ){
+				}else if( almacenado.getType() > tipo || (almacenado.getType() == tipo && almacenado.getId() > id) ){
 					Instancia3D nuevo = cache.newObject(tipo);
 					if( nuevo.getModificador() != null )
 						consumidor.modificadores.add(nuevo.getModificador());
