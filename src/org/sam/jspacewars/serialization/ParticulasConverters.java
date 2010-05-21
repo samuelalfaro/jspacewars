@@ -1,6 +1,3 @@
-/**
- * 
- */
 package org.sam.jspacewars.serialization;
 
 import org.sam.interpoladores.Getter;
@@ -28,7 +25,6 @@ public class ParticulasConverters{
 
 	/**
 	 * Clase privada para evitar repetir las cadenas.
-	 * @author samuel
 	 */
 	private static class S{
 		
