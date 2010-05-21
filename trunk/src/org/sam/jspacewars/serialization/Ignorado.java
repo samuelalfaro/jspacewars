@@ -7,6 +7,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class Ignorado implements Converter {
+	
+//	private static String tabs ="";
+	
 	@SuppressWarnings("unchecked")
 	public boolean canConvert(Class clazz) {
 		return Ignorado.class == clazz;
@@ -16,6 +19,15 @@ public class Ignorado implements Converter {
 	}
 
 	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+//		System.out.println(tabs+'<'+reader.getNodeName()+'>');
+		while(reader.hasMoreChildren()){
+//			tabs = tabs.concat("   ");
+			reader.moveDown();
+			unmarshal(reader, context);
+			reader.moveUp();
+//			tabs = tabs.substring(0, tabs.length()-3);
+		}
+//		System.out.println(tabs+"</"+reader.getNodeName()+'>');
 		return null;
 	}
 }

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -29,6 +31,7 @@ import org.sam.jogl.ObjLoader;
 import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.Textura;
 import org.sam.jspacewars.serialization.GrafoEscenaConverters;
+import org.sam.jspacewars.serialization.Ignorado;
 import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
 
@@ -36,25 +39,46 @@ import com.sun.opengl.util.Animator;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class LoaderExample{
+public class LoaderExample {
+
+	private static class Properties{
+		private Properties(){}
+		
+		private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("LoaderExample");
+
+		private static String getProperty(String key) {
+			try {
+				return BUNDLE.getString(key);
+			} catch (MissingResourceException e) {
+				return '!' + key + '!';
+			}
+		}
+
+		private static class Paths{
+			private Paths(){}
+			
+			private static final String fondo = getProperty("Paths.fondo");
+			private static final String instancias = getProperty("Paths.instancias");
+		}
+	}
 	
-	private static class Data{
+	private static class Data {
 		GLContext context;
 		Apariencia apFondo;
 		Instancia3D[] instancias;
 	}
-	
-	private static class Loader implements GLEventListener{
-		
+
+	private static class Loader implements GLEventListener {
+
 		// Indices rgb
 		@SuppressWarnings("unused")
 		private static final transient int r = 0, g = 1, b = 2;
-		
+
 		private final transient Data data;
 		private final transient ModificableBoolean loading;
 		private final transient float[] color1, color2;
 
-		Loader( Data data, ModificableBoolean loading ){
+		Loader(Data data, ModificableBoolean loading) {
 			this.data = data;
 			this.loading = loading;
 			color1 = new float[] { 1.0f, 0.0f, 0.0f };
@@ -62,9 +86,13 @@ public class LoaderExample{
 		}
 
 		private transient int ciclo;
-		
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
+		 * )
 		 */
 		@Override
 		public void init(GLAutoDrawable drawable) {
@@ -82,66 +110,85 @@ public class LoaderExample{
 		private static final transient float inc2 = 1.0f / MAX_CICLOS;
 
 		private transient float proporcionesPantalla;
-		
+
 		private transient ObjectInputStream in;
 		private transient Collection<Instancia3D> intanciasCollection;
 		private transient boolean eof;
-		
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seejavax.media.opengl.GLEventListener#display(javax.media.opengl.
+		 * GLAutoDrawable)
 		 */
 		@Override
 		public void display(GLAutoDrawable drawable) {
 			GL gl = drawable.getGL();
-			if( ciclo == 0 ){
+			if (ciclo == 0) {
 
-			}else if(data.apFondo == null ){
-				BufferedImage img = Imagen.cargarToBufferedImage("resources/texturas/cielo512.jpg");
+			} else if (data.apFondo == null) {
+				BufferedImage img = Imagen.cargarToBufferedImage(Properties.Paths.fondo);
 				data.apFondo = new Apariencia();
 
-				data.apFondo.setTextura(new Textura(gl, Textura.Format.RGB, img , true));
+				data.apFondo.setTextura(new Textura(gl, Textura.Format.RGB,
+						img, true));
 				data.apFondo.setAtributosTextura(new AtributosTextura());
-				data.apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
-			}else{
-				try{
-					if( in == null ){
+				data.apFondo.getAtributosTextura().setMode(
+						AtributosTextura.Mode.REPLACE);
+			} else {
+				try {
+					if (in == null) {
 						XStream xStream = new XStream(new DomDriver());
 						xStream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 						GrafoEscenaConverters.register(xStream);
-						GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
+						GrafoEscenaConverters
+								.setReusingReferenceByXPathMarshallingStrategy(xStream);
+
+						xStream.registerConverter(new Ignorado());
+						xStream.alias("NaveUsuario", Ignorado.class);
+						xStream.alias("DisparoLineal", Ignorado.class);
+						xStream.alias("DisparoInterpolado", Ignorado.class);
+						xStream.alias("Misil", Ignorado.class);
+						xStream.alias("NaveEnemiga", Ignorado.class);
 
 						intanciasCollection = new LinkedList<Instancia3D>();
-						in = xStream.createObjectInputStream(new FileReader("resources/instancias3D-stream-sh.xml"));
+						in = xStream.createObjectInputStream(new FileReader(Properties.Paths.instancias));
 					}
-					if( !eof )
-						try{
-							intanciasCollection.add((Instancia3D) in.readObject());
-						}catch( ClassNotFoundException e ){
+					if (!eof)
+						try {
+							Object object;
+							do {
+								object = in.readObject();
+								if (object != null)
+									intanciasCollection
+											.add((Instancia3D) object);
+							} while (object == null);
+						} catch (ClassNotFoundException e) {
 							e.printStackTrace();
-						}catch( EOFException eofEx ){
+						} catch (EOFException eofEx) {
 							eof = true;
 							in.close();
 						}
-				}catch( FileNotFoundException e ){
+				} catch (FileNotFoundException e) {
 					e.printStackTrace();
-				}catch( IOException e ){
+				} catch (IOException e) {
 					e.printStackTrace();
-				}catch( ObjLoader.ParsingErrorException e ){
+				} catch (ObjLoader.ParsingErrorException e) {
 					e.printStackTrace();
-				}catch( GLException e ){
+				} catch (GLException e) {
 					e.printStackTrace();
 				}
 			}
 
 			color1[g] += inc1;
-			if( color1[g] > 1.0f ){
+			if (color1[g] > 1.0f) {
 				color1[g] = 1.0f;
 				color1[r] -= inc1;
-				if( color1[r] < 0 )
+				if (color1[r] < 0)
 					color1[r] = 0.0f;
 			}
 			color2[g] += inc2;
-			if( color2[g] > 1.0f )
+			if (color2[g] > 1.0f)
 				color2[g] = 1.0f;
 
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT);
@@ -160,22 +207,27 @@ public class LoaderExample{
 			gl.glEnd();
 			gl.glFlush();
 
-			if( eof && intanciasCollection != null){
-				synchronized( loading ){
-					data.instancias = intanciasCollection.toArray(new Instancia3D[intanciasCollection.size()]);
+			if (eof && intanciasCollection != null) {
+				synchronized (loading) {
+					data.instancias = intanciasCollection
+							.toArray(new Instancia3D[intanciasCollection.size()]);
 					intanciasCollection = null;
 					loading.setFalse();
 					loading.notifyAll();
 				}
-//				drawable.removeGLEventListener(this);
+				// drawable.removeGLEventListener(this);
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seejavax.media.opengl.GLEventListener#reshape(javax.media.opengl.
+		 * GLAutoDrawable, int, int, int, int)
 		 */
 		@Override
-		public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+				int height) {
 			GL gl = drawable.getGL();
 			gl.glViewport(0, 0, width, height);
 			proporcionesPantalla = (float) width / height;
@@ -188,60 +240,73 @@ public class LoaderExample{
 			gl.glLoadIdentity();
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl.GLAutoDrawable, boolean, boolean)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl
+		 * .GLAutoDrawable, boolean, boolean)
 		 */
 		@Override
-		public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
+		public void displayChanged(GLAutoDrawable drawable,
+				boolean modeChanged, boolean deviceChanged) {
 		}
 	}
-	
-	private static class Renderer implements GLEventListener, KeyListener{
-		
+
+	private static class Renderer implements GLEventListener, KeyListener {
+
 		private final Data data;
 		private final OrbitBehavior orbitBehavior;
 		private transient int index = 0;
-		
-		Renderer( Data data , OrbitBehavior orbitBehavior){
+
+		Renderer(Data data, OrbitBehavior orbitBehavior) {
 			this.data = data;
 			this.orbitBehavior = orbitBehavior;
 		}
-		
+
 		private transient float proporcionesPantalla;
 		private transient long tAnterior, tActual;
 		private GLU glu;
 
 		private transient boolean iniciado = false;
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
+		 * )
 		 */
 		@Override
 		public void init(GLAutoDrawable drawable) {
 			GL gl = drawable.getGL();
 			glu = new GLU();
-			
+
 			gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
-			
+
 			gl.glDisable(GL.GL_LIGHTING);
 			gl.glEnable(GL.GL_LIGHT0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION,
-				new float[]{ 0.0f, 0.0f, 10.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, new float[] { 0.0f,
+					0.0f, 10.0f, 1.0f }, 0);
 			gl.glEnable(GL.GL_CULL_FACE);
-			
+
 			data.instancias[index].reset();
-			
+
 			tActual = System.nanoTime();
 			iniciado = true;
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seejavax.media.opengl.GLEventListener#display(javax.media.opengl.
+		 * GLAutoDrawable)
 		 */
 		@Override
 		public void display(GLAutoDrawable drawable) {
-			if(!iniciado)
+			if (!iniciado)
 				init(drawable);
 			tAnterior = tActual;
 			tActual = System.nanoTime();
@@ -249,7 +314,7 @@ public class LoaderExample{
 
 			GL gl = drawable.getGL();
 
-			gl.glMatrixMode( GL.GL_MODELVIEW );
+			gl.glMatrixMode(GL.GL_MODELVIEW);
 			gl.glLoadIdentity();
 
 			gl.glMatrixMode(GL.GL_PROJECTION);
@@ -258,166 +323,180 @@ public class LoaderExample{
 			gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
 
 			/*
-			AtributosTransparencia.desactivar(gl);
-			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-			/*/
+			 * AtributosTransparencia.desactivar(gl); gl.glClear(
+			 * GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT ); /
+			 */
 			data.apFondo.usar(gl);
-			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
-			
+			gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+
 			float s1 = 0.75f;
-			float s2 = proporcionesPantalla * data.apFondo.getTextura().getProporciones() + s1;
-			
+			float s2 = proporcionesPantalla
+					* data.apFondo.getTextura().getProporciones() + s1;
+
 			gl.glDepthMask(false);
 			gl.glBegin(GL.GL_QUADS);
-				gl.glTexCoord2f(s1,0);
-				gl.glVertex3f(0,0,0);
-				gl.glTexCoord2f(s2,0);
-				gl.glVertex3f(proporcionesPantalla,0,0);
-				gl.glTexCoord2f(s2,1);
-				gl.glVertex3f(proporcionesPantalla,1,0);
-				gl.glTexCoord2f(s1,1);
-				gl.glVertex3f(0,1,0);
+			gl.glTexCoord2f(s1, 0);
+			gl.glVertex3f(0, 0, 0);
+			gl.glTexCoord2f(s2, 0);
+			gl.glVertex3f(proporcionesPantalla, 0, 0);
+			gl.glTexCoord2f(s2, 1);
+			gl.glVertex3f(proporcionesPantalla, 1, 0);
+			gl.glTexCoord2f(s1, 1);
+			gl.glVertex3f(0, 1, 0);
 			gl.glEnd();
 			gl.glDepthMask(true);
-			//*/
-			
+			// */
+
 			gl.glPopMatrix();
 			gl.glMatrixMode(GL.GL_MODELVIEW);
-			glu.gluLookAt(
-					orbitBehavior.eyePos.x, orbitBehavior.eyePos.y, orbitBehavior.eyePos.z,
-					orbitBehavior.targetPos.x, orbitBehavior.targetPos.y, orbitBehavior.targetPos.z,
-					orbitBehavior.upDir.x, orbitBehavior.upDir.y, orbitBehavior.upDir.z
-			);
+			glu.gluLookAt(orbitBehavior.eyePos.x, orbitBehavior.eyePos.y,
+					orbitBehavior.eyePos.z, orbitBehavior.targetPos.x,
+					orbitBehavior.targetPos.y, orbitBehavior.targetPos.z,
+					orbitBehavior.upDir.x, orbitBehavior.upDir.y,
+					orbitBehavior.upDir.z);
 			ObjetosOrientables.loadModelViewMatrix();
-			
-			if(data.instancias[index].getModificador() != null)
+
+			if (data.instancias[index].getModificador() != null)
 				data.instancias[index].getModificador().modificar(incT);
 			data.instancias[index].draw(gl);
 
 			gl.glFlush();
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @seejavax.media.opengl.GLEventListener#reshape(javax.media.opengl.
+		 * GLAutoDrawable, int, int, int, int)
 		 */
 		@Override
-		public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		public void reshape(GLAutoDrawable drawable, int x, int y, int width,
+				int height) {
 			GL gl = drawable.getGL();
 			gl.glViewport(0, 0, width, height);
-			proporcionesPantalla = (float)width/height;
+			proporcionesPantalla = (float) width / height;
 			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glLoadIdentity();
 			double near = 0.01;
-			double far  = 100.0;
-			double a1 = 45.0;			// angulo en grados
-			double a2 = a1/360*Math.PI; // mitad del angulo en radianes
-			double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
+			double far = 100.0;
+			double a1 = 45.0; // angulo en grados
+			double a2 = a1 / 360 * Math.PI; // mitad del angulo en radianes
+			double d = near / Math.sqrt((1 / Math.pow(Math.sin(a2), 2)) - 1);
 
 			/*
-			// formato zoom/recorte
-			double ratio = (double) w / h;
-			if( ratio > 1 )
-				gl.glFrustum(-d, d, -d / ratio, d / ratio, near, far);
-			else
-				gl.glFrustum(-d * ratio, d * ratio, -d, d, near, far);
-			//*/
-			//*
+			 * // formato zoom/recorte double ratio = (double) w / h; if( ratio
+			 * > 1 ) gl.glFrustum(-d, d, -d / ratio, d / ratio, near, far); else
+			 * gl.glFrustum(-d * ratio, d * ratio, -d, d, near, far); //
+			 */
+			// *
 			// formato panoramico Horizontal/Vertical centrado
 			double ratio = (double) width / height;
-			if( ratio < 1 )
+			if (ratio < 1)
 				gl.glFrustum(-d, d, -d / ratio, d / ratio, near, far);
 			else
 				gl.glFrustum(-d * ratio, d * ratio, -d, d, near, far);
-			//*/
-			
+			// */
+
 			/*
-			// formato recorte/panoramico derecha
-			gl.glFrustum(-d,((2.0*w)/h -1.0)*d, -d, d, near, far);
-			//*/
-			
+			 * // formato recorte/panoramico derecha gl.glFrustum(-d,((2.0*w)/h
+			 * -1.0)*d, -d, d, near, far); //
+			 */
+
 			ObjetosOrientables.loadProjectionMatrix();
 			gl.glMatrixMode(GL.GL_MODELVIEW);
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl.GLAutoDrawable, boolean, boolean)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl
+		 * .GLAutoDrawable, boolean, boolean)
 		 */
 		@Override
-		public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
+		public void displayChanged(GLAutoDrawable drawable,
+				boolean modeChanged, boolean deviceChanged) {
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
 		 */
 		@Override
 		public void keyPressed(KeyEvent e) {
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
 		 */
 		@Override
 		public void keyReleased(KeyEvent keyEvent) {
 			int keyCode = keyEvent.getKeyCode();
 			switch (keyCode) {
-				case KeyEvent.VK_RIGHT:
-					if(++index == data.instancias.length )
-						index = 0;
-					data.instancias[index].reset();
+			case KeyEvent.VK_RIGHT:
+				if (++index == data.instancias.length)
+					index = 0;
+				data.instancias[index].reset();
 				break;
-				case KeyEvent.VK_LEFT:
-					if(--index < 0 )
-						index = data.instancias.length -1;
-					data.instancias[index].reset();
+			case KeyEvent.VK_LEFT:
+				if (--index < 0)
+					index = data.instancias.length - 1;
+				data.instancias[index].reset();
 				break;
 			}
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
 		 */
 		@Override
 		public void keyTyped(KeyEvent e) {
 		}
 	}
-	
-	public static void main(String[] args){
-	
+
+	public static void main(String[] args) {
+
 		JFrame frame = new JFrame("Loader Example");
-		
+
 		Data data = new Data();
 		ModificableBoolean loading = new ModificableBoolean(true);
-		
+
 		Animator animator = new Animator();
-//		animator.setRunAsFastAsPossible(true);
+		// animator.setRunAsFastAsPossible(true);
 
 		frame.setSize(500, 500);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		GLCanvas canvasLoader = new GLCanvas(new GLCapabilities());
 		canvasLoader.addGLEventListener(new Loader(data, loading));
-		
+
 		frame.getContentPane().setLayout(null);
 		frame.getContentPane().add(canvasLoader);
-		
+
 		animator.add(canvasLoader);
-		
+
 		frame.setVisible(true);
-		canvasLoader.setBounds( (frame.getContentPane().getWidth() - 400) / 2, frame.getContentPane().getHeight() - 40, 400, 20 );
-		
+		canvasLoader.setBounds((frame.getContentPane().getWidth() - 400) / 2,
+				frame.getContentPane().getHeight() - 40, 400, 20);
+
 		animator.start();
-		
-		if( loading.isTrue() ){
-			synchronized( loading ){
-				try{
+
+		if (loading.isTrue()) {
+			synchronized (loading) {
+				try {
 					loading.wait();
-				}catch( InterruptedException e ){
+				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		GLCanvas canvas = new GLCanvas(null, null, data.context, null);
 
 		OrbitBehavior orbitBehavior = new OrbitBehavior();
@@ -431,17 +510,17 @@ public class LoaderExample{
 		canvas.addGLEventListener(renderer);
 		canvas.addKeyListener(renderer);
 
-
 		animator.add(canvas);
-		
+
 		frame.getContentPane().setLayout(new BorderLayout());
-		frame.getContentPane().add( canvas, BorderLayout.CENTER );
+		frame.getContentPane().add(canvas, BorderLayout.CENTER);
 		frame.validate();
 		canvas.requestFocusInWindow();
-		
+
 		try {
 			animator.remove(canvasLoader);
-			// Ñapa para no quitar el canvas loader antes de que se muestren el resto :S
+			// Ñapa para no quitar el canvas loader antes de que se muestren el
+			// resto :S
 			Thread.sleep(100);
 			frame.getContentPane().remove(canvasLoader);
 		} catch (InterruptedException ignorada) {
