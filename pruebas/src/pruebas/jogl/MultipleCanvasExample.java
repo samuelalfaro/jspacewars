@@ -27,11 +27,11 @@ import javax.swing.JPanel;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
-import org.sam.jogl.GrafoEscenaConverters;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.ObjLoader;
 import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.Textura;
+import org.sam.jspacewars.serialization.GrafoEscenaConverters;
 import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
 

@@ -41,11 +41,12 @@ import org.fenggui.binding.render.ITexture;
 import org.fenggui.binding.render.Pixmap;
 import org.fenggui.binding.render.jogl.JOGLOpenGL;
 import org.fenggui.binding.render.jogl.JOGLTexture;
-import org.sam.jogl.GrafoEscenaConverters;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.ObjLoader;
 import org.sam.jogl.fondos.CieloEstrellado;
 import org.sam.jspacewars.cliente.MarcoDeIndicadores;
+import org.sam.jspacewars.serialization.GrafoEscenaConverters;
+import org.sam.jspacewars.serialization.Ignorado;
 import org.sam.util.ModificableBoolean;
 
 import com.thoughtworks.xstream.XStream;
@@ -218,12 +219,24 @@ class GLEventListenerLoader implements GLEventListener {
 					xStream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
 					GrafoEscenaConverters.register(xStream);
 					GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
+					
+					xStream.registerConverter(new Ignorado());
+					xStream.alias("NaveUsuario", Ignorado.class);
+					xStream.alias("DisparoLineal", Ignorado.class);
+					xStream.alias("DisparoInterpolado", Ignorado.class);
+					xStream.alias("Misil", Ignorado.class);
+					xStream.alias("NaveEnemiga", Ignorado.class);
 
 					in = xStream.createObjectInputStream(new FileReader("resources/instancias3D-stream.xml"));
 				}
 				if( !eof )
 					try{
-						dataGame.getCache().addPrototipo((Instancia3D) in.readObject());
+						Object object;
+						do{
+							object = in.readObject();
+							if(object != null)
+								dataGame.getCache().addPrototipo((Instancia3D)object);
+						}while( object == null);
 					}catch( ClassNotFoundException e ){
 						e.printStackTrace();
 					}catch( EOFException eofEx ){

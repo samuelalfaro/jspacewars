@@ -1,6 +1,15 @@
-package org.sam.jspacewars.elementos;
+package org.sam.jspacewars.serialization;
 
-import org.sam.interpoladores.InterpoladoresConverters;
+import org.sam.jspacewars.elementos.Canion;
+import org.sam.jspacewars.elementos.CanionInterpolado;
+import org.sam.jspacewars.elementos.CanionLineal;
+import org.sam.jspacewars.elementos.DisparoInterpolado;
+import org.sam.jspacewars.elementos.DisparoLineal;
+import org.sam.jspacewars.elementos.Elemento;
+import org.sam.jspacewars.elementos.LanzaMisiles;
+import org.sam.jspacewars.elementos.Misil;
+import org.sam.jspacewars.elementos.NaveEnemiga;
+import org.sam.jspacewars.elementos.NaveUsuario;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -28,5 +37,8 @@ public class ElementosConverters {
 		xStream.alias("LanzaMisiles", LanzaMisiles.class);
 		xStream.alias("Misil", Misil.class);
 		xStream.alias("NaveEnemiga", NaveEnemiga.class);
+		
+		xStream.registerConverter(new Ignorado());
+		xStream.alias("Instancia3D", Ignorado.class);
 	}
 }

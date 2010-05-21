@@ -13,6 +13,7 @@ import javax.vecmath.*;
 import org.sam.elementos.Modificador;
 import org.sam.jogl.*;
 import org.sam.jogl.particulas.Particulas;
+import org.sam.jspacewars.serialization.GrafoEscenaConverters;
 import org.sam.util.Imagen;
 
 import com.thoughtworks.xstream.XStream;
