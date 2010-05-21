@@ -1,14 +1,19 @@
 /**
  * 
  */
-package org.sam.jogl.particulas;
+package org.sam.jspacewars.serialization;
 
 import org.sam.interpoladores.Getter;
 import org.sam.jogl.Apariencia;
+import org.sam.jogl.particulas.Emisor;
+import org.sam.jogl.particulas.FactoriaDeParticulas;
+import org.sam.jogl.particulas.Particulas;
 import org.sam.util.Reflexion;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.*;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -233,8 +238,8 @@ public class ParticulasConverters{
 		xStream.alias(S.EmisorPuntual, Emisor.Puntual.class);
 		xStream.registerConverter(new EmisorConverter());
 		xStream.alias(S.Particulas, Particulas.class);
-		xStream.alias(S.Particulas, ParticulasPointSprites.class);
-		xStream.alias(S.Particulas, ParticulasQuads.class);
+//		xStream.alias(S.Particulas, ParticulasPointSprites.class);
+//		xStream.alias(S.Particulas, ParticulasQuads.class);
 		xStream.registerConverter(new ParticulasConverter());
 	}
 }

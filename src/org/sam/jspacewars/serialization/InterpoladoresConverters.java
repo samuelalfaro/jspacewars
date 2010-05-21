@@ -1,7 +1,16 @@
-package org.sam.interpoladores;
+package org.sam.jspacewars.serialization;
+
+import org.sam.interpoladores.Extractor;
+import org.sam.interpoladores.Getter;
+import org.sam.interpoladores.GettersFactory;
+import org.sam.interpoladores.Introductor;
+import org.sam.interpoladores.Keys;
+import org.sam.interpoladores.MetodoDeInterpolacion;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.*;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.DomDriver;

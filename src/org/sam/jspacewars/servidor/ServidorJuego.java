@@ -1,100 +1,44 @@
 package org.sam.jspacewars.servidor;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.Pipe;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.Pipe.SinkChannel;
 import java.nio.channels.Pipe.SourceChannel;
-import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import org.sam.elementos.*;
-import org.sam.jspacewars.elementos.*;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.sam.elementos.Cache;
+import org.sam.jspacewars.elementos.Disparo;
+import org.sam.jspacewars.elementos.Elemento;
+import org.sam.jspacewars.elementos.ElementoDinamico;
+import org.sam.jspacewars.elementos.NaveEnemiga;
+import org.sam.jspacewars.elementos.NaveUsuario;
+import org.sam.jspacewars.elementos.SingletonEnemigos;
+import org.sam.jspacewars.serialization.Loader;
 
 public class ServidorJuego {
 
 	private static final int TAM_DATAGRAMA = 8192;
 
-	private static class ComprobadorDeColisones {
+	private transient Cache<Elemento> cache;
+	private transient NaveUsuario nave1, nave2;
+	private transient Collection<ElementoDinamico> naves;
+	private transient Collection<Collection<Disparo>> listasDeDisparos;
 
-		private final Queue<Colisionable> colaConjuntoA;
-		private final Queue<Colisionable> colaConjuntoB;
-
-		private final Queue<Colisionable> colaActivosA;
-		private final Queue<Colisionable> colaActivosB;
-
-		ComprobadorDeColisones(int tamColas) {
-			colaConjuntoA = new ArrayBlockingQueue<Colisionable>(tamColas);
-			colaConjuntoB = new ArrayBlockingQueue<Colisionable>(tamColas);
-			colaActivosA = new ArrayBlockingQueue<Colisionable>(tamColas);
-			colaActivosB = new ArrayBlockingQueue<Colisionable>(tamColas);
-		}
-
-		private int compararInicios(Colisionable c1, Colisionable c2) {
-			return 0;
-			// return ((Elemento)c1).posX - ((Elemento)c2).posX;
-		}
-
-		private int compararInicioFin(Colisionable c1, Colisionable c2) {
-			return 0;
-			// return ((Elemento)c1).posX - (((Elemento)c2).posX + 10);
-		}
-
-		@SuppressWarnings("unused")
-		public void comprobarColisiones(Collection<? extends Colisionable> unConjuntoA,
-				Collection<? extends Colisionable> unConjuntoB) {
-			if( unConjuntoA.size() == 0 || unConjuntoB.size() == 0 )
-				return;
-
-			Queue<Colisionable> conjuntoA = colaConjuntoA;
-			conjuntoA.clear();
-			conjuntoA.addAll(unConjuntoA);
-
-			Queue<Colisionable> conjuntoB = colaConjuntoB;
-			conjuntoB.clear();
-			conjuntoB.addAll(unConjuntoB);
-
-			Queue<Colisionable> activosA = colaActivosA;
-			activosA.clear();
-			Queue<Colisionable> activosB = colaActivosB;
-			activosB.clear();
-
-			do{
-				if( conjuntoA.size() > 0
-						&& (conjuntoB.size() == 0 || compararInicios(conjuntoA.peek(), conjuntoB.peek()) < 0) ){
-					Colisionable actual = conjuntoA.poll();
-					// Se eliminan los elementos activos que han salido cuando
-					// llega el nuevo
-					while( activosA.size() > 0 && compararInicioFin(activosA.peek(), actual) > 0 )
-						activosA.poll();
-					while( activosB.size() > 0 && compararInicioFin(activosB.peek(), actual) > 0 )
-						activosB.poll();
-					activosA.offer(actual);
-					for( Colisionable otro: activosB )
-						if( actual.hayColision(otro) )
-							actual.colisionar(otro);
-				}else{
-					Colisionable actual = conjuntoB.poll();
-					// Se eliminan los elementos activos que han salido cuando
-					// llega el nuevo
-					while( activosA.size() > 0 && compararInicioFin(activosA.peek(), actual) > 0 )
-						activosA.poll();
-					while( activosB.size() > 0 && compararInicioFin(activosB.peek(), actual) > 0 )
-						activosB.poll();
-					activosB.offer(actual);
-					for( Colisionable otro: activosA )
-						if( actual.hayColision(otro) )
-							actual.colisionar(otro);
-				}
-			}while( conjuntoA.size() > 0 || conjuntoB.size() > 0 );
-		}
-	}
-
+	private transient SortedSet<Elemento> elementosOrdenados;
+	@SuppressWarnings("unused")
+	private transient ComprobadorDeColisones comprobador;
+	
 	public ServidorJuego() throws IOException {
 		this(true, 0);
 	}
@@ -104,45 +48,13 @@ public class ServidorJuego {
 	}
 
 	private ServidorJuego(boolean localOnly, int port) throws IOException {
-		loadData();
+		cache = new Cache<Elemento>(1000);
+		Loader.loadData(cache);
 		initData(localOnly);
 		initLocalChannel();
 		if( !localOnly )
 			initRemoteChannel(port);
 	}
-
-	private transient Cache<Elemento> cache;
-
-	private void loadData() throws FileNotFoundException, IOException {
-
-		cache = new Cache<Elemento>(1000);
-		Canion.setCache(cache);
-
-		XStream xStream = new XStream(new DomDriver());
-		ElementosConverters.register(xStream);
-
-		loadToCache(cache, xStream.createObjectInputStream(new FileReader("resources/elementos.xml")));
-//		loadToCache(cache, xStream.createObjectInputStream(new FileReader("disparos.xml")));
-	}
-
-	private static void loadToCache(Cache<Elemento> cache, ObjectInputStream in) throws IOException {
-		try{
-			while( true )
-				cache.addPrototipo((Elemento) in.readObject());
-		}catch( ClassNotFoundException e ){
-			e.printStackTrace();
-		}catch( EOFException eof ){
-			in.close();
-		}
-	}
-
-	private transient NaveUsuario nave1, nave2;
-	private transient Collection<ElementoDinamico> naves;
-	private transient Collection<Collection<Disparo>> listasDeDisparos;
-
-	private transient SortedSet<Elemento> elementosOrdenados;
-	@SuppressWarnings("unused")
-	private transient ComprobadorDeColisones comprobador;
 
 	private void initData(boolean localOnly) {
 
