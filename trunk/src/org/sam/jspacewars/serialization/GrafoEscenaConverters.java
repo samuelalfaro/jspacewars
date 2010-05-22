@@ -1199,27 +1199,30 @@ public class GrafoEscenaConverters {
 	    }
     	
 	    public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, ConverterLookup converterLookup, Mapper mapper) {
-	    	
+
 	    	if(unmarshaller == null)
 	    		unmarshaller = new ReferenceByXPathUnmarshaller(root, reader, converterLookup, mapper){
-		    		// TODO Mirar en futuras vesiones para quitar esta ñapa que adapta las referencias
-		    	    protected Object getReferenceKey(String reference) {
-		    	    	if(reference.startsWith("/Instancia3D[")){
-		    	    		//System.out.println(reference);
-		    	    		String number = reference.substring("/Instancia3D[".length(),reference.indexOf(']'));
-		    	    		String resto = reference.substring(reference.indexOf("]/")+2);
-		    	    		StringBuffer newReference = new StringBuffer("/Instancia3D/");
-		    	    		newReference.append(resto.substring(0,resto.indexOf('/')));
-		    	    		newReference.append('[');
-		    	    		newReference.append(number);
-		    	    		newReference.append(']');
-		    	    		newReference.append(resto.substring(resto.indexOf('/')));
-		    	    		//System.out.println(newReference);
-			    	        return super.getReferenceKey( newReference.toString() );
-		    	    	}
-		    	        return super.getReferenceKey( reference );
-		    	    }
-	    		};
+	    			// TODO Mirar en futuras vesiones para quitar esta ñapa que adapta las referencias
+		    		protected Object getReferenceKey(String reference) {
+//		    			System.out.println( reference );
+		    			if(reference.startsWith("/Instancia3D[")){
+		    				String number = reference.substring("/Instancia3D[".length(),reference.indexOf(']'));
+		    				String resto = reference.substring(reference.indexOf("]/")+2);
+		    				StringBuffer newReference = new StringBuffer("/NaveUsuario/");
+		    				newReference.append(resto.substring(0,resto.indexOf('/')));
+		    				newReference.append('[');
+		    				newReference.append(number);
+		    				newReference.append(']');
+		    				newReference.append(resto.substring(resto.indexOf('/')));
+		    				reference = newReference.toString();
+		    			}else if(reference.startsWith("/Instancia3D")){
+		    				StringBuffer newReference = new StringBuffer("/NaveUsuario");
+		    				newReference.append(reference.substring("/Instancia3D".length()));
+		    				reference = newReference.toString();
+		    			}
+		    			return super.getReferenceKey( reference );
+		    		}
+		    	};
 	    	return unmarshaller.start(dataHolder);
 	    }
 
