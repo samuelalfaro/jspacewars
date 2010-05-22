@@ -139,10 +139,9 @@ public class LoaderExample {
 				try {
 					if (in == null) {
 						XStream xStream = new XStream(new DomDriver());
-						xStream.setMode(XStream.XPATH_ABSOLUTE_REFERENCES);
+						xStream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
 						GrafoEscenaConverters.register(xStream);
-						GrafoEscenaConverters
-								.setReusingReferenceByXPathMarshallingStrategy(xStream);
+						GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
 
 						xStream.registerConverter(new Ignorado());
 						xStream.alias("NaveUsuario", Ignorado.class);
