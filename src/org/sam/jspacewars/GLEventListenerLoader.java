@@ -227,7 +227,7 @@ class GLEventListenerLoader implements GLEventListener {
 					xStream.alias("Misil", Ignorado.class);
 					xStream.alias("NaveEnemiga", Ignorado.class);
 
-					in = xStream.createObjectInputStream(new FileReader("resources/instancias3D-stream.xml"));
+					in = xStream.createObjectInputStream(new FileReader("resources/elementos-instancias3D-stream-sh.xml"));
 				}
 				if( !eof )
 					try{
