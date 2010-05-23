@@ -1,57 +1,26 @@
 package org.sam.colisiones;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-
-
-public class Test02LimiteRectangular extends JPanel implements MouseListener, MouseMotionListener{
-	private static final long serialVersionUID = 1L;
+@SuppressWarnings("serial")
+public class Test02LimiteRectangular extends PantallaTest{
 	
 	LimiteRectangular limiteRectangular;
-	double wX1, wY1, wX2, wY2;
+	float wX1, wY1, wX2, wY2;
 	boolean puntoAsignado;
 	
 	Test02LimiteRectangular(){
-		limiteRectangular = new LimiteRectangular(0.5,0.5);
-		puntoAsignado = false;
-		addMouseListener(this);
-		addMouseMotionListener(this);
-	}
-	
-	static public void main(String args[]){
-		// Se crea un frame, que va a contener nuestro panel
-		JFrame frame=new JFrame();
-		frame.setBounds(100, 100, 600, 600);
-		frame.setTitle("Test 02: Interseccion Segmento Limite Rectangular");
-		frame.setDefaultCloseOperation(3);
-		frame.setResizable(false);
-
-		// Creamos el panel donde dibujaremos
-		Test02LimiteRectangular panel=new Test02LimiteRectangular();
-
-		// Lo añadimos a la ventana
-		frame.getContentPane().add(panel);
-		
-		// Mostramos la ventana
-		frame.setVisible(true);
-		
-		// Vamos al bucle principal del programa contenido en nuestro panel
-		panel.run();
-	}
-	
-	public void run(){
-		limiteRectangular = new LimiteRectangular(0.5,0.5);
+		super(new Dimension(500,500));
+		limiteRectangular = new LimiteRectangular(0.5f,0.5f);
 		puntoAsignado = false;
 	}
-
-	public void paint(Graphics g){
+	
+	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);
 		g.clearRect(0,0,getWidth(),getHeight());
 		g.setColor(Color.BLACK);
@@ -72,34 +41,6 @@ public class Test02LimiteRectangular extends JPanel implements MouseListener, Mo
 		g.drawLine(pX1,pY1,pX2,pY2);
 	}
 
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	public void mouseExited(MouseEvent e) {
-	}
-
-	public void mousePressed(MouseEvent e) {
-	}
-
-	int xMundoPantalla(double c){
-		return (int)((c+0.5)*getWidth());	
-	}
-
-	double xPantallaMundo(int c){
-		return ((double)c)/getWidth() - 0.5;
-	}
-
-	int yMundoPantalla(double c){
-		return -(int)((c-0.5)*getHeight());
-	}
-
-	double yPantallaMundo(int c){
-		return ((double)-c)/getHeight() + 0.5;
-	}
-	
 	public void mouseReleased(MouseEvent e) {
 		if(!puntoAsignado){
 			wX1 = wX2 = xPantallaMundo(e.getX());
@@ -111,15 +52,22 @@ public class Test02LimiteRectangular extends JPanel implements MouseListener, Mo
 		puntoAsignado = !puntoAsignado;
 	}
 
-	public void mouseDragged(MouseEvent e) {
-	}
-
 	public void mouseMoved(MouseEvent e) {
 		if(puntoAsignado){
 			wX2 = xPantallaMundo(e.getX());
 			wY2 = yPantallaMundo(e.getY());
 			repaint();
 		}
+	}
+	
+	static public void main(String args[]){
+		JFrame frame=new JFrame("Test 02: Interseccion Segmento Limite Rectangular");
+		frame.getContentPane().add(new Test02LimiteRectangular());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
 	}
 }
 
