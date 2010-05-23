@@ -1,32 +1,32 @@
 package org.sam.colisiones;
 
 public class LimiteRectangular{
-	double x1, y1;  // esquina inf izda
-	double x2, y2;  // esquina sup dcha
+	float x1, y1;  // esquina inf izda
+	float x2, y2;  // esquina sup dcha
 	
 	public LimiteRectangular(){
-		x1 = y1 = x2 = y2 = 0.0;
+		x1 = y1 = x2 = y2 = 0.0f;
 	}
 	
-	public LimiteRectangular(double ancho,double alto){
+	public LimiteRectangular(float ancho,float alto){
 		x2 = ancho/2;
 		x1 = - x2;
 		y2 = alto/2;
 		y1 = - y2;
 	}
 	
-	public LimiteRectangular(double xII,double yII,double xSD,double ySD){
+	public LimiteRectangular(float xII,float yII,float xSD,float ySD){
 		setValues(xII,yII,xSD,ySD);
 	}
 	
-	public void setValues(double xII,double yII,double xSD,double ySD){
+	public void setValues(float xII,float yII,float xSD,float ySD){
 		x1 = xII;
 		y1 = yII;
 		x2 = xSD;
 		y2 = ySD;
 	}
 	
-	public void setValues(double xII,double yII,double xSD,double ySD, boolean ordenados){
+	public void setValues(float xII,float yII,float xSD,float ySD, boolean ordenados){
 		if(ordenados){
 			x1 = xII;
 			y1 = yII;
@@ -50,24 +50,24 @@ public class LimiteRectangular{
 		}
 	}
 
-	public void calcular(double xCoord[], double yCoord[], int nPuntos) {
-		double minX = Double.MAX_VALUE;
-		double minY = Double.MAX_VALUE;
-		double maxX = -Double.MAX_VALUE;
-		double maxY = -Double.MAX_VALUE;
+	public void calcular(float xCoord[], float yCoord[], int nPuntos) {
+		float minX = Float.MAX_VALUE;
+		float minY = Float.MAX_VALUE;
+		float maxX = -Float.MAX_VALUE;
+		float maxY = -Float.MAX_VALUE;
 		
 		for (int i = 0; i < nPuntos; i++) {
-			double x = xCoord[i];
+			float x = xCoord[i];
 			minX = (minX < x)? minX : x;
 			maxX = (maxX < x)? x : maxX;
-			double y = yCoord[i];
+			float y = yCoord[i];
 			minY = (minY < y)? minY : y;
 			maxY = (maxY < y)? y : maxY;
 		}
 		setValues(minX,minY,maxX,maxY);
 	}
 	
-	public void trasladar(double velX,double velY){
+	public void trasladar(float velX,float velY){
 		x1 += velX;
 		y1 += velY;
 		x2 += velX;
@@ -119,10 +119,10 @@ public class LimiteRectangular{
 	}
 
 	public LimiteRectangular interseccion(LimiteRectangular otro){
-		double newX1 = x1 > otro.x1 ? x1 : otro.x1;
-		double newY1 = y1 > otro.y1 ? y1 : otro.y1;		
-		double newX2 = x2 < otro.x2 ? x2 : otro.x2;		
-		double newY2 = y2 < otro.y2 ? y2 : otro.y2;
+		float newX1 = x1 > otro.x1 ? x1 : otro.x1;
+		float newY1 = y1 > otro.y1 ? y1 : otro.y1;		
+		float newX2 = x2 < otro.x2 ? x2 : otro.x2;		
+		float newY2 = y2 < otro.y2 ? y2 : otro.y2;
 		return new LimiteRectangular(newX1,newY1,newX2,newY2);		
 	}
 }

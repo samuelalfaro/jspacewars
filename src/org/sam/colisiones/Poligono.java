@@ -5,24 +5,27 @@ import java.util.Random;
 
 public class Poligono{
 	
-	private double coordX[], coordY[];
+	private float coordX[], coordY[];
 	private boolean segmentosEnLaInterseccion[];
 	
-	private double oX, oY;
-	private double rotacion;
-	private double escala;
+	private float oX, oY;
+	private float rotacion;
+	private float escala;
 	
 	private LimiteRectangular limiteRectangular;
 	
 	// Crea un poligono aleatorio convexo
 	public Poligono(int nLados){
+		if(nLados < 3)
+			throw new IllegalArgumentException();
+		
 		Random r=new Random();
 		
-		coordX = new double[nLados];
-		coordY = new double[nLados];
+		coordX = new float[nLados];
+		coordY = new float[nLados];
 		segmentosEnLaInterseccion = new boolean[nLados]; 
-		oX = 0.0;
-		oY = 0.0;
+		oX = 0.0f;
+		oY = 0.0f;
 		
 		double iAng = Math.PI*2 / nLados;
 		double ang = iAng * (r.nextDouble() - 0.5);
@@ -32,11 +35,11 @@ public class Poligono{
 			double dist = r.nextDouble();
 		
 			double val  = Math.cos(ang)*dist;
-			coordX[loop]= val; 
+			coordX[loop]= (float)val; 
 			oX += val;
 			
 			val  = Math.sin(ang)*dist;
-			coordY[loop]= val;
+			coordY[loop]= (float)val;
 			oY += val;
 			
 			loop++;
@@ -44,9 +47,9 @@ public class Poligono{
 		}
 		oX /= nLados;
 		oY /= nLados;
-		rotacion = 0.0;
-		escala = 1.0;
-		trasladar(0.0,0.0);
+		rotacion = 0.0f;
+		escala = 1.0f;
+		trasladar(0.0f,0.0f);
 		limiteRectangular = new LimiteRectangular(); 
 		limiteRectangular.calcular(coordX, coordY, nLados);
 	}
@@ -57,7 +60,7 @@ public class Poligono{
 	}
 	
 	// Desplaza todos los puntos del poligono
-	public void trasladar(double despX,double despY){
+	public void trasladar(float despX,float despY){
 		despX -= oX;
 		despY -= oY;
 		int nLados = coordX.length;
@@ -70,14 +73,14 @@ public class Poligono{
 	}
 
 	// Rota todos los puntos del poligono desde el centro
-	public void rotar(double alfa){
+	public void rotar(float alfa){
 		alfa -= rotacion; 
 		int nLados = coordX.length;
-		double cosAlfa = Math.cos(alfa);
-		double senAlfa = Math.sin(alfa);
+		float cosAlfa = (float)Math.cos(alfa);
+		float senAlfa = (float)Math.sin(alfa);
 		for(int loop = 0; loop < nLados; loop++){
-			double x = coordX[loop] - oX;
-			double y = coordY[loop] - oY;
+			float x = coordX[loop] - oX;
+			float y = coordY[loop] - oY;
 			coordX[loop] = x * cosAlfa - y * senAlfa + oX;
 			coordY[loop] = x * senAlfa + y * cosAlfa + oY;
 		}
@@ -85,24 +88,24 @@ public class Poligono{
 	}
 
 	// Rota todos los puntos del poligono desde un punto dado
-	public void rotar(double alfa, double pX, double pY){
+	public void rotar(float alfa, float pX, float pY){
 		int nLados = coordX.length;
-		double cosAlfa = Math.cos(alfa);
-		double senAlfa = Math.sin(alfa);
+		float cosAlfa = (float)Math.cos(alfa);
+		float senAlfa = (float)Math.sin(alfa);
 		for(int loop = 0; loop < nLados; loop++){
-			double x = coordX[loop] - pX;
-			double y = coordY[loop] - pY;
+			float x = coordX[loop] - pX;
+			float y = coordY[loop] - pY;
 			coordX[loop] = x * cosAlfa - y * senAlfa + pX;
 			coordY[loop] = x * senAlfa + y * cosAlfa + pY;
 		}
-		double x = oX - pX;
-		double y = oY - pY;
+		float x = oX - pX;
+		float y = oY - pY;
 		oX = x * cosAlfa - y * senAlfa + pX;
 		oY = x * senAlfa + y * cosAlfa + pY;
 	}
 	
 	// Escala todos los puntos del poligono desde el centro de forma uniforme
-	public void escalar(double fEscala){
+	public void escalar(float fEscala){
 		if (fEscala == 0) return;
 		fEscala /= escala;
 		int nLados = coordX.length;
@@ -114,7 +117,7 @@ public class Poligono{
 	}
 
 	// Escala todos los puntos del poligono desde el centro de con distinta escala
-	public void escalar(double escalaX, double escalaY){
+	public void escalar(float escalaX, float escalaY){
 		int nLados = coordX.length;
 		for(int loop = 0; loop < nLados; loop++){
 			coordX[loop] = (coordX[loop] - oX) * escalaX + oX;
@@ -123,15 +126,15 @@ public class Poligono{
 	}
 
 	// Traslada, rota y escala
-	public void transformar(double despX, double despY, double alfa, double escala){
+	public void transformar(float despX, float despY, float alfa, float escala){
 		int nLados = coordX.length;
-		double cosAlfa = Math.cos(alfa);
-		double senAlfa = Math.sin(alfa);
+		float cosAlfa = (float)Math.cos(alfa);
+		float senAlfa = (float)Math.sin(alfa);
 		despX = oX + despX;
 		despY = oY + despY;
 		for(int loop = 0; loop < nLados; loop++){
-			double x = coordX[loop] - oX;
-			double y = coordY[loop] - oY;
+			float x = coordX[loop] - oX;
+			float y = coordY[loop] - oY;
 			coordX[loop] = (x * cosAlfa - y * senAlfa) * escala + despX;
 			coordY[loop] = (x * senAlfa + y * cosAlfa) * escala + despY;
 		}
@@ -139,9 +142,13 @@ public class Poligono{
 		oY = despY;
 	}
 	
+	public int getNLados(){
+		return coordX.length;
+	}
+
 	// Devuelve el centro del poligono
 	public Point2D getCentro(){
-		return new Point2D.Double(oX,oY);
+		return new Point2D.Float(oX,oY);
 	}
 	
 	public LimiteRectangular getLimiteRectangular(){
@@ -169,7 +176,7 @@ public class Poligono{
 	}
 	
 	public boolean hayIntersecion(Poligono otro){
-		if(! limiteRectangular.hayInterseccion(otro.getLimiteRectangular()))
+		if( !limiteRectangular.hayInterseccion(otro.getLimiteRectangular()))
 			return false;
 		LimiteRectangular interseccion = limiteRectangular.interseccion(otro.getLimiteRectangular());
 		
@@ -183,26 +190,25 @@ public class Poligono{
 		
 		for(int i = 0, segEv1 = 0; segEv1 < segmentos1EnLaInterseccion; i++){
 			if (segmentosEnLaInterseccion[i]){
+				float p1X,p1Y,p2X,p2Y;
+				p1X = coordX[i];
+				p1Y = coordY[i];
+				if(i == coordX.length){
+					p2X = coordX[i+1];
+					p2Y = coordY[i+1];
+				}else{
+					p2X = coordX[0];
+					p2Y = coordY[0];
+				}
 				for(int j = 0, segEv2 = 0; segEv2 < segmentos2EnLaInterseccion; j++){
 					if (otro.segmentosEnLaInterseccion[j]){
-						
-						double p1X,p1Y,p2X,p2Y,p3X,p3Y,p4X,p4Y;
-						
-						p1X = coordX[i];
-						p1Y = coordY[i];
-						try{
-							p2X = coordX[i+1];
-							p2Y = coordY[i+1];
-						}catch(ArrayIndexOutOfBoundsException e){
-							p2X = coordX[0];
-							p2Y = coordY[0];
-						}
+						float p3X,p3Y,p4X,p4Y;
 						p3X = otro.coordX[j];
 						p3Y = otro.coordY[j];
-						try{
+						if(j == otro.coordX.length){
 							p4X = otro.coordX[j+1];
 							p4Y = otro.coordY[j+1];
-						}catch(ArrayIndexOutOfBoundsException e){
+						}else{
 							p4X = otro.coordX[0];
 							p4Y = otro.coordY[0];
 						}
@@ -217,25 +223,17 @@ public class Poligono{
 		return false;
 	}
 	
-	public Segmento getSegmento(int num){
-
-		double p1X,p1Y,p2X,p2Y;
-		
-		try{
-			p1X = coordX[num];
-			p1Y = coordY[num];
-		}catch(ArrayIndexOutOfBoundsException e){
-			return null;
-		}
-		
-		try{
-			p2X = coordX[num+1];
-			p2Y = coordY[num+1];
-		}catch(ArrayIndexOutOfBoundsException e){
-			p2X = coordX[0];
-			p2Y = coordY[0];
-		}
-		
-		return new Segmento(p1X,p1Y,p2X,p2Y);
+	public Segmento getSegmento(int pos){
+		return getSegmento(pos, null);
+	}
+	
+	public Segmento getSegmento(int pos, Segmento segmento){
+		if( segmento == null )
+			segmento = new Segmento();
+		int sig = pos + 1;
+		if( sig == coordX.length )
+			sig = 0;
+		segmento.setValues(coordX[pos], coordY[pos], coordX[sig], coordY[sig]);
+		return segmento;
 	}
 }	
