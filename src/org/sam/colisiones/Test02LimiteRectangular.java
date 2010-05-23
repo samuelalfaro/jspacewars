@@ -8,13 +8,13 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class Test02LimiteRectangular extends PantallaTest{
+public final class Test02LimiteRectangular extends PantallaTest{
 	
-	LimiteRectangular limiteRectangular;
-	float wX1, wY1, wX2, wY2;
-	boolean puntoAsignado;
+	private LimiteRectangular limiteRectangular;
+	private float wX1, wY1, wX2, wY2;
+	private boolean puntoAsignado;
 	
-	Test02LimiteRectangular(){
+	private Test02LimiteRectangular(){
 		super(new Dimension(500,500));
 		limiteRectangular = new LimiteRectangular(0.5f,0.5f);
 		puntoAsignado = false;

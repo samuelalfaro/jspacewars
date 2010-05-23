@@ -7,11 +7,11 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class Test04Poligonos extends PantallaTest{
-	static final int N_LADOS = 20;
-	Poligono poligono;
+public final class Test04Poligonos extends PantallaTest{
+	private static final int N_LADOS = 20;
+	private Poligono poligono;
 	
-	class Animador extends Thread{
+	private class Animador extends Thread{
 		public void run(){
 			float alfa = 0.0f;
 			float incAlfa = 0.005f;
@@ -26,9 +26,9 @@ public class Test04Poligonos extends PantallaTest{
 					incAlfa = -incAlfa;
 				}
 				//poligono.transformar(0.0,0.0,1.0,pi2*incAlfa);
-				poligono.rotar(pi2*alfa);
-				poligono.escalar(0.5f-alfa);
-				poligono.actualizarLimiteRectangular();
+				Test04Poligonos.this.poligono.rotar(pi2*alfa);
+				Test04Poligonos.this.poligono.escalar(0.5f-alfa);
+				Test04Poligonos.this.poligono.actualizarLimiteRectangular();
 				repaint();
 				try{
 					Thread.sleep(40);
@@ -38,9 +38,9 @@ public class Test04Poligonos extends PantallaTest{
 		}
 	}
 	
-	Test04Poligonos(){
+	private Test04Poligonos(){
 		super(new Dimension(500,500));
-		poligono = new Poligono(N_LADOS);
+		this.poligono = new Poligono(N_LADOS);
 		new Animador().start();
 	}
 

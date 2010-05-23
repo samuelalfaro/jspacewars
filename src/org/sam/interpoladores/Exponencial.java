@@ -5,7 +5,7 @@ package org.sam.interpoladores;
  */
 public final class Exponencial{
 
-	private Exponencial(){};
+	private Exponencial(){}
 
 	/**
 	 * Implementación con precisión Double de la función exponencial.

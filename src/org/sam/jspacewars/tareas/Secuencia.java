@@ -74,12 +74,11 @@ public final class Secuencia extends TareaAbs {
 				if(startTimeTarea != stopTimeTarea )
 					tareas[tarea].realizar(startTimeTarea, stopTimeTarea);
 				break;
-			}else{
-				tareas[tarea].realizar(startTimeTarea, stopTimeTarea);
-				stopTimeTarea  = stopTime - finales[tarea];
-				startTimeTarea = 0;
-				tarea++;
 			}
+			tareas[tarea].realizar(startTimeTarea, stopTimeTarea);
+			stopTimeTarea  = stopTime - finales[tarea];
+			startTimeTarea = 0;
+			tarea++;
 		}
 	}
 }

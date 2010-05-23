@@ -5,7 +5,7 @@ package org.sam.interpoladores;
  *
  */
 public final class Getter{
-	private Getter(){};
+	private Getter(){}
 
     /**
      *

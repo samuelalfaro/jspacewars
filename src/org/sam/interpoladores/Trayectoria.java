@@ -5,7 +5,7 @@ package org.sam.interpoladores;
  * @author Samuel
  */
 public final class Trayectoria{
-	private Trayectoria(){};
+	private Trayectoria(){}
 	
     /**
      * 

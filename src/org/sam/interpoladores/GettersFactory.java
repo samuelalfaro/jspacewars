@@ -12,7 +12,7 @@ public final class GettersFactory {
      *
      */
     public static class Double{
-		Double(){};
+		Double(){}
 
 		/**
 		 * @param keys
@@ -151,7 +151,7 @@ public final class GettersFactory {
      *
      */
     public static class Float{
-		Float(){};
+		Float(){}
 
 		/**
 		 * @param keys
@@ -290,7 +290,7 @@ public final class GettersFactory {
      *
      */
     public static class Integer{
-		Integer(){};
+		Integer(){}
 
 		/**
 		 * @param keys

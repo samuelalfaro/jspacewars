@@ -7,7 +7,7 @@ package org.sam.interpoladores;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 final class KeySelector{
-	private KeySelector(){};
+	private KeySelector(){}
 	
 	static class Double<T> implements Getter.Double<T>{
 

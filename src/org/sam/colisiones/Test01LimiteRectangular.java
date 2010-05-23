@@ -14,7 +14,7 @@ public final class Test01LimiteRectangular extends PantallaTest{
 	private float wX1, wY1, wX2, wY2;
 	private boolean puntoAsignado;
 	
-	Test01LimiteRectangular(){
+	private Test01LimiteRectangular(){
 		super(new Dimension(500,500));
 		limiteRectangular = new LimiteRectangular(0.5f,0.5f);
 		otroLimiteRectangular = new LimiteRectangular();

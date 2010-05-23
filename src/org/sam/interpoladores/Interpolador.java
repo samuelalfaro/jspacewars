@@ -7,7 +7,7 @@ package org.sam.interpoladores;
  */
 final class Interpolador{
 
-	private Interpolador(){};
+	private Interpolador(){}
 
 	static final class Double<T> implements Getter.Double<T>{
 

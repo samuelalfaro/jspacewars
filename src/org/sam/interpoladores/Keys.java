@@ -6,7 +6,7 @@ package org.sam.interpoladores;
  */
 public final class Keys{
 
-	private Keys(){};
+	private Keys(){}
 	
     /**
      * 

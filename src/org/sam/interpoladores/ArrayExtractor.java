@@ -50,7 +50,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return extractor.at(v[f], c);
 		}
-	};
+	}
 	
     /**
      *
@@ -94,7 +94,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f].doubleValue();
 		}
-	};
+	}
 	
     /**
      *
@@ -137,7 +137,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f];
 		}
-	};
+	}
 	
     /**
      *
@@ -180,7 +180,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f];
 		}
-	};
+	}
 
     /**
      *
@@ -223,7 +223,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f];
 		}
-	};
+	}
 	
     /**
      *
@@ -266,7 +266,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f][c];
 		}
-	};
+	}
 	
     /**
      *
@@ -309,7 +309,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f][c];
 		}
-	};
+	}
 
     /**
      *
@@ -352,7 +352,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f][c];
 		}
-	};
+	}
 	
     /**
      *
@@ -395,7 +395,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f][c];
 		}
-	};
+	}
 	
     /**
      *
@@ -438,7 +438,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f][c];
 		}
-	};
+	}
 
     /**
      *
@@ -481,7 +481,7 @@ abstract class ArrayExtractor{
         public double at(int f, int c){
 			return v[f][c];
 		}
-	};
+	}
 	
     /**
      *

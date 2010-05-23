@@ -7,7 +7,7 @@ package org.sam.interpoladores;
  * <li>y de la curvatura, segunda derivada f"(x)</ul>
  */
 public final class Funcion {
-	private Funcion(){};
+	private Funcion(){}
 
     /**
      *
