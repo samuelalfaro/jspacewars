@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class Test03Segmentos extends PantallaTest{
+public final class Test03Segmentos extends PantallaTest{
 	
 	private Segmento s1;
 	private Segmento s2;
@@ -20,7 +20,7 @@ public class Test03Segmentos extends PantallaTest{
 	
 	private boolean puntoAsignado;
 	
-	Test03Segmentos(){
+	private Test03Segmentos(){
 		super(new Dimension(500,500));
 		
 		s1 = new Segmento( -0.25f,  0.0f,  0.25f,  0.0f);  // segmento horizontal

@@ -203,8 +203,7 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		}
 		
 		public MarcoNave1(){
-//			super(new Contador( 1, numeros), new Contador( 1, numeros), new Contador( 6, numeros), new LedsNiveles[5], new LedsIndicadores[5], new LedsNiveles( 3, leds1),  new LedIndicadorGrado( leds2, ledsGrado ));
-			
+	
 			apariencias = new Apariencia[PATHS.length];
 			
 			superior = new PixmapComponent( new Pixmap( 0.0f, 0.25f, 1.0f, 0.75f) );
@@ -372,16 +371,6 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
 	);
 	
-//	final transient Contador vidas;
-//	final transient Contador bombas;
-//	final transient Contador puntos;
-//
-//	final transient LedsNiveles[] ledsNiveles;
-//	final transient LedsIndicadores[] ledsIndicadores;
-//
-//	final transient LedsNiveles ledsGrado;
-//	final transient LedIndicadorGrado ledIndicadorGrado;
-	
 	transient Contador vidas;
 	transient Contador bombas;
 	transient Contador puntos;
@@ -391,66 +380,6 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 
 	transient LedsNiveles ledsGrado;
 	transient LedIndicadorGrado ledIndicadorGrado;
-	
-	/*
-	public MarcoDeIndicadores(Contador vidas, Contador bombas, Contador puntos, LedsNiveles[] ledsNiveles, LedsIndicadores[] ledsIndicadores, LedsNiveles ledsGrado, LedIndicadorGrado ledIndicadorGrado){
-		this.vidas = vidas;
-		this.bombas = bombas;
-		this.puntos = puntos;
-		this.ledsNiveles = ledsNiveles;
-		this.ledsIndicadores = ledsIndicadores;
-		this.ledsGrado = ledsGrado;
-		this.ledIndicadorGrado = ledIndicadorGrado;
-//		apariencias = new Apariencia[PATHS.length];
-//		superior = new PixmapComponent( new Pixmap( 0.0f, 0.25f, 1.0f, 0.75f) );
-//		inferior = new PixmapComponent( new Pixmap( 0.0f, 0.0f,  1.0f, 0.25f) );
-//		izqSup   = new PixmapComponent( new Pixmap( 0.0f, 0.0f,  0.5f, 1.0f ) );
-//		derSup   = new PixmapComponent( new Pixmap( 0.5f, 0.0f,  0.5f, 1.0f ) );
-//		izqInf   = new PixmapComponent( new Pixmap( 0.0f, 0.0f,  0.5f, 1.0f ) );
-//		derInf   = new PixmapComponent( new Pixmap( 0.5f, 0.0f,  0.5f, 1.0f ) );
-		
-//		Pixmap[] numeros = new Pixmap[10];
-//		float j= 2;
-//		for(int i=0; i < 10; i++){
-//			numeros[i] = new Pixmap( j/512.0f, 6/64.0f, 50f/512.0f, 52/64.0f );
-//			j+= 51f;
-//		}
-//		vidas = new Contador( 1, numeros);
-//		bombas= new Contador( 1, numeros);
-//		puntos= new Contador( 6, numeros);
-//		
-//		Pixmap[] leds1 = new Pixmap[4];
-//		leds1[0] = new Pixmap( 0.0f, 17.0f/128, 0.4921875f, 16.0f/128 );
-//		leds1[1] = new Pixmap( 0.5f, 17.0f/128, 0.4921875f, 16.0f/128 );
-//		leds1[2] = new Pixmap( 0.0f,      0.0f, 0.4921875f, 16.0f/128 );
-//		leds1[3] = new Pixmap( 0.5f,      0.0f, 0.4921875f, 16.0f/128 );
-//		
-//		ledsNiveles = new LedsNiveles[5];
-//		for(int i = 0; i < ledsNiveles.length; i++){
-//			ledsNiveles[i] = new LedsNiveles( 5, leds1);
-//			ledsNiveles[i].setBorders( 0.025f, 0.1f);
-//		}
-//		ledsGrado = new LedsNiveles( 3, leds1);
-//		ledsGrado.setBorders( 0.05f, 0.1f);
-//		ledsGrado.setVDisponibles(3);
-//		
-//		Pixmap[] leds2 = new Pixmap[5];
-//		leds2[0] = new Pixmap( 0.0f, 110.0f/128, 1.0f, 18.0f/128 );
-//		leds2[1] = new Pixmap( 0.0f,  91.0f/128, 1.0f, 18.0f/128 );
-//		leds2[2] = new Pixmap( 0.0f,  72.0f/128, 1.0f, 18.0f/128 );
-//		leds2[3] = new Pixmap( 0.0f,  53.0f/128, 1.0f, 18.0f/128 );
-//		leds2[4] = new Pixmap( 0.0f,  34.0f/128, 1.0f, 18.0f/128 );
-//		
-//		ledsIndicadores = new LedsIndicadores[5];
-//		for(int i = 0; i < ledsIndicadores.length; i++){
-//			ledsIndicadores[i] = new LedsIndicadores( 2, leds2, ledsNiveles[i] );
-//			ledsIndicadores[i].setBorders( 0.04f, 0.05f);
-//		}
-//		ledIndicadorGrado = new LedIndicadorGrado( leds2, ledsGrado );
-//		ledIndicadorGrado.setBorders( 0.075f, 0.05f);
-		
-	}
-	//*/
 	
 	public abstract boolean isLoadComplete();
 	
@@ -501,8 +430,9 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		ledIndicadorGrado.actualizar();
 	}
 	
-//	public abstract void setBounds( float x, float y, float w, float h );
-	
+	/**
+	 * @param type ignorado, se usará para obtener distintos marcos.
+	 */
 	public static MarcoDeIndicadores getMarco(int type){
 		return new MarcoNave1();
 	}

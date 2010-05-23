@@ -642,13 +642,11 @@ public class PruebaMovimiento{
 	private static boolean pintado = true;
 	
 	static class Motor{
-//		private final Semaforo semaforo;
 		private final Cache<Elemento> cache;
 		private final Nave nave;
 		private final LinkedList<Disparo> disparos;
 		
-		Motor(Semaforo semaforo, Cache<Elemento> cache, Nave nave, LinkedList<Disparo> disparos){
-//			this.semaforo = semaforo;
+		Motor( Cache<Elemento> cache, Nave nave, LinkedList<Disparo> disparos){
 			this.cache = cache;
 			this.nave = nave;
 			this.disparos = disparos;
@@ -663,8 +661,7 @@ public class PruebaMovimiento{
 		private synchronized void actua(int keyState, long milis){
 			while(!pintado)
 				Thread.yield();
-//			semaforo.esperar();
-			//milis/=10;
+
 			Iterator<Disparo> i = disparos.listIterator();
 			while(i.hasNext()){
 				Disparo d = i.next();
@@ -677,7 +674,6 @@ public class PruebaMovimiento{
 			nave.setKeyState(keyState);
 			nave.actua(milis);
 			pintado = false;
-//			semaforo.notificar();
 		}
 	}
 
@@ -694,14 +690,10 @@ public class PruebaMovimiento{
 				buffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 		}
 		
-//		private final Semaforo semaforo;
-//		private final Cache cache;
 		private final Nave nave;
 		private final LinkedList<Disparo> disparos;
 		
-		Pantalla(Semaforo semaforo, Cache<Elemento> cache, Nave nave, LinkedList<Disparo> disparos){
-//			this.semaforo = semaforo;
-//			this.cache = cache;
+		Pantalla( Nave nave, LinkedList<Disparo> disparos ){
 			this.nave = nave;
 			this.disparos = disparos;
 		}
@@ -739,7 +731,6 @@ public class PruebaMovimiento{
 		public void paintComponent(Graphics g){
 			if (isVisible() && buffer != null) {
 				Graphics2D g2 = buffer.createGraphics();
-				//semaforo.esperar();
 				while(pintado)
 					Thread.yield();
 				g2.setColor(new Color(0,0,0,16));
@@ -759,7 +750,6 @@ public class PruebaMovimiento{
 					g2.fillPolygon(d.getForma());
 					g2.rotate(-angulo,x,y);
 				}
-				//			g2.setColor(Color.CYAN);
 				g2.setColor(new Color(4,32,32,255));
 				g2.fillPolygon(nave.getForma());
 				g2.setComposite(oldC);
@@ -767,7 +757,6 @@ public class PruebaMovimiento{
 				g.drawImage(buffer, 0, 0, this);
 
 				pintado = true;
-				//semaforo.notificar();
 			}
 		}
 	}
@@ -1002,14 +991,13 @@ public class PruebaMovimiento{
 //		disparo.setColor(Color.WHITE);
 		cache.addPrototipo(disparo);
 
-		Semaforo semaforo = new Semaforo(1);
 		final MyKeyListener myKeyListener = new MyKeyListener();
 		MyKeyListener.setCache(cache);
-		final Pantalla pantalla = new Pantalla(semaforo,cache, nave, disparos);
+		final Pantalla pantalla = new Pantalla(nave, disparos);
 		frame.addKeyListener(myKeyListener);
 		frame.setFocusable(true);
 		frame.setFocusTraversalKeysEnabled(false);
-		final Motor motor = new Motor(semaforo,cache, nave, disparos);
+		final Motor motor = new Motor(cache, nave, disparos);
 		motor.setDimensiones(800,600);
 		
 		frame.getContentPane().setLayout(new BorderLayout());
@@ -1024,11 +1012,6 @@ public class PruebaMovimiento{
 					motor.actua(myKeyListener.getKeyState(),tActual-tAnterior);
 					tAnterior = tActual;
 					pantalla.repaint();
-//					try{
-//						Thread.sleep(0);
-//						Thread.yield();
-//					}catch(InterruptedException igonada){
-//					}
 				}
 			}
 		};

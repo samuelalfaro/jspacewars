@@ -33,6 +33,9 @@ public class PruebaFractal{
 			this.addMouseListener(this);
 		}
 
+		/**
+		 * @param w  
+		 */
 		private void rellenar(int w, int h){
 			float ik = 1.0f/(N_PUNTOS-1);
 			keys[0] = 0.0f;

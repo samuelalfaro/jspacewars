@@ -47,7 +47,7 @@ public class Test02Misil extends JPanel implements MouseListener, MouseMotionLis
 			vel = 10;
 			setObjetivo(300,300);
 			vx = vel * FastMath.cos240(ang);
-			vy = vel * FastMath.sin240(ang);;
+			vy = vel * FastMath.sin240(ang);
 		}
 		
 		void setObjetivo(float x,float y){

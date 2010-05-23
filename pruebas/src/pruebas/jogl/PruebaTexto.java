@@ -34,7 +34,6 @@ public class PruebaTexto {
 			String tileNames [] = 
 			{"demos/data/images/font.png", "demos/data/images/bumps.png"};
 
-
 			gl.glGenTextures(2, textures, 0);
 
 			for (int i = 0; i < 2; i++) {

@@ -245,7 +245,7 @@ public class DotsDemo{
 //			System.out.println(n);
 			destinos.clear();
 		}
-	};
+	}
 
 	private static class Renderer implements GLEventListener{ 
 
@@ -364,6 +364,9 @@ public class DotsDemo{
 			UnidadTextura.desactivar(gl, 0);
 		}
 
+		/**
+		 * @param timeSpan unusued 
+		 */
 		private void drawDots(GL gl, long time, long startTime, long timeSpan, Dots credit, Dots name) {
 
 			drawBackground(gl, 512, 512);

@@ -194,8 +194,11 @@ public class Imagen {
 				RenderingHints hints) {
 			return this;
 		}
-	};
+	}
 
+	/**
+	 * @param alfa  ignorado
+	 */
 	private static int[] fusionar_AND(int[] src, int[] dstIn, int[] dstOut, int alfa){
 		for (int i = 0, t= src.length; i< t; i++)
 			dstOut[i] = (dstIn[i] & A_MASK) | (dstIn[i] & src[i] & A_MASK_I);
@@ -231,6 +234,9 @@ public class Imagen {
 		}
 	};
 
+	/**
+	 * @param alfa ignorado 
+	 */
 	private static int[] fusionar_OR(int[] src, int[] dstIn, int[] dstOut, int alfa){
 		for (int i = 0, t= src.length; i< t; i++)
 			dstOut[i] = (dstIn[i] & A_MASK) | (dstIn[i] | src[i] & A_MASK_I);
@@ -266,6 +272,9 @@ public class Imagen {
 		}
 	};
 
+	/**
+	 * @param alfa ignorado 
+	 */
 	private static int[] fusionar_XOR(int[] src, int[] dstIn, int[] dstOut, int alfa){
 		for (int i = 0, t= src.length; i< t; i++)
 			dstOut[i] = (dstIn[i] & A_MASK) | (dstIn[i] ^ src[i] & A_MASK_I);
@@ -428,7 +437,7 @@ public class Imagen {
 					}
 			}
 		}
-	};
+	}
 	public static Composite FUSIONAR_SUM = new Fusionador_Suma();
 
 	private static int[] fusionar_RES(int[] src, int[] dstIn, int[] dstOut, int alfa){
@@ -558,7 +567,7 @@ public class Imagen {
 					}
 			}
 		}
-	};
+	}
 	public static Composite FUSIONAR_RES = new Fusionador_Resta();
 
 	private static int[] fusionar_DIF(int[] src, int[] dstIn, int[] dstOut, int alfa){
@@ -665,7 +674,7 @@ public class Imagen {
 					}
 			}
 		}
-	};
+	}
 	public static Composite FUSIONAR_DIF = new Fusionador_Diferencia();
 
 	private static int[] fusionar_MUL(int[] src, int[] dstIn, int[] dstOut, int alfa){
@@ -783,7 +792,7 @@ public class Imagen {
 					}
 			}
 		}
-	};
+	}
 	public static Composite FUSIONAR_MUL = new Fusionador_Multiplicacion();
 
 	private static int[] fusionar_DIV(int[] src, int[] dstIn, int[] dstOut, int alfa){
@@ -906,7 +915,7 @@ public class Imagen {
 					}
 			}
 		}
-	};
+	}
 	public static Composite FUSIONAR_DIV = new Fusionador_Division();
 
 	private static int[] fusionar_SUP(int[] src, int[] dstIn, int[] dstOut, int alfa){
@@ -1016,7 +1025,7 @@ public class Imagen {
 					}
 			}
 		}
-	};
+	}
 	public static Composite FUSIONAR_SUP = new Fusionador_Superposicion();
 	
 	

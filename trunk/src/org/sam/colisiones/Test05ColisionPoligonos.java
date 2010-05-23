@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class Test05ColisionPoligonos extends PantallaTest{
+public final class Test05ColisionPoligonos extends PantallaTest{
 
 	static final int N_LADOS = 15;
 	Poligono poligono1, poligono2;
