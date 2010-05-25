@@ -159,14 +159,13 @@ public class Poligono{
 		int nSegmentosEnLaInterseccion = 0;
 		int nLados = coordX.length;
 		
-		int i=0, iSig = 1;
-		while(iSig<nLados){
+		int i = 0, iSig = 1;
+		while( iSig < nLados ){
 			if(	segmentosEnLaInterseccion[i] = rectangulo.hayInterseccion(
 					coordX[i],coordY[i],
 					coordX[iSig],coordY[iSig]) )
 				nSegmentosEnLaInterseccion++;
-			i++;
-			iSig ++;
+			i = iSig; iSig ++;
 		}
 		if(	segmentosEnLaInterseccion[i] = rectangulo.hayInterseccion(
 				coordX[i],coordY[i],
@@ -175,55 +174,139 @@ public class Poligono{
 		return nSegmentosEnLaInterseccion;
 	}
 	
+	/**
+	 * @param x
+	 * @param y
+	 * @return
+	 * @see java.awt.Polygon#contains(double, double)
+	 */
+	public boolean contiene(float x, float y) {
+		int npoints = coordX.length;
+		if (npoints <= 2 || !getLimiteRectangular().contiene(x, y)) {
+			return false;
+		}
+		int hits = 0;
+
+		float lastx = coordX[npoints - 1];
+		float lasty = coordY[npoints - 1];
+		float curx, cury;
+
+		// Walk the edges of the polygon
+		for (int i = 0; i < npoints; lastx = curx, lasty = cury, i++) {
+			curx = coordX[i];
+			cury = coordY[i];
+
+			if (cury == lasty) {
+				continue;
+			}
+
+			float leftx;
+			if (curx < lastx) {
+				if (x >= lastx) {
+					continue;
+				}
+				leftx = curx;
+			} else {
+				if (x >= curx) {
+					continue;
+				}
+				leftx = lastx;
+			}
+
+			double test1, test2;
+			if (cury < lasty) {
+				if (y < cury || y >= lasty) {
+					continue;
+				}
+				if (x < leftx) {
+					hits++;
+					continue;
+				}
+				test1 = x - curx;
+				test2 = y - cury;
+			} else {
+				if (y < lasty || y >= cury) {
+					continue;
+				}
+				if (x < leftx) {
+					hits++;
+					continue;
+				}
+				test1 = x - lastx;
+				test2 = y - lasty;
+			}
+
+			if (test1 < (test2 / (lasty - cury) * (lastx - curx))) {
+				hits++;
+			}
+		}
+		return ((hits & 1) != 0);
+    }
+	
 	public boolean hayIntersecion(Poligono otro){
-		if( !limiteRectangular.hayInterseccion(otro.getLimiteRectangular()))
-			return false;
+		return hayIntersecion(otro, null);
+	}
+	
+	public boolean hayIntersecion(Poligono otro, int segmentos[]){
 		LimiteRectangular interseccion = limiteRectangular.interseccion(otro.getLimiteRectangular());
-		
-		int segmentos1EnLaInterseccion;
-		if( (segmentos1EnLaInterseccion = calcularSegmentosEnRectangulo(interseccion)) == 0)
+		if( interseccion == null)
 			return false;
 		
-		int segmentos2EnLaInterseccion;
-		if( (segmentos2EnLaInterseccion = otro.calcularSegmentosEnRectangulo(interseccion)) == 0)
+		int nSegIntPol1;
+		if( (nSegIntPol1 = calcularSegmentosEnRectangulo(interseccion)) == 0)
 			return false;
 		
-		for(int i = 0, segEv1 = 0; segEv1 < segmentos1EnLaInterseccion; i++){
+		int nSegIntPol2;
+		if( (nSegIntPol2 = otro.calcularSegmentosEnRectangulo(interseccion)) == 0)
+			return false;
+		
+		for(int i = 0, sig_i = 1, eva1 = 0; eva1 < nSegIntPol1; i = sig_i++){
 			if (segmentosEnLaInterseccion[i]){
 				float p1X,p1Y,p2X,p2Y;
 				p1X = coordX[i];
 				p1Y = coordY[i];
-				if(i == coordX.length){
-					p2X = coordX[i+1];
-					p2Y = coordY[i+1];
+				if(sig_i < coordX.length){
+					p2X = coordX[sig_i];
+					p2Y = coordY[sig_i];
 				}else{
 					p2X = coordX[0];
 					p2Y = coordY[0];
 				}
-				for(int j = 0, segEv2 = 0; segEv2 < segmentos2EnLaInterseccion; j++){
+				for(int j = 0, sig_j=1, eva2 = 0; eva2 < nSegIntPol2; j = sig_j++){
 					if (otro.segmentosEnLaInterseccion[j]){
 						float p3X,p3Y,p4X,p4Y;
 						p3X = otro.coordX[j];
 						p3Y = otro.coordY[j];
-						if(j == otro.coordX.length){
-							p4X = otro.coordX[j+1];
-							p4Y = otro.coordY[j+1];
+						if(sig_j < otro.coordX.length){
+							p4X = otro.coordX[sig_j];
+							p4Y = otro.coordY[sig_j];
 						}else{
 							p4X = otro.coordX[0];
 							p4Y = otro.coordY[0];
 						}
-						if(Segmento.hayInterseccion(p1X,p1Y,p2X,p2Y,p3X,p3Y,p4X,p4Y))
+						if(Segmento.hayInterseccion(p1X,p1Y,p2X,p2Y,p3X,p3Y,p4X,p4Y)){
+							if(segmentos != null){
+								segmentos[0] = i;
+								segmentos[1] = j;
+							}
 							return true;
-						segEv2++;
+						}
+						eva2++;
 					}
 				}
-				segEv1++;
+				eva1++;
 			}
 		}
 		return false;
 	}
 	
+	private final Segmento shared = new Segmento();
+	
 	public Segmento getSegmento(int pos){
+		return getSegmento(pos, shared);
+	}
+	
+	public Segmento getNewSegmento(int pos){
 		return getSegmento(pos, null);
 	}
 	
@@ -233,7 +316,7 @@ public class Poligono{
 		int sig = pos + 1;
 		if( sig == coordX.length )
 			sig = 0;
-		segmento.setValues(coordX[pos], coordY[pos], coordX[sig], coordY[sig]);
+		segmento.setPoints(coordX[pos], coordY[pos], coordX[sig], coordY[sig]);
 		return segmento;
 	}
 }	

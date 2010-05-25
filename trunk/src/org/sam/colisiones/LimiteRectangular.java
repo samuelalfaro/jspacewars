@@ -1,53 +1,44 @@
 package org.sam.colisiones;
 
 public class LimiteRectangular{
-	float x1, y1;  // esquina inf izda
-	float x2, y2;  // esquina sup dcha
+	float xII, yII;  // esquina inf izda
+	float xSD, ySD;  // esquina sup dcha
 	
-	public LimiteRectangular(){
-		x1 = y1 = x2 = y2 = 0.0f;
-	}
+	public LimiteRectangular(){}
 	
-	public LimiteRectangular(float ancho,float alto){
-		x2 = ancho/2;
-		x1 = - x2;
-		y2 = alto/2;
-		y1 = - y2;
+	public LimiteRectangular(float ancho, float alto){
+		xSD = ancho/2;
+		xII = - xSD;
+		ySD = alto/2;
+		yII = - ySD;
 	}
 	
 	public LimiteRectangular(float xII,float yII,float xSD,float ySD){
 		setValues(xII,yII,xSD,ySD);
 	}
 	
-	public void setValues(float xII,float yII,float xSD,float ySD){
-		x1 = xII;
-		y1 = yII;
-		x2 = xSD;
-		y2 = ySD;
+	public void setValues(float x1,float y1,float x2,float y2){
+		if(x1 < x2){
+			this.xII = x1;
+			this.xSD = x2;
+		}else{
+			this.xII = x2;
+			this.xSD = x1;
+		}
+		if(y1 < y2){
+			this.yII = y1;
+			this.ySD = y2;
+		}else{
+			this.yII = y2;
+			this.ySD = y1;
+		}
 	}
 	
-	public void setValues(float xII,float yII,float xSD,float ySD, boolean ordenados){
-		if(ordenados){
-			x1 = xII;
-			y1 = yII;
-			x2 = xSD;
-			y2 = ySD;
-			return;
-		}
-		if(xII < xSD){
-			x1 = xII;
-			x2 = xSD;
-		}else{
-			x1 = xSD;
-			x2 = xII;
-		}
-		if(yII < ySD){
-			y1 = yII;
-			y2 = ySD;
-		}else{
-			y1 = ySD;
-			y2 = yII;
-		}
+	public void setSortedValues(float xII,float yII,float xSD,float ySD){
+		this.xII = xII;
+		this.yII = yII;
+		this.xSD = xSD;
+		this.ySD = ySD;
 	}
 
 	public void calcular(float xCoord[], float yCoord[], int nPuntos) {
@@ -58,71 +49,116 @@ public class LimiteRectangular{
 		
 		for (int i = 0; i < nPuntos; i++) {
 			float x = xCoord[i];
-			minX = (minX < x)? minX : x;
-			maxX = (maxX < x)? x : maxX;
+			if(x < minX)
+				minX = x;
+			if(x > maxX)
+				maxX = x;
 			float y = yCoord[i];
-			minY = (minY < y)? minY : y;
-			maxY = (maxY < y)? y : maxY;
+			if(y < minY)
+				minY = y;
+			if(y > maxY)
+				maxY = y;
 		}
-		setValues(minX,minY,maxX,maxY);
+		setSortedValues(minX,minY,maxX,maxY);
 	}
 	
-	public void trasladar(float velX,float velY){
-		x1 += velX;
-		y1 += velY;
-		x2 += velX;
-		y1 += velY;
+	public void trasladar(float desX,float desY){
+		xII += desX;
+		yII += desY;
+		xSD += desX;
+		ySD += desY;
 	}
 
-	public boolean contiene(double x, double y){
-		return x1<x && x<x2 && y1<y && y<y2;
+	public boolean contiene(float x, float y){
+		return xII<= x && x<=xSD && yII<=y && y<=ySD;
 	}
 
-	public boolean hayInterseccion(double px1, double py1,double px2, double py2){
-		// Los dos puntos del segmento no estan en las franjas del rectangulo
-		if ( (px1 < x1 && px2 < x1) || (px1 > x2 && px2 > x2) ||
-			 (py1 < y1 && py2 < y1) || (py1 > y2 && py2 > y2) )
-			return false;
-		// Los dos puntos del segmento estan en una franja del rectangulo
-		if ( (px1 >= x1 && px1 <= x2) && (px2 >= x1 && px2 <= x2) ||
-			 (py1 >= y1 && py1 <= y2) && (py2 >= x1 && py2 <= y2) )
+	public boolean hayInterseccion(Segmento segmento){
+		return hayInterseccion(segmento.x1, segmento.y1, segmento.x2, segmento.y2 );
+	}
+	
+	public boolean hayInterseccion(float px1, float py1,float px2, float py2){
+		int cuadranteP1 = 0;
+		int cuadranteP2 = 0;
+		
+		if(	px1 < xII ) 
+			cuadranteP1 = 0x01;
+		else if(px1 > xSD)
+			cuadranteP1 = 0x02;
+		if(	py1 < yII ) 
+			cuadranteP1 |= 0x04;
+		else if(py1 > ySD)
+			cuadranteP1 |= 0x08;
+		
+		if(	px2 < xII ) 
+			cuadranteP2 = 0x01;
+		else if(px2 > xSD)
+			cuadranteP2 = 0x02;
+		if(	py2 < yII ) 
+			cuadranteP2 |= 0x04;
+		else if(py2 > ySD)
+			cuadranteP2 |= 0x08;
+		
+		/*  Cuadrantes:
+		 *  1001 | 1000 | 1010
+		 * ------+------+------
+		 *  0001 | 0000 | 0010
+		 * ------+------+------
+		 *  0101 | 0100 | 0110
+		 */
+		
+		// Uno de los puntos esta dentro del rectangulo
+		if( cuadranteP1 == 0 || cuadranteP2 == 0)
 			return true;
-
+		// Los dos puntos del segmento estan en la misma franja exterior del rectangulo
+		if( (cuadranteP1 & cuadranteP2) != 0 )
+			return false;
+		
+//		int cuadranteMIN  = Math.abs(cuadranteP1 | cuadranteP2;
+		
 		// Los puntos del segmento estan en ditintas franjas del rectangulo
 		// y pueden cortar el rectangulo
-		double dx = px2 - px1;
-		double dy = py2 - py1;
+		float dx = px2 - px1;
+		float dy = py2 - py1;
+		float m =  dx /dy ;
 
-		if(Math.abs(dx) < Math.abs(dy)){
-		// el segmento tiene una pendiente mayor de 1
-		// y se comprueba con los lados horiznontales
-			dx /=dy; //inversa pendiente de la recta
-			double x = (y1 - py1)*dx + px1; 
-			if (x >= x1 && x <= x2)
-				return true;	
-			x = (y2 - py1)*dx + px1;
-			return (x >= x1 && x <= x2);
-		}
-		// el segmento tiene una pendiente menor de 1
-		// y se comprueba con los lados verticales
-		dy /=dx; //pendiente de la recta	
-		double y = (x1 - px1)*dy + py1; 
-		if (y >= y1 && y <= y2)
+//		if(Math.abs(dx) < Math.abs(dy)){
+		// se comprueba con los lados horiznontales
+		float x = (yII - py1)*m + px1; 
+		if (x >= xII && x <= xSD)
 			return true;	
-		y = (x2 - px1)*dy + py1;
-		return (y >= y1 && y <= y2);
+		x = (ySD - py1)*m + px1;
+		if (x >= xII && x <= xSD)
+			return true;
+//		}
+		// se comprueba con los lados verticales
+		m =  dy / dx; //pendiente de la recta	
+		float y = (xII - px1)*m + py1; 
+		if (y >= yII && y <= ySD)
+			return true;	
+		y = (xSD - px1)*m + py1;
+		return (y >= yII && y <= ySD);
 	}
 	
 	public boolean hayInterseccion(LimiteRectangular otro){
-		//return !(x1>otro.x2 || x2<otro.x1 || y1>otro.y2 || y2<otro.y1);
-		return (x1<=otro.x2 && x2>=otro.x1 && y1<=otro.y2 && y2>=otro.y1);
+		return (xII<=otro.xSD && xSD>=otro.xII && yII<=otro.ySD && ySD>=otro.yII);
 	}
 
+	private final static LimiteRectangular shared = new LimiteRectangular();
+	
 	public LimiteRectangular interseccion(LimiteRectangular otro){
-		float newX1 = x1 > otro.x1 ? x1 : otro.x1;
-		float newY1 = y1 > otro.y1 ? y1 : otro.y1;		
-		float newX2 = x2 < otro.x2 ? x2 : otro.x2;		
-		float newY2 = y2 < otro.y2 ? y2 : otro.y2;
-		return new LimiteRectangular(newX1,newY1,newX2,newY2);		
+		return interseccion(otro, shared);
+	}
+	
+	public LimiteRectangular interseccion(LimiteRectangular otro, LimiteRectangular interseccion){
+		if(!hayInterseccion(otro))
+			return null;
+		interseccion.setSortedValues(
+			xII > otro.xII ? xII : otro.xII,
+			yII > otro.yII ? yII : otro.yII,
+			xSD < otro.xSD ? xSD : otro.xSD,
+			ySD < otro.ySD ? ySD : otro.ySD
+		);
+		return interseccion;
 	}
 }

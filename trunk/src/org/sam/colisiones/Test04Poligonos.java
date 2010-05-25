@@ -7,14 +7,14 @@ import java.awt.Graphics;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public final class Test04Poligonos extends PantallaTest{
+public final class Test04Poligonos extends Test00Abs{
 	private static final int N_LADOS = 20;
 	private Poligono poligono;
 	
 	private class Animador extends Thread{
 		public void run(){
 			float alfa = 0.0f;
-			float incAlfa = 0.005f;
+			float incAlfa = 0.0025f;
 			float pi2 = (float)(Math.PI * 2);
 			while(true){
 				alfa += incAlfa;
@@ -26,9 +26,9 @@ public final class Test04Poligonos extends PantallaTest{
 					incAlfa = -incAlfa;
 				}
 				//poligono.transformar(0.0,0.0,1.0,pi2*incAlfa);
-				Test04Poligonos.this.poligono.rotar(pi2*alfa);
-				Test04Poligonos.this.poligono.escalar(0.5f-alfa);
-				Test04Poligonos.this.poligono.actualizarLimiteRectangular();
+				poligono.rotar(pi2*alfa);
+				poligono.escalar(0.5f-alfa);
+				poligono.actualizarLimiteRectangular();
 				repaint();
 				try{
 					Thread.sleep(40);
@@ -48,8 +48,15 @@ public final class Test04Poligonos extends PantallaTest{
 		g.setColor(Color.WHITE);
 		g.clearRect(0,0,getWidth(),getHeight());
 		
+		LimiteRectangular rectangulo = poligono.getLimiteRectangular();
+		for(float x = -0.45f; x < 0.5f; x += 0.05f)
+			for(float y = -0.45f; y < 0.5f; y += 0.05f){
+				g.setColor( rectangulo.contiene(x, y) ? poligono.contiene(x, y) ? Color.RED: Color.BLUE: Color.BLACK );
+				dibuja(g,x,y);
+			}
+				
 		g.setColor(Color.LIGHT_GRAY);
-		dibuja(g,poligono.getLimiteRectangular());
+		dibuja(g,rectangulo);
 		
 		g.setColor(Color.BLACK);
 		dibuja(g,poligono);

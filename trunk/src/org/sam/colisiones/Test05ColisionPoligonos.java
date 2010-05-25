@@ -8,15 +8,16 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public final class Test05ColisionPoligonos extends PantallaTest{
+public final class Test05ColisionPoligonos extends Test00Abs{
 
 	static final int N_LADOS = 15;
+	
 	Poligono poligono1, poligono2;
 	
 	class Animador extends Thread{
 		public void run(){
 			float alfa = 0.0f;
-			float incAlfa = 0.005f;
+			float incAlfa = 0.001f;
 			float pi2 = (float)(Math.PI * 2);
 			while(true){
 				alfa += incAlfa;
@@ -50,36 +51,61 @@ public final class Test05ColisionPoligonos extends PantallaTest{
 		new Animador().start();
 	}		
 	
+	int segmentosInterseccion[] = new int[2];
+	
 	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);
 		g.clearRect(0,0,getWidth(),getHeight());
 		
 		LimiteRectangular l1, l2;
-		if(poligono2 != null){
-			l1 = poligono1.getLimiteRectangular();
-			l2 = poligono2.getLimiteRectangular();
-
-			if(l1.hayInterseccion(l2)){
-				g.setColor(Color.YELLOW);
-				pinta(g,l1.interseccion(l2));
-			}
-			
-			g.setColor(Color.LIGHT_GRAY);
-			dibuja(g,l1);
-			dibuja(g,l2);
-			
-			if (poligono1.hayIntersecion(poligono2))
-				g.setColor(Color.RED);
-			else
-				g.setColor(Color.BLACK);
-			dibuja(g,poligono1);
-			dibuja(g,poligono2);
-		}else{
+		if(poligono2 == null){
 			g.setColor(Color.LIGHT_GRAY);
 			dibuja(g,poligono1.getLimiteRectangular());
 		
 			g.setColor(Color.BLACK);
 			dibuja(g,poligono1);
+		}else{
+			l1 = poligono1.getLimiteRectangular();
+			l2 = poligono2.getLimiteRectangular();
+
+			LimiteRectangular interseccionRectangular = l1.interseccion(l2);
+			if(interseccionRectangular != null){
+				g.setColor(Color.YELLOW);
+				pinta(g, interseccionRectangular );
+				
+				g.setColor(Color.LIGHT_GRAY);
+				dibuja(g,l1);
+				dibuja(g,l2);
+				
+				boolean chocan = poligono1.hayIntersecion(poligono2, segmentosInterseccion);
+
+				Color segmentosInterioresColor = chocan ? Color.ORANGE.darker(): Color.BLUE;
+				Color segmentosExterioresColor = chocan ? Color.MAGENTA.darker(): Color.GREEN.darker();
+
+				g.setColor(segmentosExterioresColor);
+				dibujaSegmentosExteriores(g,poligono1, interseccionRectangular);
+				g.setColor(segmentosInterioresColor);
+				dibujaSegmentosInteriores(g,poligono1, interseccionRectangular);
+				
+				g.setColor(segmentosExterioresColor);
+				dibujaSegmentosExteriores(g,poligono2, interseccionRectangular);
+				g.setColor(segmentosInterioresColor);
+				dibujaSegmentosInteriores(g,poligono2, interseccionRectangular);
+
+				
+				if(chocan){
+					g.setColor(Color.RED.darker());
+					dibuja(g,poligono1.getSegmento(segmentosInterseccion[0]));
+					dibuja(g,poligono2.getSegmento(segmentosInterseccion[1]));
+				}
+			}else{
+				g.setColor(Color.LIGHT_GRAY);
+				dibuja(g,l1);
+				dibuja(g,l2);
+				g.setColor(Color.BLACK);
+				dibuja(g,poligono1);
+				dibuja(g,poligono2);
+			}
 		}
 	}
 	
