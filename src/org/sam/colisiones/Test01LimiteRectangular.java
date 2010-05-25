@@ -8,16 +8,29 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public final class Test01LimiteRectangular extends PantallaTest{
+public final class Test01LimiteRectangular extends Test00Abs{
 	
-	private LimiteRectangular limiteRectangular, otroLimiteRectangular;
+	private LimiteRectangular rectangulos[], limiteRectangular;
 	private float wX1, wY1, wX2, wY2;
 	private boolean puntoAsignado;
 	
 	private Test01LimiteRectangular(){
 		super(new Dimension(500,500));
-		limiteRectangular = new LimiteRectangular(0.5f,0.5f);
-		otroLimiteRectangular = new LimiteRectangular();
+		
+		rectangulos = new LimiteRectangular[13];
+		for(int i= 0; i < 9; i++){
+			rectangulos[i] =  new LimiteRectangular(0.15f,0.15f);
+			float despX = (i % 3)*0.2f -0.2f;
+			float despY = (i / 3)*0.2f -0.2f;
+			rectangulos[i].trasladar(despX, despY);
+			
+		}
+		rectangulos[ 9] =  new LimiteRectangular( -.275f,-.425f, .275f,-.375f );
+		rectangulos[10] =  new LimiteRectangular( -.425f,-.275f,-.375f, .275f );
+		rectangulos[11] =  new LimiteRectangular(  .375f,-.275f, .425f, .275f );
+		rectangulos[12] =  new LimiteRectangular( -.275f, .375f, .275f, .425f );
+		
+		limiteRectangular = new LimiteRectangular();
 		puntoAsignado = false;
 	}
 	
@@ -26,33 +39,19 @@ public final class Test01LimiteRectangular extends PantallaTest{
 		g.setColor(Color.WHITE);
 		g.clearRect(0,0,getWidth(),getHeight());
 		
-		int pX1, pY1;
-		int pX2, pY2;
-			
-		if (limiteRectangular.hayInterseccion(otroLimiteRectangular)){
-			LimiteRectangular interseccion = limiteRectangular.interseccion(otroLimiteRectangular);
-			pX1 = xMundoPantalla(interseccion.x1);
-			pY1 = yMundoPantalla(interseccion.y2);
-			pX2 = xMundoPantalla(interseccion.x2);
-			pY2 = yMundoPantalla(interseccion.y1);
-			g.setColor(Color.MAGENTA);
-			g.fillRect(pX1,pY1,pX2-pX1,pY2-pY1);
-			g.setColor(Color.RED);
+		boolean hayInterseccion = false;
+		for(LimiteRectangular rectangulo: rectangulos){
+			LimiteRectangular interseccion = limiteRectangular.interseccion(rectangulo);
+			if ( interseccion!= null ){
+				hayInterseccion = true;
+				g.setColor(Color.MAGENTA);
+				pinta(g, interseccion);
+			}
+			g.setColor(Color.BLACK);
+			dibuja(g, rectangulo);
 		}
-		else
-			g.setColor(Color.BLUE);
-
-		pX1 = xMundoPantalla(wX1);
-		pY1 = yMundoPantalla(wY1);
-		pX2 = xMundoPantalla(wX2);
-		pY2 = yMundoPantalla(wY2);
-		
-		g.fillRect(pX1-2,pY1-2,5,5);
-		g.fillRect(pX2-2,pY2-2,5,5);
-		g.drawRect(Math.min(pX1,pX2),Math.min(pY1,pY2),Math.abs(pX2-pX1),Math.abs(pY2-pY1));
-		
-		g.setColor(Color.BLACK);
-		g.drawRect(getWidth()/4,getHeight()/4,getWidth()/2,getHeight()/2);
+		g.setColor( hayInterseccion ? Color.RED : Color.BLUE);
+		dibuja(g, limiteRectangular);
 	}
 
 	public void mouseReleased(MouseEvent e) {
@@ -63,7 +62,7 @@ public final class Test01LimiteRectangular extends PantallaTest{
 			wX2 = xPantallaMundo(e.getX());
 			wY2 = yPantallaMundo(e.getY());
 		}
-		otroLimiteRectangular.setValues(wX1,wY1,wX2,wY2,false);
+		limiteRectangular.setValues(wX1,wY1,wX2,wY2);
 		puntoAsignado = !puntoAsignado;
 	}
 
@@ -71,7 +70,7 @@ public final class Test01LimiteRectangular extends PantallaTest{
 		if(puntoAsignado){
 			wX2 = xPantallaMundo(e.getX());
 			wY2 = yPantallaMundo(e.getY());
-			otroLimiteRectangular.setValues(wX1,wY1,wX2,wY2,false);
+			limiteRectangular.setValues(wX1,wY1,wX2,wY2);
 			repaint();
 		}
 	}

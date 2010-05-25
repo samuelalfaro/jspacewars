@@ -8,28 +8,49 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public final class Test03Segmentos extends PantallaTest{
+public final class Test03Segmentos extends Test00Abs{
 	
-	private Segmento s1;
-	private Segmento s2;
-	private Segmento s3;
-	private Segmento s4;
-	
-	private float sX1, sY1, sX2, sY2;
+	private Segmento[] segmentos;
+
 	private Segmento segmento;
 	
 	private boolean puntoAsignado;
 	
+	private static void generaSegmentos(Segmento segmentos[], float x, float y, float r1, float r2, int offset){
+		for(int i= 0; i < 12; i++){
+			double a = (2*i + 1) * Math.PI*2 / 24;
+			float cosA = (float)Math.cos(a);
+			float sinA = (float)Math.sin(a);
+			segmentos[i + offset] = new Segmento( r1 * cosA + x,  r1 * sinA + y , r2 * cosA + x,  r2 * sinA + y); 
+		}
+		for(int i = 12; i < 36; i++){
+			int p = (i - 12) / 2;
+			double a1 = (10*p + 7) * Math.PI*2 / 120;
+			float cos1A = (float)Math.cos(a1);
+			float sin1A = (float)Math.sin(a1);
+			double a2 = (10*p + 13) * Math.PI*2 / 120;
+			float cos2A = (float)Math.cos(a2);
+			float sin2A = (float)Math.sin(a2);
+			float r = (i % 2)*(r2-3*r1) + 2*r1;
+			segmentos[i + offset] = new Segmento( r * cos1A + x,  r * sin1A + y, r * cos2A + x,  r * sin2A + y ); 
+		}
+	}
+	
 	private Test03Segmentos(){
 		super(new Dimension(500,500));
 		
-		s1 = new Segmento( -0.25f,  0.0f,  0.25f,  0.0f);  // segmento horizontal
-		s2 = new Segmento(   0.0f, -0.25f, 0.0f,   0.25f); // segmento vetical
-		s3 = new Segmento( -0.25f, -0.25f, 0.25f,  0.25f); // segmento diagonal
-		s4 = new Segmento( -0.25f,  0.25f, 0.25f, -0.25f); // segmento contradiagonal1
+		segmentos = new Segmento[148];
+		segmentos[0] = new Segmento( 0.05f, 0.0f , 0.45f, 0.0f  );
+		segmentos[1] = new Segmento(-0.05f, 0.0f ,-0.45f, 0.0f  );
+		segmentos[2] = new Segmento( 0.0f , 0.05f, 0.0f , 0.45f );
+		segmentos[3] = new Segmento( 0.0f ,-0.05f, 0.0f ,-0.45f );
+		generaSegmentos(segmentos, 0.25f, 0.25f, 0.05f, 0.2f,   4 );
+		generaSegmentos(segmentos, 0.25f,-0.25f, 0.05f, 0.2f,  40 );
+		generaSegmentos(segmentos,-0.25f, 0.25f, 0.05f, 0.2f,  76 );
+		generaSegmentos(segmentos,-0.25f,-0.25f, 0.05f, 0.2f, 112 );
+
 		
-		sX1= sY1= sX2= sY2= 0.0f;
-		segmento = new Segmento( sX1, sY1, sX2, sY2 );
+		segmento = new Segmento();
 		
 		puntoAsignado = false;
 	}
@@ -40,60 +61,34 @@ public final class Test03Segmentos extends PantallaTest{
 		
 		boolean hayInterseccion = false;
 		
-		if (segmento.hayInterseccion(s1)){
-			hayInterseccion = true;
-			g.setColor(Color.GREEN);
-		}else
-			g.setColor(Color.BLACK);
-		dibuja(g,s1);
-		
-		if (segmento.hayInterseccion(s2)){
-			hayInterseccion = true;
-			g.setColor(Color.GREEN);
-		}else
-			g.setColor(Color.BLACK);
-		dibuja(g,s2);
-		
-		if (segmento.hayInterseccion(s3)){
-			hayInterseccion = true;
-			g.setColor(Color.GREEN);
-		}else
-			g.setColor(Color.BLACK);
-		dibuja(g,s3);
-		
-		if (segmento.hayInterseccion(s4)){
-			hayInterseccion = true;
-			g.setColor(Color.GREEN);
-		}else
-			g.setColor(Color.BLACK);
-		dibuja(g,s4);
-		
-		if (hayInterseccion)
-			g.setColor(Color.RED);
-		else
-			g.setColor(Color.BLUE);
+		for(Segmento s: segmentos){
+			if (segmento.hayInterseccion(s)){
+				hayInterseccion = true;
+				g.setColor(Color.MAGENTA);
+			}else
+				g.setColor(Color.BLACK);
+			dibuja(g,s);
+		}
+		g.setColor(hayInterseccion ? Color.RED: Color.BLUE);
 		dibuja(g,segmento);
 	}
 
 	public void mouseReleased(MouseEvent e) {
 		if(!puntoAsignado){
-			sX1 = sX2 = xPantallaMundo(e.getX());
-			sY1 = sY2 = yPantallaMundo(e.getY());
+			float x = xPantallaMundo(e.getX());
+			float y = yPantallaMundo(e.getY());
+			segmento.setPoints( x, y, x, y );
 		}else{
-			sX2 = xPantallaMundo(e.getX());
-			sY2 = yPantallaMundo(e.getY());
+			segmento.setPoint2( xPantallaMundo(e.getX()), yPantallaMundo(e.getY()) );
 		}
-		segmento.setValues( sX1, sY1, sX2, sY2 );
 		puntoAsignado = !puntoAsignado;
 	}
 
 	public void mouseMoved(MouseEvent e) {
 		if(puntoAsignado){
-			sX2 = xPantallaMundo(e.getX());
-			sY2 = yPantallaMundo(e.getY());
+			segmento.setPoint2( xPantallaMundo(e.getX()), yPantallaMundo(e.getY()) );
 			repaint();
 		}
-		segmento.setValues( sX1, sY1, sX2, sY2 );
 	}
 	
 	static public void main(String args[]){

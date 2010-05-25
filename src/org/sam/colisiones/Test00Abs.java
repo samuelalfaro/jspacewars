@@ -9,9 +9,9 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public abstract class PantallaTest extends JPanel implements MouseListener, MouseMotionListener{
+public abstract class Test00Abs extends JPanel implements MouseListener, MouseMotionListener{
 	
-	PantallaTest(Dimension size){
+	Test00Abs(Dimension size){
 		this.setMinimumSize(size);
 		this.setPreferredSize(size);
 		this.addMouseListener(this);
@@ -34,22 +34,30 @@ public abstract class PantallaTest extends JPanel implements MouseListener, Mous
 		return ((float)-c)/getHeight() + 0.5f;
 	}
 	
+	protected final void dibuja(Graphics g, float pX, float pY){
+		dibuja(g,  xMundoPantalla(pX),  yMundoPantalla(pY));
+	}
+	
+	protected final void dibuja(Graphics g, int pX, int pY){
+		g.fillRect( pX-1, pY-1, 3, 3 );
+	}
+	
 	protected final void dibuja(Graphics g, LimiteRectangular rectangulo){
-		int pX1 = xMundoPantalla(rectangulo.x1);
-		int pY1 = yMundoPantalla(rectangulo.y1);
-		int pX2 = xMundoPantalla(rectangulo.x2);
-		int pY2 = yMundoPantalla(rectangulo.y2);
+		int pX1 = xMundoPantalla(rectangulo.xII);
+		int pY1 = yMundoPantalla(rectangulo.yII);
+		int pX2 = xMundoPantalla(rectangulo.xSD);
+		int pY2 = yMundoPantalla(rectangulo.ySD);
 
-		g.fillRect(pX1-2,pY1-2,5,5);
-		g.fillRect(pX2-2,pY2-2,5,5);
 		g.drawRect(pX1,pY2,pX2-pX1,pY1-pY2);
+		dibuja(g, pX1, pY1);
+		dibuja(g, pX2, pY2);
 	}
 	
 	protected final void pinta(Graphics g, LimiteRectangular rectangulo){
-		int pX1 = xMundoPantalla(rectangulo.x1);
-		int pY1 = yMundoPantalla(rectangulo.y1);
-		int pX2 = xMundoPantalla(rectangulo.x2);
-		int pY2 = yMundoPantalla(rectangulo.y2);
+		int pX1 = xMundoPantalla(rectangulo.xII);
+		int pY1 = yMundoPantalla(rectangulo.yII);
+		int pX2 = xMundoPantalla(rectangulo.xSD);
+		int pY2 = yMundoPantalla(rectangulo.ySD);
 
 		g.fillRect(pX1,pY2,pX2-pX1,pY1-pY2);
 	}
@@ -60,14 +68,30 @@ public abstract class PantallaTest extends JPanel implements MouseListener, Mous
 		int pX2 = xMundoPantalla(segmento.x2);
 		int pY2 = yMundoPantalla(segmento.y2);
 
-		g.fillRect(pX1-2,pY1-2,5,5);
-		g.fillRect(pX2-2,pY2-2,5,5);
 		g.drawLine(pX1,pY1,pX2,pY2);
+		dibuja(g, pX1, pY1);
+		dibuja(g, pX2, pY2);
 	}
 
 	protected final void dibuja(Graphics g, Poligono poligono){
 		for (int loop = 0; loop < poligono.getNLados(); loop++)
 			dibuja(g, poligono.getSegmento(loop) );
+	}
+	
+	protected final void dibujaSegmentosInteriores(Graphics g, Poligono poligono, LimiteRectangular rectangulo){
+		for (int loop = 0; loop < poligono.getNLados(); loop++){
+			Segmento segmento = poligono.getSegmento(loop);
+			if( segmento.hayInterseccion(rectangulo) )
+				dibuja(g, poligono.getSegmento(loop) );
+		}
+	}
+	
+	protected final void dibujaSegmentosExteriores(Graphics g, Poligono poligono, LimiteRectangular rectangulo){
+		for (int loop = 0; loop < poligono.getNLados(); loop++){
+			Segmento segmento = poligono.getSegmento(loop);
+			if( !segmento.hayInterseccion(rectangulo) )
+				dibuja(g, poligono.getSegmento(loop) );
+		}
 	}
 	
 	public void mouseClicked(MouseEvent e) {
