@@ -5,11 +5,53 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
 
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public abstract class Test00Abs extends JPanel implements MouseListener, MouseMotionListener{
+	
+	// Crea un poligono aleatorio convexo
+	protected final static Poligono crearPoligono(int nLados){
+		if(nLados < 3)
+			throw new IllegalArgumentException();
+		
+		Random r=new Random();
+		
+		float coordX[] = new float[nLados];
+		float coordY[] = new float[nLados];
+
+		float oX = 0.0f;
+		float oY = 0.0f;
+		
+		double iAng = Math.PI*2 / nLados;
+		double ang = iAng * (r.nextDouble() - 0.5);
+		int loop = 0;
+		while(loop < nLados){
+
+			double dist = r.nextDouble();
+		
+			double val  = Math.cos(ang)*dist;
+			coordX[loop]= (float)val; 
+			oX += val;
+			
+			val  = Math.sin(ang)*dist;
+			coordY[loop]= (float)val;
+			oY += val;
+			
+			loop++;
+			ang = iAng * (loop + r.nextDouble() - 0.5 );
+		}
+		oX /= nLados;
+		oY /= nLados;
+		
+		for(loop = 0; loop< nLados; loop++){
+			coordX[loop] -= oX;
+			coordY[loop] -= oY;
+		}
+		return new Poligono(coordX, coordY);
+	}
 	
 	Test00Abs(Dimension size){
 		this.setMinimumSize(size);
