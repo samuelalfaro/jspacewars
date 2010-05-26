@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JFrame;
 
@@ -13,6 +17,7 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 	static final int N_LADOS = 15;
 	
 	Poligono poligono1, poligono2;
+	List<Object> elementosEvaluados;
 	
 	class Animador extends Thread{
 		public void run(){
@@ -41,10 +46,10 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 	
 	Test05ColisionPoligonos(){
 		super(new Dimension(500,500));
-		
-		poligono1 = new Poligono(N_LADOS);
-		poligono1.escalar(0.25f);
-		poligono1.trasladar(0.25f,0.25f);
+		elementosEvaluados = new ArrayList<Object>(30);
+		poligono1 = crearPoligono(N_LADOS);
+		poligono1.escalar(0.5f);
+//		poligono1.trasladar(0.25f,0.25f);
 		poligono1.actualizarLimiteRectangular();
 		
 		poligono2 = null;
@@ -77,7 +82,13 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 				dibuja(g,l1);
 				dibuja(g,l2);
 				
-				boolean chocan = poligono1.hayIntersecion(poligono2, segmentosInterseccion);
+				boolean test1 = poligono1.hayIntersecion(poligono2);
+				boolean test2 = poligono1.hayIntersecion(poligono2, elementosEvaluados);
+				
+				if(test1 != test2)
+					System.err.println("Error: Tests distintos");
+				
+				boolean chocan = test1;
 
 				Color segmentosInterioresColor = chocan ? Color.ORANGE.darker(): Color.BLUE;
 				Color segmentosExterioresColor = chocan ? Color.MAGENTA.darker(): Color.GREEN.darker();
@@ -91,12 +102,18 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 				dibujaSegmentosExteriores(g,poligono2, interseccionRectangular);
 				g.setColor(segmentosInterioresColor);
 				dibujaSegmentosInteriores(g,poligono2, interseccionRectangular);
-
 				
-				if(chocan){
-					g.setColor(Color.RED.darker());
-					dibuja(g,poligono1.getSegmento(segmentosInterseccion[0]));
-					dibuja(g,poligono2.getSegmento(segmentosInterseccion[1]));
+				Iterator<?> it = elementosEvaluados.iterator();
+				while(it.hasNext()){
+					Object obj = it.next();
+					if( obj instanceof Point2D.Float){
+						Point2D.Float p = (Point2D.Float)obj;
+						g.setColor(it.hasNext()?Color.MAGENTA:Color.RED.darker());
+						dibuja( g, p.x, p.y );
+					}else if( obj instanceof Segmento){
+						g.setColor(Color.RED.darker());
+						dibuja( g, (Segmento)obj );
+					}
 				}
 			}else{
 				g.setColor(Color.LIGHT_GRAY);
@@ -110,8 +127,8 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 	}
 	
 	public void mouseClicked(MouseEvent e) {
-		poligono2 = new Poligono(N_LADOS);
-		poligono2.escalar(0.25f);
+		poligono2 = crearPoligono(N_LADOS);
+		poligono2.escalar(0.1f);
 		float x = xPantallaMundo(e.getX());
 		float y = yPantallaMundo(e.getY());
 		poligono2.trasladar(x,y);

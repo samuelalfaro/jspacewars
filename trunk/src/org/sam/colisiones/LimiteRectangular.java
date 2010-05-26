@@ -41,27 +41,6 @@ public class LimiteRectangular{
 		this.ySD = ySD;
 	}
 
-	public void calcular(float xCoord[], float yCoord[], int nPuntos) {
-		float minX = Float.MAX_VALUE;
-		float minY = Float.MAX_VALUE;
-		float maxX = -Float.MAX_VALUE;
-		float maxY = -Float.MAX_VALUE;
-		
-		for (int i = 0; i < nPuntos; i++) {
-			float x = xCoord[i];
-			if(x < minX)
-				minX = x;
-			if(x > maxX)
-				maxX = x;
-			float y = yCoord[i];
-			if(y < minY)
-				minY = y;
-			if(y > maxY)
-				maxY = y;
-		}
-		setSortedValues(minX,minY,maxX,maxY);
-	}
-	
 	public void trasladar(float desX,float desY){
 		xII += desX;
 		yII += desY;
@@ -78,6 +57,14 @@ public class LimiteRectangular{
 	}
 	
 	public boolean hayInterseccion(float px1, float py1,float px2, float py2){
+		/*  Cuadrantes:
+		 *  1001 | 1000 | 1010
+		 * ------+------+------
+		 *  0001 | 0000 | 0010
+		 * ------+------+------
+		 *  0101 | 0100 | 0110
+		 */
+		
 		int cuadranteP1 = 0;
 		int cuadranteP2 = 0;
 		
@@ -99,14 +86,6 @@ public class LimiteRectangular{
 		else if(py2 > ySD)
 			cuadranteP2 |= 0x08;
 		
-		/*  Cuadrantes:
-		 *  1001 | 1000 | 1010
-		 * ------+------+------
-		 *  0001 | 0000 | 0010
-		 * ------+------+------
-		 *  0101 | 0100 | 0110
-		 */
-		
 		// Uno de los puntos esta dentro del rectangulo
 		if( cuadranteP1 == 0 || cuadranteP2 == 0)
 			return true;
@@ -114,30 +93,57 @@ public class LimiteRectangular{
 		if( (cuadranteP1 & cuadranteP2) != 0 )
 			return false;
 		
-//		int cuadranteMIN  = Math.abs(cuadranteP1 | cuadranteP2;
-		
 		// Los puntos del segmento estan en ditintas franjas del rectangulo
 		// y pueden cortar el rectangulo
 		float dx = px2 - px1;
 		float dy = py2 - py1;
-		float m =  dx /dy ;
-
-//		if(Math.abs(dx) < Math.abs(dy)){
-		// se comprueba con los lados horiznontales
-		float x = (yII - py1)*m + px1; 
-		if (x >= xII && x <= xSD)
+		
+		float xIIdy = xII * dy;
+		float yIIdx = yII * dx;
+		float xSDdy = xSD * dy;
+		float ySDdx = ySD * dx;
+		float px1dy_minus_py1dx = px1 * dy - py1 * dx;
+		
+		float x_dy, y_dx;
+		float limIzq, limDer;
+		
+		// se comprueba con los lados horizontales
+		// x = dx·(yII - py1)/dy + px1 --> dy·x = dx·(yII - py1) + dy·px1 --> dy·x = dx·yII - dx·py1 + dy·px1 
+		if(Math.signum(dy) > 0){
+			limIzq = xIIdy;
+			limDer = xSDdy;
+		}else{
+			limIzq = xSDdy;
+			limDer = xIIdy;
+		}
+		x_dy = yIIdx + px1dy_minus_py1dx; 	
+		if (x_dy >= limIzq && x_dy <= limDer)
 			return true;	
-		x = (ySD - py1)*m + px1;
-		if (x >= xII && x <= xSD)
+		x_dy = ySDdx + px1dy_minus_py1dx; 
+		if (x_dy >= limIzq && x_dy <= limDer)
 			return true;
-//		}
+		
 		// se comprueba con los lados verticales
-		m =  dy / dx; //pendiente de la recta	
-		float y = (xII - px1)*m + py1; 
-		if (y >= yII && y <= ySD)
+		// y = dy·(xII - px1)/dx + py1 --> dx·y = dy·(xII - px1) + dx·py1 --> dx·y = dy·xII - dy·px1 + dx·py1
+		if(Math.signum(dx) > 0){
+			limIzq = yIIdx;
+			limDer = ySDdx;
+		}else{
+			limIzq = ySDdx;
+			limDer = yIIdx;
+		}
+		y_dx = xIIdy - px1dy_minus_py1dx; 
+		if (y_dx >= limIzq && y_dx <= limDer)
 			return true;	
-		y = (xSD - px1)*m + py1;
-		return (y >= yII && y <= ySD);
+		y_dx = xSDdy - px1dy_minus_py1dx;
+		return (y_dx >= limIzq && y_dx <= limDer);
+	}
+	
+	public boolean equals(LimiteRectangular otro){
+		return	(otro != null) && (
+					( otro == this ) || 
+					(xII == otro.xII && yII == otro.yII && xSD == otro.xSD && ySD == otro.ySD )
+				);
 	}
 	
 	public boolean hayInterseccion(LimiteRectangular otro){

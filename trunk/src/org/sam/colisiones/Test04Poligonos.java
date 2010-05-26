@@ -40,7 +40,7 @@ public final class Test04Poligonos extends Test00Abs{
 	
 	private Test04Poligonos(){
 		super(new Dimension(500,500));
-		this.poligono = new Poligono(N_LADOS);
+		this.poligono = crearPoligono(N_LADOS);
 		new Animador().start();
 	}
 
