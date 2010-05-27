@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 import org.sam.elementos.*;
 
-public class Elemento implements Prototipo<Elemento>, Enviable, Cacheable {
+public class Elemento implements PrototipoCache<Elemento>, Enviable, Cacheable {
 
 	public static Comparator<Elemento> COMPARADOR = new Comparator<Elemento>() {
 		public int compare(Elemento e1, Elemento e2) {

@@ -1,6 +1,6 @@
 package org.sam.colisiones;
 
-public class LimiteRectangular{
+public class LimiteRectangular implements Limites{
 	float xII, yII;  // esquina inf izda
 	float xSD, ySD;  // esquina sup dcha
 	
@@ -166,5 +166,25 @@ public class LimiteRectangular{
 			ySD < otro.ySD ? ySD : otro.ySD
 		);
 		return interseccion;
+	}
+
+	@Override
+	public float getXMin() {
+		return 	xII; 
+	}
+
+	@Override
+	public float getYMin() {
+		return yII;
+	}
+
+	@Override
+	public float getXMax() {
+		return xSD;
+	}
+
+	@Override
+	public float getYMax() {
+		return ySD;
 	}
 }

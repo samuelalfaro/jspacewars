@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import org.sam.elementos.Colisionable;
+import org.sam.colisiones.Colisionable;
 
 class ComprobadorDeColisones {
 
@@ -21,13 +21,12 @@ class ComprobadorDeColisones {
 		colaActivosB = new ArrayBlockingQueue<Colisionable>(tamColas);
 	}
 
-	private int compararInicios(Colisionable c1, Colisionable c2) {
-		return 0;
-		// return ((Elemento)c1).posX - ((Elemento)c2).posX;
+	private static int compararInicios(Colisionable c1, Colisionable c2) {
+		return (int)(c1.getLimites().getXMin() - c2.getLimites().getXMin());
 	}
 
-	private int compararInicioFin(Colisionable c1, Colisionable c2) {
-		return 0;
+	private static int compararInicioFin(Colisionable c1, Colisionable c2) {
+		return (int)(c1.getLimites().getXMin() - c2.getLimites().getXMax());
 		// return ((Elemento)c1).posX - (((Elemento)c2).posX + 10);
 	}
 
@@ -50,8 +49,10 @@ class ComprobadorDeColisones {
 		activosB.clear();
 
 		do{
-			if( conjuntoA.size() > 0
-					&& (conjuntoB.size() == 0 || compararInicios(conjuntoA.peek(), conjuntoB.peek()) < 0) ){
+			if( conjuntoA.size() > 0 && (
+					conjuntoB.size() == 0 ||
+					compararInicios(conjuntoA.peek(), conjuntoB.peek()) < 0
+			) ){
 				Colisionable actual = conjuntoA.poll();
 				// Se eliminan los elementos activos que han salido cuando
 				// llega el nuevo

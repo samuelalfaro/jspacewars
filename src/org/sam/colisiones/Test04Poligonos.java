@@ -25,9 +25,7 @@ public final class Test04Poligonos extends Test00Abs{
 					alfa = 0;
 					incAlfa = -incAlfa;
 				}
-				//poligono.transformar(0.0,0.0,1.0,pi2*incAlfa);
-				poligono.rotar(pi2*alfa);
-				poligono.escalar(0.5f-alfa);
+				poligono.transformar(pi2*alfa, 0.5f-alfa, 0.0f, 0.0f);
 				poligono.actualizarLimiteRectangular();
 				repaint();
 				try{

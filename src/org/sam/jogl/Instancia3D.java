@@ -8,7 +8,7 @@ import javax.vecmath.Vector3f;
 
 import org.sam.elementos.*;
 
-public class Instancia3D extends NodoTransformador implements Prototipo<Instancia3D>, Modificable, Recibible, Cacheable{
+public class Instancia3D extends NodoTransformador implements Modificable, Recibible, PrototipoCache<Instancia3D>, Cacheable{
 
 	private static class ModificardorChilds implements Modificador{
 		

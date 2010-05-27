@@ -1,17 +1,17 @@
 package org.sam.colisiones;
 
-public class Poligono{
+import org.sam.elementos.Prototipo;
+
+public class Poligono implements Prototipo<Poligono>{
 	
 	private static boolean testSegmentos1[] = new boolean [50];
 	private static boolean testSegmentos2[] = new boolean [50];
 	
-	private float coordX[], coordY[];
+	private final Poligono prototipo;
+	private final int nLados;
+	private final float coordX[], coordY[];
 	
-	private float oX, oY;
-	private float rotacion;
-	private float escala;
-	
-	private LimiteRectangular limiteRectangular;
+	private final LimiteRectangular limiteRectangular;
 	
 	public Poligono(float coordX[], float coordY[]){
 
@@ -23,16 +23,26 @@ public class Poligono{
 			testSegmentos2 = new boolean[ 3*coordX.length/2];
 		}
 		
+		this.prototipo = null;
+		this.nLados = coordX.length;
 		this.coordX = coordX;
 		this.coordY = coordY;
-
-		oX = 0.0f;
-		oY = 0.0f;
-		
-		rotacion = 0.0f;
-		escala = 1.0f;
+		this.limiteRectangular = null;
+	}
+	
+	private Poligono(Poligono prototipo){
+		this.prototipo = prototipo;
+		this.nLados = prototipo.nLados;
+		this.coordX = new float[prototipo.coordX.length];
+		System.arraycopy(prototipo.coordX, 0, coordX, 0, coordX.length);
+		this.coordY = new float[prototipo.coordY.length];
+		System.arraycopy(prototipo.coordY, 0, coordX, 0, coordY.length);
 		limiteRectangular = new LimiteRectangular(); 
 		actualizarLimiteRectangular();
+	}
+	
+	public Poligono clone(){
+		return new Poligono(this);
 	}
 
 	// Desplaza todos los puntos del poligono
@@ -42,7 +52,7 @@ public class Poligono{
 		float maxX = -Float.MAX_VALUE;
 		float maxY = -Float.MAX_VALUE;
 
-		for (int i = 0, nPuntos = coordX.length; i < nPuntos; i++) {
+		for (int i = 0; i < nLados; i++) {
 			float x = coordX[i];
 			if(x < minX)
 				minX = x;
@@ -59,79 +69,62 @@ public class Poligono{
 	
 	// Desplaza todos los puntos del poligono
 	public void trasladar(float despX,float despY){
-		despX -= oX;
-		despY -= oY;
-		for(int loop = 0, nLados = coordX.length; loop < nLados; loop++){
-			coordX[loop] += despX;
-			coordY[loop] += despY;
+		for(int loop = 0; loop < nLados; loop++){
+			coordX[loop] = prototipo.coordX[loop] + despX;
+			coordY[loop] = prototipo.coordY[loop] + despY;
 		}
-		oX += despX;
-		oY += despY;
 	}
 
 	// Rota todos los puntos del poligono desde el centro
 	public void rotar(float alfa){
-		alfa -= rotacion; 
 		float cosAlfa = (float)Math.cos(alfa);
 		float senAlfa = (float)Math.sin(alfa);
-		for(int loop = 0, nLados = coordX.length; loop < nLados; loop++){
-			float x = coordX[loop] - oX;
-			float y = coordY[loop] - oY;
-			coordX[loop] = x * cosAlfa - y * senAlfa + oX;
-			coordY[loop] = x * senAlfa + y * cosAlfa + oY;
+		for(int loop = 0; loop < nLados; loop++){
+			float x = prototipo.coordX[loop];
+			float y = prototipo.coordY[loop];
+			coordX[loop] = x * cosAlfa - y * senAlfa;
+			coordY[loop] = x * senAlfa + y * cosAlfa;
 		}
-		rotacion += alfa;
 	}
 
 	// Rota todos los puntos del poligono desde un punto dado
 	public void rotar(float alfa, float pX, float pY){
 		float cosAlfa = (float)Math.cos(alfa);
 		float senAlfa = (float)Math.sin(alfa);
-		for(int loop = 0, nLados = coordX.length; loop < nLados; loop++){
-			float x = coordX[loop] - pX;
-			float y = coordY[loop] - pY;
+		for(int loop = 0; loop < nLados; loop++){
+			float x = prototipo.coordX[loop] - pX;
+			float y = prototipo.coordY[loop] - pY;
 			coordX[loop] = x * cosAlfa - y * senAlfa + pX;
 			coordY[loop] = x * senAlfa + y * cosAlfa + pY;
 		}
-		float x = oX - pX;
-		float y = oY - pY;
-		oX = x * cosAlfa - y * senAlfa + pX;
-		oY = x * senAlfa + y * cosAlfa + pY;
 	}
 	
 	// Escala todos los puntos del poligono desde el centro de forma uniforme
 	public void escalar(float fEscala){
-		if (fEscala == 0) return;
-		fEscala /= escala;
-		for(int loop = 0, nLados = coordX.length; loop < nLados; loop++){
-			coordX[loop] = (coordX[loop] - oX) * fEscala + oX;
-			coordY[loop] = (coordY[loop] - oY) * fEscala + oY; 
+		for(int loop = 0; loop < nLados; loop++){
+			coordX[loop] = prototipo.coordX[loop] * fEscala;
+			coordY[loop] = prototipo.coordY[loop] * fEscala;
 		}
-		escala *= fEscala;
 	}
 
 	// Escala todos los puntos del poligono desde el centro de con distinta escala
 	public void escalar(float escalaX, float escalaY){
-		for(int loop = 0, nLados = coordX.length; loop < nLados; loop++){
-			coordX[loop] = (coordX[loop] - oX) * escalaX + oX;
-			coordY[loop] = (coordY[loop] - oY) * escalaY + oY; 
+		for(int loop = 0; loop < nLados; loop++){
+			coordX[loop] = prototipo.coordX[loop] * escalaX;
+			coordY[loop] = prototipo.coordY[loop] * escalaY;
 		}
 	}
 
-	// Traslada, rota y escala
-	public void transformar(float despX, float despY, float alfa, float escala){
+	// Rota, Escala y Traslada.
+	public void transformar( float alfa, float escala, float despX, float despY ){
 		float cosAlfa = (float)Math.cos(alfa);
 		float senAlfa = (float)Math.sin(alfa);
-		despX = oX + despX;
-		despY = oY + despY;
-		for(int loop = 0, nLados = coordX.length; loop < nLados; loop++){
-			float x = coordX[loop] - oX;
-			float y = coordY[loop] - oY;
+		for(int loop = 0; loop < nLados; loop++){
+			float x = prototipo.coordX[loop];
+			float y = prototipo.coordY[loop];
 			coordX[loop] = (x * cosAlfa - y * senAlfa) * escala + despX;
 			coordY[loop] = (x * senAlfa + y * cosAlfa) * escala + despY;
 		}
-		oX = despX;
-		oY = despY;
 	}
 	
 	public LimiteRectangular getLimiteRectangular(){
@@ -139,7 +132,7 @@ public class Poligono{
 	}
 	
 	private int nSegmentosEn(LimiteRectangular rectangulo, boolean[] testeados){
-		final int nLados = coordX.length;
+
 		if( limiteRectangular.equals(rectangulo) ){
 			for(int i=0; i < nLados; i++)
 				testeados[i] = true;
@@ -169,18 +162,18 @@ public class Poligono{
 	 * @see java.awt.Polygon#contains(double, double)
 	 */
 	boolean contiene(float x, float y) {
-		int npoints = coordX.length;
+
 //		if (npoints <= 2 || !getLimiteRectangular().contiene(x, y)) {
 //			return false;
 //		}
 		int hits = 0;
 
-		float lastx = coordX[npoints - 1];
-		float lasty = coordY[npoints - 1];
+		float lastx = coordX[nLados - 1];
+		float lasty = coordY[nLados - 1];
 		float curx, cury;
 
 		// Walk the edges of the polygon
-		for (int i = 0; i < npoints; lastx = curx, lasty = cury, i++) {
+		for (int i = 0; i < nLados; lastx = curx, lasty = cury, i++) {
 			curx = coordX[i];
 			cury = coordY[i];
 
@@ -242,13 +235,13 @@ public class Poligono{
 		if( nSegIntPol1 == 0 && nSegIntPol2 == 0 )
 			return false;
 		
-		if( (nSegIntPol1 == 0 && nSegIntPol2 != otro.getNLados()) || (nSegIntPol2 == 0 && nSegIntPol1 != getNLados()))
+		if( (nSegIntPol1 == 0 && nSegIntPol2 != otro.nLados) || (nSegIntPol2 == 0 && nSegIntPol1 != nLados))
 			return false;
 		
-		if( nSegIntPol1 == getNLados() &&  otro.contiene( coordX[0], coordY[0]) )
+		if( nSegIntPol1 == nLados &&  otro.contiene( coordX[0], coordY[0]) )
 			return true;
 		
-		if( nSegIntPol2 == otro.getNLados() && contiene( otro.coordX[0], otro.coordY[0] ) )
+		if( nSegIntPol2 == otro.nLados && contiene( otro.coordX[0], otro.coordY[0] ) )
 			return true;
 		
 		if( nSegIntPol1 == 0 )
@@ -293,7 +286,7 @@ public class Poligono{
 	}
 	
 	int getNLados(){
-		return coordX.length;
+		return nLados;
 	}
 
 	boolean hayIntersecion( Poligono otro, java.util.List<Object> evaluados){
@@ -310,16 +303,16 @@ public class Poligono{
 		if( nSegIntPol1 == 0 && nSegIntPol2 == 0 )
 			return false;
 		
-		if( (nSegIntPol1 == 0 && nSegIntPol2 != otro.getNLados()) || (nSegIntPol2 == 0 && nSegIntPol1 != getNLados()))
+		if( (nSegIntPol1 == 0 && nSegIntPol2 != otro.nLados) || (nSegIntPol2 == 0 && nSegIntPol1 != nLados))
 			return false;
 		
-		if( nSegIntPol1 == getNLados() ){
+		if( nSegIntPol1 == nLados ){
 			evaluados.add( new java.awt.geom.Point2D.Float( coordX[0], coordY[0] ));
 			if( otro.contiene( coordX[0], coordY[0]) )
 				return true;
 		}
 		
-		if( nSegIntPol2 == otro.getNLados() ){
+		if( nSegIntPol2 == otro.nLados ){
 			evaluados.add( new java.awt.geom.Point2D.Float( otro.coordX[0], otro.coordY[0] ));
 			if( contiene( otro.coordX[0], otro.coordY[0] ) )
 				return true;

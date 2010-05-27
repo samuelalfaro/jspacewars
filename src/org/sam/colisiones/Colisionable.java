@@ -1,9 +1,11 @@
-package org.sam.elementos;
+package org.sam.colisiones;
 
 /**
  * Este interface proporciona, los métodos para tratar las colisones entre objetos.
  */
 public interface Colisionable{
+	
+	public Limites getLimites();
 	
 	/**
 	 * Este método evalua si hay una colisión, entre el objeto y otro objeto <code>Colisionable</code>.
