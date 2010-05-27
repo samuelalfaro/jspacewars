@@ -50,7 +50,7 @@ public abstract class Test00Abs extends JPanel implements MouseListener, MouseMo
 			coordX[loop] -= oX;
 			coordY[loop] -= oY;
 		}
-		return new Poligono(coordX, coordY);
+		return new Poligono(coordX, coordY).clone();
 	}
 	
 	Test00Abs(Dimension size){

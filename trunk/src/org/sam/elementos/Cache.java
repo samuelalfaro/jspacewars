@@ -22,10 +22,10 @@ public class Cache<T extends Cacheable>{
 	}
 
 	private class Nodo{
-		Prototipo<T> prototipo;
+		PrototipoCache<T> prototipo;
 		Queue<T> instancias;
 		
-		Nodo(Prototipo<T> prototipo){
+		Nodo(PrototipoCache<T> prototipo){
 			this.prototipo = prototipo;
 			this.instancias = new LinkedList<T>();
 		}
@@ -52,7 +52,7 @@ public class Cache<T extends Cacheable>{
 		this.dRecuperados = 0;
 	}
 	
-	public void addPrototipo(Prototipo<T> prototipo){
+	public void addPrototipo(PrototipoCache<T> prototipo){
 		prototipos.put(prototipo.hashCode(),new Nodo(prototipo));
 	}
 	

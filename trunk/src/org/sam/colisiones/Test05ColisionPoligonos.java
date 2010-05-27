@@ -33,7 +33,7 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 					alfa = 0;
 					incAlfa = -incAlfa;
 				}
-				poligono1.rotar(pi2*alfa);
+				poligono1.transformar(pi2*alfa, 0.5f, 0.0f, 0.0f);
 				poligono1.actualizarLimiteRectangular();
 				repaint();
 				try{
@@ -48,8 +48,6 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 		super(new Dimension(500,500));
 		elementosEvaluados = new ArrayList<Object>(30);
 		poligono1 = crearPoligono(N_LADOS);
-		poligono1.escalar(0.5f);
-//		poligono1.trasladar(0.25f,0.25f);
 		poligono1.actualizarLimiteRectangular();
 		
 		poligono2 = null;
@@ -128,10 +126,9 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 	
 	public void mouseClicked(MouseEvent e) {
 		poligono2 = crearPoligono(N_LADOS);
-		poligono2.escalar(0.1f);
 		float x = xPantallaMundo(e.getX());
 		float y = yPantallaMundo(e.getY());
-		poligono2.trasladar(x,y);
+		poligono2.transformar( 0.0f, 0.1f, x, y );
 		poligono2.actualizarLimiteRectangular();
 	}
 
@@ -140,7 +137,7 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 			return;
 		float x = xPantallaMundo(e.getX());
 		float y = yPantallaMundo(e.getY());
-		poligono2.trasladar(x,y);
+		poligono2.transformar( 0.0f, 0.1f, x, y );
 		poligono2.actualizarLimiteRectangular();
 	}
 	
