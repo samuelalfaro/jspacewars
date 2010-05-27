@@ -9,7 +9,7 @@ import org.sam.elementos.*;
 import org.sam.interpoladores.Getter;
 import org.sam.jogl.*;
 
-public abstract class Particulas extends ObjetoAbstracto implements Modificable, PrototipoCache<Particulas>, Cacheable{
+public abstract class Particulas extends ObjetoAbstracto implements Modificable, PrototipoCacheable<Particulas>{
 
 	/**
 	 * @author samuel
