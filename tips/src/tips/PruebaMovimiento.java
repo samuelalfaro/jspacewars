@@ -34,7 +34,7 @@ public class PruebaMovimiento{
 	private final static int K_BOMBA	= KeyEvent.VK_SPACE;
 	private final static int K_UPGRADE	= KeyEvent.VK_CONTROL;
 	
-	static class Elemento implements Prototipo<Elemento>,Cacheable{
+	static class Elemento implements PrototipoCacheable<Elemento>{
 		
 		private final int code;
 		protected int posX, posY;

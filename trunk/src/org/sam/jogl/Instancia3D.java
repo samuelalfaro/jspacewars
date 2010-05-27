@@ -8,7 +8,7 @@ import javax.vecmath.Vector3f;
 
 import org.sam.elementos.*;
 
-public class Instancia3D extends NodoTransformador implements Modificable, Recibible, PrototipoCache<Instancia3D>, Cacheable{
+public class Instancia3D extends NodoTransformador implements Modificable, Recibible, PrototipoCacheable<Instancia3D>{
 
 	private static class ModificardorChilds implements Modificador{
 		
@@ -36,19 +36,19 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	private final transient Vector3f translation;
 	
 	private final transient Modificador modificador;
-	private final transient Cacheable cacheableChilds[];
+	private final transient Reseteable reseteableChilds[];
 
 	public Instancia3D(short type, Nodo child){
 		super(child);
 
 		Deque<Nodo> stack = new LinkedList<Nodo>();
-		Collection<Cacheable> cacheables = new LinkedList<Cacheable>();
+		Collection<Reseteable> reseteables = new LinkedList<Reseteable>();
 		Collection<Modificador> modificadores = new LinkedList<Modificador>();
 		stack.push(child);
 		do{
 			Nodo actual = stack.pop();
-			if( actual instanceof Cacheable )
-				cacheables.add((Cacheable) actual);
+			if( actual instanceof Reseteable )
+				reseteables.add((Reseteable) actual);
 			if( actual instanceof Modificable )
 				modificadores.add(((Modificable) actual).getModificador());
 			for( Nodo nodo: actual.getChilds() )
@@ -60,10 +60,10 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		else
 			this.modificador = null;
 
-		if( cacheables.size() > 0 )
-			this.cacheableChilds = cacheables.toArray(new Cacheable[cacheables.size()]);
+		if( reseteables.size() > 0 )
+			this.reseteableChilds = reseteables.toArray(new Reseteable[reseteables.size()]);
 		else
-			this.cacheableChilds = null;
+			this.reseteableChilds = null;
 		
 		this.type = type;
 		this.rotation = new AxisAngle4f();
@@ -74,14 +74,14 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		super(prototipo);
 		
 		Deque<Nodo> stack = new LinkedList<Nodo>();
-		Collection<Cacheable> cacheables = new LinkedList<Cacheable>();
+		Collection<Reseteable> reseteables = new LinkedList<Reseteable>();
 		Collection<Modificador> modificadores = new LinkedList<Modificador>();
 		
 		stack.push(this.getChilds()[0]);
 		do{
 			Nodo actual = stack.pop();
-			if( actual instanceof Cacheable )
-				cacheables.add((Cacheable) actual);
+			if( actual instanceof Reseteable )
+				reseteables.add((Reseteable) actual);
 			if( actual instanceof Modificable )
 				modificadores.add(((Modificable) actual).getModificador());
 			for( Nodo nodo: actual.getChilds() )
@@ -93,10 +93,10 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		else
 			this.modificador = null;
 
-		if( cacheables.size() > 0 )
-			this.cacheableChilds = cacheables.toArray(new Cacheable[cacheables.size()]);
+		if( reseteables.size() > 0 )
+			this.reseteableChilds = reseteables.toArray(new Reseteable[reseteables.size()]);
 		else
-			this.cacheableChilds = null;
+			this.reseteableChilds = null;
 		
 		this.type = prototipo.type;
 		this.rotation = new AxisAngle4f(prototipo.rotation);
@@ -156,9 +156,9 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	 * @see org.sam.util.Prototipo#reset()
 	 */
 	public void reset() {
-		if(cacheableChilds == null)
+		if(reseteableChilds == null)
 			return;
-		for(Cacheable child: cacheableChilds)
+		for(Reseteable child: reseteableChilds)
 			child.reset();
 	}
 }

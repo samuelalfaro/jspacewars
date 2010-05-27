@@ -5,14 +5,12 @@ import java.util.Comparator;
 
 import org.sam.elementos.*;
 
-public class Elemento implements PrototipoCache<Elemento>, Enviable, Cacheable {
+public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable {
 
 	public static Comparator<Elemento> COMPARADOR = new Comparator<Elemento>() {
 		public int compare(Elemento e1, Elemento e2) {
 			int comparacion = e1.type - e2.type;
-			if( comparacion != 0 )
-				return comparacion;
-			return e1.id - e2.id;
+			return comparacion != 0 ? comparacion: e1.id - e2.id;
 		}
 	};
 
@@ -40,10 +38,6 @@ public class Elemento implements PrototipoCache<Elemento>, Enviable, Cacheable {
 		return type;
 	}
 
-	public Elemento clone() {
-		return new Elemento(this);
-	}
-
 	public void setPosicion(float posX, float posY) {
 		this.posX = posX;
 		this.posY = posY;
@@ -63,13 +57,6 @@ public class Elemento implements PrototipoCache<Elemento>, Enviable, Cacheable {
 		buff.putFloat(posX);
 		buff.putFloat(posY);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sam.util.Prototipo#reset()
-	 */
-	public void reset() {
-		// TODO Auto-generated method stub
-	}
+	
+	public abstract Elemento clone();
 }

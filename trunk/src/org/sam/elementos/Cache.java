@@ -1,7 +1,6 @@
 package org.sam.elementos;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -12,20 +11,20 @@ import java.util.TreeMap;
  * @author Samuel
  *
  */
-public class Cache<T extends Cacheable>{
+public class Cache<T extends PrototipoCacheable<T>>{
 
 	@SuppressWarnings("serial")
-	public static class PrototipoDesconocidoException extends RuntimeException {
+	private static class PrototipoDesconocidoException extends RuntimeException {
 		PrototipoDesconocidoException(String str){
 			super(str);
 		}
 	}
 
 	private class Nodo{
-		PrototipoCache<T> prototipo;
+		PrototipoCacheable<T> prototipo;
 		Queue<T> instancias;
 		
-		Nodo(PrototipoCache<T> prototipo){
+		Nodo(PrototipoCacheable<T> prototipo){
 			this.prototipo = prototipo;
 			this.instancias = new LinkedList<T>();
 		}
@@ -52,7 +51,7 @@ public class Cache<T extends Cacheable>{
 		this.dRecuperados = 0;
 	}
 	
-	public void addPrototipo(PrototipoCache<T> prototipo){
+	public void addPrototipo(PrototipoCacheable<T> prototipo){
 		prototipos.put(prototipo.hashCode(),new Nodo(prototipo));
 	}
 	
@@ -77,14 +76,11 @@ public class Cache<T extends Cacheable>{
 	
 	public void cached(T elemento) throws PrototipoDesconocidoException{
 		try{
-			Nodo nodo = prototipos.get(elemento.hashCode());
-			nodo.instancias.offer(elemento);
+			prototipos.get(elemento.hashCode()).instancias.offer(elemento);
 			elementos++;
 			if (elementos > tamMax)
 				while( elementos > tam ){
-					Iterator<Nodo> i = prototipos.values().iterator();
-					while(i.hasNext()){
-						nodo = i.next();
+					for(Nodo nodo: prototipos.values()){
 						if(nodo.instancias.size()>0){
 							nodo.instancias.poll();
 							elementos --;
