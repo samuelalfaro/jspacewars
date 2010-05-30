@@ -18,34 +18,7 @@ public class Loader {
 	private Loader(){
 	}
 	
-	static public void loadData(Cache<Elemento> cache) throws FileNotFoundException, IOException {
-
-		Canion.setCache(cache);
-		XStream xStream = new XStream(new DomDriver());
-
-		/*
-		 * XStream xStream = new XStream(new DomDriver()) {
-		 * 
-		 * @Override protected MapperWrapper wrapMapper(MapperWrapper next) {
-		 * MapperWrapper myMapper = new MapperWrapper(next) {
-		 * 
-		 * @SuppressWarnings("unchecked")
-		 * 
-		 * @Override public boolean shouldSerializeMember(Class definedIn,
-		 * String fieldName) { try { realClass(realMember(definedIn,
-		 * fieldName)); } catch
-		 * (com.thoughtworks.xstream.mapper.CannotResolveClassException ex) {
-		 * return false; } return super.shouldSerializeMember(definedIn,
-		 * fieldName); } }; return myMapper; } };
-		 */
-
-		ElementosConverters.register(xStream);
-		loadToCache(cache, xStream.createObjectInputStream(new FileReader("resources/elementos-instancias3D-stream-sh.xml")));
-		// loadToCache(cache, xStream.createObjectInputStream(new
-		// FileReader("disparos.xml")));
-	}
-
-	private static void loadToCache(Cache<Elemento> cache, ObjectInputStream in)
+	private static void loadToCache( ObjectInputStream in, Cache<Elemento> cache )
 			throws IOException {
 		try {
 			while (true) {
@@ -58,5 +31,17 @@ public class Loader {
 		} catch (EOFException eof) {
 			in.close();
 		}
+	}
+
+	static public void loadData(Cache<Elemento> cache) throws FileNotFoundException, IOException {
+
+		Canion.setCache(cache);
+		XStream xStream = new XStream(new DomDriver());
+
+		ElementosConverters.register(xStream);
+		loadToCache(
+				xStream.createObjectInputStream(new FileReader("resources/elementos-instancias3D-stream-sh.xml")),
+				cache
+		);
 	}
 }
