@@ -4,10 +4,10 @@ public class FactoriaDeParticulas{
 
 	private static boolean pointSpritesEnabled = false;
 	private static boolean shadersEnabled = false;
-	private static boolean optimizedForStars = false;
+	private static boolean optimizedFor2D = false;
 
 	public static Particulas createParticulas(int nParticulas){
-		return optimizedForStars	?
+		return optimizedFor2D	?
 				new Estrellas(nParticulas) :
 				new ParticulasQuads(nParticulas);
 	}
@@ -16,25 +16,33 @@ public class FactoriaDeParticulas{
 		return pointSpritesEnabled;
 	}
 
+	/**
+	 * @param pointSpritesEnabled ignorado operacion no soportada 
+	 */
 	public static void setPointSpritesEnabled(boolean pointSpritesEnabled) {
 		throw new UnsupportedOperationException();
-//		FactoriaDeParticulas.pointSpritesEnabled = pointSpritesEnabled;
+		//TODO implementar o eliminar completamente
+		//FactoriaDeParticulas.pointSpritesEnabled = pointSpritesEnabled;
 	}
 
 	public static boolean isShadersEnabled() {
 		return shadersEnabled;
 	}
 
+	/**
+	 * @param shadersEnabled  ignorado operacion no soportada 
+	 */
 	public static void setShadersEnabled(boolean shadersEnabled) {
 		throw new UnsupportedOperationException();
-//		FactoriaDeParticulas.shadersEnabled = shadersEnabled;
+		//TODO implementar o eliminar completamente
+		//FactoriaDeParticulas.shadersEnabled = shadersEnabled;
 	}
 	
-	public static boolean isOptimizedForStars() {
-		return optimizedForStars;
+	public static boolean isOptimizedFor2D() {
+		return optimizedFor2D;
 	}
 
-	public static void setOptimizedForStars(boolean optimizedForStars) {
-		FactoriaDeParticulas.optimizedForStars = optimizedForStars;
+	public static void setOptimizedFor2D(boolean optimizedFor2D) {
+		FactoriaDeParticulas.optimizedFor2D = optimizedFor2D;
 	}
 }

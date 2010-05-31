@@ -153,9 +153,9 @@ public class MyGameMenuButton extends Button {
 	private Dimension minSize;
 
 	public Dimension getMinSize() {
+		// TODO Mirar
 		if( minSize == null )
-			;
-		minSize = new Dimension(312, 86);
+			minSize = new Dimension(312, 86);
 		return minSize;
 	}
 
