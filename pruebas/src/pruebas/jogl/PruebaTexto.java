@@ -2,7 +2,6 @@ package pruebas.jogl;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import javax.media.opengl.*;
@@ -14,6 +13,7 @@ import org.sam.util.Imagen;
 
 import com.sun.opengl.util.BufferUtil;
 
+// TODO terminar
 public class PruebaTexto {
 
 	private static class Renderer implements GLEventListener {
@@ -29,7 +29,7 @@ public class PruebaTexto {
 		public Renderer() {
 		}
 
-		public void loadGLTextures(GL gl) throws IOException {
+		public void loadGLTextures(GL gl) {
 
 			String tileNames [] = 
 			{"demos/data/images/font.png", "demos/data/images/bumps.png"};
@@ -64,8 +64,8 @@ public class PruebaTexto {
 			gl.glBindTexture(GL.GL_TEXTURE_2D, textures[0]);
 			
 			for (int loop = 0; loop < 256; loop++){
-				cx = (float) (loop % 16) / 16.0f;  // X Position Of Current Character
-				cy = (float) (loop / 16) / 16.0f;  // Y Position Of Current Character
+				cx = (float)( loop % 16 ) / 16;  // X Position Of Current Character
+				cy = (float)( loop / 16 ) / 16;  // Y Position Of Current Character
 
 				gl.glNewList(base + loop, GL.GL_COMPILE);
 					gl.glBegin(GL.GL_QUADS);      // Use A Quad For Each Character
@@ -121,11 +121,8 @@ public class PruebaTexto {
 
 		public void init(GLAutoDrawable glDrawable) {
 			GL gl = glDrawable.getGL();
-			try {
-				loadGLTextures(gl);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+
+			loadGLTextures(gl);
 
 			buildFont(gl);
 
@@ -164,29 +161,21 @@ public class PruebaTexto {
 			gl.glRotatef(cnt1 * 30.0f, 1.0f, 1.0f, 0.0f);  
 			gl.glDisable(GL.GL_BLEND);          // Disable Blending Before We Draw In 3D
 			gl.glColor3f(1.0f, 1.0f, 1.0f);     // Bright White
-			gl.glBegin(GL.GL_QUADS);            // Draw Our First Texture Mapped Quad
-			gl.glTexCoord2d(0.0f, 0.0f);        // First Texture Coord
-			gl.glVertex2f(-1.0f, 1.0f);         // First Vertex
-			gl.glTexCoord2d(1.0f, 0.0f);        // Second Texture Coord
-			gl.glVertex2f(1.0f, 1.0f);          // Second Vertex
-			gl.glTexCoord2d(1.0f, 1.0f);        // Third Texture Coord
-			gl.glVertex2f(1.0f, -1.0f);         // Third Vertex
-			gl.glTexCoord2d(0.0f, 1.0f);        // Fourth Texture Coord
-			gl.glVertex2f(-1.0f, -1.0f);        // Fourth Vertex
-			gl.glEnd();                         // Done Drawing The First Quad
-
+			gl.glBegin(GL.GL_QUADS);
+				gl.glTexCoord2d(0.0f, 0.0f); gl.glVertex2f(-1.0f,  1.0f);
+				gl.glTexCoord2d(1.0f, 0.0f); gl.glVertex2f( 1.0f,  1.0f);
+				gl.glTexCoord2d(1.0f, 1.0f); gl.glVertex2f( 1.0f, -1.0f);
+				gl.glTexCoord2d(0.0f, 1.0f); gl.glVertex2f(-1.0f, -1.0f);
+			gl.glEnd();
+			
 			// Rotate On The X & Y Axis By 90 Degrees (Left To Right)
 			gl.glRotatef(90.0f, 1.0f, 1.0f, 0.0f);  
-			gl.glBegin(GL.GL_QUADS);            // Draw Our Second Texture Mapped Quad
-			gl.glTexCoord2d(0.0f, 0.0f);        // First Texture Coord
-			gl.glVertex2f(-1.0f, 1.0f);         // First Vertex
-			gl.glTexCoord2d(1.0f, 0.0f);        // Second Texture Coord
-			gl.glVertex2f(1.0f, 1.0f);          // Second Vertex
-			gl.glTexCoord2d(1.0f, 1.0f);        // Third Texture Coord
-			gl.glVertex2f(1.0f, -1.0f);         // Third Vertex
-			gl.glTexCoord2d(0.0f, 1.0f);        // Fourth Texture Coord
-			gl.glVertex2f(-1.0f, -1.0f);        // Fourth Vertex
-			gl.glEnd();                         // Done Drawing Our Second Quad
+			gl.glBegin(GL.GL_QUADS);
+				gl.glTexCoord2d(0.0f, 0.0f); gl.glVertex2f(-1.0f,  1.0f);
+				gl.glTexCoord2d(1.0f, 0.0f); gl.glVertex2f( 1.0f,  1.0f);
+				gl.glTexCoord2d(1.0f, 1.0f); gl.glVertex2f( 1.0f, -1.0f);
+				gl.glTexCoord2d(0.0f, 1.0f); gl.glVertex2f(-1.0f, -1.0f);
+			gl.glEnd();
 			gl.glEnable(GL.GL_BLEND);           // Enable Blending
 
 			gl.glLoadIdentity();                // Reset The View
