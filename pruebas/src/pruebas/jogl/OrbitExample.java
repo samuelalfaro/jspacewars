@@ -96,7 +96,7 @@ implements GLEventListener{
 			tEmisor.setTranslation(new Vector3f(2.05f,0.5f,0.0f));
 			Emisor emisor = new Emisor.Cache(new Emisor.Lineal(1.0f,0.0f),tEmisor,1024);
 			
-			FactoriaDeParticulas.setOptimizedForStars(true);
+			FactoriaDeParticulas.setOptimizedFor2D(true);
 			for(int i = 0, len = estrellas.length; i< len; i++){
 				estrellas[i] = FactoriaDeParticulas.createParticulas((int)( Math.pow(8*(len-i)/len, 2) + 1 ));
 				estrellas[i].setEmisor(emisor);
@@ -122,7 +122,7 @@ implements GLEventListener{
 				estrellas[i].reset();
 				estrellas[i].getModificador().modificar(tVida);
 			}
-			FactoriaDeParticulas.setOptimizedForStars(false);
+			FactoriaDeParticulas.setOptimizedFor2D(false);
 
 			Grupo childs = new Grupo();
 
