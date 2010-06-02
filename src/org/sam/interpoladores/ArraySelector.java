@@ -8,6 +8,10 @@ package org.sam.interpoladores;
 final class ArraySelector{
 	private ArraySelector(){}
 	
+	private static<T> T valueAt(int index, T[] array){
+		return array[(index < 0) ? 0 : index < array.length ? index : array.length - 1 ];
+	}
+	
 	static class Double<T> implements Getter.Double<T>{
 		private final double scale;
 		private final double translation;
@@ -23,14 +27,12 @@ final class ArraySelector{
 			this.values = values;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.sam.interpoladores.Getter#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(double key) {
-			int index = (int) ((key + translation) * scale + 0.5);
-			return values[(index < 0) ? 0 : index >= values.length ? values.length - 1 : index];
+			return valueAt((int) ((key + translation) * scale + 0.5), values);
 		}
 	}
 	
@@ -49,14 +51,12 @@ final class ArraySelector{
 			this.values = values;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.sam.interpoladores.Getter#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(float key) {
-			int index = (int) ((key + translation) * scale + 0.5);
-			return values[(index < 0) ? 0 : index >= values.length ? values.length - 1 : index];
+			return valueAt((int) ((key + translation) * scale + 0.5f), values);
 		}
 	}
 	
@@ -75,14 +75,12 @@ final class ArraySelector{
 			this.values = values;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.sam.interpoladores.Getter#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(int key) {
-			int index = ((key + translation) * scale);
-			return values[(index < 0) ? 0 : index >= values.length ? values.length - 1 : index];
+			return valueAt(((key + translation) * scale), values);
 		}
 	}
 }

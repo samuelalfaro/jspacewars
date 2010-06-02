@@ -63,13 +63,13 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 		LimiteRectangular l1, l2;
 		if(poligono2 == null){
 			g.setColor(Color.LIGHT_GRAY);
-			dibuja(g,poligono1.getLimiteRectangular());
+			dibuja(g,poligono1.getLimites());
 		
 			g.setColor(Color.BLACK);
 			dibuja(g,poligono1);
 		}else{
-			l1 = poligono1.getLimiteRectangular();
-			l2 = poligono2.getLimiteRectangular();
+			l1 = poligono1.getLimites();
+			l2 = poligono2.getLimites();
 
 			LimiteRectangular interseccionRectangular = l1.interseccion(l2);
 			if(interseccionRectangular != null){
@@ -80,8 +80,8 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 				dibuja(g,l1);
 				dibuja(g,l2);
 				
-				boolean test1 = poligono1.hayIntersecion(poligono2);
-				boolean test2 = poligono1.hayIntersecion(poligono2, elementosEvaluados);
+				boolean test1 = poligono1.hayColision(poligono2);
+				boolean test2 = poligono1.hayColision(poligono2, elementosEvaluados);
 				
 				if(test1 != test2)
 					System.err.println("Error: Tests distintos");

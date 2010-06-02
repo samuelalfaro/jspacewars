@@ -18,12 +18,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.sam.elementos.Cache;
-import org.sam.jspacewars.elementos.Disparo;
-import org.sam.jspacewars.elementos.Elemento;
-import org.sam.jspacewars.elementos.ElementoDinamico;
-import org.sam.jspacewars.elementos.NaveEnemiga;
-import org.sam.jspacewars.elementos.NaveUsuario;
-import org.sam.jspacewars.elementos.SingletonEnemigos;
+import org.sam.jspacewars.elementos.*;
 import org.sam.jspacewars.serialization.Loader;
 
 public class ServidorJuego {
@@ -32,7 +27,7 @@ public class ServidorJuego {
 
 	private transient Cache<Elemento> cache;
 	private transient NaveUsuario nave1, nave2;
-	private transient Collection<ElementoDinamico> naves;
+	private transient Collection<Elemento> naves;
 	private transient Collection<Collection<Disparo>> listasDeDisparos;
 
 	private transient SortedSet<Elemento> elementosOrdenados;
@@ -61,7 +56,7 @@ public class ServidorJuego {
 		elementosOrdenados = new TreeSet<Elemento>(Elemento.COMPARADOR);
 		comprobador = new ComprobadorDeColisones(250);
 
-		naves = new LinkedList<ElementoDinamico>();
+		naves = new LinkedList<Elemento>();
 		listasDeDisparos = new LinkedList<Collection<Disparo>>();
 
 		Collection<Disparo> disparosNave;
@@ -148,14 +143,14 @@ public class ServidorJuego {
 			Iterator<Disparo> iDisparo = listaDisparo.iterator();
 			while( iDisparo.hasNext() ){
 				Disparo d = iDisparo.next();
-				if( d.getX() > 10 || d.getY() < -4.0 || d.getY() > 4.0 || d.finalizado() ){
+				if( d.getX() > 10 || d.getY() < -4.0 || d.getY() > 4.0 || d.isDestruido() ){
 					iDisparo.remove();
 					cache.cached(d);
 				}else
 					d.actua(nanos);
 			}
 		}
-		for( ElementoDinamico nave: naves )
+		for( Elemento nave: naves )
 			nave.actua(nanos);
 		// iListaDisparos = listasDeDisparos.iterator();
 		// while(iListaDisparos.hasNext())

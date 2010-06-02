@@ -8,7 +8,7 @@ public final class PolinomioLineal{
 	private PolinomioLineal(){}
 
 	/**
-	 * Implementacion con precisión Double de la funcion <A HREF="../../../org/sam/interpoladores/PolinomioLineal.html">PolinomioLineal</A>
+	 * Implementacion con precisión Double de la función {@link PolinomioLineal}.
 	 */
 	public static final class Double implements Funcion.Double {
 		double A, B;
@@ -24,30 +24,34 @@ public final class PolinomioLineal{
 			this.B = B;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#f(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public double f(double x) {
 			return A*x + B;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#f1(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public double f1(double x) {
 			return A;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#f2(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public double f2(double x) {
 			return 0;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#scaleIn(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
         public void scaleIn(double scale) {
 			/*
 			 * A(K*x) + B  =  AKx + B
@@ -55,9 +59,10 @@ public final class PolinomioLineal{
 			A*= scale;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#scaleOut(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
         public void scaleOut(double scale) {
 			/*
 			 * (Ax + B)*K = KAx + KB
@@ -66,9 +71,10 @@ public final class PolinomioLineal{
 			B*= scale;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#translateIn(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
         public void translateIn(double translation) {
 			/*
 			 * A(x +K) + B  =  Ax + (AK + B)
@@ -76,9 +82,10 @@ public final class PolinomioLineal{
 			B += A * translation;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#translateOut(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
         public void translateOut(double translation) {
 			/*
 			 * (Ax + B) + K = Ax + (B + K)
@@ -86,23 +93,17 @@ public final class PolinomioLineal{
 			B += translation;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#toFloat()
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
         public Funcion.Float toFloatFunction() {
 			return new PolinomioLineal.Float(A,B);
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#toInteger()
-		 */
-        public Funcion.Integer toIntegerFunction() {
-			return new PolinomioLineal.Integer(A,B);
 		}
 	}
 
 	/**
-	 * Implementacion con precisión Float de la funcion lineal correspondiente.
+	 * Implementacion con precisión Float de la función {@link PolinomioLineal}.
 	 */
 	public static final class Float implements Funcion.Float {
 		float A, B;
@@ -118,63 +119,27 @@ public final class PolinomioLineal{
 			this.B = (float)B;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Float#f(float)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public float f(float x) {
 			return A*x + B;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Float#f1(float)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public float f1(float x) {
 			return A;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Float#f2(float)
-		 */
-		public float f2(float x) {
-			return 0;
-		}
-	}
-
-	/**
-	 * Implementacion con precisión Integer de la funcion lineal correspondiente.
-	 */
-	public static final class Integer implements Funcion.Integer {
-		int A, B;
-
 		/**
-		 * Crea el polinomio lineal correspondiente a <code>f(x) = A*x + B</code>
-         *
-         * @param A
-         * @param B
-         */
-		public Integer(double A, double B){
-			this.A = (int)A;
-			this.B = (int)B;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Integer#f(int)
+		 *{@inheritDoc}
 		 */
-		public int f(int x) {
-			return A*x + B;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Integer#f1(int)
-		 */
-		public int f1(int x) {
-			return A;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Integer#f2(int)
-		 */
-		public int f2(int x) {
+		@Override
+		public float f2(float x) {
 			return 0;
 		}
 	}

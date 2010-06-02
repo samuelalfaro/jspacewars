@@ -50,9 +50,7 @@ public class CanionData {
 			return vIdDisparos[grado];
 		}catch(ArrayIndexOutOfBoundsException e){
 			e.printStackTrace();
-			if(grado < 0)
-				return vIdDisparos[0];
-			return vIdDisparos[vIdDisparos.length -1];
+			return vIdDisparos[grado < 0 ? 0 : vIdDisparos.length -1];
 		}
 	}
 
@@ -66,9 +64,7 @@ public class CanionData {
 			return vTRecarga[grado];
 		}catch(ArrayIndexOutOfBoundsException e){
 			e.printStackTrace();
-			if(grado < 0)
-				return vTRecarga[0];
-			return vTRecarga[vTRecarga.length -1];
+			return vTRecarga[grado < 0 ? 0 : vTRecarga.length -1];
 		}
 	}
 
@@ -82,9 +78,7 @@ public class CanionData {
 			return vVelocidades[grado];
 		}catch(ArrayIndexOutOfBoundsException e){
 			e.printStackTrace();
-			if(grado < 0)
-				return vVelocidades[0];
-			return vVelocidades[vVelocidades.length -1];
+			return vVelocidades[grado < 0 ? 0 : vVelocidades.length -1];
 		}
 	}
 }

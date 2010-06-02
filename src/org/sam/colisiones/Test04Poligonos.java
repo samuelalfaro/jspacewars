@@ -46,7 +46,7 @@ public final class Test04Poligonos extends Test00Abs{
 		g.setColor(Color.WHITE);
 		g.clearRect(0,0,getWidth(),getHeight());
 		
-		LimiteRectangular rectangulo = poligono.getLimiteRectangular();
+		LimiteRectangular rectangulo = poligono.getLimites();
 		for(float x = -0.45f; x < 0.5f; x += 0.05f)
 			for(float y = -0.45f; y < 0.5f; y += 0.05f){
 				g.setColor( rectangulo.contiene(x, y) ? poligono.contiene(x, y) ? Color.RED: Color.BLUE: Color.BLACK );

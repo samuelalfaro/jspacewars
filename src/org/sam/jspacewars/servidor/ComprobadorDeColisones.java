@@ -1,51 +1,59 @@
 package org.sam.jspacewars.servidor;
 
+import java.util.ArrayDeque;
 import java.util.Collection;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.Deque;
 
 import org.sam.colisiones.Colisionable;
 
 class ComprobadorDeColisones {
-
-	private final Queue<Colisionable> colaConjuntoA;
-	private final Queue<Colisionable> colaConjuntoB;
-
-	private final Queue<Colisionable> colaActivosA;
-	private final Queue<Colisionable> colaActivosB;
-
-	ComprobadorDeColisones(int tamColas) {
-		colaConjuntoA = new ArrayBlockingQueue<Colisionable>(tamColas);
-		colaConjuntoB = new ArrayBlockingQueue<Colisionable>(tamColas);
-		colaActivosA = new ArrayBlockingQueue<Colisionable>(tamColas);
-		colaActivosB = new ArrayBlockingQueue<Colisionable>(tamColas);
+	
+	private static int compare(float f1, float f2){
+		return
+			f1 < f2 ? -1:
+			f1 > f2 ?  1:
+			0;
 	}
-
+	
 	private static int compararInicios(Colisionable c1, Colisionable c2) {
-		return (int)(c1.getLimites().getXMin() - c2.getLimites().getXMin());
+		return compare( c1.getLimites().getXMin(), c2.getLimites().getXMin() );
 	}
 
 	private static int compararInicioFin(Colisionable c1, Colisionable c2) {
-		return (int)(c1.getLimites().getXMin() - c2.getLimites().getXMax());
-		// return ((Elemento)c1).posX - (((Elemento)c2).posX + 10);
+		return compare( c1.getLimites().getXMin(), c2.getLimites().getXMax() );
 	}
 
-	public void comprobarColisiones(Collection<? extends Colisionable> unConjuntoA,
+	private final Deque<Colisionable> colaConjuntoA;
+	private final Deque<Colisionable> colaConjuntoB;
+
+	private final Deque<Colisionable> colaActivosA;
+	private final Deque<Colisionable> colaActivosB;
+
+	ComprobadorDeColisones(int tamColas) {
+		colaConjuntoA = new ArrayDeque<Colisionable>(tamColas);
+		colaConjuntoB = new ArrayDeque<Colisionable>(tamColas);
+		colaActivosA = new ArrayDeque<Colisionable>(tamColas);
+		colaActivosB = new ArrayDeque<Colisionable>(tamColas);
+	}
+
+	public void comprobarColisiones(
+			Collection<? extends Colisionable> unConjuntoA,
 			Collection<? extends Colisionable> unConjuntoB) {
+		
 		if( unConjuntoA.size() == 0 || unConjuntoB.size() == 0 )
 			return;
 
-		Queue<Colisionable> conjuntoA = colaConjuntoA;
+		Deque<Colisionable> conjuntoA = colaConjuntoA;
 		conjuntoA.clear();
 		conjuntoA.addAll(unConjuntoA);
 
-		Queue<Colisionable> conjuntoB = colaConjuntoB;
+		Deque<Colisionable> conjuntoB = colaConjuntoB;
 		conjuntoB.clear();
 		conjuntoB.addAll(unConjuntoB);
 
-		Queue<Colisionable> activosA = colaActivosA;
+		Deque<Colisionable> activosA = colaActivosA;
 		activosA.clear();
-		Queue<Colisionable> activosB = colaActivosB;
+		Deque<Colisionable> activosB = colaActivosB;
 		activosB.clear();
 
 		do{
@@ -53,29 +61,33 @@ class ComprobadorDeColisones {
 					conjuntoB.size() == 0 ||
 					compararInicios(conjuntoA.peek(), conjuntoB.peek()) < 0
 			) ){
-				Colisionable actual = conjuntoA.poll();
+				Colisionable actual = conjuntoA.pollFirst();
 				// Se eliminan los elementos activos que han salido cuando
 				// llega el nuevo
-				while( activosA.size() > 0 && compararInicioFin(activosA.peek(), actual) > 0 )
-					activosA.poll();
-				while( activosB.size() > 0 && compararInicioFin(activosB.peek(), actual) > 0 )
-					activosB.poll();
-				activosA.offer(actual);
+				while( activosA.size() > 0 && compararInicioFin(activosA.peekFirst(), actual) > 0 )
+					activosA.pollFirst();
+				while( activosB.size() > 0 && compararInicioFin(activosB.peekFirst(), actual) > 0 )
+					activosB.pollFirst();
+				activosA.addLast(actual);
 				for( Colisionable otro: activosB )
-					if( actual.hayColision(otro) )
+					if( actual.hayColision(otro) ){
 						actual.colisionar(otro);
+						otro.colisionar(actual);
+					}
 			}else{
-				Colisionable actual = conjuntoB.poll();
+				Colisionable actual = conjuntoB.pollFirst();
 				// Se eliminan los elementos activos que han salido cuando
 				// llega el nuevo
-				while( activosA.size() > 0 && compararInicioFin(activosA.peek(), actual) > 0 )
-					activosA.poll();
-				while( activosB.size() > 0 && compararInicioFin(activosB.peek(), actual) > 0 )
-					activosB.poll();
-				activosB.offer(actual);
+				while( activosA.size() > 0 && compararInicioFin(activosA.peekFirst(), actual) > 0 )
+					activosA.pollFirst();
+				while( activosB.size() > 0 && compararInicioFin(activosB.peekFirst(), actual) > 0 )
+					activosB.pollFirst();
+				activosB.addLast(actual);
 				for( Colisionable otro: activosA )
-					if( actual.hayColision(otro) )
+					if( actual.hayColision(otro) ){
 						actual.colisionar(otro);
+						otro.colisionar(actual);
+					}
 			}
 		}while( conjuntoA.size() > 0 || conjuntoB.size() > 0 );
 	}

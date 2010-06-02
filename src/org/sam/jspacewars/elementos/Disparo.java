@@ -2,7 +2,9 @@ package org.sam.jspacewars.elementos;
 
 import java.nio.ByteBuffer;
 
-public abstract class Disparo extends ElementoDinamico {
+import org.sam.colisiones.Colisionable;
+
+public abstract class Disparo extends Elemento {
 
 	protected transient float angulo;
 
@@ -14,12 +16,28 @@ public abstract class Disparo extends ElementoDinamico {
 		super(prototipo);
 	}
 
-	public boolean finalizado() {
-		return false;
-	}
-
 	public void enviar(ByteBuffer buff) {
 		super.enviar(buff);
 		buff.putFloat(angulo);
+	}
+	
+	@Override
+	public void colisionar(Colisionable otro) {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void recibirImpacto(int fuerzaDeImpacto) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public boolean isDestruido() {
+		return false;
+	}
+	
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
 	}
 }
