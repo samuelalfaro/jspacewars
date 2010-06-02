@@ -1,6 +1,5 @@
 package org.sam.interpoladores;
 /**
- * @author samuel
  *
  */
 abstract class ArrayExtractor{ 
@@ -9,16 +8,16 @@ abstract class ArrayExtractor{
      *
      * @param <T>
      */
-    static final class Generico<T> extends ArrayExtractor{
+    static final class GenericoDouble<T> extends ArrayExtractor{
 		private final T v[];
-		private final Extractor<? super T> extractor;
+		private final Extractor.Double<? super T> extractor;
 		
         /**
          *
          * @param v
          * @param extractor
          */
-        public Generico(T[] v, Extractor<? super T> extractor){
+        public GenericoDouble(T[] v, Extractor.Double<? super T> extractor){
 			this.v = v;
 			this.extractor = extractor;
 		}
@@ -34,7 +33,7 @@ abstract class ArrayExtractor{
          * @see org.sam.interpoladores.ArrayExtractor#length(int)
          */
         public int length(int index) {
-			return extractor.length(v[0]);
+			return extractor.get(v[0]).length;
 		}
 
         /* (non-Javadoc)
@@ -48,7 +47,54 @@ abstract class ArrayExtractor{
          * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
          */
         public double at(int f, int c){
-			return extractor.at(v[f], c);
+			return extractor.get(v[f])[c];
+		}
+	}
+
+    /**
+     *
+     * @param <T>
+     */
+    static final class GenericoFloat<T> extends ArrayExtractor{
+    	private final T v[];
+		private final Extractor.Float<? super T> extractor;
+		
+        /**
+         *
+         * @param v
+         * @param extractor
+         */
+        public GenericoFloat(T[] v, Extractor.Float<? super T> extractor){
+			this.v = v;
+			this.extractor = extractor;
+		}
+
+        /* (non-Javadoc)
+         * @see org.sam.interpoladores.ArrayExtractor#length()
+         */
+        public int length() {
+			return v.length;
+		}
+
+        /* (non-Javadoc)
+         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         */
+        public int length(int index) {
+			return extractor.get(v[0]).length;
+		}
+
+        /* (non-Javadoc)
+         * @see org.sam.interpoladores.ArrayExtractor#at(int)
+         */
+        public double at(int index){
+			throw new UnsupportedOperationException();
+		}
+
+        /* (non-Javadoc)
+         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
+         */
+        public double at(int f, int c){
+			return extractor.get(v[f])[c];
 		}
 	}
 	

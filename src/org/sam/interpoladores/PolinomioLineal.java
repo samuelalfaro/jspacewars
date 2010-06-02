@@ -1,7 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * Polinomio de primer grado que reprensenta la función lineal <code>f(x) = A*x + B</code>
+ * Polinomio de primer grado que reprensenta la función lineal <code>f(x) = A·x + B</code>
  */
 public final class PolinomioLineal{
 
@@ -11,10 +11,10 @@ public final class PolinomioLineal{
 	 * Implementacion con precisión Double de la función {@link PolinomioLineal}.
 	 */
 	public static final class Double implements Funcion.Double {
-		double A, B;
+		private double A, B;
 
 		/**
-		 * Crea el polinomio lineal correspondiente a <code>f(x) = A*x + B</code>
+		 * Crea el polinomio lineal correspondiente a <code>f(x) = A·x + B</code>
          *
          * @param A
          * @param B
@@ -106,10 +106,10 @@ public final class PolinomioLineal{
 	 * Implementacion con precisión Float de la función {@link PolinomioLineal}.
 	 */
 	public static final class Float implements Funcion.Float {
-		float A, B;
+		private float A, B;
 
 		/**
-		 * Crea el polinomio lineal correspondiente a <code>f(x) = A*x + B</code>
+		 * Crea el polinomio lineal correspondiente a <code>f(x) = A·x + B</code>
          *
          * @param A
          * @param B

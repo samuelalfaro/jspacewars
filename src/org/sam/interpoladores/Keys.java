@@ -95,13 +95,6 @@ public final class Keys{
 		return fKeys;
 	}
 
-	static final int[] toInteger(double keys[]){
-		int[] iKeys = new int[keys.length];
-		for(int i= 0; i< keys.length; i++)
-			iKeys[i] = (int)keys[i];
-		return iKeys;
-	}
-
 	static final boolean estaOrdenado(double keys[]){
 		for(int i = 0, len = keys.length -1; i < len; )
 			if(keys[i] > keys[++i])
@@ -157,6 +150,9 @@ public final class Keys{
 		return med-1;
 	}
 
+	/**
+	 * @see #findIndexKey(double, double[])
+	 */
 	static final int findIndexKey(float key, float keys[]){
 		int izq = 0;
 		int der = keys.length - 1;
@@ -180,7 +176,10 @@ public final class Keys{
 		}
 		return med-1;
 	}
-
+	
+	/**
+	 * @see #findIndexKey(double, double[])
+	 */
 	static final int findIndexKey(int key, int keys[]){
 		int izq = 0;
 		int der = keys.length - 1;
