@@ -12,7 +12,7 @@ public final class CocientePolinomico{
 	 */
 	public static final class Double implements Funcion.Double {
 
-		double A, B, C, D;
+		private double A, B, C, D;
 
 		/**
 		 * Crea el cociente polinómico correspondiente a: <code>(A*x + B)/(C*x + D)</code>
@@ -136,7 +136,7 @@ public final class CocientePolinomico{
 	 */
 	public static final class Float implements Funcion.Float {
 
-		float A, B, C, D;
+		private float A, B, C, D;
 
 		/**
 		 * Crea el cociente polinómico correspondiente a: <code>(A*x + B)/(C*x + D)</code>

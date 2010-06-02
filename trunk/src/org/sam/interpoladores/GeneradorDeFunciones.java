@@ -1,17 +1,17 @@
 package org.sam.interpoladores;
 
 /**
- * Este interface representa generador de funciones 
+ * Este interface representa un generador de funciones.
  */
 public interface GeneradorDeFunciones {
 
     /**
-     *
+     * Enumeración que contiene {@linkplain GeneradorDeFunciones generadores de funciones} predefinidos.
      */
     public enum Predefinido implements GeneradorDeFunciones{
 	
-        /**
-         *
+    	/**
+		 * Crea y calcula el polinomio lineal que pasa por los puntos (a,fa) (b,fb).<br>
          */
         LINEAL {
 			/**
@@ -44,8 +44,9 @@ public interface GeneradorDeFunciones {
 			}
 		},
 	
-        /**
-         *
+		/**
+		 * Calcula los valores de la función exponencial que pasa por los puntos (a,fa) (b,fb)
+		 * y cuyo punto medio es pm.<br>
          */
         EXPONENCIAL_PUNTO_MEDIO {
 			/**
@@ -96,8 +97,9 @@ public interface GeneradorDeFunciones {
 			}
 		},
 
-        /**
-         *
+		/**
+		 * Calcula los valores del cociente polinómico que pasa por los puntos (a,fa) (b,fb)
+		 * y cuyo punto medio es pm.<br>
          */
         COCIENTE_POLINOMICO_PUNTO_MEDIO {
 			/**
@@ -148,8 +150,9 @@ public interface GeneradorDeFunciones {
 			}
 		},
 
-        /**
-         *
+		/**
+		 * Crea y calcula el polinomio de tercer grado que pasa por los puntos (a,fa) (b,fb) 
+		 * con las tangencias  f1a en a y  f1b en b.<br>
          */
         HERMITE{
 			/**
@@ -212,8 +215,9 @@ public interface GeneradorDeFunciones {
 			}
 		},
 
-        /**
-         *
+		/**
+		 * Crea y calcula el polinomio de tercer grado que pasa por los puntos (0,f0) (1,f1) 
+		 * con las tangencias  t0 en 0 y  t1 en 1.
          */
         HERMITE_UNITARIO{
 			/**
@@ -251,8 +255,8 @@ public interface GeneradorDeFunciones {
 			}
 		},
 
-        /**
-         * 
+		/**
+		 * Crea y calcula el polinomio de tercer grado correspondiente a la curva de Bezier (p0,p1,p2,p3).
          */
         BEZIER_CUBICO{
 			/**
@@ -293,6 +297,7 @@ public interface GeneradorDeFunciones {
 	}
 	
 	/**
+	 * Método que genera una función a partir de los parámetros necesarios.
 	 * @param p Parámetros necesarios para calcular la función.
 	 * @return La función generada.
 	 * @throws IllegalArgumentException Excepcion que se lanza cuando no hay suficientes parámetros para calcular la función.

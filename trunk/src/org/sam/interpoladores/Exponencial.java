@@ -1,7 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * Función que representa el siguiente exponencial: <code>f(x) = A*Math.pow((C*x + D), gamma) + B</code>
+ * Función que representa el siguiente exponencial: <code>f(x) = A·Math.pow( (C·x + D), gamma ) + B</code>
  */
 public final class Exponencial{
 
@@ -11,10 +11,10 @@ public final class Exponencial{
 	 * Implementación con precisión Double de la función {@link Exponencial}.
 	 */
 	public static final class Double implements Funcion.Double {
-		double A, B, C, D, gamma;
+		private double A, B, C, D, gamma;
 
 		/**
-		 * Crea la función exponencial correspondiente a <code>f(x) = A*Math.pow((C*x + D), gamma) + B</code>
+		 * Crea la función exponencial correspondiente a <code>f(x) = A·Math.pow( (C·x + D), gamma ) + B</code>
          *
          * @param A
          * @param B
@@ -113,10 +113,10 @@ public final class Exponencial{
 	 */
 	public static final class Float implements Funcion.Float {
 
-		float A, B, C, D, gamma;
+		private float A, B, C, D, gamma;
 
 		/**
-		 * Crea la función exponencial correspondiente a <code>f(x) = A*Math.pow((C*x + D), gamma) + B</code>
+		 * Crea la función exponencial correspondiente a <code>f(x) = A·Math.pow( (C·x + D), gamma ) + B</code>
          *
          * @param A
          * @param B

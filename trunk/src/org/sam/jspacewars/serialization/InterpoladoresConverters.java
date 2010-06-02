@@ -315,9 +315,9 @@ public class InterpoladoresConverters {
 			private double keysTranslation;
 			private Object values;
 			private Introductor.Double<?> introductor;
-			private Extractor<?> extractor;
+			private Extractor.Double<?> extractor;
 			private MetodoDeInterpolacion metodoDeInterpolacion;
-			Object mdiParams[];
+			private Object mdiParams[];
 		}
 		
 		@SuppressWarnings(S.unchecked)
@@ -329,7 +329,7 @@ public class InterpoladoresConverters {
 					return GettersFactory.Double.create(params.keys, (double[])params.values, params.metodoDeInterpolacion, params.mdiParams );
 				if(params.values instanceof double[][])
 					return GettersFactory.Double.create(params.keys, (double[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
-				return GettersFactory.Double.create(params.keys, null, (Introductor.Double<T>) params.introductor, (T[])params.values, (Extractor<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+				return GettersFactory.Double.create(params.keys, (Introductor.Double<T>) params.introductor, (T[])params.values, (Extractor.Double<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 			}
 			if(params.values instanceof Double[])
 				return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (Double[])params.values, params.metodoDeInterpolacion, params.mdiParams );
@@ -337,7 +337,7 @@ public class InterpoladoresConverters {
 				return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (double[])params.values, params.metodoDeInterpolacion, params.mdiParams );
 			if(params.values instanceof double[][])
 				return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (double[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
-			return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, null, (Introductor.Double<T>) params.introductor, (T[])params.values, (Extractor<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+			return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (Introductor.Double<T>) params.introductor, (T[])params.values, (Extractor.Double<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 		}
 		
 		@SuppressWarnings(S.unchecked)
@@ -427,7 +427,7 @@ public class InterpoladoresConverters {
 						params.values =	context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if(nodeName.equals(S.Extractor))
-						params.extractor =	(Extractor<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
+						params.extractor =	(Extractor.Double<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if (nodeName.equals(S.MetodoDeInterpolacion)) {
 						att = reader.getAttribute(S.predefinido);
@@ -462,9 +462,9 @@ public class InterpoladoresConverters {
 			private float keysTranslation;
 			private Object values;
 			private Introductor.Float<?> introductor;
-			private Extractor<?> extractor;
+			private Extractor.Float<?> extractor;
 			private MetodoDeInterpolacion metodoDeInterpolacion;
-			Object mdiParams[];
+			private Object mdiParams[];
 		}
 
 		@SuppressWarnings(S.unchecked)
@@ -476,7 +476,7 @@ public class InterpoladoresConverters {
 					return GettersFactory.Float.create(params.keys, (float[])params.values, params.metodoDeInterpolacion, params.mdiParams );
 				if(params.values instanceof float[][])
 					return GettersFactory.Float.create(params.keys, (float[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
-				return GettersFactory.Float.create(params.keys, null, (Introductor.Float<T>) params.introductor, (T[])params.values, (Extractor<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+				return GettersFactory.Float.create(params.keys, null, (Introductor.Float<T>) params.introductor, (T[])params.values, (Extractor.Float<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 			}
 			if(params.values instanceof Float[])
 				return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (Float[])params.values, params.metodoDeInterpolacion, params.mdiParams );
@@ -485,7 +485,7 @@ public class InterpoladoresConverters {
 			if(params.values instanceof float[][])
 				return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (float[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
 			
-			return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, null, (Introductor.Float<T>) params.introductor, (T[])params.values, (Extractor<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+			return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (Introductor.Float<T>) params.introductor, (T[])params.values, (Extractor.Float<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 		}
 		
 		@SuppressWarnings(S.unchecked)
@@ -575,7 +575,7 @@ public class InterpoladoresConverters {
 						params.values =	context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if(nodeName.equals(S.Extractor))
-						params.extractor =	(Extractor<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
+						params.extractor =	(Extractor.Float<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if (nodeName.equals(S.MetodoDeInterpolacion)) {
 						att = reader.getAttribute(S.predefinido);

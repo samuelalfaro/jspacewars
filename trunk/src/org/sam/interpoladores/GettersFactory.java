@@ -90,7 +90,7 @@ public final class GettersFactory {
 				return new Interpolador2D(keys,values,mdi,params);
 			else if( values[0].length == 3)
 				return new Interpolador3D(keys,values,mdi,params);
-			return new Interpolador.Double<double[]>(keys, null, Introductor.Double.DOUBLE_ARRAY, values, Extractor.DOUBLE_ARRAY, mdi, params);
+			return new Interpolador.Double<double[]>(keys, Introductor.Double.DOUBLE_ARRAY, values, Extractor.Double.DOUBLE_ARRAY, mdi, params);
 		}
 
 		/**
@@ -107,7 +107,7 @@ public final class GettersFactory {
 				return new Interpolador2D(genKey,scale,translation,values,mdi,params);
 			else if( values[0].length == 3)
 				return new Interpolador3D(genKey,scale,translation,values,mdi,params);
-			return new Interpolador.Double<double[]>(genKey,scale,translation, null, Introductor.Double.DOUBLE_ARRAY, values, Extractor.DOUBLE_ARRAY, mdi, params);
+			return new Interpolador.Double<double[]>(genKey,scale,translation, Introductor.Double.DOUBLE_ARRAY, values, Extractor.Double.DOUBLE_ARRAY, mdi, params);
 		}
 
 		/**
@@ -121,10 +121,10 @@ public final class GettersFactory {
 		 * @param params
 		 * @return
 		 */
-		public static <T> Getter.Double<T> create(double keys[], T shared, Introductor.Double<T> in, T values[], Extractor<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
+		public static <T> Getter.Double<T> create(double keys[], Introductor.Double<T> in, T values[], Extractor.Double<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
 				return new KeySelector.Double<T>(keys, values);
-			return new Interpolador.Double<T>(keys, shared, in, values, ex, mdi,params);
+			return new Interpolador.Double<T>(keys,in, values, ex, mdi,params);
 		}
 
 		/**
@@ -140,10 +140,10 @@ public final class GettersFactory {
 		 * @param params
 		 * @return
 		 */
-		public static <T> Getter.Double<T> create(int genKey, double scale, double translation, T shared, Introductor.Double<T> in, T values[], Extractor<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
+		public static <T> Getter.Double<T> create(int genKey, double scale, double translation, Introductor.Double<T> in, T values[], Extractor.Double<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
 				return new ArraySelector.Double<T>( scale, translation, values);
-			return new Interpolador.Double<T>(genKey,scale,translation, shared, in, values, ex, mdi,params);
+			return new Interpolador.Double<T>(genKey,scale,translation, in, values, ex, mdi,params);
 		}
 	}
 
@@ -229,7 +229,7 @@ public final class GettersFactory {
 				return new Interpolador2F(keys,values,mdi,params);
 			else if( values[0].length == 3)
 				return new Interpolador3F(keys,values,mdi,params);
-			return new Interpolador.Float<float[]>(keys, null, Introductor.Float.FLOAT_ARRAY, values, Extractor.FLOAT_ARRAY, mdi, params);
+			return new Interpolador.Float<float[]>(keys, Introductor.Float.FLOAT_ARRAY, values, Extractor.Float.FLOAT_ARRAY, mdi, params);
 		}
 
 		/**
@@ -246,7 +246,7 @@ public final class GettersFactory {
 				return new Interpolador2F(genKey,scale,translation,values,mdi,params);
 			else if( values[0].length == 3)
 				return new Interpolador3F(genKey,scale,translation,values,mdi,params);
-			return new Interpolador.Float<float[]>(genKey,scale,translation, null, Introductor.Float.FLOAT_ARRAY, values, Extractor.FLOAT_ARRAY, mdi, params);
+			return new Interpolador.Float<float[]>(genKey,scale,translation, Introductor.Float.FLOAT_ARRAY, values, Extractor.Float.FLOAT_ARRAY, mdi, params);
 		}
 
 		/**
@@ -260,10 +260,10 @@ public final class GettersFactory {
 		 * @param params
 		 * @return
 		 */
-		public static <T> Getter.Float<T> create(float keys[], T shared, Introductor.Float<T> in, T values[], Extractor<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
+		public static <T> Getter.Float<T> create(float keys[], T shared, Introductor.Float<T> in, T values[], Extractor.Float<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
 				return new KeySelector.Float<T>(keys, values);
-			return new Interpolador.Float<T>(keys, shared, in, values, ex, mdi,params);
+			return new Interpolador.Float<T>(keys, in, values, ex, mdi,params);
 		}
 
 		/**
@@ -279,10 +279,10 @@ public final class GettersFactory {
 		 * @param params
 		 * @return
 		 */
-		public static <T> Getter.Float<T> create(int genKey, float scale, float translation, T shared, Introductor.Float<T> in, T values[], Extractor<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
+		public static <T> Getter.Float<T> create(int genKey, float scale, float translation, Introductor.Float<T> in, T values[], Extractor.Float<? super T> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
 				return new ArraySelector.Float<T>( scale, translation, values);
-			return new Interpolador.Float<T>(genKey,scale,translation, shared, in, values, ex, mdi,params);
+			return new Interpolador.Float<T>(genKey,scale,translation, in, values, ex, mdi,params);
 		}
 	}
 }

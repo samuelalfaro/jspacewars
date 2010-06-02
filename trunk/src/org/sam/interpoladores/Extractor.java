@@ -2,63 +2,54 @@ package org.sam.interpoladores;
 
 /**
  *
- * @author Samuel
+ * @param <V>
  * @param <T>
  */
-public interface Extractor<T> {
+public interface Extractor<V,T> {
 
     /**
      *
+     * @param <T>
      */
-    public static final Extractor<double[]> DOUBLE_ARRAY = new Extractor<double[]>(){
-		public int length(double[] v){
-			return v.length;
-		}
-		
-		public double at(double[] v, int index){
-			return v[index];
-		}
-	};
-	
+    public interface Double<T> extends Extractor<double[], T>{
+    	
+	    /**
+	     * 
+	     */
+	    public static final  Extractor.Double<double[]> DOUBLE_ARRAY = new Extractor.Double<double[]>(){
+			/**
+			 * @param v
+			 * @return
+			 */
+			public double[] get(double[] v){
+				return v;
+			}
+		};
+    }
+    
     /**
      *
+     * @param <T>
      */
-    public static final Extractor<float[]> FLOAT_ARRAY = new Extractor<float[]>(){
-		public int length(float[] v){
-			return v.length;
-		}
-		
-		public double at(float[] v, int index){
-			return v[index];
-		}
-	};
+    public interface Float<T> extends Extractor<float[], T>{
+    	
+	    /**
+	     * 
+	     */
+	    public static final Extractor.Float<float[]> FLOAT_ARRAY = new Extractor.Float<float[]>(){
+			/**
+			 * @param v
+			 * @return
+			 */
+			public float[] get(float[] v){
+				return v;
+			}
+		};
+    }
 
     /**
-     *
-     */
-    public static final Extractor<int[]> INT_ARRAY = new Extractor<int[]>(){
-		public int length(int[] v){
-			return v.length;
-		}
-		
-		public double at(int[] v, int index){
-			return v[index];
-		}
-	};
-
-    /**
-     *
-     * @param v
+     * @param t
      * @return
      */
-    public int length(T v);
-	
-    /**
-     *
-     * @param v
-     * @param index
-     * @return
-     */
-    public double at(T v, int index);
-	
+    public V get(T t);
 }

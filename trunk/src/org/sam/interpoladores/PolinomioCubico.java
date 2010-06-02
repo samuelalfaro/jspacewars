@@ -12,10 +12,10 @@ public final class PolinomioCubico{
 	 */
 	public static final class Double implements Funcion.Double {
 
-		double A, B, C, D;
+		private double A, B, C, D;
 
 		/**
-		 * Crea el polinomio cúbico correspondiente a <code>f(x) = A*x^3 + B*x^2 + C*x + D</code>
+		 * Crea el polinomio cúbico correspondiente a <code>f(x) = Ax³ + Bx² + Cx + D</code>
          *
          * @param A
          * @param B
@@ -122,10 +122,10 @@ public final class PolinomioCubico{
 	 */
 	public static final class Float implements Funcion.Float {
 
-		float A, B, C, D;
+		private float A, B, C, D;
 
 		/**
-		 * Crea el polinomio cúbico correspondiente a <code>f(x) = A*x^3 + B*x^2 + C*x + D</code>
+		 * Crea el polinomio cúbico correspondiente a <code>f(x) = Ax³ + Bx² + Cx + D</code>
          *
          * @param A
          * @param C

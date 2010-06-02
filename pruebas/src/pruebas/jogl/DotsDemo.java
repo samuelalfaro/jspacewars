@@ -284,11 +284,11 @@ public class DotsDemo{
 			
 			img = generator.generate("Hola   ", 300, 100, 5, 5);
 			dots[0].init(img, START_X1, START_Y1, 50, 50, 2.0f, new Inverso(new DistanciaEuclidea(new Point())));
-			img = generator.generate("Fred", 300, 100, 5, 5);
+			img = generator.generate("Alberto", 300, 100, 5, 5);
 			dots[1].init(img, START_X2, START_Y2, 150, 400, 2.0f, new DistanciaEuclidea(new Point()));
 			img = generator.generate("Hola ", 300, 100, 5, 5);
 			dots[2].init(img, START_X1, START_Y1, 50, 50, 2.0f, Comparadores.IZQUIERDA_DERECHA);
-			img = generator.generate("Eloise", 300, 100, 5, 5);
+			img = generator.generate("soy sam", 300, 100, 5, 5);
 			dots[3].init(img, START_X2, START_Y2, 150, 400, 2.0f, Comparadores.DERECHA_IZQUIERDA);
 			img = generator.generate("Soy", 300, 100, 5, 5);
 			dots[4].init(img, START_X1, START_Y1, 50, 50, 2.0f, Comparadores.ARRIBA_ABAJO);
