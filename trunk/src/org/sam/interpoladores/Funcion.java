@@ -70,11 +70,6 @@ public final class Funcion {
 		 */
 		public Funcion.Float toFloatFunction();
 
-		/**
-         *
-         * @return
-         */
-        public Funcion.Integer toIntegerFunction();
 	}
 
     /**
@@ -111,38 +106,6 @@ public final class Funcion {
 
     /**
      *
-     */
-    public interface Integer {
-		/**
-		 * Funcion f(x)
-		 *
-		 * @param x valor del que se calcula la función.
-		 *
-		 * @return devuelve el valor correspondiente a x en la función.
-		 */
-		public int f(int x);
-
-		/**
-		 * Tangencia en la funcion f(x) = f'(x)dx
-		 *
-		 * @param x valor del que se calcula la tangencia
-		 *
-		 * @return devuelve la tangencia correspondiente a x.
-		 */
-		public int f1(int x);
-
-		/**
-		 * Curvatura en la funcion f(x) = f"(x)dx
-		 *
-		 * @param x valor del que se calcula la curvatura
-		 *
-		 * @return devuelve la curvatura correspondiente a x.
-		 */
-		public int f2(int x);
-	}
-	
-    /**
-     *
      * @param funciones
      * @return
      */
@@ -152,17 +115,4 @@ public final class Funcion {
 			funcionesFloat[i]  = funciones[i].toFloatFunction();
 		return funcionesFloat;
 	}
-
-    /**
-     *
-     * @param funciones
-     * @return
-     */
-    public static Funcion.Integer[] toIntegerFunctions(Funcion.Double[] funciones) {
-		Funcion.Integer[] funcionesInt = new Funcion.Integer[funciones.length];
-		for(int i = 0; i < funciones.length; i++)
-			funcionesInt[i]  = funciones[i].toIntegerFunction();
-		return funcionesInt;
-	}
-
 }

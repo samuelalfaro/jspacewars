@@ -6,17 +6,19 @@ package org.sam.interpoladores;
 final class Interpolador2F  implements Trayectoria.Float<float[]>{
 
 	private final transient float[] keys;
-	private final transient float[] valorInicial, valorFinal;
-	private final transient float[] compartido;
+	private final transient float[][] valorInicial, valorFinal;
+	private final transient float[][] compartido;
 	private final transient Funcion.Float funcionesX[];
 	private final transient Funcion.Float funcionesY[];
 
-	private static final float[] tratarDatos(float[] value) {
-		float[] newVal = new float[3];
-		newVal[0] = value[0];
-		newVal[1] = value[1];
-		newVal[2] = 0; // No definimos la tangente para el valor inicial
-		return newVal;
+	private static final float[][] tratarDatos(float[] value) {
+		float[][] newVal = new float[2][2];
+		newVal[0][0] = value[0];
+		newVal[0][1] = value[1];
+		newVal[1][0] = 0; // No definimos la tangente para el valor inicial
+		newVal[1][1] = 0;
+//		return newVal;
+		return new float[][]{value.clone(),{0,0}};
 	}
 
 	Interpolador2F(float keys[], float[][] values, MetodoDeInterpolacion mdi, Object... params) {
@@ -26,7 +28,7 @@ final class Interpolador2F  implements Trayectoria.Float<float[]>{
 		this.funcionesY = Funcion.toFloatFunctions( funciones[1] );
 		this.valorInicial = tratarDatos(values[0]);
 		this.valorFinal = tratarDatos(values[values.length-1]);
-		this.compartido = new float[]{0, 0, 0};
+		this.compartido = new float[][]{ {0, 0}, {0, 0} };
 	}
 
 	Interpolador2F(int genKey, float scale, float translation, float[][] values, MetodoDeInterpolacion mdi, Object... params) {
@@ -46,37 +48,56 @@ final class Interpolador2F  implements Trayectoria.Float<float[]>{
 		this.funcionesY = Funcion.toFloatFunctions( funciones[1]);
 		this.valorInicial = tratarDatos(values[0]);
 		this.valorFinal = tratarDatos(values[values.length-1]);
-		this.compartido = new float[]{0, 0, 0};
+		this.compartido = new float[][]{ {0, 0}, {0, 0} };
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.interpoladores.Getter.Float#get(float)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public final float[] get(float key) {
 		int index = Keys.findIndexKey(key,keys);
 		if (index < 0)
-			return valorInicial;
+			return valorInicial[0];
 		if(index < funcionesX.length){
-			compartido[0] = funcionesX[index].f(key);
-			compartido[1] = funcionesY[index].f(key);
-			return compartido;
+			compartido[0][0] = funcionesX[index].f(key);
+			compartido[0][1] = funcionesY[index].f(key);
+			return compartido[0];
 		}
-		return valorFinal;
+		return valorFinal[0];
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.sam.interpoladores.Trayectoria#getPosTang(double)
+	/**
+	 * {@inheritDoc}
 	 */
-	public final float[] getPosTang(float key) {
+	@Override
+	public final float[] getTan(float key) {
+		int index = Keys.findIndexKey(key,keys);
+		if (index < 0)
+			return valorInicial[1];
+		if(index < funcionesX.length){
+			compartido[1][0] = funcionesX[index].f1(key);
+			compartido[1][1] = funcionesY[index].f1(key);
+			return compartido[1];
+		}
+		return valorFinal[1];
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final float[][] getPosTan(float key) {
 		int index = Keys.findIndexKey(key,keys);
 		if (index < 0)
 			return valorInicial;
 		if(index < funcionesX.length){
 			Funcion.Float fX = funcionesX[index];
 			Funcion.Float fY = funcionesY[index];
-			compartido[0] = fX.f(key);
-			compartido[1] = fY.f(key);
-			compartido[2] = (float)Math.atan2(fY.f1(key), fX.f1(key));
+			compartido[0][0] = fX.f(key);
+			compartido[0][1] = fY.f(key);
+			compartido[1][0] = fX.f1(key);
+			compartido[1][1] = fY.f1(key);
 			return compartido;
 		}
 		return valorFinal;

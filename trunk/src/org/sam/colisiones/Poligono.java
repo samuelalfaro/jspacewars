@@ -4,8 +4,8 @@ import org.sam.elementos.Prototipo;
 
 public class Poligono implements Prototipo<Poligono>{
 	
-	private static boolean testSegmentos1[] = new boolean [50];
-	private static boolean testSegmentos2[] = new boolean [50];
+	private static transient boolean testSegmentos1[] = new boolean [50];
+	private static transient boolean testSegmentos2[] = new boolean [50];
 	
 	private final Poligono prototipo;
 	private final int nLados;
@@ -127,7 +127,7 @@ public class Poligono implements Prototipo<Poligono>{
 		}
 	}
 	
-	public LimiteRectangular getLimiteRectangular(){
+	public LimiteRectangular getLimites(){
 		return limiteRectangular;
 	}
 	
@@ -224,11 +224,12 @@ public class Poligono implements Prototipo<Poligono>{
 		return ((hits & 1) != 0);
     }
 	
-	public boolean hayIntersecion( Poligono otro ){
-		LimiteRectangular interseccion = limiteRectangular.interseccion(otro.getLimiteRectangular());
+	public boolean hayColision(Poligono otro){
+		
+		LimiteRectangular interseccion = limiteRectangular.interseccion(otro.getLimites());
 		if( interseccion == null)
 			return false;
-	
+		
 		int nSegIntPol1 = nSegmentosEn(interseccion, testSegmentos1);
 		int nSegIntPol2 = otro.nSegmentosEn(interseccion, testSegmentos2);
 		
@@ -289,11 +290,11 @@ public class Poligono implements Prototipo<Poligono>{
 		return nLados;
 	}
 
-	boolean hayIntersecion( Poligono otro, java.util.List<Object> evaluados){
-		
+	boolean hayColision(Poligono otro, java.util.List<Object> evaluados){
+
 		evaluados.clear();
 		
-		LimiteRectangular interseccion = limiteRectangular.interseccion(otro.getLimiteRectangular());
+		LimiteRectangular interseccion = limiteRectangular.interseccion(otro.getLimites());
 		if( interseccion == null)
 			return false;
 		

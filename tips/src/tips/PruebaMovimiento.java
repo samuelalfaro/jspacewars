@@ -215,10 +215,11 @@ public class PruebaMovimiento{
 		
 		public void actua(long milis){
 			time += milis;
-			double posicion[] = trayectoria.getPosTang(time/1000.0);
-			int dX = (int)(posicion[0]*scaleX + 0.5)- posX + despX;
-			int dY = (int)(posicion[1]*scaleY + 0.5)- posY + despY;
-			angulo = posicion[2]*scaleY;
+			double posTan[][] = trayectoria.getPosTan(time/1000.0);
+
+			int dX = (int)(posTan[0][0]*scaleX + 0.5)- posX + despX;
+			int dY = (int)(posTan[0][1]*scaleY + 0.5)- posY + despY;
+			angulo = Math.atan2(posTan[1][1] * scaleY, posTan[1][0] * scaleX);
 			forma.translate(dX, dY);
 			posX +=dX;
 			posY +=dY;
@@ -871,16 +872,22 @@ public class PruebaMovimiento{
 		CanionInterpolado c22 = (CanionInterpolado)potrotipoCanion.clone();
 		c22.setPos(0, 15);
 		c22.setScales(1.5, -1.0);
+		CanionInterpolado c23 = (CanionInterpolado)potrotipoCanion.clone();
+		c23.setPos(0, 15);
+		c23.setScales(2.0, 2.5);
+		CanionInterpolado c24 = (CanionInterpolado)potrotipoCanion.clone();
+		c24.setPos(0, 15);
+		c24.setScales(2.0, -2.5);
 		potrotipoCanion = null;
 		
 		potrotipoCanion = new LanzaMisiles(new int[]{20},0);
 		
-		LanzaMisiles c23 = (LanzaMisiles)potrotipoCanion.clone();
-		c23.setPos(0, 5);
-		c23.setAngulo(-45);
-		LanzaMisiles c24 = (LanzaMisiles)potrotipoCanion.clone();
-		c24.setPos(0, 25);
-		c24.setAngulo(45);
+		LanzaMisiles c25 = (LanzaMisiles)potrotipoCanion.clone();
+		c25.setPos(0, 5);
+		c25.setAngulo(-45);
+		LanzaMisiles c26 = (LanzaMisiles)potrotipoCanion.clone();
+		c26.setPos(0, 25);
+		c26.setAngulo(45);
 		potrotipoCanion = null;
 		
 		Canion[][][] canionesDisponibles = new Canion[][][]{
@@ -896,7 +903,7 @@ public class PruebaMovimiento{
 			{	
 				{},
 				{c21,c22},
-				{c21,c22,c23,c24},
+				{c21,c22,c23,c24,c25,c26},
 			},
 		};
 

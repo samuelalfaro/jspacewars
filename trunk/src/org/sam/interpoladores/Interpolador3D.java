@@ -6,19 +6,20 @@ package org.sam.interpoladores;
 final class Interpolador3D implements Trayectoria.Double<double[]>{
 
 	private final transient double[] keys;
-	private final transient double[] valorInicial, valorFinal;
-	private final transient double[] compartido;
+	private final transient double[][] valorInicial, valorFinal;
+	private final transient double[][] compartido;
 	private final transient Funcion.Double funcionesX[];
 	private final transient Funcion.Double funcionesY[];
 	private final transient Funcion.Double funcionesZ[];
 
-	private static final double[] tratarDatos(double[] value) {
-		double[] newVal = new double[5];
-		newVal[0] = value[0];
-		newVal[1] = value[1];
-		newVal[2] = value[2];
-		newVal[3] = 0; // No definimos la tangente para el valor inicial
-		newVal[4] = 0;
+	private static final double[][] tratarDatos(double[] value) {
+		double[][] newVal = new double[2][3];
+		newVal[0][0] = value[0];
+		newVal[0][1] = value[1];
+		newVal[0][2] = value[2];
+		newVal[1][0] = 0; // No definimos la tangente para el valor inicial
+		newVal[1][1] = 0;
+		newVal[1][2] = 0;
 		return newVal;
 	}
 
@@ -30,7 +31,7 @@ final class Interpolador3D implements Trayectoria.Double<double[]>{
 		this.funcionesZ = funciones[2];
 		this.valorInicial = tratarDatos(values[0]);
 		this.valorFinal = tratarDatos(values[values.length-1]);
-		this.compartido = new double[]{0, 0, 0, 0, 0};
+		this.compartido = new double[][]{{0, 0, 0},{ 0, 0, 0}};
 	}
 
 	Interpolador3D(int genKey, double scale, double translation, double[][] values, MetodoDeInterpolacion mdi, Object... params) {
@@ -51,29 +52,48 @@ final class Interpolador3D implements Trayectoria.Double<double[]>{
 		this.funcionesZ = funciones[2];
 		this.valorInicial = tratarDatos(values[0]);
 		this.valorFinal = tratarDatos(values[values.length-1]);
-		this.compartido = new double[]{0, 0, 0, 0, 0};
+		this.compartido = new double[][]{{0, 0, 0},{ 0, 0, 0}};
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.interpoladores.Getter#get(double)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public final double[] get(double key) {
 		int index = Keys.findIndexKey(key,keys);
 		if (index < 0)
-			return valorInicial;
+			return valorInicial[0];
 		if(index < funcionesX.length){
-			compartido[0] = funcionesX[index].f(key);
-			compartido[1] = funcionesY[index].f(key);
-			compartido[2] = funcionesZ[index].f(key);
-			return compartido;
+			compartido[0][0] = funcionesX[index].f(key);
+			compartido[0][1] = funcionesY[index].f(key);
+			compartido[0][2] = funcionesZ[index].f(key);
+			return compartido[0];
 		}
-		return valorFinal;
+		return valorFinal[0];
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final double[] getTan(double key) {
+		int index = Keys.findIndexKey(key,keys);
+		if (index < 0)
+			return valorInicial[1];
+		if(index < funcionesX.length){
+			compartido[1][0] = funcionesX[index].f1(key);
+			compartido[1][1] = funcionesY[index].f1(key);
+			compartido[1][2] = funcionesZ[index].f1(key);
+			return compartido[1];
+		}
+		return valorFinal[1];
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.interpoladores.Trayectoria#getPosTang(double)
+	/**
+	 * {@inheritDoc}
 	 */
-	public final double[] getPosTang(double key) {
+	@Override
+	public final double[][] getPosTan(double key) {
 		int index = Keys.findIndexKey(key,keys);
 		if (index < 0)
 			return valorInicial;
@@ -81,11 +101,12 @@ final class Interpolador3D implements Trayectoria.Double<double[]>{
 			Funcion.Double fX = funcionesX[index];
 			Funcion.Double fY = funcionesY[index];
 			Funcion.Double fZ = funcionesZ[index];
-			compartido[0] = fX.f(key);
-			compartido[1] = fY.f(key);
-			compartido[2] = fZ.f(key);
-			compartido[3] = Math.atan2(fY.f1(key), fX.f1(key));
-			compartido[4] = Math.atan2(fZ.f1(key), fY.f1(key));
+			compartido[0][0] = fX.f(key);
+			compartido[0][1] = fY.f(key);
+			compartido[0][2] = fZ.f(key);
+			compartido[1][0] = fX.f1(key);
+			compartido[1][1] = fY.f1(key);
+			compartido[1][2] = fZ.f1(key);
 			return compartido;
 		}
 		return valorFinal;

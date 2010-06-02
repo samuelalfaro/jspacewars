@@ -3,9 +3,14 @@ package org.sam.jspacewars.elementos;
 import java.nio.ByteBuffer;
 import java.util.Comparator;
 
-import org.sam.elementos.*;
+import org.sam.colisiones.Colisionable;
+import org.sam.colisiones.Limites;
+import org.sam.colisiones.Poligono;
+import org.sam.elementos.Dinamico;
+import org.sam.elementos.Enviable;
+import org.sam.elementos.PrototipoCacheable;
 
-public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable {
+public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable, Dinamico, Colisionable, Destruible {
 
 	public static Comparator<Elemento> COMPARADOR = new Comparator<Elemento>() {
 		public int compare(Elemento e1, Elemento e2) {
@@ -17,6 +22,7 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	private final short type;
 	private short id;
 	protected transient float posX, posY;
+	protected Poligono forma;
 
 	Elemento(short type) {
 		this.type = type;
@@ -51,6 +57,16 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		return this.posY;
 	}
 
+	@Override
+	public final Limites getLimites(){
+		return forma.getLimites();
+	}
+
+	@Override
+	public final boolean hayColision(Colisionable otro){
+		return forma.hayColision((Poligono)otro);
+	}
+	
 	public void enviar(ByteBuffer buff) {
 		buff.putShort(type);
 		buff.putShort(id);

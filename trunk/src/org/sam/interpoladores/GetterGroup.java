@@ -27,9 +27,10 @@ public final class GetterGroup{
 			this.getters = getters;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter.Double#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(double key) {
 			int index = Keys.findIndexKey(key, keys);
 			if (index < 0)
@@ -60,9 +61,10 @@ public final class GetterGroup{
 			this.getters = getters;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter.Float#get(float)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(float key) {
 			int index = Keys.findIndexKey(key, keys);
 			if (index < 0)
@@ -93,9 +95,10 @@ public final class GetterGroup{
 			this.getters = getters;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter.Integer#get(int)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(int key) {
 			int index = Keys.findIndexKey(key, keys);
 			if (index < 0)

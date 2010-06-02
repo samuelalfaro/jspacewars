@@ -20,8 +20,6 @@ public class Misil extends Disparo {
 		return new Misil(this);
 	}
 
-	private transient boolean objetivoAlcanzado = false;
-
 	public void setValues(float posX, float posY, float angulo, float velocidad) {
 		super.setPosicion(posX, posY);
 		this.angulo = angulo;
@@ -31,13 +29,14 @@ public class Misil extends Disparo {
 
 	public void setObjetivo(Elemento objetivo) {
 		this.objetivo = objetivo;
-		objetivoAlcanzado = false;
+//		objetivoAlcanzado = false;
 	}
 
-	public boolean finalizado() {
-		if( objetivo == null )
+	@Override
+	public boolean isDestruido() {
+//		if( objetivo == null )
 			return false;
-		return objetivoAlcanzado;
+//		return objetivoAlcanzado;
 	}
 
 	private static transient final float PI2 = (float) (2 * Math.PI);
@@ -62,7 +61,7 @@ public class Misil extends Disparo {
 
 		float vel = vTangencial * nanos;
 
-		if( objetivo != null ){
+		if( objetivo != null && !objetivo.isDestruido()){
 			// w = velocidad Angular
 			// v = velocidad Tangencial
 			// v = w · radio
@@ -71,34 +70,35 @@ public class Misil extends Disparo {
 			float radio = vTangencial / vAngular;
 			float dx, dy;
 
-			float dirX = (float) Math.cos(angulo) * radio;
-			float dirY = (float) Math.sin(angulo) * radio;
+			float normalX = (float) Math.sin(angulo) * radio;
+			float normalY = (float) Math.cos(angulo) * radio;
 
 			// Centro de giro 1
-			float c1X = -dirY + posX;
-			float c1Y = dirX + posY;
+			float c1X = posX - normalX;
+			float c1Y = posY + normalY;
 			dx = objetivo.posX - c1X;
 			dy = objetivo.posY - c1Y;
-			float dist1 = (float) Math.sqrt(dx * dx + dy * dy);
+			float dist1 = dx * dx + dy * dy;
 
 			// Centro de giro 2
-			float c2X = dirY + posX;
-			float c2Y = -dirX + posY;
+			float c2X = posX + normalX;
+			float c2Y = posY - normalY;
 			dx = objetivo.posX - c2X;
 			dy = objetivo.posY - c2Y;
-			float dist2 = (float) Math.sqrt(dx * dx + dy * dy);
+			float dist2 = dx * dx + dy * dy;
 
 			float iAng = vAngular * nanos;
 
 			// Si el objetivo esta dentro del radio de uno de los centros de
-			// giro, se gira en el contrario
-			if( dist1 < radio ){
+			// giro, es inalcanzable por tanto se gira en el contrario.
+			float r2 = radio * radio;
+			if( dist1 < r2 ){
 				angulo -= iAng;
 				while( angulo < 0 )
 					angulo += PI2;
 				rotarPos(-iAng, c2X, c2Y);
 				return;
-			}else if( dist2 < radio ){
+			}else if( dist2 < r2 ){
 				angulo += iAng;
 				while( angulo > PI2 )
 					angulo -= PI2;
@@ -123,9 +123,6 @@ public class Misil extends Disparo {
 
 				if( absDif < iAng ){
 					angulo = angOb;
-					float dist = (float) Math.sqrt(dx * dx + dy * dy);
-					if( dist < vel )
-						objetivoAlcanzado = true;
 					posX += vel * (float) Math.cos(angulo);
 					posY += vel * (float) Math.sin(angulo);
 					vTangencial += aceleracion * nanos;

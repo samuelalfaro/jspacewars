@@ -8,8 +8,7 @@ public final class Exponencial{
 	private Exponencial(){}
 
 	/**
-	 * Implementación con precisión Double de la función exponencial.
-	 * @author samuel
+	 * Implementación con precisión Double de la función {@link Exponencial}.
 	 */
 	public static final class Double implements Funcion.Double {
 		double A, B, C, D, gamma;
@@ -31,34 +30,34 @@ public final class Exponencial{
 			this.gamma = gamma;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#f(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public double f(double x) {
 			return A * Math.pow( C * x + D, gamma) + B;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#f1(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public double f1(double x) {
 			throw new UnsupportedOperationException();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#f2(double)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public double f2(double x) {
 			throw new UnsupportedOperationException();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#scaleIn(double)
+		/**
+		 *{@inheritDoc}
 		 */
-        /**
-         *
-         * @param scale
-         */
+		@Override
         public void scaleIn(double scale) {
 			/*
 			 *  A(C*( x * K ) + D)^gamma + B = A(CK*x + D)^gamma + B
@@ -66,13 +65,10 @@ public final class Exponencial{
 			C*= scale;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#scaleOut(double)
+		/**
+		 *{@inheritDoc}
 		 */
-        /**
-         *
-         * @param scale
-         */
+		@Override
         public void scaleOut(double scale) {
 			/*
 			 *  ( A(Cx + D)^gamma + B ) * K = AK(Cx + D)^gamma + BK
@@ -81,13 +77,10 @@ public final class Exponencial{
 			B*= scale;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#translateIn(double)
+		/**
+		 *{@inheritDoc}
 		 */
-        /**
-         *
-         * @param translation
-         */
+		@Override
         public void translateIn(double translation) {
 			/*
 			 *  A( C( x + K ) + D)^gamma + B = A(Cx + (CK + D) )^gamma + B
@@ -95,13 +88,10 @@ public final class Exponencial{
 			D += C * translation;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#translateOut(double)
+		/**
+		 *{@inheritDoc}
 		 */
-        /**
-         *
-         * @param translation
-         */
+		@Override
         public void translateOut(double translation) {
 			/*
 			 *  ( A(Cx + D)^gamma + B ) + K = A(Cx + D)^gamma + (B+K)
@@ -109,32 +99,17 @@ public final class Exponencial{
 			B += translation;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#toFloat()
+		/**
+		 *{@inheritDoc}
 		 */
-        /**
-         *
-         * @return
-         */
+		@Override
         public Funcion.Float toFloatFunction() {
 			return new Exponencial.Float(A,B,C,D,gamma);
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Double#toInteger()
-		 */
-        /**
-         *
-         * @return
-         */
-        public Funcion.Integer toIntegerFunction() {
-			return new Exponencial.Integer(A,B,C,D,gamma);
 		}
 	}
 
 	/**
-	 * Implementación con precisión Float de la función exponencial.
-	 * @author samuel
+	 * Implementación con precisión Float de la función {@link Exponencial}.
 	 */
 	public static final class Float implements Funcion.Float {
 
@@ -157,64 +132,27 @@ public final class Exponencial{
 			this.gamma = (float)gamma;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Float#f(float)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public float f(float x) {
 			return A * (float)Math.pow( C * x + D, gamma) + B;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Float#f1(float)
+		/**
+		 *{@inheritDoc}
 		 */
+		@Override
 		public float f1(float x) {
 			throw new UnsupportedOperationException();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Float#f2(float)
-		 */
-		public float f2(float x) {
-			throw new UnsupportedOperationException();
-		}
-	}
-
-	/**
-	 * Implementación con precisión Integer de la función exponencial.
-	 * @author samuel
-	 */
-	public static final class Integer implements Funcion.Integer {
-		//TODO Implementar
 		/**
-		 * Crea la función exponencial correspondiente a <code>f(x) = A*Math.pow((C*x + D), gamma) + B</code>
-         *
-         * @param A
-         * @param B
-         * @param C
-         * @param D
-         * @param gamma
-         */
-		public Integer(double A ,double B, double C, double D, double gamma){
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Integer#f(int)
+		 *{@inheritDoc}
 		 */
-		public int f(int x) {
-			return 0;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Integer#f1(int)
-		 */
-		public int f1(int x) {
-			throw new UnsupportedOperationException();
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Funcion.Integer#f2(int)
-		 */
-		public int f2(int x) {
+		@Override
+		public float f2(float x) {
 			throw new UnsupportedOperationException();
 		}
 	}

@@ -16,7 +16,12 @@ public final class Trayectoria{
 		 * @param key
 		 * @return
 		 */
-		public T getPosTang(int key);
+		public T getTan(int key);
+		/**
+		 * @param key
+		 * @return
+		 */
+		public T[] getPosTan(int key);
 	}
 
     /**
@@ -28,7 +33,12 @@ public final class Trayectoria{
 		 * @param key
 		 * @return
 		 */
-		public T getPosTang(float key);
+		public T getTan(float key);
+		/**
+		 * @param key
+		 * @return
+		 */
+		public T[] getPosTan(float key);
 	}
 
     /**
@@ -40,6 +50,11 @@ public final class Trayectoria{
 		 * @param key
 		 * @return
 		 */
-		public T getPosTang(double key);
+		public T getTan(double key);
+		/**
+		 * @param key
+		 * @return
+		 */
+		public T[] getPosTan(double key);
 	}
 }

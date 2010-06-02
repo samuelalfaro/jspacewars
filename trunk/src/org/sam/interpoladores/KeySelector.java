@@ -1,11 +1,5 @@
 package org.sam.interpoladores;
 
-/**
- * @author Samuel
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 final class KeySelector{
 	private KeySelector(){}
 	
@@ -20,9 +14,10 @@ final class KeySelector{
 			this.values = values;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(double key) {
 			int index = Keys.findIndexKey(key, keys);
 			if (index < 0)
@@ -44,9 +39,10 @@ final class KeySelector{
 			this.values = values;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(float key) {
 			int index = Keys.findIndexKey(key, keys);
 			if (index < 0)
@@ -68,9 +64,10 @@ final class KeySelector{
 			this.values = values;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(int key) {
 			int index = Keys.findIndexKey(key, keys);
 			if (index < 0)

@@ -68,7 +68,7 @@ public class PruebaInterpoladoresTrayectoria{
 			
 			g.setColor(Color.ORANGE.darker());
 			valoresAnteriores = interpolador.get(0).clone();
-			ialfa= 0.1f;
+			ialfa= 0.025f;
 			for(float alfa=0.0f; alfa < 1.0+ialfa; alfa+=ialfa){
 				valoresActuales = interpolador.get(alfa).clone();
 				g.drawRect((int)valoresActuales[0]-1, -(int)valoresActuales[1]-1, 3, 3);

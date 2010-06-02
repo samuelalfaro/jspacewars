@@ -61,7 +61,7 @@ final class Interpolador1D implements Getter.Double<Double>{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.sam.interpoladores.Interpolador#get(double)
+	 * @see org.sam.interpoladores.Getter.Double#get(double)
 	 */
 	public final Double get(double key) {
 		int index = Keys.findIndexKey(key,keys);
