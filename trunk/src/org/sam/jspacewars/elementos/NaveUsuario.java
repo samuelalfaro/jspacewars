@@ -140,7 +140,11 @@ public class NaveUsuario extends Nave {
 			upgrade();
 	}
 
+	private transient float posXant, posYant;
+	
 	private void mover(long nanos) {
+		posXant = posX;
+		posYant = posY;
 		boolean anguloModificado = false;
 
 		float v = velocidad * nanos;
@@ -187,18 +191,17 @@ public class NaveUsuario extends Nave {
 	}
 
 	private void dispara(long nanos) {
-		float nX = posX;
-		float nY = posY;
-		// TODO check
+		float nX = posXant;
+		float nY = posYant;
 		float mX = (posX - nX) / nanos;
 		float mY = (posY - nY) / nanos;
 
 		for( Canion canion: caniones[I_PRIMARIO] )
-			canion.dispara(mX, nX, mY, nY, nanos, getDstDisparos());
+			canion.dispara(mX, nX, mY, nY, nanos, nanos, getDstDisparos());
 
 		if( caniones[I_SECUNDARIO] != null )
 			for( Canion canion: caniones[I_SECUNDARIO] )
-				canion.dispara(mX, nX, mY, nY, nanos, getDstDisparos());
+				canion.dispara(mX, nX, mY, nY, nanos, nanos, getDstDisparos());
 	}
 
 	private void lanzarBomba(long nanos) {

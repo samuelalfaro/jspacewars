@@ -14,7 +14,7 @@ public class ObjLoader {
 	public static final int NONE							=	0x00;
 	public static final int RESIZE							=	0x01;
 	public static final int TRIANGULATE						=	0x02;
-	public static final int MUST_FLIP_VERTICALLY_TEXCOORS	=	0x04;
+	public static final int MUST_FLIP_VERTICALLY_TEXCOORDS	=	0x04;
 	
 	private static final int N_BYTES_FLOAT = 4;
 	
@@ -120,7 +120,6 @@ public class ObjLoader {
 	}
 	
 	private final int flags;
-	private final Matrix4d mt;
 	
 	final List<Point3f> coordList;
 	final Queue<Integer> coordIdxList;
@@ -135,14 +134,13 @@ public class ObjLoader {
 	float minY, maxY;
 	float minZ, maxZ;
 	
-	private ObjLoader(int flags, Matrix4d mt){
+	private ObjLoader(int flags){
 		this.flags = flags;
-		this.mt = mt;
-		coordList = new ArrayList<Point3f>(500);
+		coordList = new ArrayList<Point3f>(512);
 		coordIdxList = new LinkedList<Integer>();
-		texList = new ArrayList<TexCoord2f>(500);
+		texList = new ArrayList<TexCoord2f>(512);
 		texIdxList = new LinkedList<Integer>();
-		normList = new ArrayList<Vector3f>(500);
+		normList = new ArrayList<Vector3f>(512);
 		normIdxList = new LinkedList<Integer>();
 		
 		if((flags & ObjLoader.RESIZE) != 0){
@@ -204,8 +202,6 @@ public class ObjLoader {
 		v.x = st.getFloat();
 		v.y = st.getFloat();
 		v.z = st.getFloat();
-		if (mt != null)
-			mt.transform(v);
 		coordList.add(v);
 		if((flags & ObjLoader.RESIZE) != 0){
 			if(v.x < minX)
@@ -226,7 +222,7 @@ public class ObjLoader {
 	void readTexture(ObjParser st) throws ParsingErrorException {
 		TexCoord2f t = new TexCoord2f();
 		t.x = st.getFloat();
-		t.y = (flags & MUST_FLIP_VERTICALLY_TEXCOORS) != 0 ? 1.0f - st.getFloat() : st.getFloat();
+		t.y = (flags & MUST_FLIP_VERTICALLY_TEXCOORDS) != 0 ? 1.0f - st.getFloat() : st.getFloat();
 		texList.add(t);
 	}
 	
@@ -235,8 +231,6 @@ public class ObjLoader {
 		n.x = st.getFloat();
 		n.y = st.getFloat();
 		n.z = st.getFloat();
-		if (mt != null)
-			mt.transform(n);
 		normList.add(n);
 	}
 
@@ -355,7 +349,7 @@ public class ObjLoader {
 		return mt;
 	}
 	
-	Geometria generarGeometria(){
+	Geometria generarGeometria(Matrix4d mt){
 		int nVertex = coordIdxList.size();
 		
 		boolean textCoord = texList.size() > 0;
@@ -378,9 +372,12 @@ public class ObjLoader {
 		Point3f  v = new Point3f(); 
 		Vector3f n = new Vector3f();
 		
-		Matrix4d mt=null;
-		if ( (flags & RESIZE) != 0)
-			mt = escalarYCentrar();
+		if ( (flags & RESIZE) != 0 ){
+			if(mt != null)
+				mt.mul(escalarYCentrar());
+			else
+				mt = escalarYCentrar();
+		}
 		
 		while(!coordIdxList.isEmpty()){
 			v.set(coordList.get(coordIdxList.poll()));
@@ -502,15 +499,18 @@ public class ObjLoader {
 	}
 	//*/
 	
-	OglList almacenarGeometria(GL gl){
+	OglList almacenarGeometria(GL gl, Matrix4d mt){
 		boolean textCoord = texList.size() > 0;
 		boolean normal = normList.size() > 0;
 		Point3f  v = new Point3f(); 
 		Vector3f n = new Vector3f();
 		
-		Matrix4d mt=null;
-		if ( (flags & RESIZE) != 0)
-			mt = escalarYCentrar();
+		if ( (flags & RESIZE) != 0 ){
+			if(mt != null)
+				mt.mul(escalarYCentrar());
+			else
+				mt = escalarYCentrar();
+		}
 		
 		int lid = gl.glGenLists(1);
 		
@@ -555,9 +555,9 @@ public class ObjLoader {
 	}
 	
 	private static Objeto3D load(Reader reader, int flags, Matrix4d mt) throws ParsingErrorException{
-		ObjLoader loader = new ObjLoader(flags,mt);
+		ObjLoader loader = new ObjLoader(flags);
 		loader.read(new ObjParser(new BufferedReader(reader)));
-		return new Objeto3D(loader.generarGeometria(), new Apariencia());
+		return new Objeto3D(loader.generarGeometria(mt), new Apariencia());
 	}
 
 	public static Objeto3D load(String filename) throws FileNotFoundException, ParsingErrorException{
@@ -593,9 +593,9 @@ public class ObjLoader {
 	}
 	
 	private static Objeto3D loadToList(Reader reader, int flags, Matrix4d mt) throws ParsingErrorException{
-		ObjLoader loader = new ObjLoader(flags,mt);
+		ObjLoader loader = new ObjLoader(flags);
 		loader.read(new ObjParser(new BufferedReader(reader)));
-		return new Objeto3D(loader.almacenarGeometria( GLU.getCurrentGL()), new Apariencia());
+		return new Objeto3D(loader.almacenarGeometria( GLU.getCurrentGL(), mt), new Apariencia());
 	}
 	
 	public static Objeto3D loadToList(String filename) throws FileNotFoundException, ParsingErrorException{

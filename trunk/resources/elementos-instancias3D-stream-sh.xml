@@ -2016,7 +2016,7 @@
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"/>
 	</Instancia3D>
-	<!-- 8 Misil 1 -->
+	<!-- 8 Misil 01 -->
 	<Misil type="0x40">
 	</Misil>
 	<Instancia3D type="0x40">
@@ -2024,12 +2024,12 @@
 			<NodoCompartido>
 				<Grupo>
 					<Objeto3D>
-						<Forma3DFromObjFile path="resources/obj3d/misil/forma.obj">
+						<Forma3DFromObjFile path="resources/obj3d/misil01/forma.obj" flags="RESIZE">
 							<transformMatrix>
-								<m00>0.01</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
-								<m01>0.0</m01>	<m11>0.01</m11>	<m21>0.0</m21>	<m31>0.0</m31>
-								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.01</m22>	<m32>0.0</m32>
-								<m03>0.0</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+								<m00>0.5</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
+								<m01>0.0</m01>	<m11>0.5</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.5</m22>	<m32>0.0</m32>
+								<m03>0.23</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
 							</transformMatrix>
 						</Forma3DFromObjFile>
 						<Apariencia>
@@ -2042,7 +2042,472 @@
 							</Material>
 							<Textura
 									minFilter="LINEAR" magFilter="LINEAR"
-									format="RGB" image="resources/obj3d/misil/t01.jpg" flipY="true"
+									format="RGB" image="resources/obj3d/misil01/t01.jpg" flipY="true"
+									wrapS="REPEAT" wrapT="REPEAT"
+							/>
+						</Apariencia>
+					</Objeto3D>
+					<Objeto3D>
+						<TexturedQuad x1="-0.5" y1="-0.125" x2="0.0" y2="0.125" u1="0.25" v1="0.625" u2="0.5" v2="0.75" />
+						<Apariencia>
+							<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+							<AtributosTextura>
+								<mode>REPLACE</mode>
+							</AtributosTextura>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGBA" image="resources/texturas/disparos.png" flipY="true"
+									wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"
+							/>
+						</Apariencia>
+					</Objeto3D>
+				</Grupo>
+			</NodoCompartido>
+			<Particulas nParticulas="25">
+				<Emisor reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+				<Emision>CONTINUA</Emision>
+				<RangoDeEmision>1.0</RangoDeEmision>
+				<TiempoDeVida>0.25</TiempoDeVida>
+				<Radio class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="3">
+						<float>0.0</float>
+						<float>0.1666</float>
+						<float>1.0</float>
+					</Keys>
+					<Values length="3" class="[F">
+						<float>0.05</float>
+						<float>0.3</float>
+						<float>0.1</float>
+					</Values>
+				</Radio>
+				<Color>
+					<r class="float">0.11</r>
+					<g class="float">0.26</g>
+					<b class="float">0.44</b>
+					<a class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="2">
+							<float>0.0</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="2" class="[F">
+							<float>1.0</float>
+							<float>0.0</float>
+						</Values>
+					</a>
+				</Color>
+				<PertubacionColor p="0.75" homogenea="true" escalar="false"/>
+				<Velocidad v="-5" p="0" s="false"/>
+				<GiroIncial v="0.0" p="180.0" s="true"/>
+				<VelocidadGiro v="360.0" p="0.0" s="true"/>
+				<Apariencia>
+					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+				</Apariencia>
+			</Particulas>
+		</Grupo>
+	</Instancia3D>
+	<!-- 8 Misil 02 -->
+	<Misil type="0x41">
+	</Misil>
+	<Instancia3D type="0x41">
+		<Grupo>
+			<NodoCompartido>
+				<Grupo>
+					<Objeto3D>
+						<Forma3DFromObjFile path="resources/obj3d/misil02/forma.obj" flags="RESIZE">
+							<transformMatrix>
+								<m00>0.5</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
+								<m01>0.0</m01>	<m11>0.5</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.5</m22>	<m32>0.0</m32>
+								<m03>0.23</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+							</transformMatrix>
+						</Forma3DFromObjFile>
+						<Apariencia>
+							<Material>
+								<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+								<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<shininess>64.0</shininess>
+								<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+							</Material>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGB" image="resources/obj3d/misil02/t01.jpg" flipY="true"
+									wrapS="REPEAT" wrapT="REPEAT"
+							/>
+						</Apariencia>
+					</Objeto3D>
+					<Objeto3D>
+						<TexturedQuad x1="-0.5" y1="-0.125" x2="0.0" y2="0.125" u1="0.25" v1="0.625" u2="0.5" v2="0.75" />
+						<Apariencia>
+							<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+							<AtributosTextura>
+								<mode>REPLACE</mode>
+							</AtributosTextura>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGBA" image="resources/texturas/disparos.png" flipY="true"
+									wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"
+							/>
+						</Apariencia>
+					</Objeto3D>
+				</Grupo>
+			</NodoCompartido>
+			<Particulas nParticulas="25">
+				<Emisor reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+				<Emision>CONTINUA</Emision>
+				<RangoDeEmision>1.0</RangoDeEmision>
+				<TiempoDeVida>0.25</TiempoDeVida>
+				<Radio class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="3">
+						<float>0.0</float>
+						<float>0.1666</float>
+						<float>1.0</float>
+					</Keys>
+					<Values length="3" class="[F">
+						<float>0.05</float>
+						<float>0.3</float>
+						<float>0.1</float>
+					</Values>
+				</Radio>
+				<Color>
+					<r class="float">0.11</r>
+					<g class="float">0.26</g>
+					<b class="float">0.44</b>
+					<a class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="2">
+							<float>0.0</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="2" class="[F">
+							<float>1.0</float>
+							<float>0.0</float>
+						</Values>
+					</a>
+				</Color>
+				<PertubacionColor p="0.75" homogenea="true" escalar="false"/>
+				<Velocidad v="-5" p="0" s="false"/>
+				<GiroIncial v="0.0" p="180.0" s="true"/>
+				<VelocidadGiro v="360.0" p="0.0" s="true"/>
+				<Apariencia>
+					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+				</Apariencia>
+			</Particulas>
+		</Grupo>
+	</Instancia3D>
+	<!-- 8 Misil 03 -->
+	<Misil type="0x42">
+	</Misil>
+	<Instancia3D type="0x42">
+		<Grupo>
+			<NodoCompartido>
+				<Grupo>
+					<Objeto3D>
+						<Forma3DFromObjFile path="resources/obj3d/misil03/forma.obj" flags="RESIZE">
+							<transformMatrix>
+								<m00>0.5</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
+								<m01>0.0</m01>	<m11>0.5</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.5</m22>	<m32>0.0</m32>
+								<m03>0.23</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+							</transformMatrix>
+						</Forma3DFromObjFile>
+						<Apariencia>
+							<Material>
+								<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+								<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<shininess>64.0</shininess>
+								<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+							</Material>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGB" image="resources/obj3d/misil03/t01.jpg" flipY="true"
+									wrapS="REPEAT" wrapT="REPEAT"
+							/>
+						</Apariencia>
+					</Objeto3D>
+					<Objeto3D>
+						<TexturedQuad x1="-0.5" y1="-0.125" x2="0.0" y2="0.125" u1="0.25" v1="0.625" u2="0.5" v2="0.75" />
+						<Apariencia>
+							<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+							<AtributosTextura>
+								<mode>REPLACE</mode>
+							</AtributosTextura>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGBA" image="resources/texturas/disparos.png" flipY="true"
+									wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"
+							/>
+						</Apariencia>
+					</Objeto3D>
+				</Grupo>
+			</NodoCompartido>
+			<Particulas nParticulas="25">
+				<Emisor reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+				<Emision>CONTINUA</Emision>
+				<RangoDeEmision>1.0</RangoDeEmision>
+				<TiempoDeVida>0.25</TiempoDeVida>
+				<Radio class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="3">
+						<float>0.0</float>
+						<float>0.1666</float>
+						<float>1.0</float>
+					</Keys>
+					<Values length="3" class="[F">
+						<float>0.05</float>
+						<float>0.3</float>
+						<float>0.1</float>
+					</Values>
+				</Radio>
+				<Color>
+					<r class="float">0.11</r>
+					<g class="float">0.26</g>
+					<b class="float">0.44</b>
+					<a class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="2">
+							<float>0.0</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="2" class="[F">
+							<float>1.0</float>
+							<float>0.0</float>
+						</Values>
+					</a>
+				</Color>
+				<PertubacionColor p="0.75" homogenea="true" escalar="false"/>
+				<Velocidad v="-5" p="0" s="false"/>
+				<GiroIncial v="0.0" p="180.0" s="true"/>
+				<VelocidadGiro v="360.0" p="0.0" s="true"/>
+				<Apariencia>
+					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+				</Apariencia>
+			</Particulas>
+		</Grupo>
+	</Instancia3D>
+	<!-- 8 Misil 04 -->
+	<Misil type="0x43">
+	</Misil>
+	<Instancia3D type="0x43">
+		<Grupo>
+			<NodoCompartido>
+				<Grupo>
+					<Objeto3D>
+						<Forma3DFromObjFile path="resources/obj3d/misil04/forma.obj" flags="RESIZE">
+							<transformMatrix>
+								<m00>0.5</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
+								<m01>0.0</m01>	<m11>0.5</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.5</m22>	<m32>0.0</m32>
+								<m03>0.23</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+							</transformMatrix>
+						</Forma3DFromObjFile>
+						<Apariencia>
+							<Material>
+								<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+								<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<shininess>64.0</shininess>
+								<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+							</Material>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGB" image="resources/obj3d/misil04/t01.jpg" flipY="true"
+									wrapS="REPEAT" wrapT="REPEAT"
+							/>
+						</Apariencia>
+					</Objeto3D>
+					<Objeto3D>
+						<TexturedQuad x1="-0.5" y1="-0.125" x2="0.0" y2="0.125" u1="0.25" v1="0.625" u2="0.5" v2="0.75" />
+						<Apariencia>
+							<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+							<AtributosTextura>
+								<mode>REPLACE</mode>
+							</AtributosTextura>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGBA" image="resources/texturas/disparos.png" flipY="true"
+									wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"
+							/>
+						</Apariencia>
+					</Objeto3D>
+				</Grupo>
+			</NodoCompartido>
+			<Particulas nParticulas="25">
+				<Emisor reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+				<Emision>CONTINUA</Emision>
+				<RangoDeEmision>1.0</RangoDeEmision>
+				<TiempoDeVida>0.25</TiempoDeVida>
+				<Radio class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="3">
+						<float>0.0</float>
+						<float>0.1666</float>
+						<float>1.0</float>
+					</Keys>
+					<Values length="3" class="[F">
+						<float>0.05</float>
+						<float>0.3</float>
+						<float>0.1</float>
+					</Values>
+				</Radio>
+				<Color>
+					<r class="float">0.11</r>
+					<g class="float">0.26</g>
+					<b class="float">0.44</b>
+					<a class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="2">
+							<float>0.0</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="2" class="[F">
+							<float>1.0</float>
+							<float>0.0</float>
+						</Values>
+					</a>
+				</Color>
+				<PertubacionColor p="0.75" homogenea="true" escalar="false"/>
+				<Velocidad v="-5" p="0" s="false"/>
+				<GiroIncial v="0.0" p="180.0" s="true"/>
+				<VelocidadGiro v="360.0" p="0.0" s="true"/>
+				<Apariencia>
+					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+				</Apariencia>
+			</Particulas>
+		</Grupo>
+	</Instancia3D>
+	<!-- 8 Misil 05 -->
+	<Misil type="0x44">
+	</Misil>
+	<Instancia3D type="0x44">
+		<Grupo>
+			<NodoCompartido>
+				<Grupo>
+					<Objeto3D>
+						<Forma3DFromObjFile path="resources/obj3d/misil05/forma.obj" flags="RESIZE">
+							<transformMatrix>
+								<m00>0.5</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
+								<m01>0.0</m01>	<m11>0.5</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.5</m22>	<m32>0.0</m32>
+								<m03>0.23</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+							</transformMatrix>
+						</Forma3DFromObjFile>
+						<Apariencia>
+							<Material>
+								<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+								<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<shininess>64.0</shininess>
+								<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+							</Material>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGB" image="resources/obj3d/misil05/t01.jpg" flipY="true"
+									wrapS="REPEAT" wrapT="REPEAT"
+							/>
+						</Apariencia>
+					</Objeto3D>
+					<Objeto3D>
+						<TexturedQuad x1="-0.5" y1="-0.125" x2="0.0" y2="0.125" u1="0.25" v1="0.625" u2="0.5" v2="0.75" />
+						<Apariencia>
+							<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+							<AtributosTextura>
+								<mode>REPLACE</mode>
+							</AtributosTextura>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGBA" image="resources/texturas/disparos.png" flipY="true"
+									wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"
+							/>
+						</Apariencia>
+					</Objeto3D>
+				</Grupo>
+			</NodoCompartido>
+			<Particulas nParticulas="25">
+				<Emisor reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+				<Emision>CONTINUA</Emision>
+				<RangoDeEmision>1.0</RangoDeEmision>
+				<TiempoDeVida>0.25</TiempoDeVida>
+				<Radio class="Getter.Float">
+					<MetodoDeInterpolacion predefinido="LINEAL"/>
+					<Keys length="3">
+						<float>0.0</float>
+						<float>0.1666</float>
+						<float>1.0</float>
+					</Keys>
+					<Values length="3" class="[F">
+						<float>0.05</float>
+						<float>0.3</float>
+						<float>0.1</float>
+					</Values>
+				</Radio>
+				<Color>
+					<r class="float">0.11</r>
+					<g class="float">0.26</g>
+					<b class="float">0.44</b>
+					<a class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="2">
+							<float>0.0</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="2" class="[F">
+							<float>1.0</float>
+							<float>0.0</float>
+						</Values>
+					</a>
+				</Color>
+				<PertubacionColor p="0.75" homogenea="true" escalar="false"/>
+				<Velocidad v="-5" p="0" s="false"/>
+				<GiroIncial v="0.0" p="180.0" s="true"/>
+				<VelocidadGiro v="360.0" p="0.0" s="true"/>
+				<Apariencia>
+					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
+					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
+				</Apariencia>
+			</Particulas>
+		</Grupo>
+	</Instancia3D>
+	<!-- 8 Misil 06 -->
+	<Misil type="0x45">
+	</Misil>
+	<Instancia3D type="0x45">
+		<Grupo>
+			<NodoCompartido>
+				<Grupo>
+					<Objeto3D>
+						<Forma3DFromObjFile path="resources/obj3d/misil06/forma.obj" flags="RESIZE">
+							<transformMatrix>
+								<m00>0.5</m00>	<m10>0.0</m10>	<m20>0.0</m20>	<m30>0.0</m30>
+								<m01>0.0</m01>	<m11>0.5</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+								<m02>0.0</m02>	<m12>0.0</m12>	<m22>0.5</m22>	<m32>0.0</m32>
+								<m03>0.23</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+							</transformMatrix>
+						</Forma3DFromObjFile>
+						<Apariencia>
+							<Material>
+								<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+								<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+								<shininess>64.0</shininess>
+								<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+							</Material>
+							<Textura
+									minFilter="LINEAR" magFilter="LINEAR"
+									format="RGB" image="resources/obj3d/misil06/t01.jpg" flipY="true"
 									wrapS="REPEAT" wrapT="REPEAT"
 							/>
 						</Apariencia>

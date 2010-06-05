@@ -17,6 +17,10 @@ public class CanionLineal extends Canion {
 		this.angulo = prototipo.angulo;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Canion clone() {
 		return new CanionLineal(this);
 	}
@@ -25,20 +29,17 @@ public class CanionLineal extends Canion {
 		this.angulo = (float) (angulo / 180.0f * Math.PI);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sam.elementos.Canion#dispara(float, float, float, float, long,
-	 * java.util.Collection)
+	/**
+	 * {@inheritDoc}
 	 */
-	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst){
+	@Override
+	public void dispara(float mX, float nX, float mY, float nY, long nanos, long stopTime, Collection<? super Disparo> dst){
 
 		long t = tRecarga - tTranscurrido;
 
 		tTranscurrido += nanos;
 		while( tTranscurrido >= tRecarga ){
 			DisparoLineal disparo = (DisparoLineal) cache.newObject(idDisparo);
-			disparo.setId(Canion.getId());
 
 			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, angulo, velocidad);
 			disparo.actua(nanos - t);

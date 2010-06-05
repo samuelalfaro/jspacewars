@@ -19,25 +19,48 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		}
 	};
 
+	private transient AutoIncrementable incrementador;
+	
+	interface AutoIncrementable{
+		short getNextId();
+	}
+	
+	private final AutoIncrementable getAutoIncrementable(){
+		if(incrementador == null)
+			incrementador = new AutoIncrementable(){
+			private transient short id = 0;
+
+			public short getNextId() {
+				if( ++id == Short.MAX_VALUE )
+					id = 1;
+				return id;
+			}
+		};
+		return incrementador;
+	}
+	
+	private final Elemento prototipo;
 	private final short type;
+	
 	private short id;
 	protected transient float posX, posY;
 	protected Poligono forma;
 
 	Elemento(short type) {
+		this.prototipo = null;
 		this.type = type;
+		this.id = 0;
 		this.posX = 0.0f;
 		this.posY = 0.0f;
 	}
 
 	protected Elemento(Elemento prototipo) {
+		this.prototipo = prototipo;
 		this.type = prototipo.type;
+		this.incrementador = null;
+		this.id = prototipo.getAutoIncrementable().getNextId();
 		this.posX = prototipo.posX;
 		this.posY = prototipo.posY;
-	}
-
-	public final void setId(short id) {
-		this.id = id;
 	}
 
 	public final int hashCode() {
@@ -75,4 +98,9 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	}
 	
 	public abstract Elemento clone();
+	
+	@Override
+	public final void reset() {
+		this.id = prototipo.getAutoIncrementable().getNextId();
+	}
 }

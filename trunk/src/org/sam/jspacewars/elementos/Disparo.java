@@ -36,8 +36,8 @@ public abstract class Disparo extends Elemento {
 		return false;
 	}
 	
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-	}
+//	@Override
+//	public void reset() {
+//		// TODO Auto-generated method stub
+//	}
 }
