@@ -17,6 +17,10 @@ public class LanzaMisiles extends Canion {
 		this.angulo = prototipo.angulo;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Canion clone() {
 		return new LanzaMisiles(this);
 	}
@@ -25,13 +29,16 @@ public class LanzaMisiles extends Canion {
 		this.angulo = (float) (angulo / 180.0 * Math.PI);
 	}
 
-	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst){
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void dispara(float mX, float nX, float mY, float nY, long nanos, long stopTime, Collection<? super Disparo> dst){
 		long t = tRecarga - tTranscurrido;
 
 		tTranscurrido += nanos;
 		while( tTranscurrido >= tRecarga ){
 			Misil disparo = (Misil) cache.newObject(idDisparo);
-			disparo.setId(Canion.getId());
 
 			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, angulo, velocidad);
 			// TODO cambiar esta ñapa

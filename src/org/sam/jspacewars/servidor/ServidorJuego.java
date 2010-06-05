@@ -62,7 +62,6 @@ public class ServidorJuego {
 		Collection<Disparo> disparosNave;
 
 		nave1 = (NaveUsuario) cache.newObject(0x02);
-		nave1.setId((short) 1);
 		disparosNave = new LinkedList<Disparo>();
 		nave1.setDstDisparos(disparosNave);
 		listasDeDisparos.add(disparosNave);
@@ -78,7 +77,6 @@ public class ServidorJuego {
 
 		if( !localOnly ){
 			nave2 = (NaveUsuario) cache.newObject(0x01);
-			nave2.setId((short) 2);
 			disparosNave = new LinkedList<Disparo>();
 			nave2.setDstDisparos(disparosNave);
 			listasDeDisparos.add(disparosNave);

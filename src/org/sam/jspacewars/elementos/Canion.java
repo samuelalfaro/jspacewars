@@ -3,16 +3,9 @@ package org.sam.jspacewars.elementos;
 import java.util.Collection;
 
 import org.sam.elementos.Cache;
+import org.sam.elementos.Prototipo;
 
-public abstract class Canion implements Cloneable {
-
-	private static short id = 0;
-
-	protected static short getId() {
-		if( ++id == Short.MAX_VALUE )
-			id = 1;
-		return id;
-	}
+public abstract class Canion implements Prototipo<Canion> {
 
 	protected static Cache<Elemento> cache;
 
@@ -94,13 +87,13 @@ public abstract class Canion implements Cloneable {
 	
 	public final void setDesfase(float desfase) {
 		this.desfase = desfase;
-		this.tDesfase = (int)(desfase * tRecarga);
+		this.tDesfase = (long)(desfase * tRecarga);
 	}
 
 	public final void setGrado(int grado) {
 		this.idDisparo = data.getIdDisparo(grado);
 		this.tRecarga = data.getTRecarga(grado);
-		this.tDesfase = (int)(desfase * tRecarga);
+		this.tDesfase = (long)(desfase * tRecarga);
 		this.velocidad = data.getVelocidad(grado);
 		
 		tTranscurrido = tRecarga - tDesfase;
@@ -110,5 +103,5 @@ public abstract class Canion implements Cloneable {
 		tTranscurrido = tRecarga - tDesfase;
 	}
 
-	public abstract void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst);
+	public abstract void dispara(float mX, float nX, float mY, float nY, long nanos, long stopTime, Collection<? super Disparo> dst);
 }

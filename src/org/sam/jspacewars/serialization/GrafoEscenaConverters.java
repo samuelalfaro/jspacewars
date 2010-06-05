@@ -103,6 +103,10 @@ public class GrafoEscenaConverters {
 		
 		private static final String Forma3DFromObjFile = "Forma3DFromObjFile";
 		private static final String path = "path";
+		private static final String flags = "flags";
+		private static final String RESIZE = "RESIZE";
+		private static final String TRIANGULATE	= "TRIANGULATE";
+		private static final String MUST_FLIP_VERTICALLY_TEXCOORDS = "MUST_FLIP_VERTICALLY_TEXCOORDS";
 		
 		private static final String TexturedQuad = "TexturedQuad";
 		private static final String ancho = "ancho";
@@ -384,12 +388,13 @@ public class GrafoEscenaConverters {
 	
 	private static class ObjLoaderData{
 		private String path;
+		private int flags = ObjLoader.NONE;
 		private Matrix4d transformMatrix;
 	}
 	
 	
 	private static class ObjLoaderDataConverter implements Converter {
-
+		
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
@@ -410,6 +415,13 @@ public class GrafoEscenaConverters {
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			ObjLoaderData loaderData = new ObjLoaderData();
 			loaderData.path = reader.getAttribute(S.path);
+			String flagsAtt = reader.getAttribute(S.flags);
+			if(flagsAtt != null){
+				flagsAtt = flagsAtt.toUpperCase();
+				loaderData.flags |= flagsAtt.contains(S.RESIZE) ? ObjLoader.RESIZE : 0;
+				loaderData.flags |= flagsAtt.contains(S.TRIANGULATE) ? ObjLoader.TRIANGULATE : 0;
+				loaderData.flags |= flagsAtt.contains(S.MUST_FLIP_VERTICALLY_TEXCOORDS) ? ObjLoader.MUST_FLIP_VERTICALLY_TEXCOORDS : 0;
+			}
 			if( reader.hasMoreChildren() ){
 				reader.moveDown();
 				if( reader.getNodeName().equals(S.transformMatrix) )
@@ -417,7 +429,7 @@ public class GrafoEscenaConverters {
 				reader.moveUp();
 			}
 			try{
-				return ObjLoader.loadToList(loaderData.path, loaderData.transformMatrix).getForma3D();
+				return ObjLoader.loadToList(loaderData.path, loaderData.flags, loaderData.transformMatrix).getForma3D();
 			}catch( Exception e ){
 				e.printStackTrace();
 			}
