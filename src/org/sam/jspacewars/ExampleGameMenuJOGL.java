@@ -72,14 +72,9 @@ public class ExampleGameMenuJOGL {
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			frame.setBounds(0, 0, dim.width, dim.height);
 		}
-//		CardLayout layout = new ;
-//		frame.setContentPane(contentPane)
-//		final JPanel escenario = new JPanel(layout);
-//		frame.getContentPane().setLayout(new CardLayout());
 		return frame;
 	}
 	
-	//*
 	private static void mostrar(JFrame frame, Component component) {
 		if( Container.class.isAssignableFrom(component.getClass()) ){
 			System.out.println("Usando componente como ContentPane");
@@ -96,10 +91,8 @@ public class ExampleGameMenuJOGL {
 			System.out.println("eoo");
 			frame.setVisible(true);
 		}
-//		frame.setVisible(true);
 		component.requestFocus();
 	}
-	//*/
 	
 	private static class ClientServer{
 		Cliente cliente;
@@ -112,19 +105,19 @@ public class ExampleGameMenuJOGL {
 		final ClientServer clientServer= new ClientServer();
 		
 		final DataGame dataGame = new DataGame();
-		GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
+		GLCanvas splashCanvas = new GLCanvas(new GLCapabilities());
 
-		SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
-		splashFrame.setVisible(true);
+		SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
+		splashWindow.setVisible(true);
 
 		final Animator animator = new Animator();
 		animator.setRunAsFastAsPossible(true);
 		animator.setPrintExceptions(true);
-		splashFrame.waitForLoading();
-		splashFrame.setVisible(false);
+		splashWindow.waitForLoading();
+		splashWindow.setVisible(false);
 
 //		canvas.removeAllGLEventListeners();
-		final GLCanvas canvas = new GLCanvas(null, null, canvas1.getContext(), null);
+		final GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);
 		
 		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer(dataGame.getFondo());
 		Map<String,IButtonPressedListener> actions = new Hashtable<String,IButtonPressedListener>();
@@ -133,7 +126,7 @@ public class ExampleGameMenuJOGL {
 		canvas.addGLEventListener(backgroundRenderer);
 		canvas.addGLEventListener(displayGUI);
 		
-		splashFrame = null;
+		splashWindow = null;
 		System.gc();
 
 		final JFrame frame = getFullScreenFrame();
@@ -153,8 +146,6 @@ public class ExampleGameMenuJOGL {
 							dataGame, canvas
 					);
 					canvas.addGLEventListener(displayGUI);
-//					canvas.
-//					canvas.setSize(canvas.getSize());
 					clientServer.cliente.start();
 					
 					new Thread(){
@@ -175,14 +166,7 @@ public class ExampleGameMenuJOGL {
 		
 		actions.put("lanzarUnJugador", lanzarUnJugador);
 		
-//		GLCanvas canvas = new GLCanvas(new GLCapabilities(), null, dataGame.getGLContext(), null);
-		
-//		GameMenu gameMenu = new GameMenu();
-//		canvas.addGLEventListener(new GLEventListenerDisplayGUI(gameMenu));
 		animator.add(canvas);
-//		frame.getContentPane().add( canvas, "0");
-//		frame.getContentPane().add( pantalla, "1");
-//		frame.validate();
 		mostrar(frame, canvas);
 		animator.start();
 	}

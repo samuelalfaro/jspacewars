@@ -26,7 +26,7 @@ public class CanionLineal extends Canion {
 	}
 
 	public void setAngulo(float angulo) {
-		this.angulo = (float) (angulo / 180.0f * Math.PI);
+		this.angulo = (float) (angulo * Math.PI / 180.0 );
 	}
 
 	/**

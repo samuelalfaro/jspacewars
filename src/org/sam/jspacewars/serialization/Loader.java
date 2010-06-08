@@ -18,8 +18,7 @@ public class Loader {
 	private Loader(){
 	}
 	
-	private static void loadToCache( ObjectInputStream in, Cache<Elemento> cache )
-			throws IOException {
+	private static void loadToCache( ObjectInputStream in, Cache<Elemento> cache ) throws IOException {
 		try {
 			while (true) {
 				Object o = in.readObject();

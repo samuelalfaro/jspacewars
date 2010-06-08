@@ -23,6 +23,10 @@ public class Misil extends Disparo {
 	public void setValues(float posX, float posY, float angulo, float velocidad) {
 		super.setPosicion(posX, posY);
 		this.angulo = angulo;
+		while( this.angulo < 0 )
+			this.angulo += PI2;
+		while( this.angulo > PI2 )
+			this.angulo -= PI2;
 		this.vTangencial = velocidad;
 		this.aceleracion = velocidad / 500000000;
 	}

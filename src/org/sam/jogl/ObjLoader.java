@@ -381,10 +381,8 @@ public class ObjLoader {
 		
 		while(!coordIdxList.isEmpty()){
 			v.set(coordList.get(coordIdxList.poll()));
-			try{
+			if(mt != null)
 				mt.transform(v);
-			}catch(NullPointerException noHayTransfrom){
-			}
 			floatBuffer.put(v.x);
 			floatBuffer.put(v.y);
 			floatBuffer.put(v.z);
@@ -407,10 +405,8 @@ public class ObjLoader {
 			floatBuffer = ByteBuffer.allocateDirect(N_BYTES_FLOAT * nVertex * 3).order(order).asFloatBuffer();
 			while(!normIdxList.isEmpty()){
 				n.set(normList.get(normIdxList.poll()));
-				try{
+				if(mt != null)
 					mt.transform(n);
-				}catch(NullPointerException noHayTransfrom){
-				}
 				n.normalize();
 				floatBuffer.put(n.x);
 				floatBuffer.put(n.y);
@@ -527,21 +523,16 @@ public class ObjLoader {
 			}
 			if (normal){
 				n.set(normList.get(normIdxList.poll()));
-				try{
+				if(mt != null)
 					mt.transform(n);
-				}catch(NullPointerException noHayTransfrom){
-				}
 				n.normalize();
 				gl.glNormal3f(n.x, n.y, n.z);
 			}
 			
 			v.set(coordList.get(coordIdxList.poll()));
-			try{
+			if(mt != null)
 				mt.transform(v);
-			}catch(NullPointerException noHayTransfrom){
-			}
 			gl.glVertex3f(v.x,v.y,v.z);
-			
 		}
 		gl.glEnd();
 		gl.glEndList();
