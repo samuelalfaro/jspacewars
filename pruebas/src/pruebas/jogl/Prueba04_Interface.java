@@ -14,11 +14,10 @@ import javax.swing.JFrame;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
-import org.sam.jogl.Material;
+import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Textura;
 import org.sam.jspacewars.cliente.MarcoDeIndicadores;
 import org.sam.util.Imagen;
-
 
 import com.sun.opengl.util.Animator;
 
@@ -29,8 +28,8 @@ public class Prueba04_Interface{
 		private GLU glu;
 		private OrbitBehavior orbitBehavior;
 
-		private Apariencia apFondo, apHelix;
-		private int idList;
+		private Apariencia apFondo;
+		private Objeto3D helix;
 
 		private final MarcoDeIndicadores marco = MarcoDeIndicadores.getMarco(0);
 
@@ -57,13 +56,7 @@ public class Prueba04_Interface{
 			while(!marco.isLoadComplete())
 				marco.loadTexturas(gl);
 
-			idList = HelixGenerator.generateHelix(gl, 0.25f, 0.5f, 0.75f, 20);
-			apHelix = new Apariencia();
-			Material material = new Material();
-			material.setDiffuse( 0.4f, 0.2f, 0.8f, 1.0f );
-			material.setSpecular( 1.0f, 1.0f, 1.0f, 1.0f );
-			material.setShininess(128.0f);
-			apHelix.setMaterial(material);
+			helix = HelixGenerator.generateHelix(gl, 0.25f, 0.5f, 0.75f, 20);
 
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
@@ -112,8 +105,7 @@ public class Prueba04_Interface{
 			gl.glMatrixMode(GL.GL_MODELVIEW);
 			orbitBehavior.setLookAt(glu);
 
-			apHelix.usar(gl);
-			gl.glCallList(idList);
+			helix.draw(gl);
 
 			marco.draw(gl);
 			gl.glFlush();

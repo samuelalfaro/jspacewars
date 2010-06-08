@@ -17,7 +17,7 @@ import javax.vecmath.Vector3f;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
-import org.sam.jogl.Material;
+import org.sam.jogl.Objeto3D;
 import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.Textura;
 import org.sam.jogl.particulas.Emisor;
@@ -37,8 +37,7 @@ public class Prueba02_FondoCieloEstrellado{
 		private Apariencia apFondo;
 		private transient Particulas estrellas[] = new Particulas[20];
 		
-		private Apariencia  apHelix;
-		private int idList;
+		private Objeto3D helix;
 		
 		private transient float proporcionesFondo, proporcionesPantalla;
 		private transient long tAnterior, tActual;
@@ -106,13 +105,7 @@ public class Prueba02_FondoCieloEstrellado{
 			}
 			FactoriaDeParticulas.setOptimizedFor2D(false);
 			
-			idList = HelixGenerator.generateHelix(gl, 0.25f, 0.5f, 0.75f, 20);
-			apHelix = new Apariencia();
-			Material material = new Material();
-			material.setDiffuse( 0.4f, 0.2f, 0.8f, 1.0f );
-			material.setSpecular( 1.0f, 1.0f, 1.0f, 1.0f );
-			material.setShininess(128.0f);
-			apHelix.setMaterial(material);
+			helix = HelixGenerator.generateHelix(gl, 0.25f, 0.5f, 0.75f, 20);
 
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
@@ -121,7 +114,7 @@ public class Prueba02_FondoCieloEstrellado{
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 10.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.9f, 1.0f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 0.9f, 1.0f }, 0);
-			gl.glEnable(GL.GL_CULL_FACE);
+//			gl.glEnable(GL.GL_CULL_FACE);
 			tActual = System.nanoTime();
 		}
 
@@ -173,8 +166,7 @@ public class Prueba02_FondoCieloEstrellado{
 			
 			orbitBehavior.setLookAt(glu);
 			
-			apHelix.usar(gl);
-			gl.glCallList(idList);
+			helix.draw(gl);
 			
 			gl.glFlush();
 		}

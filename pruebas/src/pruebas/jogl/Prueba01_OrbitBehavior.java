@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
-import org.sam.jogl.Material;
+import org.sam.jogl.Objeto3D;
 import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
@@ -28,8 +28,8 @@ public class Prueba01_OrbitBehavior{
 		private GLU glu;
 		private OrbitBehavior orbitBehavior;
 
-		private Apariencia apFondo, apHelix;
-		private int idList;
+		private Apariencia apFondo;
+		private Objeto3D helix;
 		
 		private transient float proporcionesFondo, proporcionesPantalla;
 
@@ -51,13 +51,7 @@ public class Prueba01_OrbitBehavior{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			idList = HelixGenerator.generateHelix(gl, 0.25f, 0.5f, 0.75f, 20);
-			apHelix = new Apariencia();
-			Material material = new Material();
-			material.setDiffuse( 0.4f, 0.2f, 0.8f, 1.0f );
-			material.setSpecular( 1.0f, 1.0f, 1.0f, 1.0f );
-			material.setShininess(128.0f);
-			apHelix.setMaterial(material);
+			helix = HelixGenerator.generateHelix(gl, 0.25f, 0.5f, 0.75f, 20);
 
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
@@ -109,8 +103,7 @@ public class Prueba01_OrbitBehavior{
 			
 			orbitBehavior.setLookAt(glu);
 			
-			apHelix.usar(gl);
-			gl.glCallList(idList);
+			helix.draw(gl);
 			
 			gl.glFlush();
 		}

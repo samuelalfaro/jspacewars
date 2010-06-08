@@ -12,6 +12,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
+import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 
 import com.sun.opengl.util.Animator;
@@ -100,7 +101,7 @@ public class PruebaBloom {
 		private GLU glu = new GLU();
 		private int width, height;
 		
-		private int idList;
+		private Objeto3D helix;
 		private int textuId[];
 		private int FBO[];
 		private Shader corte, radialBlur;
@@ -123,7 +124,7 @@ public class PruebaBloom {
 			FBO[0] = initFBO(gl, textuId[0],128,128);
 			FBO[1] = initFBO(gl, textuId[1],128,128);
 			
-			idList = HelixGenerator.generateHelix(gl, 2.5f, 5.0f, 7.5f, 20);
+			helix = HelixGenerator.generateHelix(gl, 2.5f, 5.0f, 7.5f, 20);
 			
 			corte = new Shader(gl,"shaders/filter.vert","shaders/corte.frag");
 			corte.addUniform(gl, "textureIn", 0);
@@ -138,22 +139,14 @@ public class PruebaBloom {
 			
 			gl.glEnable(GL.GL_DEPTH_TEST);
 		
-			gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, new float[] { 0.2f, 0.2f,  0.2f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION,   new float[] { 0.0f, 5.0f, 10.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT,    new float[] { 0.2f, 0.2f,  0.2f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,    new float[] { 0.3f, 0.3f,  0.3f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,   new float[] { 0.8f, 0.8f,  0.8f, 1.0f }, 0);
-			gl.glEnable(GL.GL_LIGHTING);
 			gl.glEnable(GL.GL_LIGHT0);
-		
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 10.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.9f, 1.0f, 1.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 0.9f, 1.0f }, 0);
+			
 			gl.glShadeModel(GL.GL_SMOOTH);
-		
-			gl.glDisable(GL.GL_LIGHTING);
 		}
 
-		private final transient float[] materialColor = new float[] { 0.4f, 0.2f, 0.8f, 1.0f };
-		private final transient float[] specular = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
-		
 		private void drawHelix(GL gl) {
 
 			gl.glPushMatrix();
@@ -162,15 +155,9 @@ public class PruebaBloom {
 			gl.glRotatef(angle / 3.0f, 0, 0, 1);
 			gl.glRotatef(angle / 2.0f, 1, 0, 0);
 			gl.glRotatef(angle / 3.0f, 0, 1, 0);
-//			
-//			gl.glTranslatef(75, 0, 0);
-
+			
 			gl.glEnable(GL.GL_LIGHTING);
-			gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, materialColor, 0);
-			gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_SPECULAR, specular, 0);
-			gl.glMateriali(GL.GL_FRONT, GL.GL_SHININESS, 128);
-
-			gl.glCallList(idList);
+			helix.draw(gl);
 			gl.glDisable(GL.GL_LIGHTING);
 			
 			gl.glPopMatrix();

@@ -2,14 +2,19 @@ package pruebas.jogl;
 
 import javax.media.opengl.GL;
 
+import org.sam.jogl.Apariencia;
+import org.sam.jogl.Material;
+import org.sam.jogl.Objeto3D;
+import org.sam.jogl.OglList;
+
 public class HelixGenerator {
 	
 	private HelixGenerator(){}
 
 	private static float DEG_TO_RAD = (float)(Math.PI / 180.0);
-	private static float TOW_TO_PI  = (float)( 2 * Math.PI);
+	private static float TOW_PI  = (float)( 2 * Math.PI);
 	
-	public static int generateHelix(GL gl, float r1I, float r1F, float r2I, float r2F, float l, int twists) {
+	public static Objeto3D generateHelix(GL gl, float r1I, float r1F, float r2I, float r2F, float l, int twists) {
 		float incTheta = 15.0f * DEG_TO_RAD;
 		float incPhi   = 30.0f * DEG_TO_RAD;
 		
@@ -22,11 +27,11 @@ public class HelixGenerator {
 		float sinU0 = 0.0f;
 		float cosU1 = (float)Math.cos( incTheta );
 		float sinU1 = (float)Math.sin( incTheta );
-		float l0 = 0, l1 = l * incTheta / TOW_TO_PI;
-		float r10 = r1I, r11 = (incTheta /(TOW_TO_PI * twists)) * (r1F - r1I) + r1I;
-		float r20 = r2I, r21 = (incTheta /(TOW_TO_PI * twists)) * (r2F - r2I) + r2I;
+		float l0 = 0, l1 = l * incTheta / TOW_PI;
+		float r10 = r1I, r11 = (incTheta /(TOW_PI * twists)) * (r1F - r1I) + r1I;
+		float r20 = r2I, r21 = (incTheta /(TOW_PI * twists)) * (r2F - r2I) + r2I;
 		
-		for (float theta = 0.0f; theta <= TOW_TO_PI * twists; ) {
+		for (float theta = 0.0f; theta <= TOW_PI * twists; ) {
 				
 			float cosV0 = 1.0f;
 			float sinV0 = 0.0f;
@@ -43,7 +48,7 @@ public class HelixGenerator {
 			float posX11 = r11 * cosV1 + l1;
 			float posY11 = r11 * sinV1 + r21;
 		
-			for (float phi = 0.0f; phi <= TOW_TO_PI; ) {
+			for (float phi = 0.0f; phi <= TOW_PI; ) {
 				
 				gl.glNormal3f(  cosV0,  sinV0 * cosU0,  sinV0 * sinU0 );
 				gl.glVertex3f( posX00, posY00 * cosU0, posY00 * sinU0 );
@@ -78,20 +83,29 @@ public class HelixGenerator {
 			cosU1 = (float)Math.cos( theta );
 			sinU1 = (float)Math.sin( theta );
 			l0 = l1;
-			float alpha = theta / TOW_TO_PI;
+			float alpha = theta / TOW_PI;
 			l1 = alpha * l;
 			r10 = r11;
-			r11 = (theta /(TOW_TO_PI * twists)) * (r1F - r1I) + r1I;
+			r11 = (theta /(TOW_PI * twists)) * (r1F - r1I) + r1I;
 			r20 = r21;
-			r21 = (theta /(TOW_TO_PI * twists)) * (r2F - r2I) + r2I;
+			r21 = (theta /(TOW_PI * twists)) * (r2F - r2I) + r2I;
 		}
 		gl.glEnd();
 		gl.glEndList();
 		
-		return lid;
+		
+		Material material = new Material();
+		material.setDiffuse( 0.4f, 0.2f, 0.8f, 1.0f );
+		material.setSpecular( 1.0f, 1.0f, 1.0f, 1.0f );
+		material.setShininess(128.0f);
+		
+		Apariencia apHelix = new Apariencia();
+		apHelix.setMaterial(material);
+		
+		return new Objeto3D(new OglList(lid), apHelix);
 	}
 	
-	public static int generateHelix(GL gl, float r1, float r2, float l, int twists) {
+	public static Objeto3D generateHelix(GL gl, float r1, float r2, float l, int twists) {
 		return generateHelix(gl, r1, r1, r2, r2, l, twists);
 	}
 }
