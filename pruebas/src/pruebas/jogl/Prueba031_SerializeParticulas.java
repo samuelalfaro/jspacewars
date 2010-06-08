@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 
-public class SerializeParticulas{
+public class Prueba031_SerializeParticulas{
 	public static void main(String args[]){
 		Particulas particulas;
 		

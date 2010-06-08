@@ -14,7 +14,7 @@ import org.sam.util.Tipografias;
 
 import com.sun.opengl.util.Animator;
 
-public class DotsDemo{
+public class PruebaDots{
 
 	private static final int screenHeight = 600;
 	private static final int screenWidth = 800;

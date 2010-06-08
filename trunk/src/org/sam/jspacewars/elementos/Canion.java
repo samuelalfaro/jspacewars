@@ -17,29 +17,6 @@ public abstract class Canion implements Prototipo<Canion> {
 	protected final CanionData data;
 
 	/**
-	 * Id del {@code Disparo} que lanzara el {@code Canion}, con el {@code grado} actual.
-	 */
-	protected int idDisparo;
-	
-	/**
-	 * Tiempo de recarga, en nanosegundos, del {@code Canion}, con el {@code grado} actual.
-	 */
-	protected long tRecarga;
-	
-	/**
-	 * Desfase, en nanosegundos, del {@code Canion}, con el {@code grado} actual.<br/>
-	 * Por ejemplo: una {@code Nave} puede tener varios {@code Canion}, de las mismas caracteristicas,
-	 * con el mismo grado, con el mismo tiempo de recarga, y que no disparen a la vez al estar desfasados.
-	 */
-	protected long tDesfase;
-	
-	/**
-	 *  Velocidad, en unidades por nanosegundo, a la que sale el {@code Disparo} del {@code Canion},
-	 *  con el {@code grado} actual.
-	 */
-	protected float velocidad;
-
-	/**
 	 * Posicion relativa del cañon respecto al elemento donde esta armado.
 	 */
 	protected float posX, posY;
@@ -50,31 +27,56 @@ public abstract class Canion implements Prototipo<Canion> {
 	protected float desfase;
 	
 	/**
+	 * Id del {@code Disparo} que lanzara el {@code Canion}, con el {@code grado} actual.
+	 */
+	protected transient int idDisparo;
+	
+	/**
+	 * Tiempo de recarga, en nanosegundos, del {@code Canion}, con el {@code grado} actual.
+	 */
+	protected transient long tRecarga;
+	
+	/**
+	 * Desfase, en nanosegundos, del {@code Canion}, con el {@code grado} actual.<br/>
+	 * Por ejemplo: una {@code Nave} puede tener varios {@code Canion}, de las mismas caracteristicas,
+	 * con el mismo grado, con el mismo tiempo de recarga, y que no disparen a la vez al estar desfasados.
+	 */
+	protected transient long tDesfase;
+	
+	/**
+	 *  Velocidad, en unidades por nanosegundo, a la que sale el {@code Disparo} del {@code Canion},
+	 *  con el {@code grado} actual.
+	 */
+	protected transient float velocidad;
+
+	/**
 	 * Contador para acumular el tiempo trancurrido.
 	 */
 	protected transient long tTranscurrido;
 
 	protected Canion(CanionData data) {
 		this.data = data;
+		this.posX = 0;
+		this.posY = 0;
+		this.desfase = 0;
+		
 		this.idDisparo = data.getIdDisparo(0);
 		this.tRecarga = data.getTRecarga(0);
 		this.tDesfase = 0;
 		this.velocidad = data.getVelocidad(0);
-		
-		this.posX = 0;
-		this.posY = 0;
-		this.desfase = 0;
 	}
 
 	protected Canion(Canion prototipo) {
 		this.data = prototipo.data;
+		this.posX = prototipo.posX;
+		this.posY = prototipo.posY;
+		this.desfase = prototipo.desfase;
+		
 		this.idDisparo = prototipo.idDisparo;
 		this.tRecarga = prototipo.tRecarga;
 		this.tDesfase = prototipo.tDesfase;
 		this.velocidad = prototipo.velocidad;
-		this.posX = prototipo.posX;
-		this.posY = prototipo.posY;
-		this.desfase = prototipo.desfase;
+
 		tTranscurrido = tRecarga - tDesfase;
 	}
 

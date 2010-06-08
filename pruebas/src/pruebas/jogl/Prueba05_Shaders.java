@@ -1,4 +1,7 @@
 package pruebas.jogl;
+
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,36 +19,24 @@ import org.sam.jogl.particulas.Particulas;
 import org.sam.jspacewars.serialization.GrafoEscenaConverters;
 import org.sam.util.Imagen;
 
+import com.sun.opengl.util.Animator;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-@SuppressWarnings("serial")
-public class ShadersExample
-		extends JFrame 
-		implements GLEventListener{
+public class Prueba05_Shaders{
+
+	private static class Renderer implements GLEventListener{
 	
 	private GLU glu;
-	private final GLCanvas canvas;
-	private final OrbitBehavior orbitBehavior;
+	private OrbitBehavior orbitBehavior;
 	
 	private Apariencia apFondo;
 	private Instancia3D nave1;
 	
 	private final Collection<Modificador> gestorDeParticulas;
 	
-	public ShadersExample(){
-		super("Example");
+	Renderer(){
 		gestorDeParticulas = new LinkedList<Modificador>();
-		canvas = new GLCanvas(new GLCapabilities());
-		canvas.addGLEventListener(this);
-		orbitBehavior = new OrbitBehavior();
-		orbitBehavior.eyePos.x = 0;
-		orbitBehavior.eyePos.y = 0;
-		orbitBehavior.eyePos.z = 2.5f;
-		canvas.addMouseListener(orbitBehavior);
-		canvas.addMouseMotionListener(orbitBehavior);
-
-		getContentPane().add(canvas);
 	}
 
 	private transient float proporcionesFondo, proporcionesPantalla;
@@ -53,7 +44,12 @@ public class ShadersExample
 
 	public void init(GLAutoDrawable drawable){
 		GL gl = drawable.getGL();
+		
 		glu = new GLU();
+		orbitBehavior = new OrbitBehavior();
+		orbitBehavior.setEyePos(0.0f, 0.0f, 4.0f);
+		orbitBehavior.addMouseListeners((GLCanvas)drawable);
+		
 		gl.glClearColor(0.0f,0.25f,0.25f,0.0f);
 		
 		try {
@@ -155,12 +151,9 @@ public class ShadersExample
 		
 		gl.glDisable(GL.GL_LIGHTING);
 		gl.glEnable(GL.GL_LIGHT0);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION,
-			new float[]{ 0.0f, 0.0f, 10.0f, 1.0f }, 0);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,
-				new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,
-				new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, new float[]{ 0.0f, 0.0f, 10.0f, 1.0f }, 0);
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,  new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
 		gl.glEnable(GL.GL_CULL_FACE);
 		tActual = System.nanoTime();
 	}
@@ -201,11 +194,7 @@ public class ShadersExample
 		
 		gl.glPopMatrix();
 		gl.glMatrixMode(GL.GL_MODELVIEW);
-		glu.gluLookAt(
-				orbitBehavior.eyePos.x, orbitBehavior.eyePos.y, orbitBehavior.eyePos.z,
-				orbitBehavior.targetPos.x, orbitBehavior.targetPos.y, orbitBehavior.targetPos.z,
-				orbitBehavior.upDir.x, orbitBehavior.upDir.y, orbitBehavior.upDir.z
-		);
+		orbitBehavior.setLookAt(glu);
 		ObjetosOrientables.loadModelViewMatrix();
 		
 		for( Modificador modificador: gestorDeParticulas )
@@ -257,31 +246,30 @@ public class ShadersExample
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
 			boolean deviceChanged){
 	}
-	
-	public void run(){
-		setSize(500, 500);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		canvas.requestFocusInWindow();
-//		canvas.getContext().getGL();
-	
-		setVisible(true);
-		new Thread(){
-	        @Override
-			public void run(){
-				while(true){
-					canvas.display();
-					try{
-						Thread.sleep(5);
-					}catch( InterruptedException e){
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();
 	}
-
+	
 	public static void main(String[] args){
-		new ShadersExample().run();
+		
+		JFrame frame = new JFrame("Prueba Shaders");
+		frame.getContentPane().setBackground(Color.BLACK);
+		frame.getContentPane().setPreferredSize(new Dimension(640, 480));
+		frame.pack();
+		frame.setLocationRelativeTo(null); // center
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		GLCanvas canvas = new GLCanvas(new GLCapabilities());
+		canvas.addGLEventListener(new Renderer());
+
+		frame.getContentPane().add(canvas);
+		
+		Animator animator = new Animator();
+		// animator.setRunAsFastAsPossible(true);
+		animator.add(canvas);
+		
+		frame.setVisible(true);
+
+		animator.add(canvas);
+		canvas.requestFocusInWindow();
+		animator.start();
 	}
 }

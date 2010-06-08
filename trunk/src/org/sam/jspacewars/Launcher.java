@@ -47,34 +47,23 @@ import org.sam.jspacewars.servidor.ServidorJuego;
  * @author Samuel Alfaro
  */
 public class Launcher {
-	//*
-	private static void mostrar(Component component) {
 
+	private static JFrame getFullScreenFrame(){
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		JFrame frame = new JFrame(myDevice.getDefaultConfiguration());
 		frame.setUndecorated(true);
 		frame.setResizable(false);
 		frame.setBackground(Color.BLACK);
 
-		if( Container.class.isAssignableFrom(component.getClass()) )
-			frame.setContentPane((Container) component);
-		else{
-			frame.getContentPane().setLayout(new BorderLayout());
-			frame.getContentPane().add(component, BorderLayout.CENTER);
-		}
-
 		if( myDevice.isFullScreenSupported() ){
 			myDevice.setFullScreenWindow(frame);
 			if( myDevice.isDisplayChangeSupported() ){
 				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
 				/*
-					currentDisplayMode = new DisplayMode(640, 400,
-				 	currentDisplayMode.getBitDepth(),
-//					DisplayMode.BIT_DEPTH_MULTI,
-					currentDisplayMode.getRefreshRate()
-//					60
-					);
-					*/
+				 currentDisplayMode = new DisplayMode(640, 400,
+				 currentDisplayMode.getBitDepth(),
+				 currentDisplayMode.getRefreshRate());
+				 */
 				try{
 					myDevice.setDisplayMode(currentDisplayMode);
 					frame.setSize(currentDisplayMode.getWidth(), currentDisplayMode.getHeight());
@@ -82,50 +71,53 @@ public class Launcher {
 					System.err.println("Display Mode: not supported!!");
 				}
 			}
-			frame.validate();
 		}else{
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 			frame.setBounds(0, 0, dim.width, dim.height);
+		}
+		return frame;
+	}
+	
+	private static void mostrar(JFrame frame, Component component) {
+		if( Container.class.isAssignableFrom(component.getClass()) ){
+			System.out.println("Usando componente como ContentPane");
+			frame.setContentPane((Container) component);
+		}else{
+			System.out.println("Añadiendo content pane");
+			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
+				frame.getContentPane().setLayout(new BorderLayout());
+			frame.getContentPane().removeAll();
+			frame.getContentPane().add(component, BorderLayout.CENTER);
+		}
+		frame.validate();
+		if(!frame.isVisible()){
+			System.out.println("eoo");
 			frame.setVisible(true);
 		}
 		component.requestFocus();
 	}
-	
-	/*/
-	private static void mostrar(Component component) {
-		JFrame frame = new JFrame();
-		frame.setSize(800, 600);
-		if( Container.class.isAssignableFrom(component.getClass()) )
-			frame.setContentPane((Container) component);
-		else{
-			frame.getContentPane().setLayout(new BorderLayout());
-			frame.getContentPane().add(component, BorderLayout.CENTER);
-		}
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		component.requestFocus();
-	} 
-	//*/
 
 	private static void lanzarUnJugador() {
 		try{
-			GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
-			DataGame dataGame = new DataGame();
+			final DataGame dataGame = new DataGame();
+			GLCanvas splashCanvas = new GLCanvas(new GLCapabilities());
 
-			SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
-			splashFrame.setVisible(true);
-
+			SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
+			splashWindow.setVisible(true);
+			
 			ServidorJuego server = new ServidorJuego();
-			splashFrame.waitForLoading();
+			splashWindow.waitForLoading();
 			
-			GLCanvas canvas2 = new GLCanvas(null, null, canvas1.getContext(), null);
-			
-			splashFrame.setVisible(false);
-			splashFrame = null;
+			splashWindow.setVisible(false);
+			splashWindow = null;
 			System.gc();
-
-			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas2);
-			mostrar(canvas2);
+			
+			final JFrame frame = getFullScreenFrame();
+			final GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);
+			
+			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas);
+			mostrar(frame, canvas);
+			
 			cliente.start();
 			server.atenderClientes();
 		}catch( IOException e ){
@@ -135,23 +127,23 @@ public class Launcher {
 
 	private static void lanzarAnfitrion(int port) {
 		try{
-			GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
-			DataGame dataGame = new DataGame();
+			final DataGame dataGame = new DataGame();
+			GLCanvas splashCanvas = new GLCanvas(new GLCapabilities());
 
-			SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
-			splashFrame.setVisible(true);
+			SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
+			splashWindow.setVisible(true);
 
 			ServidorJuego server = new ServidorJuego(port);
-			splashFrame.waitForLoading();
+			splashWindow.waitForLoading();
 			
-			GLCanvas canvas2 = new GLCanvas(null, null, canvas1.getContext(), null);
+			GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);
 			
-			splashFrame.setVisible(false);
-			splashFrame = null;
+			splashWindow.setVisible(false);
+			splashWindow = null;
 			System.gc();
 
-			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas2);
-			mostrar(canvas2);
+			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas);
+			mostrar(getFullScreenFrame(), canvas);
 			cliente.start();
 			server.atenderClientes();
 		}catch( IOException e ){
@@ -160,26 +152,25 @@ public class Launcher {
 	}
 
 	private static void lanzarInvitado(String hostname, int port) {
-		//*
 		try{
-			GLCanvas canvas1 = new GLCanvas(new GLCapabilities());
-			DataGame dataGame = new DataGame();
+			final DataGame dataGame = new DataGame();
+			GLCanvas splashCanvas = new GLCanvas(new GLCapabilities());
 
-			SplashWindow splashFrame = new SplashWindow("splash.jpg", canvas1, dataGame);
-			splashFrame.setVisible(true);
-			splashFrame.waitForLoading();
+			SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
+			splashWindow.setVisible(true);
+			splashWindow.waitForLoading();
 			
-			GLCanvas canvas2 = new GLCanvas(null, null, canvas1.getContext(), null);
+			GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);
 			
-			splashFrame.setVisible(false);
-			splashFrame = null;
+			splashWindow.setVisible(false);
+			splashWindow = null;
 			System.gc();
 			
 			DatagramChannel canalCliente = DatagramChannel.open();
 			canalCliente.connect(new InetSocketAddress(hostname, port));
 
-			Cliente cliente = new Cliente(canalCliente, canalCliente, dataGame, canvas2);
-			mostrar(canvas2);
+			Cliente cliente = new Cliente(canalCliente, canalCliente, dataGame, canvas);
+			mostrar(getFullScreenFrame(), canvas);
 			cliente.start();
 			cliente.run();
 
@@ -190,7 +181,6 @@ public class Launcher {
 		}catch( IOException e ){
 			e.printStackTrace();
 		}
-		//*/
 	}
 
 	public static void main(String... args) {

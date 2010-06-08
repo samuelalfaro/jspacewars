@@ -77,95 +77,6 @@ public class PruebaBloom {
 		return FBO[0];
 	}
 
-	private static float DEG_TO_RAD = (float)(Math.PI / 180.0);
-	private static float TOW_TO_PI  = (float)( 2 * Math.PI);
-	
-	private static int generateHelix(GL gl, float r1I, float r1F, float r2I, float r2F, float l, int twists) {
-		float incTheta = 15.0f * DEG_TO_RAD;
-		float incPhi   = 30.0f * DEG_TO_RAD;
-		
-		int lid = gl.glGenLists(1);
-		
-		gl.glNewList(lid, GL.GL_COMPILE);
-		gl.glBegin(GL.GL_QUADS);
-		
-		float cosU0 = 1.0f;
-		float sinU0 = 0.0f;
-		float cosU1 = (float)Math.cos( incTheta );
-		float sinU1 = (float)Math.sin( incTheta );
-		float l0 = 0, l1 = l * incTheta / TOW_TO_PI;
-		float r10 = r1I, r11 = (incTheta /(TOW_TO_PI * twists)) * (r1F - r1I) + r1I;
-		float r20 = r2I, r21 = (incTheta /(TOW_TO_PI * twists)) * (r2F - r2I) + r2I;
-		
-		for (float theta = 0.0f; theta <= TOW_TO_PI * twists; ) {
-				
-			float cosV0 = 1.0f;
-			float sinV0 = 0.0f;
-			float cosV1 = (float) Math.cos( incPhi );
-			float sinV1 = (float) Math.sin( incPhi );
-
-			float posX00 = r10 + l0;
-			float posY00 = r20;
-			float posX10 = r10 * cosV1 + l0;
-			float posY10 = r10 * sinV1 + r20;
-			
-			float posX01 = r11 + l1;
-			float posY01 = r21;
-			float posX11 = r11 * cosV1 + l1;
-			float posY11 = r11 * sinV1 + r21;
-		
-			for (float phi = 0.0f; phi <= TOW_TO_PI; ) {
-				
-				gl.glNormal3f(  cosV0,  sinV0 * cosU0,  sinV0 * sinU0 );
-				gl.glVertex3f( posX00, posY00 * cosU0, posY00 * sinU0 );
-				
-				gl.glNormal3f(  cosV1,  sinV1 * cosU0,  sinV1 * sinU0 );
-				gl.glVertex3f( posX10, posY10 * cosU0, posY10 * sinU0 );
-				
-				gl.glNormal3f(  cosV1,  sinV1 * cosU1,  sinV1 * sinU1 );
-				gl.glVertex3f( posX11, posY11 * cosU1, posY11 * sinU1 );
-				
-				gl.glNormal3f(  cosV0,  sinV0 * cosU1,  sinV0 * sinU1 );
-				gl.glVertex3f( posX01, posY01 * cosU1, posY01 * sinU1 );
-				
-				cosV0 = cosV1;
-				sinV0 = sinV1;
-				posX00 = posX10;
-				posY00 = posY10;
-				posX01 = posX11;
-				posY01 = posY11;
-				
-				phi += incPhi;
-				cosV1 = (float) Math.cos( phi );
-				sinV1 = (float) Math.sin( phi );
-				posX10 = r10 * cosV1 + l0;
-				posY10 = r10 * sinV1 + r20;
-				posX11 = r11 * cosV1 + l1;
-				posY11 = r11 * sinV1 + r21;
-			}
-			cosU0 = cosU1;
-			sinU0 = sinU1;
-			theta += incTheta;
-			cosU1 = (float)Math.cos( theta );
-			sinU1 = (float)Math.sin( theta );
-			l0 = l1;
-			float alpha = theta / TOW_TO_PI;
-			l1 = alpha * l;
-			r10 = r11;
-			r11 = (theta /(TOW_TO_PI * twists)) * (r1F - r1I) + r1I;
-			r20 = r21;
-			r21 = (theta /(TOW_TO_PI * twists)) * (r2F - r2I) + r2I;
-		}
-		gl.glEnd();
-		gl.glEndList();
-		
-		return lid;
-	}
-	
-	private static int generateHelix(GL gl, float r1, float r2, float l, int twists) {
-		return generateHelix(gl, r1, r1, r2, r2, l, twists);
-	}
-	
 	private static void viewOrtho(GL gl, int w, int h) {
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glPushMatrix();
@@ -211,7 +122,8 @@ public class PruebaBloom {
 			FBO = new int[2];
 			FBO[0] = initFBO(gl, textuId[0],128,128);
 			FBO[1] = initFBO(gl, textuId[1],128,128);
-			idList = generateHelix(gl, 2.5f, 5.0f, 7.5f, 20);
+			
+			idList = HelixGenerator.generateHelix(gl, 2.5f, 5.0f, 7.5f, 20);
 			
 			corte = new Shader(gl,"shaders/filter.vert","shaders/corte.frag");
 			corte.addUniform(gl, "textureIn", 0);
@@ -226,33 +138,23 @@ public class PruebaBloom {
 			
 			gl.glEnable(GL.GL_DEPTH_TEST);
 		
-			float[] global_ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
-			float[] light0pos = new float[] { 0.0f, 5.0f, 10.0f, 1.0f };
-			float[] light0ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
-			float[] light0diffuse = new float[] { 0.3f, 0.3f, 0.3f, 1.0f };
-			float[] light0specular = new float[] { 0.8f, 0.8f, 0.8f, 1.0f };
-		
-			float[] lmodel_ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
-			gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, lmodel_ambient, 0);
-		
-			gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, global_ambient, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, light0pos, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, light0ambient, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE, light0diffuse, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR, light0specular, 0);
+			gl.glLightModelfv(GL.GL_LIGHT_MODEL_AMBIENT, new float[] { 0.2f, 0.2f,  0.2f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION,   new float[] { 0.0f, 5.0f, 10.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT,    new float[] { 0.2f, 0.2f,  0.2f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,    new float[] { 0.3f, 0.3f,  0.3f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,   new float[] { 0.8f, 0.8f,  0.8f, 1.0f }, 0);
 			gl.glEnable(GL.GL_LIGHTING);
 			gl.glEnable(GL.GL_LIGHT0);
 		
 			gl.glShadeModel(GL.GL_SMOOTH);
 		
-			gl.glMateriali(GL.GL_FRONT, GL.GL_SHININESS, 128);
 			gl.glDisable(GL.GL_LIGHTING);
 		}
 
+		private final transient float[] materialColor = new float[] { 0.4f, 0.2f, 0.8f, 1.0f };
+		private final transient float[] specular = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
+		
 		private void drawHelix(GL gl) {
-
-			float[] glfMaterialColor = new float[] { 0.4f, 0.2f, 0.8f, 1.0f };
-			float[] specular = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
 
 			gl.glPushMatrix();
 
@@ -264,8 +166,9 @@ public class PruebaBloom {
 //			gl.glTranslatef(75, 0, 0);
 
 			gl.glEnable(GL.GL_LIGHTING);
-			gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, glfMaterialColor, 0);
+			gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_AMBIENT_AND_DIFFUSE, materialColor, 0);
 			gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL.GL_SPECULAR, specular, 0);
+			gl.glMateriali(GL.GL_FRONT, GL.GL_SHININESS, 128);
 
 			gl.glCallList(idList);
 			gl.glDisable(GL.GL_LIGHTING);

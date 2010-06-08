@@ -61,7 +61,7 @@ public class ServidorJuego {
 
 		Collection<Disparo> disparosNave;
 
-		nave1 = (NaveUsuario) cache.newObject(0x02);
+		nave1 = (NaveUsuario) cache.newObject(0x03);
 		disparosNave = new LinkedList<Disparo>();
 		nave1.setDstDisparos(disparosNave);
 		listasDeDisparos.add(disparosNave);

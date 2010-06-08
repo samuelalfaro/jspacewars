@@ -16,7 +16,7 @@ import org.sam.util.Imagen;
 /**
  */
 @SuppressWarnings("serial")
-public class PruebaParticulas extends JFrame implements GLEventListener{
+public class Prueba03_Particulas extends JFrame implements GLEventListener{
 	private final GLCanvas canvas;
 	private GLU glu;
 	private final OrbitBehavior orbitBehavior;
@@ -24,20 +24,15 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 	private UnidadTextura fondo, texture1, texture12, texture2;
 	private NodoTransformador fuenteTransformada;
 
-	public PruebaParticulas() {
+	public Prueba03_Particulas() {
 		super("Prueba Particulas");
 		canvas = new GLCanvas(new GLCapabilities());
 		canvas.addGLEventListener(this);
 		orbitBehavior = new OrbitBehavior();
-		orbitBehavior.eyePos.x = 1;
-		orbitBehavior.eyePos.y = 0;
-		orbitBehavior.eyePos.z = 3;
-		orbitBehavior.targetPos.x = 1;
-		orbitBehavior.targetPos.y = 0;
-		orbitBehavior.targetPos.z = 0;
-		canvas.addMouseListener(orbitBehavior);
-		canvas.addMouseMotionListener(orbitBehavior);
-
+		orbitBehavior.setEyePos(1.0f, 0.0f, 3.0f);
+		orbitBehavior.setTargetPos(1.0f, 0.0f, 0.0f);
+		orbitBehavior.addMouseListeners(canvas);
+		
 		getContentPane().add(canvas);
 	}
 
@@ -203,11 +198,7 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 //		gl.glLoadIdentity();
-		glu.gluLookAt(
-				orbitBehavior.eyePos.x, orbitBehavior.eyePos.y, orbitBehavior.eyePos.z,
-				orbitBehavior.targetPos.x, orbitBehavior.targetPos.y, orbitBehavior.targetPos.z,
-				orbitBehavior.upDir.x, orbitBehavior.upDir.y, orbitBehavior.upDir.z
-		);
+		orbitBehavior.setLookAt(glu);
 		ObjetosOrientables.loadModelViewMatrix();
 		
 		gl.glEnable(GL.GL_BLEND);
@@ -301,6 +292,6 @@ public class PruebaParticulas extends JFrame implements GLEventListener{
 	}
 
 	public static void main(String[] args) {
-		new PruebaParticulas().run();
+		new Prueba03_Particulas().run();
 	}
 }
