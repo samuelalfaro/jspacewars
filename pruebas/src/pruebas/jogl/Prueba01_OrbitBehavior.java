@@ -137,7 +137,7 @@ public class Prueba01_OrbitBehavior{
 	
 	public static void main(String[] args){
 		
-		JFrame frame = new JFrame("Prueba Clielo Estellado");
+		JFrame frame = new JFrame("Prueba Orbit Behavior");
 		frame.getContentPane().setBackground(Color.BLACK);
 		frame.getContentPane().setPreferredSize(new Dimension(640, 480));
 		frame.pack();

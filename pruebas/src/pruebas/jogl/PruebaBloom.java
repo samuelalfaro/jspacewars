@@ -150,11 +150,11 @@ public class PruebaBloom {
 		private void drawHelix(GL gl) {
 
 			gl.glPushMatrix();
-
 			gl.glTranslatef(0, 0, -25);
 			gl.glRotatef(angle / 3.0f, 0, 0, 1);
 			gl.glRotatef(angle / 2.0f, 1, 0, 0);
 			gl.glRotatef(angle / 3.0f, 0, 1, 0);
+			gl.glTranslatef(-75, 0, 0);
 			
 			gl.glEnable(GL.GL_LIGHTING);
 			helix.draw(gl);
@@ -295,9 +295,12 @@ public class PruebaBloom {
 			previousTime = currentTime;
 
 			GL gl = drawable.getGL();
-
+			
+			gl.glMatrixMode(GL.GL_MODELVIEW);
 			gl.glLoadIdentity();
 			glu.gluLookAt(0, 50, 100, 0, 0, 0, 0, 1, 0);
+//			gl.glMatrixMode(GL.GL_MODELVIEW);
+//			gl.glLoadIdentity();
 			
 			renderToTexture(gl, 128, 128);
 			gl.glClearColor(0.0f, 0.0f, 0.5f, 1.0f);

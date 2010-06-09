@@ -8,10 +8,10 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import javax.media.opengl.glu.GLU;
-import javax.vecmath.AxisAngle4f;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
+import javax.vecmath.AxisAngle4d;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * @author samuel
@@ -23,26 +23,44 @@ public class OrbitBehavior{
 		
 		private transient Point ptCurrentMousePosit, ptLastMousePosit;
 		
-		private transient final Vector3f eyeDir =     new Vector3f();
-		private transient final Vector3f crossEyeUp = new Vector3f();
+		private transient final Point3d  eyePos;
+		private transient final Point3d  targetPos;
+		private transient final Vector3d upDir;
+		private transient final Vector3d eyeDir;
+		private transient final Vector3d sideDir;
 		
-		private transient final AxisAngle4f rotH = new AxisAngle4f();
-		private transient final Matrix4f t1 = new Matrix4f(
-				1.0f, 0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f
+		private transient final AxisAngle4d rotH = new AxisAngle4d();
+		private transient final Matrix4d t1 = new Matrix4d(
+				1.0, 0.0, 0.0, 0.0,
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0, 1.0, 0.0,
+				0.0, 0.0, 0.0, 1.0
 		);
-		private transient final AxisAngle4f rotV = new AxisAngle4f();
-		private transient final Matrix4f t2 = new Matrix4f(
-				1.0f, 0.0f, 0.0f, 0.0f,
-				0.0f, 1.0f, 0.0f, 0.0f,
-				0.0f, 0.0f, 1.0f, 0.0f,
-				0.0f, 0.0f, 0.0f, 1.0f
+		private transient final AxisAngle4d rotV = new AxisAngle4d();
+		private transient final Matrix4d t2 = new Matrix4d(
+				1.0, 0.0, 0.0, 0.0,
+				0.0, 1.0, 0.0, 0.0,
+				0.0, 0.0, 1.0, 0.0,
+				0.0, 0.0, 0.0, 1.0
 		);
 
-		private transient final Matrix4f tc = new Matrix4f();
+		private transient final Matrix4d tc = new Matrix4d();
 
+		OrbitListener(){
+			eyePos =     new Point3d(0, 0, 5);
+			targetPos =  new Point3d(0, 0, 0);
+			upDir =      new Vector3d(0, 1, 0);
+			
+			eyeDir =     new Vector3d();
+			eyeDir.set(targetPos);
+			eyeDir.sub(eyePos);
+			eyeDir.normalize();
+			
+			sideDir = new Vector3d();
+			sideDir.cross( eyeDir, upDir );
+			sideDir.normalize();
+		}
+		
 		/**
 		 * {@inheritDoc}
 		 */
@@ -64,7 +82,7 @@ public class OrbitBehavior{
 		public void mouseExited(MouseEvent e) {
 		}
 
-		private transient float dist;
+		private transient double dist;
 
 		/**
 		 * {@inheritDoc}
@@ -79,7 +97,8 @@ public class OrbitBehavior{
 			eyeDir.sub(eyePos);
 			eyeDir.normalize();
 			upDir.normalize();
-			crossEyeUp.cross( eyeDir, upDir );
+			sideDir.cross( eyeDir, upDir );
+			sideDir.normalize();
 		}
 
 		/**
@@ -97,8 +116,8 @@ public class OrbitBehavior{
 
 			ptCurrentMousePosit = e.getPoint();
 
-			rotH.set(upDir,      ((float)(ptCurrentMousePosit.x - ptLastMousePosit.x))/200);
-			rotV.set(crossEyeUp, ((float)(ptCurrentMousePosit.y - ptLastMousePosit.y))/200);
+			rotH.set(upDir,      (double)(ptCurrentMousePosit.x - ptLastMousePosit.x)/200 );
+			rotV.set(sideDir, (double)(ptCurrentMousePosit.y - ptLastMousePosit.y)/200 );
 
 			t1.setRotation(rotH);
 			t2.setRotation(rotV);
@@ -111,6 +130,7 @@ public class OrbitBehavior{
 			eyePos.negate();
 			eyePos.scale(dist);
 			eyePos.add(targetPos);
+			
 			tc.transform(upDir);
 			upDir.normalize();
 
@@ -142,44 +162,46 @@ public class OrbitBehavior{
 			eyePos.scale( (1 + x/25.0f)*dist );
 			eyePos.add(targetPos);
 		}
+		
+		private void setLookAt(GLU glu){
+			glu.gluLookAt(
+					this.eyePos.x,    this.eyePos.y,    this.eyePos.z,
+					this.targetPos.x, this.targetPos.y, this.targetPos.z,
+					this.upDir.x,     this.upDir.y,     this.upDir.z
+				);
+		}
 	}
 
-	private transient final Point3f  eyePos =     new Point3f(0, 0, 5);
-	private transient final Point3f  targetPos =  new Point3f(0, 0, 0);
-	private transient final Vector3f upDir =      new Vector3f(0, 1, 0);
+	private final transient OrbitListener myListener;
 	
-	private transient OrbitListener myListener = null;
-	
-	public void setEyePos(float x, float y, float z){
-		eyePos.x = x;
-		eyePos.y = y;
-		eyePos.z = z;
+	public OrbitBehavior(){
+		myListener = new OrbitListener();
 	}
 	
-	public void setTargetPos(float x, float y, float z){
-		targetPos.x = x;
-		targetPos.y = y;
-		targetPos.z = z;
+	public void setEyePos(double x, double y, double z){
+		myListener.eyePos.x = x;
+		myListener.eyePos.y = y;
+		myListener.eyePos.z = z;
 	}
 	
-	public void setUpDir(float x, float y, float z){
-		upDir.x = x;
-		upDir.y = y;
-		upDir.z = z;
-		upDir.normalize();
+	public void setTargetPos(double x, double y, double z){
+		myListener.targetPos.x = x;
+		myListener.targetPos.y = y;
+		myListener.targetPos.z = z;
+	}
+	
+	public void setUpDir(double x, double y, double z){
+		myListener.upDir.x = x;
+		myListener.upDir.y = y;
+		myListener.upDir.z = z;
+		myListener.upDir.normalize();
 	}
 	
 	public void setLookAt(GLU glu){
-		glu.gluLookAt(
-				this.eyePos.x,    this.eyePos.y,    this.eyePos.z,
-				this.targetPos.x, this.targetPos.y, this.targetPos.z,
-				this.upDir.x,     this.upDir.y,     this.upDir.z
-			);
+	    myListener.setLookAt(glu);
 	}
 	
 	public void addMouseListeners(Component component){
-		if(myListener == null)
-			myListener = new OrbitListener();
 		component.addMouseListener(myListener);
 		component.addMouseMotionListener(myListener);
 		component.addMouseWheelListener(myListener);
