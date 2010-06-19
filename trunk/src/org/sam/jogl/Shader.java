@@ -191,7 +191,7 @@ public class Shader{
 	
 	private transient static Shader anterior;
 	
-	private transient final int programObject;
+	public transient final int programObject;
 	private transient final Map<String,Atributo<? extends Object>> uniforms;
 	
 	public Shader(GL gl, String vertexFile, String fragmentFile){

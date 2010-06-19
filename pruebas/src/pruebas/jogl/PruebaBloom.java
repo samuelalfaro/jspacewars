@@ -124,7 +124,7 @@ public class PruebaBloom {
 			FBO[0] = initFBO(gl, textuId[0],128,128);
 			FBO[1] = initFBO(gl, textuId[1],128,128);
 			
-			helix = HelixGenerator.generateHelix(gl, 2.5f, 5.0f, 7.5f, 20);
+			helix = HelixGenerator.generateHelix(gl, 2.5f, 5.0f, 20);
 			
 			corte = new Shader(gl,"shaders/filter.vert","shaders/corte.frag");
 			corte.addUniform(gl, "textureIn", 0);
@@ -154,7 +154,7 @@ public class PruebaBloom {
 			gl.glRotatef(angle / 3.0f, 0, 0, 1);
 			gl.glRotatef(angle / 2.0f, 1, 0, 0);
 			gl.glRotatef(angle / 3.0f, 0, 1, 0);
-			gl.glTranslatef(-75, 0, 0);
+			gl.glTranslatef(-62.5f, 0, 0);
 			
 			gl.glEnable(GL.GL_LIGHTING);
 			helix.draw(gl);

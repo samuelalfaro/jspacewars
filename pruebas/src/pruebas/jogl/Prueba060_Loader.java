@@ -18,7 +18,7 @@ import org.sam.util.ModificableBoolean;
 
 import com.sun.opengl.util.Animator;
 
-public class Prueba06_Loader {
+public class Prueba060_Loader {
 
 	static class Renderer implements GLEventListener, KeyListener {
 

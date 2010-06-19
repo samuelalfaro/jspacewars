@@ -16,7 +16,7 @@ import org.sam.util.Imagen;
 /**
  */
 @SuppressWarnings("serial")
-public class Prueba03_Particulas extends JFrame implements GLEventListener{
+public class Prueba030_Particulas extends JFrame implements GLEventListener{
 	private final GLCanvas canvas;
 	private GLU glu;
 	private final OrbitBehavior orbitBehavior;
@@ -24,7 +24,7 @@ public class Prueba03_Particulas extends JFrame implements GLEventListener{
 	private UnidadTextura fondo, texture1, texture12, texture2;
 	private NodoTransformador fuenteTransformada;
 
-	public Prueba03_Particulas() {
+	public Prueba030_Particulas() {
 		super("Prueba Particulas");
 		canvas = new GLCanvas(new GLCapabilities());
 		canvas.addGLEventListener(this);
@@ -292,6 +292,6 @@ public class Prueba03_Particulas extends JFrame implements GLEventListener{
 	}
 
 	public static void main(String[] args) {
-		new Prueba03_Particulas().run();
+		new Prueba030_Particulas().run();
 	}
 }

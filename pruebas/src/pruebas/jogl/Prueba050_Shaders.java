@@ -23,7 +23,7 @@ import com.sun.opengl.util.Animator;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class Prueba05_Shaders{
+public class Prueba050_Shaders{
 
 	private static class Renderer implements GLEventListener{
 	
@@ -73,7 +73,7 @@ public class Prueba05_Shaders{
 			mtd = new Matrix4d();
 			mtd.rotY(Math.PI/2);
 			mtd.setScale(1.25);
-			nave = ObjLoader.loadToList("resources/obj3d/nave05/forma.obj",mtd);
+			nave = ObjLoader.load("resources/obj3d/nave05/forma.obj",mtd);
 			Material material = new Material();
 			material.setAmbient(0.0f, 0.0f, 0.0f, 1.0f);
 			material.setDiffuse(0.25f, 0.25f, 0.25f, 1.0f);

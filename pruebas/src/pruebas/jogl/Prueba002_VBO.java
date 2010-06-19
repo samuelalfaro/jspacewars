@@ -13,7 +13,7 @@ import com.sun.opengl.util.BufferUtil;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureIO;
 
-public class Prueba00_VBO{
+public class Prueba002_VBO{
 	
 	private static class VBO{
 		int idBuff;

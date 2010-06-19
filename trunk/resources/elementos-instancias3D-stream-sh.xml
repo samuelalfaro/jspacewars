@@ -2580,7 +2580,7 @@
 							</UnidadTextura>
 							<UnidadTextura>
 								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
-									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+									image="resources/obj3d/fragata/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
 								<Textura

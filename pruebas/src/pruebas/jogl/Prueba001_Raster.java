@@ -24,7 +24,7 @@ import org.sam.util.Imagen;
  * @author Kiet Le (Java port)
  */
 
-public class Prueba00_Raster {
+public class Prueba001_Raster {
 
 	private static class Renderer implements GLEventListener{
 		

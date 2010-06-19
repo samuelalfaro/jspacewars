@@ -94,6 +94,7 @@ public class GrafoEscenaConverters {
 		private static final String Forma3DFromObjFile = "Forma3DFromObjFile";
 		private static final String path = "path";
 		private static final String flags = "flags";
+		private static final String TO_GEOMETRY = "TO_GEOMETRY";
 		private static final String RESIZE = "RESIZE";
 		private static final String TRIANGULATE	= "TRIANGULATE";
 		private static final String MUST_FLIP_VERTICALLY_TEXCOORDS = "MUST_FLIP_VERTICALLY_TEXCOORDS";
@@ -408,6 +409,7 @@ public class GrafoEscenaConverters {
 			String flagsAtt = reader.getAttribute(S.flags);
 			if(flagsAtt != null){
 				flagsAtt = flagsAtt.toUpperCase();
+				loaderData.flags |= flagsAtt.contains(S.TO_GEOMETRY) ? ObjLoader.TO_GEOMETRY : 0;
 				loaderData.flags |= flagsAtt.contains(S.RESIZE) ? ObjLoader.RESIZE : 0;
 				loaderData.flags |= flagsAtt.contains(S.TRIANGULATE) ? ObjLoader.TRIANGULATE : 0;
 				loaderData.flags |= flagsAtt.contains(S.MUST_FLIP_VERTICALLY_TEXCOORDS) ? ObjLoader.MUST_FLIP_VERTICALLY_TEXCOORDS : 0;
@@ -419,7 +421,7 @@ public class GrafoEscenaConverters {
 				reader.moveUp();
 			}
 			try{
-				return ObjLoader.loadToList(loaderData.path, loaderData.flags, loaderData.transformMatrix).getForma3D();
+				return ObjLoader.load(loaderData.path, loaderData.flags, loaderData.transformMatrix).getForma3D();
 			}catch( Exception e ){
 				e.printStackTrace();
 			}
