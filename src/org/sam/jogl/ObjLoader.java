@@ -12,14 +12,13 @@ import javax.vecmath.*;
 public class ObjLoader {
 	
 	public static final int NONE							=	0x00;
-	public static final int RESIZE							=	0x01;
-	public static final int TRIANGULATE						=	0x02;
-	public static final int MUST_FLIP_VERTICALLY_TEXCOORDS	=	0x04;
-	
-	private static final int N_BYTES_FLOAT = 4;
+	public static final int TO_GEOMETRY						=	0x01;
+	public static final int RESIZE							=	0x02;
+	public static final int TRIANGULATE						=	0x04;
+	public static final int MUST_FLIP_VERTICALLY_TEXCOORDS	=	0x08;
 	
 	@SuppressWarnings("serial")
-	static public class ParsingErrorException extends RuntimeException {
+	public static class ParsingErrorException extends RuntimeException {
 		public ParsingErrorException() {
 			super();
 		}
@@ -28,16 +27,18 @@ public class ObjLoader {
 		}
 	}
 	
-	static class ObjParser extends StreamTokenizer {
+	private static final int N_BYTES_FLOAT = 4;
+	
+	private static class ObjParser extends StreamTokenizer {
 		
 		private static final char BACKSLASH = '\\';
 		
-		ObjParser(Reader r) {
+		private ObjParser(Reader r) {
 			super(r);
 			setup();
 		} 
 		
-		void setup() {
+		private void setup() {
 			resetSyntax();
 			eolIsSignificant(true);
 			lowerCaseMode(true);
@@ -55,7 +56,7 @@ public class ObjLoader {
 			ordinaryChar(BACKSLASH);
 		}
 		
-		void getToken() throws ParsingErrorException {
+		private void getToken() throws ParsingErrorException {
 			try {
 				while (true){
 					nextToken();
@@ -72,20 +73,20 @@ public class ObjLoader {
 			}
 		}
 		
-		void skipToNextLine() throws ParsingErrorException {
+		private void skipToNextLine() throws ParsingErrorException {
 			while (ttype != StreamTokenizer.TT_EOF && ttype != StreamTokenizer.TT_EOL) {
 				getToken();
 			}
 		}
 		
-		float getFloat() throws ParsingErrorException {
+		private float getFloat() throws ParsingErrorException {
 			do{
 				getToken();
 			}while(ttype == StreamTokenizer.TT_EOL);
 			return getLastValueAsFloat();
 		}
 		
-		float getLastValueAsFloat() throws ParsingErrorException {
+		private float getLastValueAsFloat() throws ParsingErrorException {
 			try{
 //				if(ttype == StreamTokenizer.TT_NUMBER)
 //					return (float)this.nval;
@@ -98,14 +99,14 @@ public class ObjLoader {
 			}
 		}
 
-		int getInteger() throws ParsingErrorException {
+		private int getInteger() throws ParsingErrorException {
 			do{
 				getToken();
 			}while(ttype == StreamTokenizer.TT_EOL);
 			return getLastValueAsInteger();
 		}
 
-		int getLastValueAsInteger() throws ParsingErrorException {
+		private int getLastValueAsInteger() throws ParsingErrorException {
 			try {
 //				if(ttype == StreamTokenizer.TT_NUMBER)
 //					return (int)this.nval;
@@ -121,18 +122,18 @@ public class ObjLoader {
 	
 	private final int flags;
 	
-	final List<Point3f> coordList;
-	final Queue<Integer> coordIdxList;
+	private final List<Point3f> coordList;
+	private final Queue<Integer> coordIdxList;
 
-	final List<TexCoord2f> texList;
-	final Queue<Integer> texIdxList;
+	private final List<TexCoord2f> texList;
+	private final Queue<Integer> texIdxList;
 
-	final List<Vector3f> normList;
-	final Queue<Integer> normIdxList;
+	private final List<Vector3f> normList;
+	private final Queue<Integer> normIdxList;
 	
-	float minX, maxX;
-	float minY, maxY;
-	float minZ, maxZ;
+	private float minX, maxX;
+	private float minY, maxY;
+	private float minZ, maxZ;
 	
 	private ObjLoader(int flags){
 		this.flags = flags;
@@ -150,7 +151,7 @@ public class ObjLoader {
 		}
 	}
 	
-	void read(ObjParser st) throws ParsingErrorException {
+	private void read(ObjParser st) throws ParsingErrorException {
 		boolean triangular = (flags & ObjLoader.TRIANGULATE) != 0;
 		do{
 			st.getToken();
@@ -197,7 +198,7 @@ public class ObjLoader {
 		}while (st.ttype != StreamTokenizer.TT_EOF);
 	}
 
-	void readVertex(ObjParser st) throws ParsingErrorException {
+	private void readVertex(ObjParser st) throws ParsingErrorException {
 		Point3f v = new Point3f();
 		v.x = st.getFloat();
 		v.y = st.getFloat();
@@ -219,14 +220,14 @@ public class ObjLoader {
 		}
 	}
 
-	void readTexture(ObjParser st) throws ParsingErrorException {
+	private void readTexture(ObjParser st) throws ParsingErrorException {
 		TexCoord2f t = new TexCoord2f();
 		t.x = st.getFloat();
 		t.y = (flags & MUST_FLIP_VERTICALLY_TEXCOORDS) != 0 ? 1.0f - st.getFloat() : st.getFloat();
 		texList.add(t);
 	}
 	
-	void readNormal(ObjParser st) throws ParsingErrorException {
+	private void readNormal(ObjParser st) throws ParsingErrorException {
 		Vector3f n = new Vector3f();
 		n.x = st.getFloat();
 		n.y = st.getFloat();
@@ -234,7 +235,7 @@ public class ObjLoader {
 		normList.add(n);
 	}
 
-	void readTriangle(ObjParser st) throws ParsingErrorException {
+	private void readTriangle(ObjParser st) throws ParsingErrorException {
 		int[] vertIndex = new int[4];
 		int[] texIndex  = new int[4];
 		int[] normIndex = new int[4];
@@ -288,7 +289,7 @@ public class ObjLoader {
 		}while (st.ttype != StreamTokenizer.TT_EOF && st.ttype != StreamTokenizer.TT_EOL);
 	}
 	
-	void readQuad(ObjParser st) throws ParsingErrorException {
+	private void readQuad(ObjParser st) throws ParsingErrorException {
 		int[] vertIndex = new int[4];
 		int[] texIndex  = new int[4];
 		int[] normIndex = new int[4];
@@ -349,7 +350,7 @@ public class ObjLoader {
 		return mt;
 	}
 	
-	Geometria generarGeometria(Matrix4d mt){
+	private Geometria generarGeometria(Matrix4d mt){
 		int nVertex = coordIdxList.size();
 		
 		boolean textCoord = texList.size() > 0;
@@ -495,7 +496,7 @@ public class ObjLoader {
 	}
 	//*/
 	
-	OglList almacenarGeometria(GL gl, Matrix4d mt){
+	private OglList almacenarGeometria(GL gl, Matrix4d mt){
 		boolean textCoord = texList.size() > 0;
 		boolean normal = normList.size() > 0;
 		Point3f  v = new Point3f(); 
@@ -548,6 +549,8 @@ public class ObjLoader {
 	private static Objeto3D load(Reader reader, int flags, Matrix4d mt) throws ParsingErrorException{
 		ObjLoader loader = new ObjLoader(flags);
 		loader.read(new ObjParser(new BufferedReader(reader)));
+		if( (flags & TO_GEOMETRY) != 0)
+			return new Objeto3D(loader.almacenarGeometria( GLU.getCurrentGL(), mt), new Apariencia());
 		return new Objeto3D(loader.generarGeometria(mt), new Apariencia());
 	}
 
@@ -581,43 +584,5 @@ public class ObjLoader {
 	
 	public static Objeto3D load(URL url, int flags, Matrix4d mt) throws IOException, ParsingErrorException{
 		return load(new InputStreamReader(url.openStream()),flags, mt);
-	}
-	
-	private static Objeto3D loadToList(Reader reader, int flags, Matrix4d mt) throws ParsingErrorException{
-		ObjLoader loader = new ObjLoader(flags);
-		loader.read(new ObjParser(new BufferedReader(reader)));
-		return new Objeto3D(loader.almacenarGeometria( GLU.getCurrentGL(), mt), new Apariencia());
-	}
-	
-	public static Objeto3D loadToList(String filename) throws FileNotFoundException, ParsingErrorException{
-		return loadToList( filename, NONE, null);
-	}
-	
-	public static Objeto3D loadToList(String filename, int flags) throws FileNotFoundException, ParsingErrorException{
-		return loadToList( filename, flags, null);
-	}
-	
-	public static Objeto3D loadToList(String filename, Matrix4d mt) throws FileNotFoundException, ParsingErrorException{
-		return loadToList( filename, NONE, mt);
-	}
-	
-	public static Objeto3D loadToList(String filename, int flags, Matrix4d mt) throws FileNotFoundException, ParsingErrorException{
-		return loadToList(new FileReader(filename),flags, mt);
-	}
-
-	public static Objeto3D loadToList(URL url) throws IOException, ParsingErrorException{
-		return loadToList( url, NONE, null);
-	}
-	
-	public static Objeto3D loadToList(URL url, int flags) throws IOException, ParsingErrorException{
-		return loadToList( url, flags, null);
-	}
-	
-	public static Objeto3D loadToList(URL url, Matrix4d mt) throws IOException, ParsingErrorException{
-		return loadToList( url, NONE, mt);
-	}
-	
-	public static Objeto3D loadToList(URL url, int flags, Matrix4d mt) throws IOException, ParsingErrorException{
-		return loadToList(new InputStreamReader(url.openStream()),flags, mt);
 	}
 }
