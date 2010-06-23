@@ -30,7 +30,8 @@ public class Prueba013_NormalMap{
 		private OrbitBehavior orbitBehavior;
 
 		private Apariencia apFondo;
-		private Objeto3D helix;
+		private Objeto3D forma, ntb;
+		private boolean showNTB = false;
 		
 		private transient float proporcionesFondo, proporcionesPantalla;
 
@@ -38,8 +39,8 @@ public class Prueba013_NormalMap{
 			GL gl = drawable.getGL();
 			glu = new GLU();
 			orbitBehavior = new OrbitBehavior();
-			orbitBehavior.setEyePos(9.0f, 0.0f, 22.0f);
-			orbitBehavior.setTargetPos(9.0f, 0.0f, 0.0f);
+			orbitBehavior.setEyePos(0.0f, 0.0f, 22.0f);
+			orbitBehavior.setTargetPos(0.0f, 0.0f, 0.0f);
 			orbitBehavior.addMouseListeners((GLCanvas)drawable);
 
 			gl.glClearColor(0.0f,0.25f,0.25f,0.0f);
@@ -52,7 +53,12 @@ public class Prueba013_NormalMap{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			helix = HelixGenerator.generateHelix(gl, 1.2f, 3.0f, 6);
+			/*
+			forma = CubeGenerator.generateCube(gl, 9);
+			/*/
+			forma =	HelixGenerator.generateHelix(gl, 1.2f, 3.0f, 6);
+			ntb =   HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
+			//*/
 			Textura bump= new Textura(
 					gl,
 					Textura.Format.RGB,
@@ -61,17 +67,17 @@ public class Prueba013_NormalMap{
 			);
 			bump.setWrap_s(Textura.Wrap.CLAMP_TO_EDGE);
 			bump.setWrap_t(Textura.Wrap.CLAMP_TO_EDGE);
-			helix.getApariencia().setTextura(bump);
+			forma.getApariencia().setTextura(bump);
         	Shader shader = new Shader(
         			gl,
         			"shaders/normal.vert",
 					"shaders/normal.frag"
         	);
+        	gl.glBindAttribLocation(shader.programObject, 1, "vTangent");
         	shader.addUniform(gl, "normalMap", 0 );
-        	System.out.println( gl.glGetAttribLocation(shader.programObject, "vTangent") );
    	
-        	helix.getApariencia().setShader(shader);
-
+        	forma.getApariencia().setShader(shader);
+        	
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
 
@@ -80,6 +86,7 @@ public class Prueba013_NormalMap{
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.9f, 1.0f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 0.9f, 1.0f }, 0);
 			//gl.glEnable(GL.GL_CULL_FACE);
+			gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT,GL.GL_NICEST);
 		}
 
 		public void display(GLAutoDrawable drawable){
@@ -122,7 +129,16 @@ public class Prueba013_NormalMap{
 			
 			orbitBehavior.setLookAt(glu);
 			
-			helix.draw(gl);
+			if(showNTB){
+				gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
+				gl.glPolygonOffset( 10.f, 10.f);
+				forma.draw(gl);
+				gl.glDisable( GL.GL_POLYGON_OFFSET_FILL );
+				gl.glPolygonOffset( 0.f, 0.f);
+				ntb.draw(gl);
+			}else{
+				forma.draw(gl);
+			}
 			
 			gl.glFlush();
 		}
@@ -169,7 +185,6 @@ public class Prueba013_NormalMap{
 		frame.getContentPane().add(canvas);
 		
 		Animator animator = new Animator();
-		// animator.setRunAsFastAsPossible(true);
 		animator.add(canvas);
 		
 		frame.setVisible(true);

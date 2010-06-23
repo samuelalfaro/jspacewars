@@ -12,6 +12,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
+import org.sam.jogl.Material;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 
@@ -126,6 +127,13 @@ public class PruebaBloom {
 			
 			helix = HelixGenerator.generateHelix(gl, 2.5f, 5.0f, 20);
 			
+			Material material = new Material();
+			material.setDiffuse( 0.4f, 0.2f, 0.8f, 1.0f );
+			material.setSpecular( 1.0f, 1.0f, 1.0f, 1.0f );
+			material.setShininess(128.0f);
+			
+			helix.getApariencia().setMaterial(material);
+			
 			corte = new Shader(gl,"shaders/filter.vert","shaders/corte.frag");
 			corte.addUniform(gl, "textureIn", 0);
 			corte.addUniform(gl, "pixelSize", 1.0f/128);
@@ -154,7 +162,6 @@ public class PruebaBloom {
 			gl.glRotatef(angle / 3.0f, 0, 0, 1);
 			gl.glRotatef(angle / 2.0f, 1, 0, 0);
 			gl.glRotatef(angle / 3.0f, 0, 1, 0);
-			gl.glTranslatef(-62.5f, 0, 0);
 			
 			gl.glEnable(GL.GL_LIGHTING);
 			helix.draw(gl);

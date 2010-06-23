@@ -37,8 +37,8 @@ public class Prueba010_OrbitBehavior{
 			GL gl = drawable.getGL();
 			glu = new GLU();
 			orbitBehavior = new OrbitBehavior();
-			orbitBehavior.setEyePos(9.0f, 0.0f, -22.0f);
-			orbitBehavior.setTargetPos(9.0f, 0.0f, 0.0f);
+			orbitBehavior.setEyePos(0.0f, 0.0f, -22.0f);
+			orbitBehavior.setTargetPos(0.0f, 0.0f, 0.0f);
 			orbitBehavior.addMouseListeners((GLCanvas)drawable);
 
 			gl.glClearColor(0.0f,0.25f,0.25f,0.0f);

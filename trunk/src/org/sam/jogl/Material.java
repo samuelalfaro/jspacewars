@@ -36,9 +36,9 @@ public class Material {
 	
 	public Material(){
 		ambient   = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
-		diffuse    = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+		diffuse   = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 		emission  = new float[]{0.0f, 0.0f, 0.0f, 1.0f};
-		shininess = new float[]{1.0f};
+		shininess = new float[]{64.0f};
 		specular  = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 	}
 	
