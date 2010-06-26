@@ -54,9 +54,10 @@ public class Prueba013_NormalMap{
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
 			/*
-			forma = CubeGenerator.generateCube(gl, 9);
+			forma = CubeGenerator.generate(gl, 9);
+			ntb =   CubeGenerator.generateNTB (gl, 9, 1.0f);
 			/*/
-			forma =	HelixGenerator.generateHelix(gl, 1.2f, 3.0f, 6);
+			forma =	HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
 			ntb =   HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
 			//*/
 			Textura bump= new Textura(
@@ -70,8 +71,8 @@ public class Prueba013_NormalMap{
 			forma.getApariencia().setTextura(bump);
         	Shader shader = new Shader(
         			gl,
-        			"shaders/normal.vert",
-					"shaders/normal.frag"
+        			"shaders/normal2.vert",
+					"shaders/normal2.frag"
         	);
         	gl.glBindAttribLocation(shader.programObject, 1, "vTangent");
         	shader.addUniform(gl, "normalMap", 0 );
@@ -82,9 +83,13 @@ public class Prueba013_NormalMap{
 			gl.glDepthFunc(GL.GL_LESS);
 
 			gl.glEnable(GL.GL_LIGHT0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 10.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.9f, 1.0f, 1.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 0.9f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.5f, 0.2f, 1.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPOT_DIRECTION, new float[]{ 0.0f, 0.0f, -1.0f }, 0);
+			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 30);
+			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_EXPONENT, 32.0f);
+			
 			//gl.glEnable(GL.GL_CULL_FACE);
 			gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT,GL.GL_NICEST);
 		}

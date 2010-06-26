@@ -125,7 +125,7 @@ public class PruebaBloom {
 			FBO[0] = initFBO(gl, textuId[0],128,128);
 			FBO[1] = initFBO(gl, textuId[1],128,128);
 			
-			helix = HelixGenerator.generateHelix(gl, 2.5f, 5.0f, 20);
+			helix = HelixGenerator.generate(gl, 2.5f, 5.0f, 20);
 			
 			Material material = new Material();
 			material.setDiffuse( 0.4f, 0.2f, 0.8f, 1.0f );

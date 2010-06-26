@@ -56,7 +56,7 @@ public class Prueba040_Interface{
 			while(!marco.isLoadComplete())
 				marco.loadTexturas(gl);
 
-			helix = HelixGenerator.generateHelix(gl, 1.2f, 3.0f, 6);
+			helix = HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
 
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);

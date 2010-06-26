@@ -73,32 +73,30 @@ public class HelixGenerator {
 				Point3f vert3, Point2f text3, Vector3f norm3, Vector4f tang3,
 				Point3f vert4, Point2f text4, Vector3f norm4, Vector4f tang4
 			){
-			gl.glTexCoord2f(        text1.x, text1.y);
-			gl.glVertexAttrib4f( 1, tang1.x, tang1.y, tang1.z, tang1.w);
 			gl.glNormal3f(          norm1.x, norm1.y, norm1.z);
+			gl.glVertexAttrib4f( 1, tang1.x, tang1.y, tang1.z, tang1.w);
+			gl.glTexCoord2f(        text1.x, text1.y);
 			gl.glVertex3f(          vert1.x, vert1.y, vert1.z);
 			
-			gl.glTexCoord2f(        text2.x, text2.y);
-			gl.glVertexAttrib4f( 1, tang2.x, tang2.y, tang2.z, tang2.w);
 			gl.glNormal3f(          norm2.x, norm2.y, norm2.z);
+			gl.glVertexAttrib4f( 1, tang2.x, tang2.y, tang2.z, tang2.w);
+			gl.glTexCoord2f(        text2.x, text2.y);
 			gl.glVertex3f(          vert2.x, vert2.y, vert2.z);
 			
-			gl.glTexCoord2f(        text3.x, text3.y);
-			gl.glVertexAttrib4f( 1, tang3.x, tang3.y, tang3.z, tang3.w);
 			gl.glNormal3f(          norm3.x, norm3.y, norm3.z);
+			gl.glVertexAttrib4f( 1, tang3.x, tang3.y, tang3.z, tang3.w);
+			gl.glTexCoord2f(        text3.x, text3.y);
 			gl.glVertex3f(          vert3.x, vert3.y, vert3.z);
 			
-			gl.glTexCoord2f(        text4.x, text4.y);
-			gl.glVertexAttrib4f( 1, tang4.x, tang4.y, tang4.z, tang4.w);
 			gl.glNormal3f(          norm4.x, norm4.y, norm4.z);
+			gl.glVertexAttrib4f( 1, tang4.x, tang4.y, tang4.z, tang4.w);
+			gl.glTexCoord2f(        text4.x, text4.y);
 			gl.glVertex3f(          vert4.x, vert4.y, vert4.z);
 		}
-
-
 	};
 	
 	private static class NTBGenerator implements Generator{
-		float scale = 0.25f;
+		float scale = 1.0f;
 		
 		@Override
 		public int getMode() {
@@ -174,7 +172,7 @@ public class HelixGenerator {
 		}
 	}
 	
-	private static NTBGenerator myNTBGenerator = new NTBGenerator();
+	private static NTBGenerator MyNTBGenerator = new NTBGenerator();
 	
 	private static Vector4f calculateTangent(Vector3f normal, Point3f pu0, Point2f tu0, Point3f pu1, Point2f tu1, Point3f pv0, Point2f tv0, Point3f pv1, Point2f tv1){
 		
@@ -281,9 +279,9 @@ public class HelixGenerator {
 				u = - u;
 				incU = - incU;
 			}
-			l  += incL;
 			r1 += incR1;
 			r2 += incR2;
+			l  += incL*r1/r1I;
 		}
 		
 		Vector3f udir1 = new Vector3f(), udir2 = new Vector3f();
@@ -413,7 +411,7 @@ public class HelixGenerator {
 		return new OglList(lid);
 	}
 	
-	public static Objeto3D generateHelix(GL gl, float r1I, float r1F, int steps1, float r2I, float r2F, int steps2, float l, int twists) {
+	public static Objeto3D generate(GL gl, float r1I, float r1F, int steps1, float r2I, float r2F, int steps2, float l, int twists) {
 		OglList list = generate(gl, QuadsGenerator, r1I, r1F, steps1, r2I, r2F, steps2, l, twists );
 
 		Apariencia ap = new Apariencia();
@@ -421,17 +419,17 @@ public class HelixGenerator {
 		return new Objeto3D(list, ap);
 	}
 	
-	public static Objeto3D generateHelix(GL gl, float r1, float r2, int twists) {
-		return generateHelix(gl, r1, r1, 12, r2, r2, 24, r1*2.5f, twists);
+	public static Objeto3D generate(GL gl, float r1, float r2, int twists) {
+		return generate(gl, r1, r1, 12, r2, r2, 36, r1*2.5f, twists);
 	}
 	
 	public static Objeto3D generateNTB(GL gl, float r1I, float r1F, int steps1, float r2I, float r2F, int steps2, float l, int twists, float scale) {
-		myNTBGenerator.scale = scale;
-		OglList list = generate(gl, myNTBGenerator, r1I, r1F, steps1, r2I, r2F, steps2, l, twists );
+		MyNTBGenerator.scale = scale;
+		OglList list = generate(gl, MyNTBGenerator, r1I, r1F, steps1, r2I, r2F, steps2, l, twists );
 		return new Objeto3D(list, new Apariencia());
 	}
 	
 	public static Objeto3D generateNTB(GL gl, float r1, float r2, int twists, float scale) {
-		return generateNTB(gl, r1, r1, 12, r2, r2, 24, r1*2.5f, twists, scale);
+		return generateNTB(gl, r1, r1, 6, r2, r2, 18, r1*2.5f, twists, scale);
 	}
 }

@@ -51,16 +51,16 @@ public class Prueba010_OrbitBehavior{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			helix = HelixGenerator.generateHelix(gl, 1.2f, 3.0f, 6);
+			helix = HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
 
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
 
 			gl.glEnable(GL.GL_LIGHT0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 10.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.9f, 1.0f, 1.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 0.9f, 1.0f }, 0);
-			gl.glEnable(GL.GL_CULL_FACE);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.7f, 0.2f, 1.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 0.3f, 1.0f, 0.0f, 1.0f }, 0);
+			//gl.glEnable(GL.GL_CULL_FACE);
 		}
 
 		public void display(GLAutoDrawable drawable){

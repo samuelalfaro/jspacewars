@@ -51,7 +51,7 @@ public class Prueba011_ModoMaya{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			helix = HelixGenerator.generateHelix(gl, 1.2f, 3.0f, 6);
+			helix = HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
 
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
@@ -80,6 +80,7 @@ public class Prueba011_ModoMaya{
 			ObjetosOrientables.loadProjectionMatrix();
 
 			apFondo.usar(gl);
+			gl.glStencilMask(~0);
 			gl.glClear(GL.GL_DEPTH_BUFFER_BIT|GL.GL_STENCIL_BUFFER_BIT);
 
 			gl.glDepthMask(false);
@@ -97,7 +98,6 @@ public class Prueba011_ModoMaya{
 			gl.glEnd();
 			gl.glDepthMask(true);
 			
-			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glPopMatrix();
 
 			gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -118,15 +118,51 @@ public class Prueba011_ModoMaya{
 			gl.glStencilOp( GL.GL_KEEP, GL.GL_KEEP, GL.GL_REPLACE );
 			
 			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
-			gl.glLineWidth(4);
+			gl.glLineWidth(1);
 			helix.getForma3D().draw(gl);
-			
+
 			gl.glColorMask(true, true, true, true);
-			gl.glStencilFunc(GL.GL_EQUAL, 1, ~0);
-			gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_ZERO);
 			gl.glPolygonMode( GL.GL_FRONT_AND_BACK, GL.GL_FILL );
-			helix.draw(gl);
+			gl.glStencilFunc(GL.GL_EQUAL, 1, ~0);
+			//gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_ZERO);
+			gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);
+			
+			//*
+			gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 			gl.glDepthMask(true);
+			gl.glDepthFunc(GL.GL_LESS);
+			//gl.glDisable(GL.GL_STENCIL_TEST);
+			helix.draw(gl);
+			//gl.glEnable(GL.GL_STENCIL_TEST);
+
+			/*/
+			gl.glDisable(GL.GL_DEPTH_TEST);
+			gl.glDepthMask(false);
+			
+			gl.glMatrixMode( GL.GL_MODELVIEW );
+			gl.glPushMatrix();
+			gl.glLoadIdentity();
+			gl.glMatrixMode(GL.GL_PROJECTION);
+			gl.glPushMatrix();
+			gl.glLoadIdentity();
+			gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
+			gl.glDisable(GL.GL_LIGHTING);
+			gl.glDisable(GL.GL_TEXTURE_2D);
+			gl.glBegin(GL.GL_QUADS);
+				gl.glColor3f(1.0f, 0.0f, 1.0f);
+				gl.glVertex3f(0,0,0);
+				gl.glVertex3f(proporcionesPantalla,0,0);
+				gl.glVertex3f(proporcionesPantalla,1,0);
+				gl.glVertex3f(0,1,0);
+			gl.glEnd();
+			gl.glEnable(GL.GL_TEXTURE_2D);
+			gl.glEnable(GL.GL_LIGHTING);
+			gl.glPopMatrix();
+			gl.glMatrixMode(GL.GL_MODELVIEW);
+			gl.glPopMatrix();
+			
+			gl.glDepthMask(true);
+			gl.glEnable(GL.GL_DEPTH_TEST);
 			
 			// clean up state */
 			gl.glEnable(GL.GL_TEXTURE_2D);
@@ -142,8 +178,8 @@ public class Prueba011_ModoMaya{
 			proporcionesPantalla = (float)w/h;
 			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glLoadIdentity();
-			double near = 0.01;
-			double far  = 100.0;
+			double near = 0.5;
+			double far  = 50.0;
 			double a1 = 45.0;			// angulo en grados
 			double a2 = a1/360*Math.PI; // mitad del angulo en radianes
 			double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
@@ -173,7 +209,7 @@ public class Prueba011_ModoMaya{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		GLCapabilities caps = new GLCapabilities();
-		caps.setStencilBits(1);
+		caps.setStencilBits(8);
 		GLCanvas canvas = new GLCanvas(caps);
 		canvas.addGLEventListener(new Renderer());
 
