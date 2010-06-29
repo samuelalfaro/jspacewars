@@ -35,9 +35,8 @@ void Light(
 	attenuation *= mix( 1.0, pow( spotDot * step( lightSource.spotCosCutoff, spotDot ), lightSource.spotExponent ), esFoco);
 
 	diffuse  += max( 0.0, nDotL ) * lightSource.diffuse.rgb * attenuation;
-	
-	float rDotEV = dot( reflect( -lightVec, normal), eyeVec );
-	specular +=  cut * lightSource.specular.rgb * pow( max( 0.0, rDotEV ), gl_FrontMaterial.shininess ) * attenuation;
+	specular += cut * pow( max( 0.0, dot( reflect( -lightVec, normal), eyeVec ) ), gl_FrontMaterial.shininess )
+		* lightSource.specular.rgb * attenuation;
 }
 
 void main(){

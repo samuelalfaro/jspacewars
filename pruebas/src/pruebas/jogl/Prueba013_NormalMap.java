@@ -31,7 +31,7 @@ public class Prueba013_NormalMap{
 
 		private Apariencia apFondo;
 		private Objeto3D forma, ntb;
-		private boolean showNTB = false;
+		private boolean showNTB = true;
 		
 		private transient float proporcionesFondo, proporcionesPantalla;
 
@@ -57,7 +57,7 @@ public class Prueba013_NormalMap{
 			forma = CubeGenerator.generate(gl, 9);
 			ntb =   CubeGenerator.generateNTB (gl, 9, 1.0f);
 			/*/
-			forma =	HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
+			forma =	HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
 			ntb =   HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
 			//*/
 			Textura bump= new Textura(
@@ -87,7 +87,7 @@ public class Prueba013_NormalMap{
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.5f, 0.2f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPOT_DIRECTION, new float[]{ 0.0f, 0.0f, -1.0f }, 0);
-			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 30);
+			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 20);
 			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_EXPONENT, 32.0f);
 			
 			//gl.glEnable(GL.GL_CULL_FACE);
