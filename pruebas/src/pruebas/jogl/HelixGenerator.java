@@ -462,10 +462,10 @@ public class HelixGenerator {
 				float z1 = p11.z + p01.z - p10.z - p00.z;
 				float z2 = p11.z + p10.z - p01.z - p00.z;
 			
-				float s1 = c11.x + c01.x - c10.x - c00.x;
-				float s2 = c11.x + c10.x - c01.x - c00.x;
-				float t1 = c11.y + c01.y - c10.y - c00.y;
-				float t2 = c11.y + c10.y - c01.y - c00.y;
+				float s1 = Math.abs( c11.x + c01.x - c10.x - c00.x );
+				float s2 = Math.abs( c11.x + c10.x - c01.x - c00.x );
+				float t1 = Math.abs( c11.y + c01.y - c10.y - c00.y );
+				float t2 = Math.abs( c11.y + c10.y - c01.y - c00.y );
 			
 				float r = 1.0f / (s1 * t2 - s2 * t1);
 				sDir.set(
@@ -481,9 +481,10 @@ public class HelixGenerator {
 		}
 	}
 	
-	
-	private static void calculateTangent(Vector3f normal, Vector3f sDir, Vector3f tDir, Vector4f t4f){
-	    Vector3f t = orthogonalizeGramSchmidt(normal, sDir);
+	private static void calculateTangent(Vector3f normal, Vector3f tangent, Vector3f sDir, Vector3f tDir, Vector4f t4f){
+	    Vector3f t = orthogonalizeGramSchmidt(normal, tangent);
+	    if(dot( t, sDir ) < 0.0f)
+	    	t.negate();
 	    t4f.set( t.x, t.y, t.z, dot( cross( normal, t ), tDir ) < 0.0f ? -1.0f : 1.0f );
 	}
 	
@@ -534,6 +535,9 @@ public class HelixGenerator {
 		gl.glNewList(lid, GL.GL_COMPILE);
 		gl.glBegin(generator.getMode());
 		
+		final Vector3f sDir = new Vector3f();
+		final Vector3f tDir = new Vector3f();
+		
 		for (int i = 0; i < steps1; i++) {
 			for (int j = 0, total = steps2 * twists; j < total; j++) {
 				p00 = vertices[i  ][j  ]; 
@@ -579,16 +583,22 @@ public class HelixGenerator {
 				
 					float r = 1.0f / (s1 * t2 - s2 * t1);
 					
-					Vector3f tDir  = new Vector3f(
+					sDir.set(
+							(t2 * x1 - t1 * x2) * r,
+							(t2 * y1 - t1 * y2) * r,
+				            (t2 * z1 - t1 * z2) * r
+					);
+					
+					tDir.set(
 							(s1 * x2 - s2 * x1) * r,
 							(s1 * y2 - s2 * y1) * r,
 				            (s1 * z2 - s2 * z1) * r
 					);
 					
-					calculateTangent( n00, sDirs[i  ][j  ], tDir, t00 );
-					calculateTangent( n10, sDirs[i+1][j  ], tDir, t10 );
-					calculateTangent( n11, sDirs[i+1][j+1], tDir, t11 );
-					calculateTangent( n01, sDirs[i  ][j+1], tDir, t01 );
+					calculateTangent( n00, sDirs[i  ][j  ], sDir, tDir, t00 );
+					calculateTangent( n10, sDirs[i+1][j  ], sDir, tDir, t10 );
+					calculateTangent( n11, sDirs[i+1][j+1], sDir, tDir, t11 );
+					calculateTangent( n01, sDirs[i  ][j+1], sDir, tDir, t01 );
 					//*/
 				}
 				generator.generate(gl, 
