@@ -47,7 +47,7 @@ void main(){
 	reflectDir.y = 0.0;
 	index.s =  sign(-reflectDir.z) * dot(normalize(reflectDir), Xunitvec);
 
-    	// Translate index values into proper range
+	// Translate index values into proper range
 	index *= 0.5;
 	index += 0.5;
 
