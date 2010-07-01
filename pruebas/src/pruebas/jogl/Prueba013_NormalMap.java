@@ -15,7 +15,6 @@ import javax.swing.JFrame;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.Objeto3D;
-import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
@@ -55,19 +54,45 @@ public class Prueba013_NormalMap{
 
 			/*
 			forma = CubeGenerator.generate(gl, 9);
-			ntb =   CubeGenerator.generateNTB (gl, 9, 1.0f);
+			if(showNTB)
+				ntb = CubeGenerator.generateNTB (gl, 9, 1.0f);
 			/*/
 			forma =	HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
-			ntb =   HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
-			//*/
+			
+//			Matrix4d mtd = new Matrix4d();
+//			mtd.rotY(Math.PI/2);
+//			mtd.setScale(18.0);
+//			try {
+//				forma = ObjLoader.load( "resources/obj3d/nave03/forma.obj", ObjLoader.RESIZE, mtd );
+//			} catch (FileNotFoundException e) {
+//				e.printStackTrace();
+//			} catch (ParsingErrorException e) {
+//				e.printStackTrace();
+//			}
+			
+			if(showNTB)
+				ntb = HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
+			
+			//*
+			
+			//*
 			Textura bump= new Textura(
 					gl,
 					Textura.Format.RGB,
-					Imagen.cargarToBufferedImage("resources/texturas/bump2.png"),
+					Imagen.cargarToBufferedImage("resources/obj3d/nave04/bump.png"),
 					true
 			);
+			/*/
+			Textura bump= new Textura(
+					gl,
+					Textura.Format.LUMINANCE,
+					Imagen.cargarToBufferedImage("resources/texturas/smoke_particle2.jpg"),
+					true
+			);
+			//*/
+			
 			bump.setWrap_s(Textura.Wrap.CLAMP_TO_EDGE);
-			bump.setWrap_t(Textura.Wrap.CLAMP_TO_EDGE);
+			bump.setWrap_t(Textura.Wrap.REPEAT);
 			forma.getApariencia().setTextura(bump);
         	Shader shader = new Shader(
         			gl,
@@ -83,14 +108,14 @@ public class Prueba013_NormalMap{
 			gl.glDepthFunc(GL.GL_LESS);
 
 			gl.glEnable(GL.GL_LIGHT0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 0.0f, 1.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 1.0f, 0.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.5f, 0.2f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPOT_DIRECTION, new float[]{ 0.0f, 0.0f, -1.0f }, 0);
-			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 20);
-			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_EXPONENT, 32.0f);
+//			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPOT_DIRECTION, new float[]{ 0.0f, 0.0f, -1.0f }, 0);
+//			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 20);
+//			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_EXPONENT, 32.0f);
 			
-			//gl.glEnable(GL.GL_CULL_FACE);
+			gl.glEnable(GL.GL_CULL_FACE);
 			gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT,GL.GL_NICEST);
 		}
 
@@ -100,13 +125,11 @@ public class Prueba013_NormalMap{
 
 			gl.glMatrixMode( GL.GL_MODELVIEW );
 			gl.glLoadIdentity();
-			ObjetosOrientables.loadModelViewMatrix();
 
 			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
 			gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
-			ObjetosOrientables.loadProjectionMatrix();
 
 			apFondo.usar(gl);
 			gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
@@ -134,7 +157,7 @@ public class Prueba013_NormalMap{
 			
 			orbitBehavior.setLookAt(glu);
 			
-			if(showNTB){
+			if( ntb != null ){
 				gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
 				gl.glPolygonOffset( 10.f, 10.f);
 				forma.draw(gl);
