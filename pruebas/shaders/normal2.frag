@@ -73,8 +73,12 @@ void main(){
 	Light( gl_LightSource[1], tbnBasis, pos, eye, normal, amb, diff, spec);
 	Light( gl_LightSource[2], tbnBasis, pos, eye, normal, amb, diff, spec);
 
+	//*
 	gl_FragColor = vec4( clamp(
 		amb  * gl_FrontMaterial.ambient.rgb +
 		diff * gl_FrontMaterial.diffuse.rgb + 
 		spec * gl_FrontMaterial.specular.rgb, 0.0, 1.0), 1.0);
+	/*/
+	gl_FragColor = vec4( texture2D(normalMap, gl_TexCoord[0].st).xyz * gl_TexCoord[0].t, 1.0);
+	//*/
 }

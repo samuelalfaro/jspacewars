@@ -53,49 +53,60 @@ public class HelixGenerator {
 	    t.y = ny;
 	}
 	
-	private static float dot(Vector3f v1, Vector3f v2){
+	static float dot(Vector3f v1, Vector3f v2){
 		return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
 	}
 	
-	private static Vector3f cross(Vector3f v1, Vector3f v2){
-		return new Vector3f(
-			v1.y*v2.z - v1.z*v2.y,
-			v2.x*v1.z - v2.z*v1.x,
-			v1.x*v2.y - v1.y*v2.x
-		);
+	/**
+	 * @return dot( cross(v1, v2), v3 )
+	 */
+	static float dotcross(Vector3f v1, Vector3f v2, Vector3f v3){
+		return ((v1.y*v2.z - v1.z*v2.y)*v3.x + (v2.x*v1.z - v2.z*v1.x)*v3.y + (v1.x*v2.y - v1.y*v2.x)*v3.z);
 	}
 	
-	private static Vector3f cross(Vector3f v1, Vector4f v2){
-		return new Vector3f(
-        	v1.y*v2.z - v1.z*v2.y,
-        	v2.x*v1.z - v2.z*v1.x,
-        	v1.x*v2.y - v1.y*v2.x
-        );
-	}
-	
-	static Vector2f cambioDeBase(Vector3f v, Vector3f s, Vector3f t){
-//		float d = s.x * t.y - s.y * t.x;
-//		if( Math.abs(d) > 0.01f )
-//			return new Vector2f(
-//				(v.x * t.y - v.y * t.x)/d,
-//				(v.y * s.x - v.x * s.y)/d
-//			);
-//		d = s.y * t.z - s.z * t.y;
-//		if( Math.abs(d) > 0.01f )
-//			return new Vector2f(
-//				(v.y * t.z - v.z * t.y)/d,
-//				(v.z * s.y - v.y * s.z)/d
-//			);
-//
-//		d = s.z * t.x - s.x * t.z;
-//		return new Vector2f(
-//			(v.z * t.x - v.x * t.z)/d,
-//			(v.x * s.z - v.z * s.x)/d
+//	static Vector3f cross(Vector3f v1, Vector3f v2){
+//		return new Vector3f(
+//			v1.y*v2.z - v1.z*v2.y,
+//			v2.x*v1.z - v2.z*v1.x,
+//			v1.x*v2.y - v1.y*v2.x
 //		);
+//	}
+	
+//	static Vector3f cross(Vector3f v1, Vector4f v2){
+//		return new Vector3f(
+//        	(v1.y*v2.z - v1.z*v2.y)*Math.signum(v2.w),
+//        	(v2.x*v1.z - v2.z*v1.x)*Math.signum(v2.w),
+//        	(v1.x*v2.y - v1.y*v2.x)*Math.signum(v2.w)
+//        );
+//	}
+	
+	/*
+	static Vector2f cambioDeBase( Vector3f v, Vector3f s ){
 		float d = dot(s,s); // = |s|²
 		return new Vector2f(
 			dot(v,s)/d,
 			-1.0f/d
+		);
+	}
+	
+	static Vector2f cambioDeBase( Vector3f v, Vector3f s, Vector3f t ){
+		float d = s.x * t.y - s.y * t.x;
+		if( Math.abs(d) > 0.01f )
+			return new Vector2f(
+				(v.x * t.y - v.y * t.x)/d,
+				(v.y * s.x - v.x * s.y)/d
+			);
+		d = s.y * t.z - s.z * t.y;
+		if( Math.abs(d) > 0.01f )
+			return new Vector2f(
+				(v.y * t.z - v.z * t.y)/d,
+				(v.z * s.y - v.y * s.z)/d
+			);
+
+		d = s.z * t.x - s.x * t.z;
+		return new Vector2f(
+			(v.z * t.x - v.x * t.z)/d,
+			(v.x * s.z - v.z * s.x)/d
 		);
 	}
 	
@@ -119,10 +130,15 @@ public class HelixGenerator {
 				dot(cross(v,s),reflect),  dot(v,s) - dot(reflect,s) );
 		return cambioDeBase(v2f, s, t );
 	}
+	*/
 
 	/**
 	 * Reflejo coplanar
 	 * <PRE>
+	 * Calculo del vector perpendicular a s y coplanar al plano(v,s)
+	 * cross(v, s) = normal del plano(v,s)
+	 * cross(n, s) = cross( cross(v, s), s ) = vector perpendicular a la normal y a s
+	 * 
 	 * cross( cross(v1, v2), v2)
 	 * c.x = ( v1.y*v2.z - v1.z*v2.y )
 	 * c.y = ( v2.x*v1.z - v2.z*v1.x )
@@ -147,10 +163,6 @@ public class HelixGenerator {
 	 * cc.y = v2.y*(v1.x*v2.x + v1.z*v2.z) - v1.y*(v2.x² + v2.z²)
 	 * cc.z = v2.z*(v1.x*v2.x + v1.y*v2.y) - v1.z*(v2.x² + v2.y²)
 	 * 
-	 * Calculo del vector perpendicular a s y coplanar al plano(v,s)
-	 * cross(v, s) = normal del plano(v,s)
-	 * cross(n, s) = cross( cross(v, s), s ) = vector perpendicular a la normal y a s
-	 * 	
 	 * t = cross( cross(v, s), s );
 	 * t.x = s.x*(v.y*s.y + v.z*s.z) - v.x*(s.y² + s.z²)
 	 * t.y = s.y*(v.x*s.x + v.z*s.z) - v.y*(s.x² + s.z²)
@@ -233,7 +245,7 @@ public class HelixGenerator {
 	 * rb3.z = s.z*2*dot(v,s)/|s|² - v.z
 	 * </PRE>
 	 */
-	static final Vector3f reflect(Vector3f v, Vector3f s){
+	static Vector3f reflect(Vector3f v, Vector3f s){
 		float d = 2 * dot(v,s)/dot(s,s);
 		return new Vector3f(
 				d * s.x - v.x,
@@ -242,14 +254,15 @@ public class HelixGenerator {
 		);
 	}
 	
-	private static Vector3f orthogonalizeGramSchmidt(Vector3f n, Vector3f t){
+	private static void orthogonalizeGramSchmidt(Vector3f n, Vector3f t){
 	    // tOrtho = normalize( t - n·dot(n, t) )
-		Vector3f tOrtho = new Vector3f(t);
-		Vector3f aux = new Vector3f(n);
-		aux.scale( dot( aux, t ) );
-		tOrtho.sub( aux );
-		tOrtho.normalize();
-		return tOrtho;
+		float d = dot( n, t );
+		t.set(
+			t.x - n.x*d,
+			t.y - n.y*d,
+			t.z - n.z*d
+		);
+		t.normalize();
 	}
 	
 	private interface Generator{
@@ -275,7 +288,6 @@ public class HelixGenerator {
 				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
 				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
 			){
-
 			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
 			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
 			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
@@ -447,31 +459,40 @@ public class HelixGenerator {
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 			gl.glVertex3f( vert4.x + tang4.x * scale, vert4.y + tang4.y * scale, vert4.z + tang4.z * scale );
 
-			Vector3f bitang;
+			final Vector3f bitang = new Vector3f();
 			gl.glColor3f(0.0f, 0.5f, 1.0f);
 			
 			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			bitang = cross( norm1, tang1 );
-			if(tang1.w < 0.0f)
-				bitang.negate();
+			bitang.set(
+	        	(norm1.y*tang1.z - norm1.z*tang1.y)*Math.signum(tang1.w),
+	        	(tang1.x*norm1.z - tang1.z*norm1.x)*Math.signum(tang1.w),
+	        	(norm1.x*tang1.y - norm1.y*tang1.x)*Math.signum(tang1.w)
+			);
 			gl.glVertex3f( vert1.x + bitang.x * scale, vert1.y + bitang.y * scale, vert1.z + bitang.z * scale);
 
 			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			bitang = cross( norm2, tang2 );
-			if(tang2.w < 0.0f)
-				bitang.negate();
+			bitang.set(
+	        	(norm2.y*tang2.z - norm2.z*tang2.y)*Math.signum(tang2.w),
+	        	(tang2.x*norm2.z - tang2.z*norm2.x)*Math.signum(tang2.w),
+	        	(norm2.x*tang2.y - norm2.y*tang2.x)*Math.signum(tang2.w)
+			);
 			gl.glVertex3f( vert2.x + bitang.x * scale, vert2.y + bitang.y * scale, vert2.z + bitang.z * scale);
 
 			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			bitang = cross( norm3, tang3 );
-			if(tang3.w < 0.0f)
-				bitang.negate();
+			bitang.set(
+	        	(norm3.y*tang3.z - norm3.z*tang3.y)*Math.signum(tang3.w),
+	        	(tang3.x*norm3.z - tang3.z*norm3.x)*Math.signum(tang3.w),
+	        	(norm3.x*tang3.y - norm3.y*tang3.x)*Math.signum(tang3.w)
+			);
+
 			gl.glVertex3f( vert3.x + bitang.x * scale, vert3.y + bitang.y * scale, vert3.z + bitang.z * scale);
 
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-			bitang = cross( norm4, tang4 );
-			if(tang4.w < 0.0f)
-				bitang.negate();
+			bitang.set(
+	        	(norm4.y*tang4.z - norm4.z*tang4.y)*Math.signum(tang4.w),
+	        	(tang4.x*norm4.z - tang4.z*norm4.x)*Math.signum(tang4.w),
+	        	(norm4.x*tang4.y - norm4.y*tang4.x)*Math.signum(tang4.w)
+			);
 			gl.glVertex3f( vert4.x + bitang.x * scale, vert4.y + bitang.y * scale, vert4.z + bitang.z * scale );
 		}
 	}
@@ -517,40 +538,40 @@ public class HelixGenerator {
 		}
 	}
 	
-	private static void generateNormals(Point3f[][] vertex, Vector3f[][] normals){
+	private static void generateNormals(Point3f[][] vertices, Vector3f[][] normals){
 		
-		Vector3f udir1 = new Vector3f(), udir2 = new Vector3f();
-		Vector3f vdir1 = new Vector3f(), vdir2 = new Vector3f();
+		final Vector3f udir1 = new Vector3f(), udir2 = new Vector3f();
+		final Vector3f vdir1 = new Vector3f(), vdir2 = new Vector3f();
 		
-		Vector3f n1 = new Vector3f();
-		Vector3f n2 = new Vector3f();
-		Vector3f n3 = new Vector3f();
-		Vector3f n4 = new Vector3f();
+		final Vector3f n1 = new Vector3f();
+		final Vector3f n2 = new Vector3f();
+		final Vector3f n3 = new Vector3f();
+		final Vector3f n4 = new Vector3f();
 		
-		for ( int i= 0; i < vertex.length; i++ ) {
-			for (int j = 0; j < vertex[0].length; j++) {
+		for ( int i= 0; i < vertices.length; i++ ) {
+			for (int j = 0; j < vertices[0].length; j++) {
 				if(j > 0){
-					udir1.set(vertex [i][j-1]);
-					udir1.sub(vertex [i][j]);
+					udir1.set(vertices [i][j-1]);
+					udir1.sub(vertices [i][j]);
+					if( j == vertices[0].length -1 ){
+						udir2.set(udir1);
+						udir2.negate();
+					}
 				}
-				if( j < vertex[0].length -1 ){
-					udir2.set(vertex [i][j+1]);
-					udir2.sub(vertex [i][j]);
+				if( j < vertices[0].length -1 ){
+					udir2.set(vertices [i][j+1]);
+					udir2.sub(vertices [i][j]);
+					if(j == 0){
+						udir1.set(udir2);
+						udir1.negate();
+					}
 				}
-				if(j == 0){
-					udir1 = new Vector3f(udir2);
-					udir1.negate();
-				}
-				if( j == vertex[0].length -1 ){
-					udir2 = new Vector3f(udir1);
-					udir2.negate();
-				}
-					
-				vdir1.set(vertex [i > 0 ? i-1 : vertex.length -1 ][j]);
-				vdir1.sub(vertex [i][j]);
+
+				vdir1.set(vertices [i > 0 ? i-1 : vertices.length -1 ][j]);
+				vdir1.sub(vertices [i][j]);
 				
-				vdir2.set(vertex [i < vertex.length-1 ? i+1 : 0][j]);
-				vdir2.sub(vertex [i][j]);
+				vdir2.set(vertices [i < vertices.length-1 ? i+1 : 0][j]);
+				vdir2.sub(vertices [i][j]);
 				
 				n1.cross(vdir1, udir1);
 				n2.cross(udir1, vdir2);
@@ -606,7 +627,7 @@ public class HelixGenerator {
 		float u = 0.0f;
 		incU = Math.abs(incU) * Math.signum( scaleU );
 		for( int i = 0; i < tCoords[0].length; i++) {
-			float v = 0.05f * i;
+			float v = 0.1f * i;
 			for( int j= 0; j < tCoords.length/2; j++ ) {
 				tCoords [j][i] = new Point2f ( u, v );
 				v += incV;
@@ -615,7 +636,6 @@ public class HelixGenerator {
 			for( int j= 0; j < tCoords.length/2; j++ ) {
 				tCoords [ (tCoords.length-1) -j][i] = new Point2f ( tCoords [j][i] );
 			}
-			
 			u += incU;
 			if(u > 1){
 				u = 2 - u;
@@ -628,13 +648,15 @@ public class HelixGenerator {
 	}
 	//*/
 
-	private static void generateTangents(Point3f[][] vertices, Vector3f[][] tangents){
+	private static void generateTangents(Point3f[][] vertices, Vector3f[][][] tangents){
 		
-		for ( int i= 0; i < tangents.length; i++ )
-			for (int j = 0; j < tangents[0].length; j++)
-				tangents[i][j] = new Vector3f();
-		
+		for ( int i= 0; i < tangents[0].length; i++ )
+			for (int j = 0; j < tangents[0][0].length; j++){
+				tangents[0][i][j] = new Vector3f();
+				tangents[1][i][j] = new Vector3f();
+			}
 		final Vector3f tangent = new Vector3f();
+		final Vector3f bitangent = new Vector3f();
 		
 		for (int i = 0; i < vertices.length; i++) {
 			int i_1 = i+1 < vertices.length ? i+1: 0;
@@ -645,128 +667,52 @@ public class HelixGenerator {
 				final Point3f p11 = vertices[i_1][j+1];
 				final Point3f p01 = vertices[i  ][j+1];
 
-				float x1 = p11.x + p01.x - p10.x - p00.x;
-				float x2 = p11.x + p10.x - p01.x - p00.x;
-				float y1 = p11.y + p01.y - p10.y - p00.y;
-				float y2 = p11.y + p10.y - p01.y - p00.y;
-				float z1 = p11.z + p01.z - p10.z - p00.z;
-				float z2 = p11.z + p10.z - p01.z - p00.z;
-			
-				float s1 = 1.0f; //Math.abs(c11.x + c01.x - c10.x - c00.x);
-				float s2 = 0.0f; //Math.abs(c11.x + c10.x - c01.x - c00.x);
-				float t1 = 1.0f; //Math.abs(c11.y + c01.y - c10.y - c00.y);
-				float t2 = 0.0f; //Math.abs(c11.y + c10.y - c01.y - c00.y);
-			
 				tangent.set(
-						(t2 * x1 - t1 * x2),
-						(t2 * y1 - t1 * y2),
-			            (t2 * z1 - t1 * z2)
+						p11.x + p01.x - p10.x - p00.x,
+						p11.y + p01.y - p10.y - p00.y,
+						p11.z + p01.z - p10.z - p00.z
 				);
-				//sDir.normalize();
-				tangents[i  ][j  ].add(tangent);
-				tangents[i  ][j+1].add(tangent);
-				tangents[i_1][j+1].add(tangent);
-				tangents[i_1][j  ].add(tangent);
+				
+				bitangent.set(
+						p11.x + p10.x - p01.x - p00.x,
+						p11.y + p10.y - p01.y - p00.y,
+			            p11.z + p10.z - p01.z - p00.z
+				);
+				
+				tangents[0][i  ][j  ].add(tangent);
+				tangents[0][i  ][j+1].add(tangent);
+				tangents[0][i_1][j+1].add(tangent);
+				tangents[0][i_1][j  ].add(tangent);
+				
+				tangents[1][i  ][j  ].add(bitangent);
+				tangents[1][i  ][j+1].add(bitangent);
+				tangents[1][i_1][j+1].add(bitangent);
+				tangents[1][i_1][j  ].add(bitangent);
 			}
 		}
 	}
 	
-	
-	private static void generateTangentDirs(Point3f[][] vertices, Point2f[][] tCoords, Vector3f[][] sDirs){
-		
-		for ( int i= 0; i < sDirs.length; i++ )
-			for (int j = 0; j < sDirs[0].length; j++)
-				sDirs[i][j] = new Vector3f();
-		
-		final Vector3f sDir = new Vector3f();
-		
-		for (int i = 0; i < vertices.length; i++) {
-			int i_1 = i+1 < vertices.length ? i+1: 0;
-			for (int j = 0; j < vertices[0].length -1; j++) {
-				
-				final Point3f p00 = vertices[i  ][j  ]; 
-				final Point3f p10 = vertices[i_1][j  ]; 
-				final Point3f p11 = vertices[i_1][j+1];
-				final Point3f p01 = vertices[i  ][j+1];
-
-				final Point2f c00 = tCoords[i  ][j  ]; 
-				final Point2f c10 = tCoords[i+1][j  ];
-				final Point2f c11 = tCoords[i+1][j+1];
-				final Point2f c01 = tCoords[i  ][j+1];
-				
-				float x1 = p11.x + p01.x - p10.x - p00.x;
-				float x2 = p11.x + p10.x - p01.x - p00.x;
-				float y1 = p11.y + p01.y - p10.y - p00.y;
-				float y2 = p11.y + p10.y - p01.y - p00.y;
-				float z1 = p11.z + p01.z - p10.z - p00.z;
-				float z2 = p11.z + p10.z - p01.z - p00.z;
-			
-				float s1 = Math.abs(c11.x + c01.x - c10.x - c00.x);
-				float s2 = Math.abs(c11.x + c10.x - c01.x - c00.x);
-				float t1 = Math.abs(c11.y + c01.y - c10.y - c00.y);
-				float t2 = Math.abs(c11.y + c10.y - c01.y - c00.y);
-			
-				float r = 1.0f / (s1 * t2 - s2 * t1);
-				sDir.set(
-						(t2 * x1 - t1 * x2) * r,
-						(t2 * y1 - t1 * y2) * r,
-			            (t2 * z1 - t1 * z2) * r
-				);
-				//sDir.normalize();
-				sDirs[i  ][j  ].add(sDir);
-				sDirs[i  ][j+1].add(sDir);
-				sDirs[i_1][j+1].add(sDir);
-				sDirs[i_1][j  ].add(sDir);
-			}
-		}
+	private static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector3f uVec, Vector3f vVec, Vector4f t4f){
+		Vector3f sDir = new Vector3f(
+				(t.y * uVec.x - t.x * vVec.x),
+				(t.y * uVec.y - t.x * vVec.y),
+	            (t.y * uVec.z - t.x * vVec.z)
+		);
+		sDir.normalize();
+		Vector3f tDir = new Vector3f(
+				(s.y * uVec.x + s.x * vVec.x),
+				(s.y * uVec.y + s.x * vVec.y),
+	            (s.y * uVec.z + s.x * vVec.z)
+		);
+		t4f.set( sDir.x, sDir.y, sDir.z, dotcross( normal, sDir, tDir ) < 0.0f ? -1.0f : 1.0f );
 	}
-	/*
-	private static void calculateTangent(Vector3f normal, Vector3f tangent, Vector3f arista1, Vector3f arista2, Vector3f sDir, Vector3f tDir, Vector4f t4f){
-		sDir = orthogonalizeGramSchmidt( normal, sDir );
-		Vector3f tang = orthogonalizeGramSchmidt(normal, tangent);
-				
-		float d0 = dot( tang, sDir );
-
-		Vector3f tRa1 =  reflect( tang, orthogonalizeGramSchmidt(normal, arista1) );
-		float d1 = dot( tRa1, sDir );
-		Vector3f tRa2 =  reflect( tang, orthogonalizeGramSchmidt(normal, arista2) );
-		float d2 = dot( tRa2, sDir );
-		Vector3f tRa3 =  reflect( tRa1, orthogonalizeGramSchmidt(normal, arista2) );
-		float d3 = dot( tRa3, sDir );
-
-		if( d1 >= d0 && d1 >= d2 && d1 >= d3 ){
-			tang = tRa1;
-		}else if( d2 >= d0 && d2 >= d1 && d2 >= d3 ){
-			tang = tRa2;
-		}else if( d3 >= d0 && d3 >= d1 && d3 >= d2 ){
-			tang = tRa3;
-		}
-
-	    t4f.set( tang.x, tang.y, tang.z, dot( cross( normal, tang ), tDir ) < 0.0f ? -1.0f : 1.0f );
-	}
-	/*/
-	private static void calculateTangent(Vector3f normal, Vector3f tangent, Vector3f aristaH, float uSign, float vSign, Vector4f t4f){
-
-		Vector3f tang = orthogonalizeGramSchmidt(normal, tangent);
-		Vector3f tRa1 =  orthogonalizeGramSchmidt( normal, reflect( tang, aristaH) );
-
-		if( vSign > 0 ){
-			tang = tRa1;
-		}
-		if( uSign < 0 ){
-			tang.negate();
-		}
-	    //t4f.set( tang.x, tang.y, tang.z, dot( cross( normal, tang ), tDir ) < 0.0f ? -1.0f : 1.0f );
-		t4f.set( tang.x, tang.y, tang.z, 1.0f );
-	}
-	//*/
 	
 	// Tangente alineada a las aristas para test
 	@SuppressWarnings("unused")
 	private static void calculateTangent(Vector3f normal, Point3f pu0, Point3f pu1, float uSign, float vSign, Vector4f t4f){
-		Vector3f udir = new Vector3f(pu1);
-		udir.sub(pu0);
-		Vector3f t = orthogonalizeGramSchmidt( normal, udir );
+		Vector3f t = new Vector3f(pu1);
+		t.sub(pu0);
+		orthogonalizeGramSchmidt( normal, t );
 		t4f.set( t.x, t.y, t.z, vSign );
         t4f.scale( uSign );
 	}
@@ -785,7 +731,7 @@ public class HelixGenerator {
 		Point2f[][] tCoords = null;
 		if ( (flags & GENERATE_TEXT_COORDS) != 0 ){
 			tCoords  = new Point2f [steps1+1][steps2 * twists+1];
-			generateTextCoords( tCoords, 6.0f*twists, 2.0f );
+			generateTextCoords( tCoords, 12.0f*twists, 4.0f );
 		}
 		
 		Vector3f n00 = null; Vector4f t00 = null; Point2f c00 = null; Point3f p00;
@@ -793,15 +739,22 @@ public class HelixGenerator {
 		Vector3f n11 = null; Vector4f t11 = null; Point2f c11 = null; Point3f p11;
 		Vector3f n01 = null; Vector4f t01 = null; Point2f c01 = null; Point3f p01;
 
-		Vector3f[][] sDirs = null;
+		Vector3f[][][] tb = null;
 		if ((flags & GENERATE_TANGENTS_MASK) != 0) {
 			t00 = new Vector4f();
 			t10 = new Vector4f();
 			t11 = new Vector4f();
 			t01 = new Vector4f();
 			
-			sDirs  = new Vector3f[steps1][steps2 * twists+1];
-			generateTangentDirs( vertices, tCoords, sDirs );
+			tb  = new Vector3f[2][steps1][steps2 * twists+1];
+			generateTangents( vertices, tb );
+
+			for (int i = 0; i < normals.length; i++) {
+				for (int j = 0; j < normals[0].length; j++) {
+					orthogonalizeGramSchmidt(normals[i][j],tb[0][i][j]);
+					orthogonalizeGramSchmidt(normals[i][j],tb[1][i][j]);
+				}
+			}
 		}
 		
 		int lid = gl.glGenLists(1);
@@ -809,13 +762,8 @@ public class HelixGenerator {
 		gl.glBegin(generator.getMode());
 		
 		
-		final Vector3f aristaH = new Vector3f();
-
-		final Vector3f aristav1 = new Vector3f();
-		final Vector3f aristav2 = new Vector3f();
-		
-		final Vector3f sDir = new Vector3f();
-		final Vector3f tDir = new Vector3f();
+		final Vector2f s = new Vector2f();
+		final Vector2f t = new Vector2f();
 		
 		for (int i = 0; i < steps1; i++) {
 			int i_1 = i+1 < steps1 ? i+1: 0;
@@ -837,62 +785,30 @@ public class HelixGenerator {
 					c01 = tCoords[i  ][j+1];
 				}
 				if ((flags & GENERATE_TANGENTS_MASK) != 0) {
-					
+					/*
 					float uSign = c00.x < c01.x ?  1.0f: -1.0f;
 					float vSign = c00.y < c10.y ? -1.0f:  1.0f;
 					int j0 = j > 0 ? j-1 : j;
 					int j2 = j+1 < total ? j+2: j+1;
-					/*
-
 					
 					calculateTangent( n00, vertices[i  ][j0], p01, uSign, vSign, t00);
 					calculateTangent( n10, vertices[i+1][j0], p11, uSign, vSign, t10);
 					calculateTangent( n11, p10, vertices[i+1][j2], uSign, vSign, t11);
 					calculateTangent( n01, p00, vertices[i  ][j2], uSign, vSign, t01);
 					/*/
-					float x1 = p11.x + p01.x - p10.x - p00.x;
-					float x2 = p11.x + p10.x - p01.x - p00.x;
-					float y1 = p11.y + p01.y - p10.y - p00.y;
-					float y2 = p11.y + p10.y - p01.y - p00.y;
-					float z1 = p11.z + p01.z - p10.z - p00.z;
-					float z2 = p11.z + p10.z - p01.z - p00.z;
-				
 					float s1 = c11.x + c01.x - c10.x - c00.x;
 					float s2 = c11.x + c10.x - c01.x - c00.x;
 					float t1 = c11.y + c01.y - c10.y - c00.y;
 					float t2 = c11.y + c10.y - c01.y - c00.y;
-				
 					float r = 1.0f / (s1 * t2 - s2 * t1);
 					
-					sDir.set(
-							(t2 * x1 - t1 * x2) * r,
-							(t2 * y1 - t1 * y2) * r,
-				            (t2 * z1 - t1 * z2) * r
-					);
-					sDir.normalize();
+					s.set(s1, s2); s.scale(r);
+					t.set(t1, t2); t.scale(r);
 					
-					tDir.set(
-							(s1 * x2 - s2 * x1) * r,
-							(s1 * y2 - s2 * y1) * r,
-				            (s1 * z2 - s2 * z1) * r
-					);
-					
-					aristav1.set(p10); aristav1.sub(p00);
-					aristav2.set(p11); aristav2.sub(p01);
-					
-//					calculateTangent( n00, sDirs[i  ][j  ], aristah1, aristav1, sDir, tDir, t00 );
-//					calculateTangent( n10, sDirs[i_1][j  ], aristah2, aristav1, sDir, tDir, t10 );
-//					calculateTangent( n11, sDirs[i_1][j+1], aristah2, aristav2, sDir, tDir, t11 );
-//					calculateTangent( n01, sDirs[i  ][j+1], aristah1, aristav2, sDir, tDir, t01 );
-					
-					aristaH.set(p01); aristaH.sub(vertices[i  ][j0]);
-					calculateTangent( n00, sDirs[i  ][j  ], aristaH, uSign, vSign, t00 );
-					aristaH.set(p11); aristaH.sub(vertices[i_1][j0]);
-					calculateTangent( n10, sDirs[i_1][j  ], aristaH, uSign, vSign, t10 );
-					aristaH.set(vertices[i_1][j2]); aristaH.sub(p10);
-					calculateTangent( n11, sDirs[i_1][j+1], aristaH, uSign, vSign, t11 );
-					aristaH.set(vertices[i  ][j2]); aristaH.sub(p00);
-					calculateTangent( n01, sDirs[i  ][j+1], aristaH, uSign, vSign, t01 );
+					calculateTangent(n00, s, t, tb[0][i  ][j  ], tb[1][i  ][j  ], t00);
+					calculateTangent(n10, s, t, tb[0][i_1][j  ], tb[1][i_1][j  ], t10);
+					calculateTangent(n11, s, t, tb[0][i_1][j+1], tb[1][i_1][j+1], t11);
+					calculateTangent(n01, s, t, tb[0][i  ][j+1], tb[1][i  ][j+1], t01);
 					//*/
 				}
 				generator.generate(gl, 

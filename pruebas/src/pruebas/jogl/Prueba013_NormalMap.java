@@ -3,6 +3,7 @@ package pruebas.jogl;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -11,12 +12,15 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+import javax.vecmath.Matrix4d;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
+import org.sam.jogl.ObjLoader.ParsingErrorException;
 import org.sam.util.Imagen;
 
 import com.sun.opengl.util.Animator;
@@ -30,7 +34,7 @@ public class Prueba013_NormalMap{
 
 		private Apariencia apFondo;
 		private Objeto3D forma, ntb;
-		private boolean showNTB = true;
+		private boolean showNTB = false;
 		
 		private transient float proporcionesFondo, proporcionesPantalla;
 
@@ -57,39 +61,28 @@ public class Prueba013_NormalMap{
 			if(showNTB)
 				ntb = CubeGenerator.generateNTB (gl, 9, 1.0f);
 			/*/
-			forma =	HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
+			// forma =	HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
 			
-//			Matrix4d mtd = new Matrix4d();
-//			mtd.rotY(Math.PI/2);
-//			mtd.setScale(18.0);
-//			try {
-//				forma = ObjLoader.load( "resources/obj3d/nave03/forma.obj", ObjLoader.RESIZE, mtd );
-//			} catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//			} catch (ParsingErrorException e) {
-//				e.printStackTrace();
-//			}
+			Matrix4d mtd = new Matrix4d();
+			mtd.rotY(Math.PI/2);
+			mtd.setScale(18.0);
+			try {
+				forma = ObjLoader.load( "resources/obj3d/fragata/forma.obj", ObjLoader.RESIZE, mtd );
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (ParsingErrorException e) {
+				e.printStackTrace();
+			}
 			
 			if(showNTB)
 				ntb = HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
 			
-			//*
-			
-			//*
 			Textura bump= new Textura(
 					gl,
 					Textura.Format.RGB,
 					Imagen.cargarToBufferedImage("resources/obj3d/nave04/bump.png"),
 					true
 			);
-			/*/
-			Textura bump= new Textura(
-					gl,
-					Textura.Format.LUMINANCE,
-					Imagen.cargarToBufferedImage("resources/texturas/smoke_particle2.jpg"),
-					true
-			);
-			//*/
 			
 			bump.setWrap_s(Textura.Wrap.CLAMP_TO_EDGE);
 			bump.setWrap_t(Textura.Wrap.REPEAT);
@@ -99,7 +92,7 @@ public class Prueba013_NormalMap{
         			"shaders/normal2.vert",
 					"shaders/normal2.frag"
         	);
-        	gl.glBindAttribLocation(shader.programObject, 1, "vTangent");
+        	//gl.glBindAttribLocation(shader.programObject, 1, "vTangent");
         	shader.addUniform(gl, "normalMap", 0 );
    	
         	forma.getApariencia().setShader(shader);
@@ -108,7 +101,7 @@ public class Prueba013_NormalMap{
 			gl.glDepthFunc(GL.GL_LESS);
 
 			gl.glEnable(GL.GL_LIGHT0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 1.0f, 0.0f }, 0);
+			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.5f, 0.2f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
 //			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPOT_DIRECTION, new float[]{ 0.0f, 0.0f, -1.0f }, 0);
