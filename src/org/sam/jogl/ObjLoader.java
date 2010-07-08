@@ -725,13 +725,29 @@ public class ObjLoader {
 		do{
 			st.getToken();
 			if (st.ttype == StreamTokenizer.TT_WORD) {
-				if (st.sval.equals("v"))
-					readVertex(st);
-				else if (st.sval.equals("vn"))
-					readNormal(st);
-				else if (st.sval.equals("vt"))
-					readTexture(st);
-				else if (st.sval.equals("f") || st.sval.equals("fo"))
+				if (st.sval.equals("v")){
+					Point3f v = readVertex(st);
+					coordList.add(v);
+					if(v.x < minX)
+						minX = v.x;
+					if(v.x > maxX)
+						maxX = v.x;
+					if(v.y < minY)
+						minY = v.y;
+					if(v.y > maxY)
+						maxY = v.y;
+					if(v.z < minZ)
+						minZ = v.z;
+					if(v.z > maxZ)
+						maxZ = v.z;
+				}else if (st.sval.equals("vn"))
+					normList.add( readNormal(st) );
+				else if (st.sval.equals("vt")){
+					TexCoord2f t = readTexture(st);
+					if( (flags & MUST_FLIP_VERTICALLY_TEXCOORDS) != 0 )
+					t.y = 1.0f - t.y;
+					texList.add(t);
+				}else if (st.sval.equals("f") || st.sval.equals("fo"))
 					primitives.offer( readPrimitive(st) );
 				else if (st.sval.equals("g"))
 					st.skipToNextLine();
@@ -766,7 +782,8 @@ public class ObjLoader {
 	
 	private static float clearDist;
 	
-	private void readVertex(ObjParser st) throws ParsingErrorException {
+	@SuppressWarnings("serial")
+	private static Point3f readVertex(ObjParser st) throws ParsingErrorException {
 		Point3f v = new Point3f(){
 			public boolean equals(Object t){
 		        try {
@@ -779,30 +796,18 @@ public class ObjLoader {
 		v.x = st.getFloat();
 		v.y = st.getFloat();
 		v.z = st.getFloat();
-		coordList.add(v);
-
-		if(v.x < minX)
-			minX = v.x;
-		if(v.x > maxX)
-			maxX = v.x;
-		if(v.y < minY)
-			minY = v.y;
-		if(v.y > maxY)
-			maxY = v.y;
-		if(v.z < minZ)
-			minZ = v.z;
-		if(v.z > maxZ)
-			maxZ = v.z;
+		return v;
 	}
 
-	private void readTexture(ObjParser st) throws ParsingErrorException {
+	private static TexCoord2f readTexture(ObjParser st) throws ParsingErrorException {
 		TexCoord2f t = new TexCoord2f();
 		t.x = st.getFloat();
-		t.y = (flags & MUST_FLIP_VERTICALLY_TEXCOORDS) != 0 ? 1.0f - st.getFloat() : st.getFloat();
-		texList.add(t);
+		t.y = st.getFloat();
+		return t;
 	}
 	
-	private void readNormal(ObjParser st) throws ParsingErrorException {
+	@SuppressWarnings("serial")
+	private static Vector3f readNormal(ObjParser st) throws ParsingErrorException {
 		Vector3f n = new Vector3f(){
 			public boolean equals(Object t){
 		        try {
@@ -816,7 +821,7 @@ public class ObjLoader {
 		n.y = st.getFloat();
 		n.z = st.getFloat();
 		n.normalize();
-		normList.add(n);
+		return n;
 	}
 
 	private Primitive readPrimitive(ObjParser st) throws ParsingErrorException {
