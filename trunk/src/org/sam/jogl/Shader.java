@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.media.opengl.GL;
+import javax.vecmath.*;
 
 import com.sun.opengl.util.BufferUtil;
 
@@ -22,171 +23,229 @@ public class Shader{
 		protected final int id;
 		protected T value;
 		
-		Atributo(int id, Object value){
+		Atributo( int id ){
 			this.id = id;
-			setValue(value);
 		}
 		public abstract void setValue(Object value);
 		public abstract void Uniform(GL gl);
+		
+		static Atributo<?> getAtributo( int id, Object value ){
+	    	if( value instanceof Integer )
+	    		return new AtributoEntero1( id, value );
+	    	if( Tuple2i.class.isAssignableFrom(value.getClass()) )
+	    		return new AtributoEntero2( id, value );
+	    	if( Tuple3i.class.isAssignableFrom(value.getClass()) )
+	    		return new AtributoEntero3( id, value );
+	    	if( Tuple4i.class.isAssignableFrom(value.getClass()) )
+	    		return new AtributoEntero4( id, value );
+	    	if( value instanceof Integer[] || value instanceof int[]){
+	    		switch(Array.getLength(value)){
+	    		case 2:
+	    			return new AtributoEntero2 ( id, value );
+	    		case 3:
+	    			return new AtributoEntero3 ( id, value );
+	    		case 4:
+	    			return new AtributoEntero4 ( id, value );
+	    		}
+	    	}
+	    	if( value instanceof Float )
+	    		return new AtributoFloat1( id, value );
+	    	if( Tuple2f.class.isAssignableFrom(value.getClass()) )
+	    		return new AtributoFloat2( id, value );
+	    	if( Tuple3f.class.isAssignableFrom(value.getClass()) )
+	    		return new AtributoFloat3( id, value );
+	    	if( Tuple4f.class.isAssignableFrom(value.getClass()) )
+	    		return new AtributoFloat4( id, value );
+	    	if( value instanceof Float[] || value instanceof float[] ){
+	    		switch(Array.getLength(value)){
+	    		case 2:
+	    			return new AtributoFloat2 ( id, value);
+	    		case 3:
+	    			return new AtributoFloat3 ( id, value );
+	    		case 4:
+	    			return new AtributoFloat4 ( id, value );
+	    		}
+	    	}
+	    	// TODO Resto de tipos de atributos
+	    	throw new IllegalArgumentException("Tipo no soportado");
+		}
 	}
 	
 	private static class AtributoEntero1 extends Atributo<Integer>{
+		
 		AtributoEntero1(int id, Object value){
-			super(id, value);
+			super(id);
+			setValue(value);
 		}
+		
 		public void setValue(Object value){
-			setValue((Integer)value);
+			this.value = (Integer)value;
 		}
-		public void setValue(Integer value){
-			this.value = value;
-		}
+
 		public void Uniform(GL gl){
 			gl.glUniform1i( id, value );
 		}
 	}
 	
-	private static class AtributoEntero2 extends Atributo<int[]>{
+	private static class AtributoEntero2 extends Atributo<Tuple2i>{
+		
 		AtributoEntero2(int id, Object value){
-			super(id, value);
+			super(id);
+			this.value = new Point2i();
+			setValue(value);
 		}
+		
 		public void setValue(Object value){
-			if(value instanceof int[])
-				setValue( (int[])value );
-			else if(value instanceof Integer[])
-				setValue((Integer[])value);
+			if(Tuple2i.class.isAssignableFrom(value.getClass()))
+				this.value.set( (Tuple2i)value );
+			else if(value instanceof int[])
+				this.value.set( (int[])value );
+			else if(value instanceof Integer[]){
+				Integer[] v = (Integer[])value;
+				this.value.set( v[0], v[1] );
+			}
 		}
-		public void setValue(int[] value){
-			this.value = value;
-		}
-		public void setValue(Integer[] value){
-			this.value = new int[]{ value[0],  value[1] };
-		}
+			
 		public void Uniform(GL gl){
-			gl.glUniform2i( id, value[0], value[1] );
+			gl.glUniform2i( id, value.x, value.y );
 		}
 	}
 	
-	private static class AtributoEntero3 extends Atributo<int[]>{
+	private static class AtributoEntero3 extends Atributo<Tuple3i>{
+		
 		AtributoEntero3(int id, Object value){
-			super(id, value);
+			super(id);
+			this.value = new Point3i();
+			setValue(value);
 		}
+		
 		public void setValue(Object value){
-			if(value instanceof int[])
-				setValue( (int[])value );
-			else if(value instanceof Integer[])
-				setValue((Integer[])value);
+			if(Tuple3i.class.isAssignableFrom(value.getClass()))
+				this.value.set( (Tuple3i)value );
+			else if(value instanceof int[])
+				this.value.set( (int[])value );
+			else if(value instanceof Integer[]){
+				Integer[] v = (Integer[])value;
+				this.value.set( v[0], v[1], v[2] );
+			}
 		}
-		public void setValue(int[] value){
-			this.value = value;
-		}
-		public void setValue(Integer[] value){
-			this.value = new int[]{ value[0],  value[1],  value[2] };
-		}
+		
 		public void Uniform(GL gl){
-			gl.glUniform3i( id, value[0], value[1], value[2] );
+			gl.glUniform3i( id, value.x, value.y, value.z );
 		}
 	}
 	
-	private static class AtributoEntero4 extends Atributo<int[]>{
+	private static class AtributoEntero4 extends Atributo<Tuple4i>{
+		
 		AtributoEntero4(int id, Object value){
-			super(id, value);
+			super(id);
+			this.value = new Point4i();
+			setValue(value);
 		}
+		
 		public void setValue(Object value){
-			if(value instanceof int[])
-				setValue( (int[])value );
-			else if(value instanceof Integer[])
-				setValue((Integer[])value);
+			if(Tuple4i.class.isAssignableFrom(value.getClass()))
+				this.value.set( (Tuple4i)value );
+			else if(value instanceof int[])
+				this.value.set( (int[])value );
+			else if(value instanceof Integer[]){
+				Integer[] v = (Integer[])value;
+				this.value.set( v[0], v[1], v[2], v[3] );
+			}
 		}
-		public void setValue(int[] value){
-			this.value = value;
-		}
-		public void setValue(Integer[] value){
-			this.value = new int[]{ value[0],  value[1],  value[2],  value[3] };
-		}
+		
 		public void Uniform(GL gl){
-			gl.glUniform4i( id, value[0], value[1], value[2], value[3] );
+			gl.glUniform4i( id, value.x, value.y, value.z, value.w );
 		}
 	}
 	
 	private static class AtributoFloat1 extends Atributo<Float>{
+		
 		AtributoFloat1(int id, Object value){
-			super(id, value);
+			super(id);
+			setValue(value);
 		}
+		
 		public void setValue(Object value){
-			setValue((Float)value);
+			this.value = (Float)value;
 		}
-		public void setValue(Float value){
-			this.value = value;
-		}
+
 		public void Uniform(GL gl){
 			gl.glUniform1f( id, value );
 		}
 	}
 	
-	private static class AtributoFloat2 extends Atributo<float[]>{
+	private static class AtributoFloat2 extends Atributo<Tuple2f>{
+		
 		AtributoFloat2(int id, Object value){
-			super(id, value);
+			super(id);
+			this.value = new Point2f();
+			setValue(value);
 		}
+		
 		public void setValue(Object value){
-			if(value instanceof float[])
-				setValue( (float[])value );
-			else if(value instanceof Float[])
-				setValue((Float[])value);
-		}
-		public void setValue(float[] value){
-			this.value = value;
-		}
-		public void setValue(Float[] value){
-			this.value = new float[]{ value[0],  value[1] };
-		}
-		public void Uniform(GL gl){
-			gl.glUniform2f( id, value[0], value[1] );
-		}
-	}
-	
-	private static class AtributoFloat3 extends Atributo<float[]>{
-		AtributoFloat3(int id, Object value){
-			super(id, value);
-		}
-		public void setValue(Object value){
-			if(value instanceof float[])
-				setValue( (float[])value );
-			else if(value instanceof Float[])
-				setValue((Float[])value);
-		}
-		public void setValue(float[] value){
-			this.value = value;
-		}
-		public void setValue(Float[] value){
-			this.value = new float[]{ value[0],  value[1],  value[2] };
-		}
-		public void Uniform(GL gl){
-			gl.glUniform3f( id, value[0], value[1], value[2] );
-		}
-	}
-	
-	private static class AtributoFloat4 extends Atributo<float[]>{
-		AtributoFloat4(int id, Object value){
-			super(id, value);
-		}
-		public void setValue(Object value){
-			if(value instanceof float[])
-				setValue( (float[])value );
-			else if(value instanceof Float[])
-				setValue((Float[])value);
-		}
-		public void setValue(float[] value){
-			this.value = value;
-		}
-		public void setValue(Float[] value){
-			this.value = new float[]{ value[0],  value[1],  value[2],  value[3] };
+			if(Tuple2f.class.isAssignableFrom(value.getClass()))
+				this.value.set( (Tuple2f)value );
+			else if(value instanceof float[])
+				this.value.set( (float[])value );
+			else if(value instanceof Float[]){
+				Float[] v = (Float[])value;
+				this.value.set( v[0], v[1] );
+			}
 		}
 		
 		public void Uniform(GL gl){
-			gl.glUniform4f( id, value[0], value[1], value[2], value[3] );
+			gl.glUniform2f( id, value.x, value.y );
 		}
 	}
 	
+	private static class AtributoFloat3 extends Atributo<Tuple3f>{
+		
+		AtributoFloat3(int id, Object value){
+			super(id);
+			this.value = new Point3f();
+			setValue(value);
+		}
+		
+		public void setValue(Object value){
+			if(Tuple3f.class.isAssignableFrom(value.getClass()))
+				this.value.set( (Tuple3f)value );
+			else if(value instanceof float[])
+				this.value.set( (float[])value );
+			else if(value instanceof Float[]){
+				Float[] v = (Float[])value;
+				this.value.set( v[0], v[1], v[2] );
+			}
+		}
+		
+		public void Uniform(GL gl){
+			gl.glUniform3f( id, value.x, value.y, value.z );
+		}
+	}
+	
+	private static class AtributoFloat4 extends Atributo<Tuple4f>{
+		
+		AtributoFloat4(int id, Object value){
+			super(id);
+			this.value = new Point4f();
+			setValue(value);
+		}
+		
+		public void setValue(Object value){
+			if(Tuple4f.class.isAssignableFrom(value.getClass()))
+				this.value.set( (Tuple4f)value );
+			else if(value instanceof float[])
+				this.value.set( (float[])value );
+			else if(value instanceof Float[]){
+				Float[] v = (Float[])value;
+				this.value.set( v[0], v[1], v[2], v[3] );
+			}
+		}
+		
+		public void Uniform(GL gl){
+			gl.glUniform4f( id, value.x, value.y, value.z, value.w );
+		}
+	}
 	// TODO Resto de tipos de atributos
 	
 	private transient static Shader anterior;
@@ -275,43 +334,13 @@ public class Shader{
 	
     public void addUniform(GL gl, String name, Object value){
     	int id = gl.glGetUniformLocation(programObject, name);
-    	if(value instanceof Integer)
-    		uniforms.put( name, new AtributoEntero1 ( id, value ) );
-    	else if(value instanceof Integer[] || value instanceof int[]){
-    		switch(Array.getLength(value)){
-    		case 2:
-    			uniforms.put( name, new AtributoEntero2 ( id, value ) );
-    			break;
-    		case 3:
-    			uniforms.put( name, new AtributoEntero3 ( id, value ) );
-    			break;
-    		case 4:
-    			uniforms.put( name, new AtributoEntero4 ( id, value ) );
-    			break;
-    		}
-    	}else if(value instanceof Float)
-    		uniforms.put( name, new AtributoFloat1 ( id, value ) );
-    	else if(value instanceof Float[] || value instanceof float[] ){
-    		switch(Array.getLength(value)){
-    		case 2:
-    			uniforms.put( name, new AtributoFloat2 ( id, value) );
-    			break;
-    		case 3:
-    			uniforms.put( name, new AtributoFloat3 ( id, value ) );
-    			break;
-    		case 4:
-    			uniforms.put( name, new AtributoFloat4 ( id, value ) );
-    			break;
-    		}
-    	}
-    	// TODO Resto de tipos de atributos
+   		uniforms.put( name, Atributo.getAtributo(id, value) );
     }
     
     public void setUniform(String name, Object value){
-    	Atributo<? extends Object> att = uniforms.get( name );
-    	if(att == null)
-    		return;
-    	att.setValue(value);
+    	Atributo<?> att = uniforms.get( name );
+    	if( att != null)
+    		att.setValue(value);
     }
     
 	public void activar(GL gl) {

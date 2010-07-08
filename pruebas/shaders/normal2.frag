@@ -55,6 +55,7 @@ void main(){
 	
 	vec3 eye = tbnBasis * normalize(-pos);
 	vec3 normal = normalize( 2.0 * texture2D(normalMap, gl_TexCoord[0].st).xyz - 1.0 );
+	//vec3 normal = vec3( 0.0, 0.0, 1.0);
 	/*/
 	mat3 tbnBasis = mat3(
 		1.0, 0.0, 0.0,

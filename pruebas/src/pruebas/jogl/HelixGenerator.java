@@ -1,26 +1,31 @@
 package pruebas.jogl;
 
 import javax.media.opengl.GL;
-import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
+import javax.vecmath.TexCoord2f;
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 import org.sam.jogl.Apariencia;
+import org.sam.jogl.Generator;
 import org.sam.jogl.Material;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.OglList;
 
 public class HelixGenerator {
 	
-	public  static final int ONLY_VERTICES          = 0x0;
-	public  static final int GENERATE_NORMALS       = 0x1;
-	public  static final int GENERATE_TEXT_COORDS   = 0x2;
-	private static final int GENERATE_TANGENTS_MASK = 0x4;
-	public  static final int GENERATE_TANGENTS      = 0x7;
-	
+	public  static final int ONLY_VERTICES          = 0x00;
+	public  static final int GENERATE_NORMALS       = 0x01;
+	public  static final int GENERATE_TEXT_COORDS   = 0x02;
+	public  static final int WIREFRAME              = 0x05;
+	private static final int WIREFRAME_MASK         = 0x04;
+	public  static final int GENERATE_TANGENTS      = 0x0B;
+	private static final int GENERATE_TANGENTS_MASK = 0x08;
+	public  static final int GENERATE_NTB           = 0x1B;
+	private static final int GENERATE_NTB_MASK      = 0x10;
+
 	private HelixGenerator(){}
 
 	static void rotateAboutX(Tuple3f t, double alpha){
@@ -265,239 +270,7 @@ public class HelixGenerator {
 		t.normalize();
 	}
 	
-	private interface Generator{
-		public int getMode();
-		public void generate(GL gl,
-				Vector3f norm1, Vector4f tang1, Point2f text1, Point3f vert1,
-				Vector3f norm2, Vector4f tang2, Point2f text2, Point3f vert2,
-				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
-				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
-			);
-	}
-	
-	private static final Generator QuadsGenerator = new Generator(){
-		@Override
-		public int getMode() {
-			return GL.GL_QUADS;
-		}
-		
-		@Override
-		public void generate(GL gl,
-				Vector3f norm1, Vector4f tang1, Point2f text1, Point3f vert1,
-				Vector3f norm2, Vector4f tang2, Point2f text2, Point3f vert2,
-				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
-				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
-			){
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-		}
-	};
-	
-	private static final Generator QuadsNormalsGenerator = new Generator(){
-		@Override
-		public int getMode() {
-			return GL.GL_QUADS;
-		}
-		
-		@Override
-		public void generate(GL gl,
-				Vector3f norm1, Vector4f tang1, Point2f text1, Point3f vert1,
-				Vector3f norm2, Vector4f tang2, Point2f text2, Point3f vert2,
-				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
-				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
-			){
-			gl.glNormal3f( norm1.x, norm1.y, norm1.z );
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			
-			gl.glNormal3f( norm2.x, norm2.y, norm2.z );
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			
-			gl.glNormal3f( norm3.x, norm3.y, norm3.z );
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			
-			gl.glNormal3f( norm4.x, norm4.y, norm4.z );
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-		}
-	};
-	
-	private static final Generator QuadsTexCoordsGenerator = new Generator(){
-		@Override
-		public int getMode() {
-			return GL.GL_QUADS;
-		}
-		
-		@Override
-		public void generate(GL gl,
-				Vector3f norm1, Vector4f tang1, Point2f text1, Point3f vert1,
-				Vector3f norm2, Vector4f tang2, Point2f text2, Point3f vert2,
-				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
-				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
-			){
-			gl.glTexCoord2f( text1.x, text1.y );
-			gl.glVertex3f(   vert1.x, vert1.y, vert1.z );
-			
-			gl.glTexCoord2f( text2.x, text2.y );
-			gl.glVertex3f(   vert2.x, vert2.y, vert2.z );
-			
-			gl.glTexCoord2f( text3.x, text3.y );
-			gl.glVertex3f(   vert3.x, vert3.y, vert3.z );
-			
-			gl.glTexCoord2f( text4.x, text4.y );
-			gl.glVertex3f(   vert4.x, vert4.y, vert4.z );
-		}
-	};
-	
-	private static final Generator QuadsNormalsTexCoordsGenerator = new Generator(){
-		@Override
-		public int getMode() {
-			return GL.GL_QUADS;
-		}
-		
-		@Override
-		public void generate(GL gl,
-				Vector3f norm1, Vector4f tang1, Point2f text1, Point3f vert1,
-				Vector3f norm2, Vector4f tang2, Point2f text2, Point3f vert2,
-				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
-				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
-			){
-			gl.glNormal3f(   norm1.x, norm1.y, norm1.z );
-			gl.glTexCoord2f( text1.x, text1.y );
-			gl.glVertex3f(   vert1.x, vert1.y, vert1.z );
-			
-			gl.glNormal3f(   norm2.x, norm2.y, norm2.z );
-			gl.glTexCoord2f( text2.x, text2.y );
-			gl.glVertex3f(   vert2.x, vert2.y, vert2.z );
-			
-			gl.glNormal3f(   norm3.x, norm3.y, norm3.z );
-			gl.glTexCoord2f( text3.x, text3.y );
-			gl.glVertex3f(   vert3.x, vert3.y, vert3.z );
-			
-			gl.glNormal3f(   norm4.x, norm4.y, norm4.z );
-			gl.glTexCoord2f( text4.x, text4.y );
-			gl.glVertex3f(   vert4.x, vert4.y, vert4.z );
-		}
-	};
-	
-	private static final Generator QuadsTangentsGenerator = new Generator(){
-		@Override
-		public int getMode() {
-			return GL.GL_QUADS;
-		}
-		
-		@Override
-		public void generate(GL gl,
-				Vector3f norm1, Vector4f tang1, Point2f text1, Point3f vert1,
-				Vector3f norm2, Vector4f tang2, Point2f text2, Point3f vert2,
-				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
-				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
-			){
-			gl.glNormal3f(          norm1.x, norm1.y, norm1.z );
-			gl.glVertexAttrib4f( 1, tang1.x, tang1.y, tang1.z, tang1.w );
-			gl.glTexCoord2f(        text1.x, text1.y );
-			gl.glVertex3f(          vert1.x, vert1.y, vert1.z );
-			
-			gl.glNormal3f(          norm2.x, norm2.y, norm2.z );
-			gl.glVertexAttrib4f( 1, tang2.x, tang2.y, tang2.z, tang2.w );
-			gl.glTexCoord2f(        text2.x, text2.y );
-			gl.glVertex3f(          vert2.x, vert2.y, vert2.z );
-			
-			gl.glNormal3f(          norm3.x, norm3.y, norm3.z );
-			gl.glVertexAttrib4f( 1, tang3.x, tang3.y, tang3.z, tang3.w );
-			gl.glTexCoord2f(        text3.x, text3.y );
-			gl.glVertex3f(          vert3.x, vert3.y, vert3.z );
-			
-			gl.glNormal3f(          norm4.x, norm4.y, norm4.z );
-			gl.glVertexAttrib4f( 1, tang4.x, tang4.y, tang4.z, tang4.w );
-			gl.glTexCoord2f(        text4.x, text4.y );
-			gl.glVertex3f(          vert4.x, vert4.y, vert4.z );
-		}
-	};
-	
-	private static class NTBGenerator implements Generator{
-		float scale = 1.0f;
-		
-		@Override
-		public int getMode() {
-			return GL.GL_LINES;
-		}
-		
-		@Override
-		public void generate(GL gl,
-				Vector3f norm1, Vector4f tang1, Point2f text1, Point3f vert1,
-				Vector3f norm2, Vector4f tang2, Point2f text2, Point3f vert2,
-				Vector3f norm3, Vector4f tang3, Point2f text3, Point3f vert3,
-				Vector3f norm4, Vector4f tang4, Point2f text4, Point3f vert4
-			){
-			
-			gl.glColor3f(0.5f, 1.0f, 0.0f);
-			
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			gl.glVertex3f( vert1.x + norm1.x * scale, vert1.y + norm1.y * scale, vert1.z + norm1.z * scale );
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			gl.glVertex3f( vert2.x + norm2.x * scale, vert2.y + norm2.y * scale, vert2.z + norm2.z * scale );
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			gl.glVertex3f( vert3.x + norm3.x * scale, vert3.y + norm3.y * scale, vert3.z + norm3.z * scale );
-
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-			gl.glVertex3f( vert4.x + norm4.x * scale, vert4.y + norm4.y * scale, vert4.z + norm4.z * scale );
-
-			gl.glColor3f(1.0f, 0.0f, 0.5f);
-
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			gl.glVertex3f( vert1.x + tang1.x * scale, vert1.y + tang1.y * scale, vert1.z + tang1.z * scale );
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			gl.glVertex3f( vert2.x + tang2.x * scale, vert2.y + tang2.y * scale, vert2.z + tang2.z * scale );
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			gl.glVertex3f( vert3.x + tang3.x * scale, vert3.y + tang3.y * scale, vert3.z + tang3.z * scale );
-
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-			gl.glVertex3f( vert4.x + tang4.x * scale, vert4.y + tang4.y * scale, vert4.z + tang4.z * scale );
-
-			final Vector3f bitang = new Vector3f();
-			gl.glColor3f(0.0f, 0.5f, 1.0f);
-			
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			bitang.set(
-	        	(norm1.y*tang1.z - norm1.z*tang1.y)*Math.signum(tang1.w),
-	        	(tang1.x*norm1.z - tang1.z*norm1.x)*Math.signum(tang1.w),
-	        	(norm1.x*tang1.y - norm1.y*tang1.x)*Math.signum(tang1.w)
-			);
-			gl.glVertex3f( vert1.x + bitang.x * scale, vert1.y + bitang.y * scale, vert1.z + bitang.z * scale);
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			bitang.set(
-	        	(norm2.y*tang2.z - norm2.z*tang2.y)*Math.signum(tang2.w),
-	        	(tang2.x*norm2.z - tang2.z*norm2.x)*Math.signum(tang2.w),
-	        	(norm2.x*tang2.y - norm2.y*tang2.x)*Math.signum(tang2.w)
-			);
-			gl.glVertex3f( vert2.x + bitang.x * scale, vert2.y + bitang.y * scale, vert2.z + bitang.z * scale);
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			bitang.set(
-	        	(norm3.y*tang3.z - norm3.z*tang3.y)*Math.signum(tang3.w),
-	        	(tang3.x*norm3.z - tang3.z*norm3.x)*Math.signum(tang3.w),
-	        	(norm3.x*tang3.y - norm3.y*tang3.x)*Math.signum(tang3.w)
-			);
-
-			gl.glVertex3f( vert3.x + bitang.x * scale, vert3.y + bitang.y * scale, vert3.z + bitang.z * scale);
-
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-			bitang.set(
-	        	(norm4.y*tang4.z - norm4.z*tang4.y)*Math.signum(tang4.w),
-	        	(tang4.x*norm4.z - tang4.z*norm4.x)*Math.signum(tang4.w),
-	        	(norm4.x*tang4.y - norm4.y*tang4.x)*Math.signum(tang4.w)
-			);
-			gl.glVertex3f( vert4.x + bitang.x * scale, vert4.y + bitang.y * scale, vert4.z + bitang.z * scale );
-		}
-	}
-	
-	private static final NTBGenerator MyNTBGenerator = new NTBGenerator();
+	private static final Generator.VerticesNTB MyNTBGenerator = new Generator.VerticesNTB();
 	
 	private static final float TOW_PI  = (float)( 2 * Math.PI);
 	
@@ -589,6 +362,7 @@ public class HelixGenerator {
 			}
 		}
 	}
+	
 	/*
 	private static void generateTextCoords(Point2f[][] tCoords, float scaleU, float scaleV) {
 		float incU = scaleU / (tCoords[0].length - 1);
@@ -620,7 +394,7 @@ public class HelixGenerator {
 		}
 	}
 	/*/
-	private static void generateTextCoords(Point2f[][] tCoords, float scaleU, float scaleV) {
+	private static void generateTextCoords(TexCoord2f[][] tCoords, float scaleU, float scaleV) {
 		float incU = scaleU / (tCoords[0].length - 1);
 		float incV = scaleV / (tCoords.length - 1);
 		
@@ -629,12 +403,12 @@ public class HelixGenerator {
 		for( int i = 0; i < tCoords[0].length; i++) {
 			float v = 0.1f * i;
 			for( int j= 0; j < tCoords.length/2; j++ ) {
-				tCoords [j][i] = new Point2f ( u, v );
+				tCoords [j][i] = new TexCoord2f ( u, v );
 				v += incV;
 			}
-			tCoords [tCoords.length/2][i] = new Point2f ( u, v );
+			tCoords [tCoords.length/2][i] = new TexCoord2f ( u, v );
 			for( int j= 0; j < tCoords.length/2; j++ ) {
-				tCoords [ (tCoords.length-1) -j][i] = new Point2f ( tCoords [j][i] );
+				tCoords [ (tCoords.length-1) -j][i] = new TexCoord2f ( tCoords [j][i] );
 			}
 			u += incU;
 			if(u > 1){
@@ -728,16 +502,16 @@ public class HelixGenerator {
 			generateNormals(vertices, normals);
 		}
 		
-		Point2f[][] tCoords = null;
+		TexCoord2f[][] tCoords = null;
 		if ( (flags & GENERATE_TEXT_COORDS) != 0 ){
-			tCoords  = new Point2f [steps1+1][steps2 * twists+1];
+			tCoords  = new TexCoord2f [steps1+1][steps2 * twists+1];
 			generateTextCoords( tCoords, 12.0f*twists, 4.0f );
 		}
 		
-		Vector3f n00 = null; Vector4f t00 = null; Point2f c00 = null; Point3f p00;
-		Vector3f n10 = null; Vector4f t10 = null; Point2f c10 = null; Point3f p10;
-		Vector3f n11 = null; Vector4f t11 = null; Point2f c11 = null; Point3f p11;
-		Vector3f n01 = null; Vector4f t01 = null; Point2f c01 = null; Point3f p01;
+		Vector3f n00 = null; Vector4f t00 = null; TexCoord2f c00 = null; Point3f p00;
+		Vector3f n10 = null; Vector4f t10 = null; TexCoord2f c10 = null; Point3f p10;
+		Vector3f n11 = null; Vector4f t11 = null; TexCoord2f c11 = null; Point3f p11;
+		Vector3f n01 = null; Vector4f t01 = null; TexCoord2f c01 = null; Point3f p01;
 
 		Vector3f[][][] tb = null;
 		if ((flags & GENERATE_TANGENTS_MASK) != 0) {
@@ -759,8 +533,7 @@ public class HelixGenerator {
 		
 		int lid = gl.glGenLists(1);
 		gl.glNewList(lid, GL.GL_COMPILE);
-		gl.glBegin(generator.getMode());
-		
+		gl.glBegin((flags & GENERATE_NTB_MASK) != 0 ? GL.GL_LINES : GL.GL_QUADS );
 		
 		final Vector2f s = new Vector2f();
 		final Vector2f t = new Vector2f();
@@ -811,11 +584,11 @@ public class HelixGenerator {
 					calculateTangent(n01, s, t, tb[0][i  ][j+1], tb[1][i  ][j+1], t01);
 					//*/
 				}
-				generator.generate(gl, 
-						n00, t00, c00, p00,
-						n10, t10, c10, p10,
-						n11, t11, c11, p11,
-						n01, t01, c01, p01
+				generator.generate(gl,
+						p00, p10, p11, p01,
+						c00, c10, c11, c01,
+						n00, n10, n11, n01,
+						t00, t10, t11, t01
 				);
 			}
 		}
@@ -829,16 +602,18 @@ public class HelixGenerator {
 
 		Generator generator;
 		if( (flags & GENERATE_TANGENTS_MASK) != 0 )
-			generator = QuadsTangentsGenerator;
+			generator = Generator.VerticesTangents;
+		else if( (flags & WIREFRAME_MASK) != 0 )
+			generator = Generator.VerticesWireFrame;
 		else if( (flags & GENERATE_NORMALS) != 0  && (flags & GENERATE_TEXT_COORDS) != 0 )
-			generator = QuadsNormalsTexCoordsGenerator;
+			generator = Generator.VerticesNormalsTexCoords;
 		else if( (flags & GENERATE_TEXT_COORDS) != 0 )
-			generator = QuadsTexCoordsGenerator;
+			generator = Generator.VerticesTexCoords;
 		else if( (flags & GENERATE_NORMALS) != 0 )
-			generator = QuadsNormalsGenerator;
+			generator = Generator.VerticesNormals;
 		else
-			generator = QuadsGenerator;
-			
+			generator = Generator.Vertices;
+		
 		OglList list = generate(gl, flags, generator, r1I, r1F, steps1, r2I, r2F, steps2, l, twists );
 
 		Apariencia ap = new Apariencia();
@@ -855,9 +630,9 @@ public class HelixGenerator {
 	}
 	
 	public static Objeto3D generateNTB(GL gl, float r1I, float r1F, int steps1, float r2I, float r2F, int steps2, float l, int twists, float scale) {
-		MyNTBGenerator.scale = scale;
+		MyNTBGenerator.setScale( scale );
 		OglList list = generate(
-				gl, GENERATE_TANGENTS,
+				gl, GENERATE_NTB,
 				MyNTBGenerator, r1I, r1F, steps1, r2I, r2F, steps2, l, twists
 		);
 		return new Objeto3D(list, new Apariencia());

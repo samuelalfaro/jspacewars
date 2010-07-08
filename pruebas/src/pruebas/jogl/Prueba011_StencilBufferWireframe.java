@@ -3,6 +3,7 @@ package pruebas.jogl;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -11,17 +12,20 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+import javax.vecmath.Matrix4d;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.Textura;
+import org.sam.jogl.ObjLoader.ParsingErrorException;
 import org.sam.util.Imagen;
 
 import com.sun.opengl.util.Animator;
 
-public class Prueba011_ModoMaya{
+public class Prueba011_StencilBufferWireframe{
 	
 	private static class Renderer implements GLEventListener{
 		
@@ -29,7 +33,7 @@ public class Prueba011_ModoMaya{
 		private OrbitBehavior orbitBehavior;
 
 		private Apariencia apFondo;
-		private Objeto3D helix;
+		private Objeto3D forma;
 		
 		private transient float proporcionesFondo, proporcionesPantalla;
 
@@ -51,7 +55,25 @@ public class Prueba011_ModoMaya{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			helix = HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
+			/*
+			forma = HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
+			/*/
+			Matrix4d mtd = new Matrix4d();
+			mtd.rotY(Math.PI/2);
+			mtd.setScale(18.0);
+			try {
+				String path = "resources/obj3d/nave01/forma.obj";
+				forma = ObjLoader.load(
+						path,
+						ObjLoader.RESIZE|ObjLoader.GENERATE_TANGENTS,
+						mtd
+				);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (ParsingErrorException e) {
+				e.printStackTrace();
+			}
+			//*/
 
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glDepthFunc(GL.GL_LESS);
@@ -106,8 +128,8 @@ public class Prueba011_ModoMaya{
 
 			gl.glColorMask(false, false, false, false);
 			gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
-			gl.glPolygonOffset( 1.f, 1.f);
-			helix.getForma3D().draw(gl);
+			gl.glPolygonOffset( 1.1f, 0.1f);
+			forma.getForma3D().draw(gl);
 			gl.glDisable( GL.GL_POLYGON_OFFSET_FILL );
 			gl.glPolygonOffset( 0.f, 0.f);
 			
@@ -116,23 +138,24 @@ public class Prueba011_ModoMaya{
 			gl.glEnable(GL.GL_STENCIL_TEST);
 			gl.glStencilFunc(GL.GL_ALWAYS, 1, ~0);
 			gl.glStencilOp( GL.GL_KEEP, GL.GL_KEEP, GL.GL_REPLACE );
+			gl.glFlush();
 			
 			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
 			gl.glLineWidth(1);
-			helix.getForma3D().draw(gl);
+			forma.getForma3D().draw(gl);
 
 			gl.glColorMask(true, true, true, true);
 			gl.glPolygonMode( GL.GL_FRONT_AND_BACK, GL.GL_FILL );
 			gl.glStencilFunc(GL.GL_EQUAL, 1, ~0);
-			//gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_ZERO);
-			gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);
+			gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_ZERO);
+			//gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);
 			
-			//*
+			/*
 			gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 			gl.glDepthMask(true);
 			gl.glDepthFunc(GL.GL_LESS);
 			//gl.glDisable(GL.GL_STENCIL_TEST);
-			helix.draw(gl);
+			forma.draw(gl);
 			//gl.glEnable(GL.GL_STENCIL_TEST);
 
 			/*/
@@ -201,7 +224,7 @@ public class Prueba011_ModoMaya{
 	
 	public static void main(String[] args){
 		
-		JFrame frame = new JFrame("Prueba Maya Stencil Buffer");
+		JFrame frame = new JFrame("Prueba Stencil Buffer Wireframe");
 		frame.getContentPane().setBackground(Color.BLACK);
 		frame.getContentPane().setPreferredSize(new Dimension(640, 480));
 		frame.pack();
