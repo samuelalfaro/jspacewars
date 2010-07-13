@@ -28,13 +28,14 @@ import javax.vecmath.Vector4f;
 
 public class ObjLoader {
 	
-	public static final int NONE							=	0x00;
-	public static final int TO_GEOMETRY						=	0x01;
-	public static final int RESIZE							=	0x02;
-	public static final int TRIANGULATE						=	0x04;
-	public static final int MUST_FLIP_VERTICALLY_TEXCOORDS	=	0x08;
-	public static final int GENERATE_TANGENTS				=	0x10;
-	public static final int GENERATE_NTB					=	0x20;
+	public static final int NONE							= 0x00;
+	public static final int TO_GEOMETRY						= 0x01;
+	public static final int RESIZE							= 0x02;
+	public static final int TRIANGULATE						= 0x04;
+	public static final int MUST_FLIP_VERTICALLY_TEXCOORDS	= 0x08;
+	public static final int WIREFRAME                       = 0x10;
+	public static final int GENERATE_TANGENTS				= 0x20;
+	public static final int GENERATE_NTB					= 0x40;
 	
 	@SuppressWarnings("serial")
 	public static class ParsingErrorException extends RuntimeException {
@@ -139,31 +140,23 @@ public class ObjLoader {
 		}
 	}
 	
-	private final int flags;
-	
 	private static abstract class Primitive{
 		abstract Triangle[] toTriangles();
 		abstract void generateTangents(final List<Point3f> coordList, Vector3f[][] tangents);
+		
 		abstract void generate(
-				GL gl,
+				GL gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final List<TexCoord2f> texList
 		);
+		
 		abstract void generate(
-				GL gl,
+				GL gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final Vector3f[][] tangents,
 				final List<TexCoord2f> texList
-		);
-		abstract void generateNTB(
-				GL gl,
-				List<Point3f> coordList,
-				List<Vector3f> normList,
-				Vector3f[][] tangents,
-				List<TexCoord2f> texList,
-				float scale
 		);
 	}
 	
@@ -222,47 +215,37 @@ public class ObjLoader {
 		}
 		
 		void generate(
-				GL gl,
+				GL gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final List<TexCoord2f> texList
 		){
-			if(indexN1 >= 0){
-				Vector3f n = normList.get(indexN1);
-				gl.glNormal3f(n.x, n.y, n.z);
-			}
-			if(indexT1 >= 0){
-				TexCoord2f t = texList.get(indexT1);
-				gl.glTexCoord2f(t.x,t.y);
-			}
-			Point3f v = coordList.get(indexP1);
-			gl.glVertex3f(v.x,v.y,v.z);
+			final Point3f p00 = coordList.get(indexP1);
+			final Point3f p10 = coordList.get(indexP2);
+			final Point3f p11 = coordList.get(indexP3);
 			
-			if(indexN2 >= 0){
-				Vector3f n = normList.get(indexN2);
-				gl.glNormal3f(n.x, n.y, n.z);
-			}
-			if(indexT2 >= 0){
-				TexCoord2f t = texList.get(indexT2);
-				gl.glTexCoord2f(t.x,t.y);
-			}
-			v = coordList.get(indexP2);
-			gl.glVertex3f(v.x,v.y,v.z);
+			final TexCoord2f c00 = indexT1 < 0 ? null: texList.get(indexT1);
+			final TexCoord2f c10 = indexT2 < 0 ? null: texList.get(indexT2);
+			final TexCoord2f c11 = indexT3 < 0 ? null: texList.get(indexT3);
 			
-			if(indexN3 >= 0){
-				Vector3f n = normList.get(indexN3);
-				gl.glNormal3f(n.x, n.y, n.z);
-			}
-			if(indexT3 >= 0){
-				TexCoord2f t = texList.get(indexT3);
-				gl.glTexCoord2f(t.x,t.y);
-			}
-			v = coordList.get(indexP3);
-			gl.glVertex3f(v.x,v.y,v.z);
+			final Vector3f n00 = indexN1 < 0 ? null: normList.get(indexN1);
+			final Vector3f n10 = indexN2 < 0 ? null: normList.get(indexN2);
+			final Vector3f n11 = indexN3 < 0 ? null: normList.get(indexN3);
+			
+			final Vector4f t00 = null;
+			final Vector4f t10 = null;
+			final Vector4f t11 = null;
+			
+			generator.generate(gl,
+					p00, p10, p11,
+					c00, c10, c11,
+					n00, n10, n11,
+					t00, t10, t11
+			);
 		}
 		
 		void generate(
-				GL gl,
+				GL gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final Vector3f[][] tangents,
@@ -297,108 +280,12 @@ public class ObjLoader {
 			calculateTangent(n10, s, t, tangents[0][indexN2], tangents[1][indexN2], t10);
 			calculateTangent(n11, s, t, tangents[0][indexN3], tangents[1][indexN3], t11);
 			
-			gl.glNormal3f(          n00.x, n00.y, n00.z );
-			gl.glVertexAttrib4f( 1, t00.x, t00.y, t00.z, t00.w );
-			gl.glTexCoord2f(        c00.x, c00.y );
-			gl.glVertex3f(          p00.x, p00.y, p00.z );
-			
-			gl.glNormal3f(          n10.x, n10.y, n10.z );
-			gl.glVertexAttrib4f( 1, t10.x, t10.y, t10.z, t10.w );
-			gl.glTexCoord2f(        c10.x, c10.y );
-			gl.glVertex3f(          p10.x, p10.y, p10.z );
-			
-			gl.glNormal3f(          n11.x, n11.y, n11.z );
-			gl.glVertexAttrib4f( 1, t11.x, t11.y, t11.z, t11.w );
-			gl.glTexCoord2f(        c11.x, c11.y );
-			gl.glVertex3f(          p11.x, p11.y, p11.z );
-		}
-		
-		void generateNTB(
-				GL gl,
-				List<Point3f> coordList,
-				List<Vector3f> normList,
-				Vector3f[][] tangents,
-				List<TexCoord2f> texList,
-				float scale
-		){
-			final Point3f vert1 = coordList.get(indexP1);
-			final Point3f vert2 = coordList.get(indexP2);
-			final Point3f vert3 = coordList.get(indexP3);
-			
-			final Vector3f norm1 = normList.get(indexN1);
-			final Vector3f norm2 = normList.get(indexN2);
-			final Vector3f norm3 = normList.get(indexN3);
-			
-			final Vector4f tang1 = new Vector4f();
-			final Vector4f tang2 = new Vector4f();
-			final Vector4f tang3 = new Vector4f();
-
-			final TexCoord2f c00 = texList.get(indexT1);
-			final TexCoord2f c10 = texList.get(indexT2);
-			final TexCoord2f c11 = texList.get(indexT3);
-			
-			float s1 = c11.x - c00.x;
-			float s2 = c10.x - c00.x;
-			float t1 = c11.y - c00.y;
-			float t2 = c10.y - c00.y;
-			float r = 1.0f / (s1 * t2 - s2 * t1);
-			
-			final Vector2f s = new Vector2f(s1, s2); s.scale(r);
-			final Vector2f t = new Vector2f(t1, t2); t.scale(r);
-			
-			calculateTangent(norm1, s, t, tangents[0][indexN1], tangents[1][indexN1], tang1);
-			calculateTangent(norm2, s, t, tangents[0][indexN2], tangents[1][indexN2], tang2);
-			calculateTangent(norm3, s, t, tangents[0][indexN3], tangents[1][indexN3], tang3);
-			
-			gl.glColor3f(0.5f, 1.0f, 0.0f);
-
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			gl.glVertex3f( vert1.x + norm1.x * scale, vert1.y + norm1.y * scale, vert1.z + norm1.z * scale );
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			gl.glVertex3f( vert2.x + norm2.x * scale, vert2.y + norm2.y * scale, vert2.z + norm2.z * scale );
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			gl.glVertex3f( vert3.x + norm3.x * scale, vert3.y + norm3.y * scale, vert3.z + norm3.z * scale );
-
-			gl.glColor3f(1.0f, 0.0f, 0.5f);
-
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			gl.glVertex3f( vert1.x + tang1.x * scale, vert1.y + tang1.y * scale, vert1.z + tang1.z * scale );
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			gl.glVertex3f( vert2.x + tang2.x * scale, vert2.y + tang2.y * scale, vert2.z + tang2.z * scale );
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			gl.glVertex3f( vert3.x + tang3.x * scale, vert3.y + tang3.y * scale, vert3.z + tang3.z * scale );
-
-			final Vector3f bitang = new Vector3f();
-			gl.glColor3f(0.0f, 0.5f, 1.0f);
-
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			bitang.set(
-					(norm1.y*tang1.z - norm1.z*tang1.y)*Math.signum(tang1.w),
-					(tang1.x*norm1.z - tang1.z*norm1.x)*Math.signum(tang1.w),
-					(norm1.x*tang1.y - norm1.y*tang1.x)*Math.signum(tang1.w)
+			generator.generate(gl,
+					p00, p10, p11,
+					c00, c10, c11,
+					n00, n10, n11,
+					t00, t10, t11
 			);
-			gl.glVertex3f( vert1.x + bitang.x * scale, vert1.y + bitang.y * scale, vert1.z + bitang.z * scale);
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			bitang.set(
-					(norm2.y*tang2.z - norm2.z*tang2.y)*Math.signum(tang2.w),
-					(tang2.x*norm2.z - tang2.z*norm2.x)*Math.signum(tang2.w),
-					(norm2.x*tang2.y - norm2.y*tang2.x)*Math.signum(tang2.w)
-			);
-			gl.glVertex3f( vert2.x + bitang.x * scale, vert2.y + bitang.y * scale, vert2.z + bitang.z * scale);
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			bitang.set(
-					(norm3.y*tang3.z - norm3.z*tang3.y)*Math.signum(tang3.w),
-					(tang3.x*norm3.z - tang3.z*norm3.x)*Math.signum(tang3.w),
-					(norm3.x*tang3.y - norm3.y*tang3.x)*Math.signum(tang3.w)
-			);
-
-			gl.glVertex3f( vert3.x + bitang.x * scale, vert3.y + bitang.y * scale, vert3.z + bitang.z * scale);
 		}
 	}
 	
@@ -476,58 +363,41 @@ public class ObjLoader {
 		}
 		
 		void generate(
-				GL gl,
+				GL gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final List<TexCoord2f> texList
 		){
-			if(indexN1 >= 0){
-				Vector3f n = normList.get(indexN1);
-				gl.glNormal3f(n.x, n.y, n.z);
-			}
-			if(indexT1 >= 0){
-				TexCoord2f t = texList.get(indexT1);
-				gl.glTexCoord2f(t.x,t.y);
-			}
-			Point3f v = coordList.get(indexP1);
-			gl.glVertex3f(v.x,v.y,v.z);
+			final Point3f p00 = coordList.get(indexP1);
+			final Point3f p10 = coordList.get(indexP2);
+			final Point3f p11 = coordList.get(indexP3);
+			final Point3f p01 = coordList.get(indexP4);
 			
-			if(indexN2 >= 0){
-				Vector3f n = normList.get(indexN2);
-				gl.glNormal3f(n.x, n.y, n.z);
-			}
-			if(indexT2 >= 0){
-				TexCoord2f t = texList.get(indexT2);
-				gl.glTexCoord2f(t.x,t.y);
-			}
-			v = coordList.get(indexP2);
-			gl.glVertex3f(v.x,v.y,v.z);
+			final TexCoord2f c00 = indexT1 < 0 ? null: texList.get(indexT1);
+			final TexCoord2f c10 = indexT2 < 0 ? null: texList.get(indexT2);
+			final TexCoord2f c11 = indexT3 < 0 ? null: texList.get(indexT3);
+			final TexCoord2f c01 = indexT4 < 0 ? null: texList.get(indexT4);
 			
-			if(indexN3 >= 0){
-				Vector3f n = normList.get(indexN3);
-				gl.glNormal3f(n.x, n.y, n.z);
-			}
-			if(indexT3 >= 0){
-				TexCoord2f t = texList.get(indexT3);
-				gl.glTexCoord2f(t.x,t.y);
-			}
-			v = coordList.get(indexP3);
-			gl.glVertex3f(v.x,v.y,v.z);
+			final Vector3f n00 = indexN1 < 0 ? null: normList.get(indexN1);
+			final Vector3f n10 = indexN2 < 0 ? null: normList.get(indexN2);
+			final Vector3f n11 = indexN3 < 0 ? null: normList.get(indexN3);
+			final Vector3f n01 = indexN4 < 0 ? null: normList.get(indexN4);
 			
-			if(indexN4 >= 0){
-				Vector3f n = normList.get(indexN4);
-				gl.glNormal3f(n.x, n.y, n.z);
-			}
-			if(indexT4 >= 0){
-				TexCoord2f t = texList.get(indexT4);
-				gl.glTexCoord2f(t.x,t.y);
-			}
-			v = coordList.get(indexP4);
-			gl.glVertex3f(v.x,v.y,v.z);
+			final Vector4f t00 = null;
+			final Vector4f t10 = null;
+			final Vector4f t11 = null;
+			final Vector4f t01 = null;
+			
+			generator.generate(gl,
+					p00, p10, p11, p01,
+					c00, c10, c11, c01,
+					n00, n10, n11, n01,
+					t00, t10, t11, t01
+			);
 		}
 		
 		void generate(
-				GL gl,
+				GL gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final Vector3f[][] tangents,
@@ -567,135 +437,475 @@ public class ObjLoader {
 			calculateTangent(n11, s, t, tangents[0][indexN3], tangents[1][indexN3], t11);
 			calculateTangent(n01, s, t, tangents[0][indexN4], tangents[1][indexN4], t01);
 			
-			gl.glNormal3f(          n00.x, n00.y, n00.z );
-			gl.glVertexAttrib4f( 1, t00.x, t00.y, t00.z, t00.w );
-			gl.glTexCoord2f(        c00.x, c00.y );
-			gl.glVertex3f(          p00.x, p00.y, p00.z );
-			
-			gl.glNormal3f(          n10.x, n10.y, n10.z );
-			gl.glVertexAttrib4f( 1, t10.x, t10.y, t10.z, t10.w );
-			gl.glTexCoord2f(        c10.x, c10.y );
-			gl.glVertex3f(          p10.x, p10.y, p10.z );
-			
-			gl.glNormal3f(          n11.x, n11.y, n11.z );
-			gl.glVertexAttrib4f( 1, t11.x, t11.y, t11.z, t11.w );
-			gl.glTexCoord2f(        c11.x, c11.y );
-			gl.glVertex3f(          p11.x, p11.y, p11.z );
-			
-			gl.glNormal3f(          n01.x, n01.y, n01.z );
-			gl.glVertexAttrib4f( 1, t01.x, t01.y, t01.z, t01.w );
-			gl.glTexCoord2f(        c01.x, c01.y );
-			gl.glVertex3f(          p01.x, p01.y, p01.z );
-		}
-		
-		void generateNTB(
-				GL gl,
-				List<Point3f> coordList,
-				List<Vector3f> normList,
-				Vector3f[][] tangents,
-				List<TexCoord2f> texList,
-				float scale
-		){
-			final Point3f vert1 = coordList.get(indexP1);
-			final Point3f vert2 = coordList.get(indexP2);
-			final Point3f vert3 = coordList.get(indexP3);
-			final Point3f vert4 = coordList.get(indexP4);
-			
-			final Vector3f norm1 = normList.get(indexN1);
-			final Vector3f norm2 = normList.get(indexN2);
-			final Vector3f norm3 = normList.get(indexN3);
-			final Vector3f norm4 = normList.get(indexN4);
-			
-			final Vector4f tang1 = new Vector4f();
-			final Vector4f tang2 = new Vector4f();
-			final Vector4f tang3 = new Vector4f();
-			final Vector4f tang4 = new Vector4f();
-
-			final TexCoord2f c00 = texList.get(indexT1);
-			final TexCoord2f c10 = texList.get(indexT2);
-			final TexCoord2f c11 = texList.get(indexT3);
-			final TexCoord2f c01 = texList.get(indexT4);
-			
-			float s1 = c11.x + c01.x - c10.x - c00.x;
-			float s2 = c11.x + c10.x - c01.x - c00.x;
-			float t1 = c11.y + c01.y - c10.y - c00.y;
-			float t2 = c11.y + c10.y - c01.y - c00.y;
-			float r = 1.0f / (s1 * t2 - s2 * t1);
-			
-			final Vector2f s = new Vector2f(s1, s2); s.scale(r);
-			final Vector2f t = new Vector2f(t1, t2); t.scale(r);
-			
-			calculateTangent(norm1, s, t, tangents[0][indexN1], tangents[1][indexN1], tang1);
-			calculateTangent(norm2, s, t, tangents[0][indexN2], tangents[1][indexN2], tang2);
-			calculateTangent(norm3, s, t, tangents[0][indexN3], tangents[1][indexN3], tang3);
-			calculateTangent(norm4, s, t, tangents[0][indexN4], tangents[1][indexN4], tang4);
-			
-			gl.glColor3f(0.5f, 1.0f, 0.0f);
-
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			gl.glVertex3f( vert1.x + norm1.x * scale, vert1.y + norm1.y * scale, vert1.z + norm1.z * scale );
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			gl.glVertex3f( vert2.x + norm2.x * scale, vert2.y + norm2.y * scale, vert2.z + norm2.z * scale );
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			gl.glVertex3f( vert3.x + norm3.x * scale, vert3.y + norm3.y * scale, vert3.z + norm3.z * scale );
-
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-			gl.glVertex3f( vert4.x + norm4.x * scale, vert4.y + norm4.y * scale, vert4.z + norm4.z * scale );
-
-			gl.glColor3f(1.0f, 0.0f, 0.5f);
-
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			gl.glVertex3f( vert1.x + tang1.x * scale, vert1.y + tang1.y * scale, vert1.z + tang1.z * scale );
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			gl.glVertex3f( vert2.x + tang2.x * scale, vert2.y + tang2.y * scale, vert2.z + tang2.z * scale );
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			gl.glVertex3f( vert3.x + tang3.x * scale, vert3.y + tang3.y * scale, vert3.z + tang3.z * scale );
-
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-			gl.glVertex3f( vert4.x + tang4.x * scale, vert4.y + tang4.y * scale, vert4.z + tang4.z * scale );
-
-			final Vector3f bitang = new Vector3f();
-			gl.glColor3f(0.0f, 0.5f, 1.0f);
-
-			gl.glVertex3f( vert1.x, vert1.y, vert1.z );
-			bitang.set(
-					(norm1.y*tang1.z - norm1.z*tang1.y)*Math.signum(tang1.w),
-					(tang1.x*norm1.z - tang1.z*norm1.x)*Math.signum(tang1.w),
-					(norm1.x*tang1.y - norm1.y*tang1.x)*Math.signum(tang1.w)
+			generator.generate(gl,
+					p00, p10, p11, p01,
+					c00, c10, c11, c01,
+					n00, n10, n11, n01,
+					t00, t10, t11, t01
 			);
-			gl.glVertex3f( vert1.x + bitang.x * scale, vert1.y + bitang.y * scale, vert1.z + bitang.z * scale);
-
-			gl.glVertex3f( vert2.x, vert2.y, vert2.z );
-			bitang.set(
-					(norm2.y*tang2.z - norm2.z*tang2.y)*Math.signum(tang2.w),
-					(tang2.x*norm2.z - tang2.z*norm2.x)*Math.signum(tang2.w),
-					(norm2.x*tang2.y - norm2.y*tang2.x)*Math.signum(tang2.w)
-			);
-			gl.glVertex3f( vert2.x + bitang.x * scale, vert2.y + bitang.y * scale, vert2.z + bitang.z * scale);
-
-			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
-			bitang.set(
-					(norm3.y*tang3.z - norm3.z*tang3.y)*Math.signum(tang3.w),
-					(tang3.x*norm3.z - tang3.z*norm3.x)*Math.signum(tang3.w),
-					(norm3.x*tang3.y - norm3.y*tang3.x)*Math.signum(tang3.w)
-			);
-
-			gl.glVertex3f( vert3.x + bitang.x * scale, vert3.y + bitang.y * scale, vert3.z + bitang.z * scale);
-
-			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
-			bitang.set(
-					(norm4.y*tang4.z - norm4.z*tang4.y)*Math.signum(tang4.w),
-					(tang4.x*norm4.z - tang4.z*norm4.x)*Math.signum(tang4.w),
-					(norm4.x*tang4.y - norm4.y*tang4.x)*Math.signum(tang4.w)
-			);
-			gl.glVertex3f( vert4.x + bitang.x * scale, vert4.y + bitang.y * scale, vert4.z + bitang.z * scale );
 		}
 	}
 	
+	private static float distance(Tuple3f t1, Tuple3f t2){
+		float dx = t1.x-t2.x;
+		float dy = t1.y-t2.y;
+		float dz = t1.z-t2.z;
+		return (float) Math.sqrt(dx*dx+dy*dy+dz*dz);
+	}
+
+	private static float clearDist;
+
+	@SuppressWarnings("serial")
+	private static Point3f readVertex(ObjParser st) throws ParsingErrorException {
+		Point3f v = new Point3f(){
+			public boolean equals(Object t){
+		        try {
+		            return ObjLoader.distance(this, (Tuple3f)t) <= clearDist;
+		         }
+		         catch (NullPointerException e2) {return false;}
+		         catch (ClassCastException   e1) {return false;}
+			}
+		};
+		v.x = st.getFloat();
+		v.y = st.getFloat();
+		v.z = st.getFloat();
+		return v;
+	}
+
+	private static TexCoord2f readTexture(ObjParser st) throws ParsingErrorException {
+		TexCoord2f t = new TexCoord2f();
+		t.x = st.getFloat();
+		t.y = st.getFloat();
+		return t;
+	}
+
+	@SuppressWarnings("serial")
+	private static Vector3f readNormal(ObjParser st) throws ParsingErrorException {
+		Vector3f n = new Vector3f(){
+			public boolean equals(Object t){
+		        try {
+		            return dot((Vector3f)t) > 0.9f;
+		         }
+		         catch (NullPointerException e2) {return false;}
+		         catch (ClassCastException   e1) {return false;}
+			}
+		};
+		n.x = st.getFloat();
+		n.y = st.getFloat();
+		n.z = st.getFloat();
+		n.normalize();
+		return n;
+	}
+
+	private static Primitive readPrimitive(ObjParser st, int coordListSize, int texListSize, int normListSize) throws ParsingErrorException {
+		int[] vertIndex = new int[]{ -1, -1, -1, -1 };
+		int[] texIndex  = new int[]{ -1, -1, -1, -1 };
+		int[] normIndex = new int[]{ -1, -1, -1, -1 };
+		int count = 0;
+		
+		st.getToken();
+		do{
+			if (st.ttype == StreamTokenizer.TT_WORD){
+				vertIndex[count] = st.getLastValueAsInteger() - 1;
+				if (vertIndex[count] < 0)
+					vertIndex[count] += coordListSize + 1;
+			}
+			st.getToken();
+			if (st.ttype == '/') {
+				st.getToken();
+				if (st.ttype == StreamTokenizer.TT_WORD) {
+					texIndex[count] = st.getLastValueAsInteger() - 1;
+					if (texIndex[count] < 0)
+						texIndex[count] += texListSize + 1;
+					st.getToken();
+				}
+				if (st.ttype == '/') {
+					normIndex[count] = st.getInteger() - 1;
+					if (normIndex[count] < 0)
+						normIndex[count] += normListSize + 1;
+					st.getToken();
+				}
+			}
+			count++;
+		}while (st.ttype != StreamTokenizer.TT_EOF && st.ttype != StreamTokenizer.TT_EOL);
+	
+		if(count == 3){
+			return new Triangle(
+				vertIndex[0], vertIndex[1], vertIndex[2],
+				normIndex[0], normIndex[1], normIndex[2],
+				texIndex [0], texIndex [1], texIndex [2]
+			);
+		}
+		return new Quad(
+			vertIndex[0], vertIndex[1], vertIndex[2], vertIndex[3],
+			normIndex[0], normIndex[1], normIndex[2], normIndex[3],
+			texIndex [0], texIndex [1], texIndex [2], texIndex [3]
+		);
+	}
+
+	private static void purgeVertices(final Queue<Primitive> primitives, final List<Point3f> coordList){
+		int[] newIndices = new int[coordList.size()];
+		ArrayList<Point3f> newCoordList = new ArrayList<Point3f>(coordList.size());
+		int i = 0, j = 0;
+		for(Point3f p: coordList){
+			int index = newCoordList.indexOf(p);
+			if(index < 0){
+				newCoordList.add(p);
+				newIndices[i]= j;
+				j++;
+			}else{
+				newIndices[i]= index;
+			}
+			i++;
+		}
+		if( coordList.size() != newCoordList.size() ){
+			System.out.println("Vertices: " + coordList.size() + " --> " +newCoordList.size() );
+			for( Primitive p: primitives ){
+				if(p instanceof Triangle){
+					Triangle t = (Triangle)p;
+					t.indexP1 = newIndices[t.indexP1];
+					t.indexP2 = newIndices[t.indexP2];
+					t.indexP3 = newIndices[t.indexP3];
+				}else{
+					Quad q = (Quad)p;
+					q.indexP1 = newIndices[q.indexP1];
+					q.indexP2 = newIndices[q.indexP2];
+					q.indexP3 = newIndices[q.indexP3];
+					q.indexP4 = newIndices[q.indexP4];
+				}
+			}
+			coordList.clear();
+			coordList.addAll(newCoordList);
+		}else{
+			System.out.println("Vertices: " + coordList.size());
+		}
+		LinkedList<Primitive> newPrimitives = new LinkedList<Primitive>();
+		while( !primitives.isEmpty() ){
+			Primitive p = primitives.poll();
+			if(p instanceof Triangle){
+				Triangle t = (Triangle)p;
+				if( t.indexP1 == t.indexP2 ||  t.indexP2 == t.indexP3 || t.indexP3 == t.indexP1 )
+					 continue;
+				newPrimitives.add(p);
+			}else{
+				Quad q = (Quad)p;
+				
+				if( q.indexP1 == q.indexP3 ||  q.indexP2 == q.indexP4 )
+					continue;
+				
+				if( q.indexP1 ==  q.indexP2 || q.indexP1 == q.indexP4 ){
+					newPrimitives.add(
+							new Triangle(
+									q.indexP2, q.indexP3, q.indexP4,
+									q.indexN2, q.indexN3, q.indexN4,
+									q.indexT2, q.indexT3, q.indexT4
+							)
+					);
+				}else if( q.indexP3 ==  q.indexP2 || q.indexP3 ==  q.indexP4 ){
+					newPrimitives.add(
+							new Triangle(
+									q.indexP1, q.indexP2, q.indexP4,
+									q.indexN1, q.indexN2, q.indexN4,
+									q.indexT1, q.indexT2, q.indexT4
+							)
+					);
+				}else
+					newPrimitives.add(q);
+			}				
+		}
+		primitives.addAll(newPrimitives);
+	}
+
+	private static final Vector3f _d1 = new Vector3f();
+	private static final Vector3f _d2 = new Vector3f();
+	private static final Vector3f _normal = new Vector3f();
+
+	/**
+	 * @return ( p1 - p2) x ( p3 - p1 )
+	 */
+	private static Vector3f calculateNormal( Point3f p1, Point3f p2, Point3f p3 ){
+		_d1.set(p1);
+		_d1.sub(p2);
+		
+		_d2.set(p3);
+		_d2.sub(p1);
+		
+		_normal.cross( _d1, _d2 );
+		
+		return _normal;
+	}
+
+	@SuppressWarnings("unchecked")
+		private static void regenerateNormals(final Queue<Primitive> primitives, final List<Point3f> coordList, final List<Vector3f> normList){
+			
+			purgeVertices(primitives, coordList);
+			
+			Map<Integer,Integer>[] newIndices = new Map[coordList.size()];
+			for(int i = 0; i < newIndices.length; i++)
+				newIndices[i] = new HashMap<Integer,Integer>();
+			
+			for( Primitive p: primitives ){
+				if(p instanceof Triangle){
+					Triangle t = (Triangle)p;
+					newIndices[t.indexP1].put(t.indexN1, t.indexN1);
+					newIndices[t.indexP2].put(t.indexN2, t.indexN2);
+					newIndices[t.indexP3].put(t.indexN3, t.indexN3);
+				}else{
+					Quad q = (Quad)p;
+					newIndices[q.indexP1].put(q.indexN1, q.indexN1);
+					newIndices[q.indexP2].put(q.indexN2, q.indexN2);
+					newIndices[q.indexP3].put(q.indexN3, q.indexN3);
+					newIndices[q.indexP4].put(q.indexN4, q.indexN4);
+				}
+			}
+			
+			ArrayList<Vector3f> newNormList = new ArrayList<Vector3f>(normList.size());
+			for( Map<Integer,Integer> m: newIndices ){
+				int indexI = newNormList.size();
+				for( int oldIndex:  m.keySet() ){
+					Vector3f v = normList.get(oldIndex);
+					int index = newNormList.lastIndexOf(v);
+					if( index < 0 ){
+						m.put(oldIndex, newNormList.size());
+						newNormList.add(v);
+					}else if(index < indexI){
+						m.put(oldIndex, newNormList.size());
+						newNormList.add(v);
+					}else{
+						m.put( oldIndex, index );
+					}
+				}
+			}
+			
+			System.out.println("Normals: " + normList.size() + " --> " +newNormList.size() );
+			for( Primitive p: primitives ){
+				if(p instanceof Triangle){
+					Triangle t = (Triangle)p;
+					t.indexN1 = newIndices[t.indexP1].get(t.indexN1);
+					t.indexN2 = newIndices[t.indexP2].get(t.indexN2);
+					t.indexN3 = newIndices[t.indexP3].get(t.indexN3);
+				}else{
+					Quad q = (Quad)p;
+					q.indexN1 = newIndices[q.indexP1].get(q.indexN1);
+					q.indexN2 = newIndices[q.indexP2].get(q.indexN2);
+					q.indexN3 = newIndices[q.indexP3].get(q.indexN3);
+					q.indexN4 = newIndices[q.indexP4].get(q.indexN4);
+				}
+			}
+			normList.clear();
+			for(int i = 0; i < newNormList.size(); i++)
+				normList.add(new Vector3f());
+			
+			final Point3f p1 = new Point3f();
+			final Point3f p2 = new Point3f();
+			final Point3f p3 = new Point3f();
+			final Point3f p4 = new Point3f();
+			
+			final Vector3f normal = new Vector3f();
+			
+			for( Primitive p: primitives ){
+				if(p instanceof Triangle){
+					
+					Triangle t = (Triangle)p;
+					
+					p1.set(coordList.get(t.indexP1));
+					p2.set(coordList.get(t.indexP2));
+					p3.set(coordList.get(t.indexP3));
+					
+					normal.set( calculateNormal( p1, p3, p2 ) );
+					normal.add( calculateNormal( p2, p1, p3 ) );
+					normal.add( calculateNormal( p3, p2, p1 ) );
+					normal.scale(1.0f/3);
+					
+					normList.get(t.indexN1).add( normal );
+					normList.get(t.indexN2).add( normal );
+					normList.get(t.indexN3).add( normal );
+				}else{
+					Quad q = (Quad)p;
+					
+					p1.set(coordList.get(q.indexP1));
+					p2.set(coordList.get(q.indexP2));
+					p3.set(coordList.get(q.indexP3));
+					p4.set(coordList.get(q.indexP4));
+					
+	//				if( p1.equals(p3) || p2.equals(p4) )
+	//					continue;
+	//				
+	//				if( p1.equals(p2) ){
+	//					normal = calculateNormal(p1,p4,p3);					
+	//					normList.get(q.indexN1).add( normal );
+	//					normList.get(q.indexN2).add( normal );				
+	//					normList.get(q.indexN3).add( calculateNormal(p3,p2,p4) );
+	//					normList.get(q.indexN4).add( calculateNormal(p4,p3,p1) );
+	//				}else if( p1.equals(p4) ){
+	//					normal = calculateNormal(p1,p3,p2);
+	//					normList.get(q.indexN1).add( normal );
+	//					normList.get(q.indexN2).add( calculateNormal(p2,p1,p3) );
+	//					normList.get(q.indexN3).add( calculateNormal(p3,p2,p4) );
+	//					normList.get(q.indexN4).add( normal );
+	//				}else if( p2.equals(p3) ){
+	//					normal = calculateNormal(p2,p1,p4);
+	//					normList.get(q.indexN1).add( calculateNormal(p1,p4,p2) );
+	//					normList.get(q.indexN2).add( normal );
+	//					normList.get(q.indexN3).add( normal );
+	//					normList.get(q.indexN4).add( calculateNormal(p4,p3,p1) );
+	//				}else if( p3.equals(p4) ){
+	//					normal = calculateNormal(p3,p2,p1);
+	//					normList.get(q.indexN1).add( calculateNormal(p1,p4,p2) );
+	//					normList.get(q.indexN2).add( calculateNormal(p2,p1,p3) );
+	//					normList.get(q.indexN3).add( normal );
+	//					normList.get(q.indexN4).add( normal );
+	//				}else{
+					normal.set( calculateNormal(p1,p4,p2) );
+					normal.add( calculateNormal(p2,p1,p3) );
+					normal.add( calculateNormal(p3,p2,p4) );
+					normal.add( calculateNormal(p4,p3,p1) );
+					normal.scale(1.0f/4);
+						
+					normList.get(q.indexN1).add( normal );
+					normList.get(q.indexN2).add( normal );
+					normList.get(q.indexN3).add( normal );
+					normList.get(q.indexN4).add( normal );
+	//				}
+				}
+			}
+			for(Vector3f n: normList)
+				n.normalize();
+			
+			for( Primitive p: primitives )
+				if(p instanceof Quad){
+					
+					Quad q = (Quad)p;
+	
+					float l1 = normList.get(q.indexN1).length();
+					float l2 = normList.get(q.indexN2).length();
+					float l3 = normList.get(q.indexN3).length();
+					float l4 = normList.get(q.indexN4).length();
+					
+					if( 
+							valorNoValido(l1) ||
+							valorNoValido(l2) ||
+							valorNoValido(l3) ||
+							valorNoValido(l4)
+							//( d  < 0 && d  > 0 ) || ( d  == Float.POSITIVE_INFINITY ) || ( d  == Float.NEGATIVE_INFINITY ) 
+					){
+						System.out.println(l1 + " " + l2 + " " + l3 + " " + l4);
+						
+	////					System.out.println(coordList.get(q.indexP1));
+	////					System.out.println(coordList.get(q.indexP2));
+	////					System.out.println(coordList.get(q.indexP3));
+	////					System.out.println(coordList.get(q.indexP4));
+	//					
+	//					d1.set(coordList.get(q.indexP2));
+	//					d1.sub(coordList.get(q.indexP1));
+	//					
+	//					d2.set(coordList.get(q.indexP3));
+	//					d2.sub(coordList.get(q.indexP2));
+	//					
+	//					d3.set(coordList.get(q.indexP4));
+	//					d3.sub(coordList.get(q.indexP3));
+	//					
+	//					d4.set(coordList.get(q.indexP1));
+	//					d4.sub(coordList.get(q.indexP4));
+	//					
+	//					d5.set(coordList.get(q.indexP3));
+	//					d5.sub(coordList.get(q.indexP1));
+	//					
+	//					normal.cross(d4, d1);
+	//					normal.normalize();
+	////					System.out.println( d4 + " " + d1 + " --> " + normal );
+	//					normList.get(q.indexN1).set(normal);
+	//					
+	//					normal.cross(d1, d2);
+	//					normal.normalize();
+	////					System.out.println( d1 + " " + d2 + " --> " + normal );
+	//					normList.get(q.indexN2).set(normal);
+	//					
+	//					normal.cross(d2, d3);
+	//					normal.normalize();
+	////					System.out.println( d2 + " " + d3 + " --> " + normal );
+	//					normList.get(q.indexN3).set(normal);
+	//					
+	//					normal.cross(d3, d4);
+	//					normal.normalize();
+	////					System.out.println( d3 + " " + d4 + " --> " + normal );
+	////					normList.get(q.indexN4).set(normal);
+						
+	//					int aux = q.indexP2;
+	//					q.indexP2 = q.indexP4;
+	//					q.indexP4 = aux;
+	//					
+	//					aux = q.indexN2;
+	//					q.indexN2 = q.indexN4;
+	//					q.indexN4 = aux;
+	//					
+	//					aux = q.indexT2;
+	//					q.indexT2 = q.indexT4;
+	//					q.indexT4 = aux;
+						
+					}
+				}
+		}
+
+	private static boolean valorNoValido(float f){
+		return
+			Float.compare(f, 0.0f) == 0 ||
+			Float.compare(f, -0.0f) == 0 ||
+			Float.compare(f, Float.NaN) == 0 ||
+			Float.compare(f, Float.POSITIVE_INFINITY) == 0 ||
+			Float.compare(f, Float.NEGATIVE_INFINITY) == 0;
+	}
+
+	private static void generateTangents(final Queue<Primitive> primitives, final List<Point3f> coordList, Vector3f[][] tangents){
+		
+		for ( int i= 0; i < tangents[0].length; i++ ){
+			tangents[0][i] = new Vector3f();
+			tangents[1][i] = new Vector3f();
+		}
+		
+		for (Primitive p: primitives)
+			p.generateTangents( coordList, tangents);
+	}
+
+	private static float dot(Vector3f v1, Vector3f v2){
+		return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
+	}
+
+	private static void orthogonalizeGramSchmidt(Vector3f n, Vector3f t){
+	    // tOrtho = normalize( t - n·dot(n, t) )
+		float d = dot( n, t );
+		t.set(
+			t.x - n.x*d,
+			t.y - n.y*d,
+			t.z - n.z*d
+		);
+		t.normalize();
+	}
+
+	/**
+	 * @return dot( cross(v1, v2), v3 )
+	 */
+	private static float dotcross(Vector3f v1, Vector3f v2, Vector3f v3){
+		return ((v1.y*v2.z - v1.z*v2.y)*v3.x + (v2.x*v1.z - v2.z*v1.x)*v3.y + (v1.x*v2.y - v1.y*v2.x)*v3.z);
+	}
+
+	private static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector3f uVec, Vector3f vVec, Vector4f t4f){
+		Vector3f sDir = new Vector3f(
+				(t.y * uVec.x - t.x * vVec.x),
+				(t.y * uVec.y - t.x * vVec.y),
+	            (t.y * uVec.z - t.x * vVec.z)
+		);
+		sDir.normalize();
+		Vector3f tDir = new Vector3f(
+				(s.y * uVec.x + s.x * vVec.x),
+				(s.y * uVec.y + s.x * vVec.y),
+	            (s.y * uVec.z + s.x * vVec.z)
+		);
+		t4f.set( sDir.x, sDir.y, sDir.z, dotcross( normal, sDir, tDir ) < 0.0f ? -1.0f : 1.0f );
+		//t4f.set( uVec.x, uVec.y, uVec.z, dotcross( normal, uVec, vVec ) < 0.0f ? -1.0f : 1.0f );
+	}
+
+	private final int flags;
 	private final List<Point3f> coordList;
 	private final List<Vector3f> normList;
 	private final List<TexCoord2f> texList;
@@ -748,7 +958,7 @@ public class ObjLoader {
 					t.y = 1.0f - t.y;
 					texList.add(t);
 				}else if (st.sval.equals("f") || st.sval.equals("fo"))
-					primitives.offer( readPrimitive(st) );
+					primitives.offer( readPrimitive(st, coordList.size(), texList.size(), normList.size() ) );
 				else if (st.sval.equals("g"))
 					st.skipToNextLine();
 				else if (st.sval.equals("s"))
@@ -773,103 +983,6 @@ public class ObjLoader {
 		}while (st.ttype != StreamTokenizer.TT_EOF);
 	}
 
-	private static float distance(Tuple3f t1, Tuple3f t2){
-		float dx = t1.x-t2.x;
-		float dy = t1.y-t2.y;
-		float dz = t1.z-t2.z;
-		return (float) Math.sqrt(dx*dx+dy*dy+dz*dz);
-	}
-	
-	private static float clearDist;
-	
-	@SuppressWarnings("serial")
-	private static Point3f readVertex(ObjParser st) throws ParsingErrorException {
-		Point3f v = new Point3f(){
-			public boolean equals(Object t){
-		        try {
-		            return ObjLoader.distance(this, (Tuple3f)t) <= clearDist;
-		         }
-		         catch (NullPointerException e2) {return false;}
-		         catch (ClassCastException   e1) {return false;}
-			}
-		};
-		v.x = st.getFloat();
-		v.y = st.getFloat();
-		v.z = st.getFloat();
-		return v;
-	}
-
-	private static TexCoord2f readTexture(ObjParser st) throws ParsingErrorException {
-		TexCoord2f t = new TexCoord2f();
-		t.x = st.getFloat();
-		t.y = st.getFloat();
-		return t;
-	}
-	
-	@SuppressWarnings("serial")
-	private static Vector3f readNormal(ObjParser st) throws ParsingErrorException {
-		Vector3f n = new Vector3f(){
-			public boolean equals(Object t){
-		        try {
-		            return dot((Vector3f)t) > 0.000995f;
-		         }
-		         catch (NullPointerException e2) {return false;}
-		         catch (ClassCastException   e1) {return false;}
-			}
-		};
-		n.x = st.getFloat();
-		n.y = st.getFloat();
-		n.z = st.getFloat();
-		n.normalize();
-		return n;
-	}
-
-	private Primitive readPrimitive(ObjParser st) throws ParsingErrorException {
-		int[] vertIndex = new int[]{ -1, -1, -1, -1 };
-		int[] texIndex  = new int[]{ -1, -1, -1, -1 };
-		int[] normIndex = new int[]{ -1, -1, -1, -1 };
-		int count = 0;
-		
-		st.getToken();
-		do{
-			if (st.ttype == StreamTokenizer.TT_WORD){
-				vertIndex[count] = st.getLastValueAsInteger() - 1;
-				if (vertIndex[count] < 0)
-					vertIndex[count] += coordList.size() + 1;
-			}
-			st.getToken();
-			if (st.ttype == '/') {
-				st.getToken();
-				if (st.ttype == StreamTokenizer.TT_WORD) {
-					texIndex[count] = st.getLastValueAsInteger() - 1;
-					if (texIndex[count] < 0)
-						texIndex[count] += texList.size() + 1;
-					st.getToken();
-				}
-				if (st.ttype == '/') {
-					normIndex[count] = st.getInteger() - 1;
-					if (normIndex[count] < 0)
-						normIndex[count] += normList.size() + 1;
-					st.getToken();
-				}
-			}
-			count++;
-		}while (st.ttype != StreamTokenizer.TT_EOF && st.ttype != StreamTokenizer.TT_EOL);
-
-		if(count == 3){
-			return new Triangle(
-				vertIndex[0], vertIndex[1], vertIndex[2],
-				normIndex[0], normIndex[1], normIndex[2],
-				texIndex [0], texIndex [1], texIndex [2]
-			);
-		}
-		return new Quad(
-			vertIndex[0], vertIndex[1], vertIndex[2], vertIndex[3],
-			normIndex[0], normIndex[1], normIndex[2], normIndex[3],
-			texIndex [0], texIndex [1], texIndex [2], texIndex [3]
-		);
-	}
-	
 	private double getMaxDistance(){
 		double absX = maxX - minX;
 		double absY = maxY - minY;
@@ -966,375 +1079,20 @@ public class ObjLoader {
 		*/
 	}
 
-	private static void purgeVertices(final Queue<Primitive> primitives, final List<Point3f> coordList){
-		int[] newIndices = new int[coordList.size()];
-		ArrayList<Point3f> newCoordList = new ArrayList<Point3f>(coordList.size());
-		int i = 0, j = 0;
-		for(Point3f p: coordList){
-			int index = newCoordList.indexOf(p);
-			if(index < 0){
-				newCoordList.add(p);
-				newIndices[i]= j;
-				j++;
-			}else{
-				newIndices[i]= index;
-			}
-			i++;
-		}
-		if( coordList.size() != newCoordList.size() ){
-			System.out.println("Vertices: " + coordList.size() + " --> " +newCoordList.size() );
-			for( Primitive p: primitives ){
-				if(p instanceof Triangle){
-					Triangle t = (Triangle)p;
-					t.indexP1 = newIndices[t.indexP1];
-					t.indexP2 = newIndices[t.indexP2];
-					t.indexP3 = newIndices[t.indexP3];
-				}else{
-					Quad q = (Quad)p;
-					q.indexP1 = newIndices[q.indexP1];
-					q.indexP2 = newIndices[q.indexP2];
-					q.indexP3 = newIndices[q.indexP3];
-					q.indexP4 = newIndices[q.indexP4];
-				}
-			}
-			coordList.clear();
-			coordList.addAll(newCoordList);
-		}else{
-			System.out.println("Vertices: " + coordList.size());
-		}
-		LinkedList<Primitive> newPrimitives = new LinkedList<Primitive>();
-		while( !primitives.isEmpty() ){
-			Primitive p = primitives.poll();
-			if(p instanceof Triangle){
-				Triangle t = (Triangle)p;
-				if( t.indexP1 == t.indexP2 ||  t.indexP2 == t.indexP3 || t.indexP3 == t.indexP1 )
-					 continue;
-				newPrimitives.add(p);
-			}else{
-				Quad q = (Quad)p;
-				
-				if( q.indexP1 == q.indexP3 ||  q.indexP2 == q.indexP4 )
-					continue;
-				
-				if( q.indexP1 ==  q.indexP2 || q.indexP1 == q.indexP4 ){
-					newPrimitives.add(
-							new Triangle(
-									q.indexP2, q.indexP3, q.indexP4,
-									q.indexN2, q.indexN3, q.indexN4,
-									q.indexT2, q.indexT3, q.indexT4
-							)
-					);
-				}else if( q.indexP3 ==  q.indexP2 || q.indexP3 ==  q.indexP4 ){
-					newPrimitives.add(
-							new Triangle(
-									q.indexP1, q.indexP2, q.indexP4,
-									q.indexN1, q.indexN2, q.indexN4,
-									q.indexT1, q.indexT2, q.indexT4
-							)
-					);
-				}else
-					newPrimitives.add(q);
-			}				
-		}
-		primitives.addAll(newPrimitives);
-	}
-	
-	private static final Vector3f _d1 = new Vector3f();
-	private static final Vector3f _d2 = new Vector3f();
-	private static final Vector3f _normal = new Vector3f();
-	
-	
-	/**
-	 * @return ( p1 - p2) x ( p3 - p1 )
-	 */
-	private static Vector3f calculateNormal( Point3f p1, Point3f p2, Point3f p3 ){
-		_d1.set(p1);
-		_d1.sub(p2);
-		
-		_d2.set(p3);
-		_d2.sub(p1);
-		
-		_normal.cross( _d1, _d2 );
-		
-		return _normal;
-	}
-	
-	
-	@SuppressWarnings("unchecked")
-	private static void regenerateNormals(final Queue<Primitive> primitives, final List<Point3f> coordList, final List<Vector3f> normList){
-		
-		purgeVertices(primitives, coordList);
-		
-		Map<Integer,Integer>[] newIndices = new Map[coordList.size()];
-		for(int i = 0; i < newIndices.length; i++)
-			newIndices[i] = new HashMap<Integer,Integer>();
-		
-		for( Primitive p: primitives ){
-			if(p instanceof Triangle){
-				Triangle t = (Triangle)p;
-				newIndices[t.indexP1].put(t.indexN1, t.indexN1);
-				newIndices[t.indexP2].put(t.indexN2, t.indexN2);
-				newIndices[t.indexP3].put(t.indexN3, t.indexN3);
-			}else{
-				Quad q = (Quad)p;
-				newIndices[q.indexP1].put(q.indexN1, q.indexN1);
-				newIndices[q.indexP2].put(q.indexN2, q.indexN2);
-				newIndices[q.indexP3].put(q.indexN3, q.indexN3);
-				newIndices[q.indexP4].put(q.indexN4, q.indexN4);
-			}
-		}
-		
-		ArrayList<Vector3f> newNormList = new ArrayList<Vector3f>(normList.size());
-		for( Map<Integer,Integer> m: newIndices ){
-			int indexI = newNormList.size();
-			for( int oldIndex:  m.keySet() ){
-				Vector3f v = normList.get(oldIndex);
-				int index = newNormList.lastIndexOf(v);
-				if( index < 0 ){
-					m.put(oldIndex, newNormList.size());
-					newNormList.add(v);
-				}else if(index < indexI){
-					m.put(oldIndex, newNormList.size());
-					newNormList.add(v);
-				}else{
-					m.put( oldIndex, index );
-				}
-			}
-		}
-		
-		System.out.println("Normals: " + normList.size() + " --> " +newNormList.size() );
-		for( Primitive p: primitives ){
-			if(p instanceof Triangle){
-				Triangle t = (Triangle)p;
-				t.indexN1 = newIndices[t.indexP1].get(t.indexN1);
-				t.indexN2 = newIndices[t.indexP2].get(t.indexN2);
-				t.indexN3 = newIndices[t.indexP3].get(t.indexN3);
-			}else{
-				Quad q = (Quad)p;
-				q.indexN1 = newIndices[q.indexP1].get(q.indexN1);
-				q.indexN2 = newIndices[q.indexP2].get(q.indexN2);
-				q.indexN3 = newIndices[q.indexP3].get(q.indexN3);
-				q.indexN4 = newIndices[q.indexP4].get(q.indexN4);
-			}
-		}
-		normList.clear();
-		for(int i = 0; i < newNormList.size(); i++)
-			normList.add(new Vector3f());
-		
-		final Point3f p1 = new Point3f();
-		final Point3f p2 = new Point3f();
-		final Point3f p3 = new Point3f();
-		final Point3f p4 = new Point3f();
-		
-		final Vector3f normal = new Vector3f();
-		
-		for( Primitive p: primitives ){
-			if(p instanceof Triangle){
-				
-				Triangle t = (Triangle)p;
-				
-				p1.set(coordList.get(t.indexP1));
-				p2.set(coordList.get(t.indexP2));
-				p3.set(coordList.get(t.indexP3));
-				
-				normal.set( calculateNormal( p1, p3, p2 ) );
-				normal.add( calculateNormal( p2, p1, p3 ) );
-				normal.add( calculateNormal( p3, p2, p1 ) );
-				normal.scale(1.0f/3);
-				
-				normList.get(t.indexN1).add( normal );
-				normList.get(t.indexN2).add( normal );
-				normList.get(t.indexN3).add( normal );
-			}else{
-				Quad q = (Quad)p;
-				
-				p1.set(coordList.get(q.indexP1));
-				p2.set(coordList.get(q.indexP2));
-				p3.set(coordList.get(q.indexP3));
-				p4.set(coordList.get(q.indexP4));
-				
-//				if( p1.equals(p3) || p2.equals(p4) )
-//					continue;
-//				
-//				if( p1.equals(p2) ){
-//					normal = calculateNormal(p1,p4,p3);					
-//					normList.get(q.indexN1).add( normal );
-//					normList.get(q.indexN2).add( normal );				
-//					normList.get(q.indexN3).add( calculateNormal(p3,p2,p4) );
-//					normList.get(q.indexN4).add( calculateNormal(p4,p3,p1) );
-//				}else if( p1.equals(p4) ){
-//					normal = calculateNormal(p1,p3,p2);
-//					normList.get(q.indexN1).add( normal );
-//					normList.get(q.indexN2).add( calculateNormal(p2,p1,p3) );
-//					normList.get(q.indexN3).add( calculateNormal(p3,p2,p4) );
-//					normList.get(q.indexN4).add( normal );
-//				}else if( p2.equals(p3) ){
-//					normal = calculateNormal(p2,p1,p4);
-//					normList.get(q.indexN1).add( calculateNormal(p1,p4,p2) );
-//					normList.get(q.indexN2).add( normal );
-//					normList.get(q.indexN3).add( normal );
-//					normList.get(q.indexN4).add( calculateNormal(p4,p3,p1) );
-//				}else if( p3.equals(p4) ){
-//					normal = calculateNormal(p3,p2,p1);
-//					normList.get(q.indexN1).add( calculateNormal(p1,p4,p2) );
-//					normList.get(q.indexN2).add( calculateNormal(p2,p1,p3) );
-//					normList.get(q.indexN3).add( normal );
-//					normList.get(q.indexN4).add( normal );
-//				}else{
-				normal.set( calculateNormal(p1,p4,p2) );
-				normal.add( calculateNormal(p2,p1,p3) );
-				normal.add( calculateNormal(p3,p2,p4) );
-				normal.add( calculateNormal(p4,p3,p1) );
-				normal.scale(1.0f/4);
-					
-				normList.get(q.indexN1).add( normal );
-				normList.get(q.indexN2).add( normal );
-				normList.get(q.indexN3).add( normal );
-				normList.get(q.indexN4).add( normal );
-//				}
-			}
-		}
-		for(Vector3f n: normList)
-			n.normalize();
-		
-		for( Primitive p: primitives )
-			if(p instanceof Quad){
-				
-				Quad q = (Quad)p;
-
-				float l1 = normList.get(q.indexN1).length();
-				float l2 = normList.get(q.indexN2).length();
-				float l3 = normList.get(q.indexN3).length();
-				float l4 = normList.get(q.indexN4).length();
-				
-				if( 
-						valorNoValido(l1) ||
-						valorNoValido(l2) ||
-						valorNoValido(l3) ||
-						valorNoValido(l4)
-						//( d  < 0 && d  > 0 ) || ( d  == Float.POSITIVE_INFINITY ) || ( d  == Float.NEGATIVE_INFINITY ) 
-				){
-					System.out.println(l1 + " " + l2 + " " + l3 + " " + l4);
-					
-////					System.out.println(coordList.get(q.indexP1));
-////					System.out.println(coordList.get(q.indexP2));
-////					System.out.println(coordList.get(q.indexP3));
-////					System.out.println(coordList.get(q.indexP4));
-//					
-//					d1.set(coordList.get(q.indexP2));
-//					d1.sub(coordList.get(q.indexP1));
-//					
-//					d2.set(coordList.get(q.indexP3));
-//					d2.sub(coordList.get(q.indexP2));
-//					
-//					d3.set(coordList.get(q.indexP4));
-//					d3.sub(coordList.get(q.indexP3));
-//					
-//					d4.set(coordList.get(q.indexP1));
-//					d4.sub(coordList.get(q.indexP4));
-//					
-//					d5.set(coordList.get(q.indexP3));
-//					d5.sub(coordList.get(q.indexP1));
-//					
-//					normal.cross(d4, d1);
-//					normal.normalize();
-////					System.out.println( d4 + " " + d1 + " --> " + normal );
-//					normList.get(q.indexN1).set(normal);
-//					
-//					normal.cross(d1, d2);
-//					normal.normalize();
-////					System.out.println( d1 + " " + d2 + " --> " + normal );
-//					normList.get(q.indexN2).set(normal);
-//					
-//					normal.cross(d2, d3);
-//					normal.normalize();
-////					System.out.println( d2 + " " + d3 + " --> " + normal );
-//					normList.get(q.indexN3).set(normal);
-//					
-//					normal.cross(d3, d4);
-//					normal.normalize();
-////					System.out.println( d3 + " " + d4 + " --> " + normal );
-////					normList.get(q.indexN4).set(normal);
-					
-//					int aux = q.indexP2;
-//					q.indexP2 = q.indexP4;
-//					q.indexP4 = aux;
-//					
-//					aux = q.indexN2;
-//					q.indexN2 = q.indexN4;
-//					q.indexN4 = aux;
-//					
-//					aux = q.indexT2;
-//					q.indexT2 = q.indexT4;
-//					q.indexT4 = aux;
-					
-				}
-			}
-	}
-	
-	private static boolean valorNoValido(float f){
-		return
-			Float.compare(f, 0.0f) == 0 ||
-			Float.compare(f, -0.0f) == 0 ||
-			Float.compare(f, Float.NaN) == 0 ||
-			Float.compare(f, Float.POSITIVE_INFINITY) == 0 ||
-			Float.compare(f, Float.NEGATIVE_INFINITY) == 0;
-	}
-	
-	private static void generateTangents(final Queue<Primitive> primitives, final List<Point3f> coordList, Vector3f[][] tangents){
-		
-		for ( int i= 0; i < tangents[0].length; i++ ){
-			tangents[0][i] = new Vector3f();
-			tangents[1][i] = new Vector3f();
-		}
-		
-		for (Primitive p: primitives)
-			p.generateTangents( coordList, tangents);
-	}
-	
-	static float dot(Vector3f v1, Vector3f v2){
-		return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
-	}
-	
-	private static void orthogonalizeGramSchmidt(Vector3f n, Vector3f t){
-	    // tOrtho = normalize( t - n·dot(n, t) )
-		float d = dot( n, t );
-		t.set(
-			t.x - n.x*d,
-			t.y - n.y*d,
-			t.z - n.z*d
-		);
-		t.normalize();
-	}
-	
-	/**
-	 * @return dot( cross(v1, v2), v3 )
-	 */
-	static float dotcross(Vector3f v1, Vector3f v2, Vector3f v3){
-		return ((v1.y*v2.z - v1.z*v2.y)*v3.x + (v2.x*v1.z - v2.z*v1.x)*v3.y + (v1.x*v2.y - v1.y*v2.x)*v3.z);
-	}
-	
-	private static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector3f uVec, Vector3f vVec, Vector4f t4f){
-		Vector3f sDir = new Vector3f(
-				(t.y * uVec.x - t.x * vVec.x),
-				(t.y * uVec.y - t.x * vVec.y),
-	            (t.y * uVec.z - t.x * vVec.z)
-		);
-		sDir.normalize();
-		Vector3f tDir = new Vector3f(
-				(s.y * uVec.x + s.x * vVec.x),
-				(s.y * uVec.y + s.x * vVec.y),
-	            (s.y * uVec.z + s.x * vVec.z)
-		);
-		t4f.set( sDir.x, sDir.y, sDir.z, dotcross( normal, sDir, tDir ) < 0.0f ? -1.0f : 1.0f );
-		//t4f.set( uVec.x, uVec.y, uVec.z, dotcross( normal, uVec, vVec ) < 0.0f ? -1.0f : 1.0f );
+	private static int getGLPrimitive(Primitive primitive, int flags){
+		if((flags & ObjLoader.GENERATE_NTB) != 0)
+			return GL.GL_LINES;
+		if((flags & ObjLoader.WIREFRAME) != 0)
+			return GL.GL_QUADS;
+		if( (flags & ObjLoader.TRIANGULATE) != 0 || primitive instanceof Triangle )
+			return GL.GL_TRIANGLES;
+		return GL.GL_QUADS;
 	}
 	
 	private OglList almacenarGeometria(GL gl, Matrix4d mt){
 		
 		boolean textCoord = texList.size() > 0;
 		boolean normal = normList.size() > 0;
-		
 		
 		//TODO mirar
 		clearDist = (float)(getMaxDistance() * 0.0001);
@@ -1369,52 +1127,58 @@ public class ObjLoader {
 				orthogonalizeGramSchmidt(normList.get(i),tb[1][i]);
 			}
 			
+			Generator generator = (flags & ObjLoader.GENERATE_NTB) != 0 ? 
+					new Generator.VerticesNTB(0.25f):
+					Generator.VerticesTangents;
+					
 			if( (flags & ObjLoader.TRIANGULATE) != 0){
-				if((flags & ObjLoader.GENERATE_NTB) != 0){
-					gl.glBegin(	GL.GL_LINES );
-					for(Primitive p: primitives)
-						for(Triangle t: p.toTriangles())
-							t.generateNTB( gl, coordList, normList, tb, texList, 0.25f );
-				}else{
-					gl.glBegin(	GL.GL_TRIANGLES );
-					for(Primitive p: primitives)
-						for(Triangle t: p.toTriangles())
-							t.generate( gl, coordList, normList, tb, texList );
-				}
+				gl.glBegin(	getGLPrimitive( primitives.element(), flags) );
+				for(Primitive p: primitives)
+					for(Triangle t: p.toTriangles())
+						t.generate(gl, generator, coordList, normList, tb, texList);
 			}else{
-				if((flags & ObjLoader.GENERATE_NTB) != 0){
-					gl.glBegin(	GL.GL_LINES );
-					for(Primitive p: primitives)
-						p.generateNTB( gl, coordList, normList, tb, texList, 0.25f );
-				}else{
-					Primitive pa = primitives.element();
-					gl.glBegin(	pa instanceof Quad ? GL.GL_QUADS: GL.GL_TRIANGLES );
-					for(Primitive p: primitives){
-						if(p.getClass() != pa.getClass()){
-							gl.glEnd();
-							gl.glBegin(	p instanceof Quad ? GL.GL_QUADS: GL.GL_TRIANGLES );
-						}
-						p.generate( gl, coordList, normList, tb, texList );
-						pa = p;
+				int glPrimitivePre = getGLPrimitive( primitives.element(), flags );
+				gl.glBegin(	glPrimitivePre );
+				for(Primitive p: primitives){
+					int glPrimitiveCur = getGLPrimitive( p, flags );
+					if(glPrimitiveCur != glPrimitivePre){
+						gl.glEnd();
+						gl.glBegin(	glPrimitiveCur );
 					}
+					p.generate( gl, generator, coordList, normList, tb, texList );
+					glPrimitivePre = glPrimitiveCur;
 				}
 			}
 		}else{
+			Generator generator;
+			
+			if( (flags & WIREFRAME) != 0 )
+				generator = Generator.VerticesWireFrame;
+			else if( normal  && textCoord )
+				generator = Generator.VerticesNormalsTexCoords;
+			else if( textCoord )
+				generator = Generator.VerticesTexCoords;
+			else if( normal )
+				generator = Generator.VerticesNormals;
+			else
+				generator = Generator.Vertices;
+			
 			if( (flags & ObjLoader.TRIANGULATE) != 0){
-				gl.glBegin(	GL.GL_TRIANGLES );
+				gl.glBegin(	getGLPrimitive( primitives.element(), flags) );
 				for(Primitive p: primitives)
 					for(Triangle t: p.toTriangles())
-						t.generate(gl, coordList, normList, texList);
+						t.generate(gl, generator, coordList, normList, texList);
 			}else{
-				Primitive pa = primitives.element();
-				gl.glBegin(	pa instanceof Quad ? GL.GL_QUADS: GL.GL_TRIANGLES );
+				int glPrimitivePre = getGLPrimitive( primitives.element(), flags );
+				gl.glBegin(	glPrimitivePre );
 				for(Primitive p: primitives){
-					if(p.getClass() != pa.getClass()){
+					int glPrimitiveCur = getGLPrimitive( p, flags );
+					if(glPrimitiveCur != glPrimitivePre){
 						gl.glEnd();
-						gl.glBegin(	p instanceof Quad ? GL.GL_QUADS: GL.GL_TRIANGLES );
+						gl.glBegin(	glPrimitiveCur );
 					}
-					p.generate( gl, coordList, normList, texList );
-					pa = p;
+					p.generate( gl, generator, coordList, normList, texList );
+					glPrimitivePre = glPrimitiveCur;
 				}
 			}
 		}
