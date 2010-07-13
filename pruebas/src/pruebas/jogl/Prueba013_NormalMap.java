@@ -3,7 +3,6 @@ package pruebas.jogl;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -20,7 +19,6 @@ import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
-import org.sam.jogl.ObjLoader.ParsingErrorException;
 import org.sam.util.Imagen;
 
 import com.sun.opengl.util.Animator;
@@ -56,7 +54,7 @@ public class Prueba013_NormalMap{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			//*
+			/*
 			forma = HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
 			if(showNTB)
 				ntb = HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
@@ -77,9 +75,7 @@ public class Prueba013_NormalMap{
 							ObjLoader.RESIZE|ObjLoader.GENERATE_TANGENTS|ObjLoader.GENERATE_NTB,
 							mtd
 					);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (ParsingErrorException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			//*/

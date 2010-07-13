@@ -345,8 +345,16 @@ public interface Generator {
 	};
 
 	public class VerticesNTB implements Generator{
-		float scale = 1.0f;
+		float scale;
 		
+		public VerticesNTB(){
+			this(1.0f);
+		}
+		
+		public VerticesNTB(float scale) {
+			this.scale = scale;
+		}
+
 		public float getScale() {
 			return scale;
 		}

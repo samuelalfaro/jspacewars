@@ -34,26 +34,26 @@ void main()
 	//
 	vec4 vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord0;
 	vec2 vp0 = vec2(
-		viewport.x + 0.5*viewport.z*(vertex.x / vertex.w + 1.0),
-		viewport.y + 0.5*viewport.w*(vertex.y / vertex.w + 1.0)
+		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
+		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
 	
 	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord1;
 	vec2 vp1 = vec2(
-		viewport.x + 0.5*viewport.z*(vertex.x / vertex.w + 1.0),
-		viewport.y + 0.5*viewport.w*(vertex.y / vertex.w + 1.0)
+		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
+		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
 
 	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord2;
 	vec2 vp2 = vec2(
-		viewport.x + 0.5*viewport.z*(vertex.x / vertex.w + 1.0),
-		viewport.y + 0.5*viewport.w*(vertex.y / vertex.w + 1.0)
+		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
+		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
 
 	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord3;
 	vec2 vp3 = vec2(
-		viewport.x + 0.5*viewport.z*(vertex.x / vertex.w + 1.0),
-		viewport.y + 0.5*viewport.w*(vertex.y / vertex.w + 1.0)
+		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
+		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
 
 	// Project current vertex into viewport (screen) space.
@@ -68,18 +68,30 @@ void main()
 	// of the vertex to avoid errors with perspective correction. The inverse
 	// perspective component is interpolated and used in the fragment shader.
 	//
-	vec2 d1, d0;
-	d0 = vp0 - vp; d1 = vp1 - vp0; 
-	distances.x = abs( d0.y * d1.x - d0.x * d1.y )/length(d1);
+	
+   vec2 d1, d0;
+	d0 = vp0 - vp; d1 = vp1 - vp0; float l1 = length(d1);
+	distances.x = abs( d0.y * d1.x - d0.x * d1.y )/l1;
 
-	d0 = vp1 - vp; d1 = vp2 - vp1;
-	distances.y = abs( d0.y * d1.x - d0.x * d1.y )/length(d1);
+	d0 = vp1 - vp; d1 = vp2 - vp1; float l2 = length(d1);
+	distances.y = abs( d0.y * d1.x - d0.x * d1.y )/l2;
 
-	d0 = vp2 - vp; d1 = vp3 - vp2;
-	distances.z = abs( d0.y * d1.x - d0.x * d1.y )/length(d1);
+	d0 = vp2 - vp; d1 = vp3 - vp2; float l3 = length(d1);
+	distances.z = abs( d0.y * d1.x - d0.x * d1.y )/l3;
 
-	d0 = vp3 - vp; d1 = vp0 - vp3;
-	distances.w = abs( d0.y * d1.x - d0.x * d1.y )/length(d1);
+	d0 = vp3 - vp; d1 = vp0 - vp3; float l4 = length(d1);
+	distances.w = abs( d0.y * d1.x - d0.x * d1.y )/l4;
+
+	float m = max( max( distances.x, distances.y ), max( distances.z, distances.w ) );
+
+	if( l1 == 0.0 )
+		distances.x = m;
+	if( l2 == 0.0 )
+		distances.y = m;
+	if( l3 == 0.0 )
+		distances.z = m;
+	if( l4 == 0.0 )
+		distances.w = m;
 
 	distances *= gl_Position.w;	// Perspective pre-multiplication.
 	

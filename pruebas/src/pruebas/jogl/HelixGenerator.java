@@ -270,8 +270,6 @@ public class HelixGenerator {
 		t.normalize();
 	}
 	
-	private static final Generator.VerticesNTB MyNTBGenerator = new Generator.VerticesNTB();
-	
 	private static final float TOW_PI  = (float)( 2 * Math.PI);
 	
 	private static void generateVertices(Point3f[][] vertices, float r1I, float r1F, int steps1, float r2I, float r2F, int steps2, float l, int twists) {
@@ -630,10 +628,9 @@ public class HelixGenerator {
 	}
 	
 	public static Objeto3D generateNTB(GL gl, float r1I, float r1F, int steps1, float r2I, float r2F, int steps2, float l, int twists, float scale) {
-		MyNTBGenerator.setScale( scale );
 		OglList list = generate(
-				gl, GENERATE_NTB,
-				MyNTBGenerator, r1I, r1F, steps1, r2I, r2F, steps2, l, twists
+				gl, GENERATE_NTB, new Generator.VerticesNTB(scale),
+				r1I, r1F, steps1, r2I, r2F, steps2, l, twists
 		);
 		return new Objeto3D(list, new Apariencia());
 	}
