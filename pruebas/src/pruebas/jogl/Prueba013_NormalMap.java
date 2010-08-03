@@ -11,15 +11,15 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
-import javax.vecmath.Matrix4d;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
-import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
+
+import pruebas.jogl.generators.SphereGenerator;
 
 import com.sun.opengl.util.Animator;
 
@@ -54,16 +54,20 @@ public class Prueba013_NormalMap{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			/*
-			forma = HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
+			//*
+//			forma = HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
+//			if(showNTB)
+//				ntb = HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
+				
+			forma = SphereGenerator.generate( gl, SphereGenerator.GENERATE_TANGENTS, 9.0f, 36, 72 );
 			if(showNTB)
-				ntb = HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
+				ntb = SphereGenerator.generateNTB  (gl, 9.0f, 0.25f);
 			/*/
 			Matrix4d mtd = new Matrix4d();
 			mtd.rotY(Math.PI/2);
 			mtd.setScale(18.0);
 			try {
-				String path = "resources/obj3d/nave01/forma.obj";
+				String path = "resources/obj3d/nave04/forma.obj";
 				forma = ObjLoader.load(
 						path,
 						ObjLoader.RESIZE|ObjLoader.GENERATE_TANGENTS,
@@ -105,7 +109,7 @@ public class Prueba013_NormalMap{
 
 			gl.glEnable(GL.GL_LIGHT0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, 	new float[]{ 0.0f, 0.0f, 1.0f, 1.0f }, 0);
-			gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.5f, 0.2f, 1.0f, 1.0f }, 0);
+			//gl.glLightfv(GL.GL_LIGHT0, GL.GL_DIFFUSE,	new float[]{ 0.5f, 0.2f, 1.0f, 1.0f }, 0);
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPECULAR,	new float[]{ 1.0f, 1.0f, 1.0f, 1.0f }, 0);
 //			gl.glLightfv(GL.GL_LIGHT0, GL.GL_SPOT_DIRECTION, new float[]{ 0.0f, 0.0f, -1.0f }, 0);
 //			gl.glLightf(GL.GL_LIGHT0, GL.GL_SPOT_CUTOFF, 20);

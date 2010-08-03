@@ -16,6 +16,8 @@ import org.sam.jogl.Material;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 
+import pruebas.jogl.generators.HelixGenerator;
+
 import com.sun.opengl.util.Animator;
 
 /**
@@ -55,7 +57,7 @@ public class PruebaBloom {
 		gl.glRenderbufferStorageEXT(GL.GL_RENDERBUFFER_EXT, GL.GL_DEPTH_COMPONENT24, w, h);
 		gl.glFramebufferRenderbufferEXT(GL.GL_FRAMEBUFFER_EXT, GL.GL_DEPTH_ATTACHMENT_EXT, GL.GL_RENDERBUFFER_EXT, depthId[0]);
 
-		/*
+		//*
 		int fbostate = gl.glCheckFramebufferStatusEXT(GL.GL_FRAMEBUFFER_EXT);
 		switch (fbostate) {
 		case GL.GL_FRAMEBUFFER_COMPLETE_EXT:
@@ -73,7 +75,8 @@ public class PruebaBloom {
 		case GL.GL_FRAMEBUFFER_UNSUPPORTED_EXT:
 			System.out.println("incomplete: GL_FRAMEBUFFER_INCOMPLETE_UNSUPPORTED");
 			break;
-		}*/
+		}
+		//*/
 		gl.glBindFramebufferEXT(GL.GL_FRAMEBUFFER_EXT, 0);
 		
 		return FBO[0];
@@ -230,14 +233,17 @@ public class PruebaBloom {
 			gl.glViewport(0, 0, width, height);
 		}
 
-		private void drawBlur(GL gl, float centerX, float centerY, int times, float inc) {
-			float offsetIzq = 0.0f; float incIzq = centerX * 2 * inc;
-			float offsetDer = 0.0f; float incDer = (centerX - 1.0f) * 2 * inc;
-			float offsetSup = 0.0f; float incSup = (centerY - 1.0f) * 2 * inc;
-			float offsetInf = 0.0f; float incInf = centerY * 2 * inc;
+		private void drawBlur(GL gl, float alpha0, float alpha1, float centerX, float centerY, float zoom, int steps) {
 			
-			float alpha = 0.2f;
-
+			float alpha = alpha0;   float incAlpha = ( alpha1 - alpha0 )/( steps -1 );
+			
+			float zoomFactor = ( zoom - 1.0f )/( steps -1 );
+			
+			float offsetIzq = 0.0f; float incIzq = centerX * zoomFactor;
+			float offsetDer = 1.0f; float incDer = ( centerX - 1.0f ) * zoomFactor;
+			float offsetSup = 1.0f; float incSup = ( centerY - 1.0f ) * zoomFactor;
+			float offsetInf = 0.0f; float incInf = centerY * zoomFactor;
+			
 			gl.glEnable(GL.GL_TEXTURE_2D);
 			gl.glBindTexture(GL.GL_TEXTURE_2D, textuId[0]);
 			gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
@@ -258,21 +264,21 @@ public class PruebaBloom {
 
 			viewOrtho(gl, width, height);
 
-			float alphainc = alpha / times;
+			
 
 			gl.glBegin(GL.GL_QUADS);
-			for (int num = 0; num < times; num++) {
+			for (int num = 0; num < steps; num++) {
 				gl.glColor3f(alpha, alpha, alpha);
-				gl.glTexCoord2f(0 + offsetIzq, 0 + offsetInf); gl.glVertex2f(0, 0);
-				gl.glTexCoord2f(0 + offsetIzq, 1 + offsetSup); gl.glVertex2f(0, height);
-				gl.glTexCoord2f(1 + offsetDer, 1 + offsetSup); gl.glVertex2f(width, height);
-				gl.glTexCoord2f(1 + offsetDer, 0 + offsetInf); gl.glVertex2f(width, 0);
+				gl.glTexCoord2f( offsetIzq, offsetInf ); gl.glVertex2f(0, 0);
+				gl.glTexCoord2f( offsetIzq, offsetSup ); gl.glVertex2f(0, height);
+				gl.glTexCoord2f( offsetDer, offsetSup ); gl.glVertex2f(width, height);
+				gl.glTexCoord2f( offsetDer, offsetInf ); gl.glVertex2f(width, 0);
 
 				offsetIzq += incIzq;
 				offsetDer += incDer;
 				offsetSup += incSup;
 				offsetInf += incInf;
-				alpha -= alphainc;
+				alpha     += incAlpha;
 			}
 			gl.glEnd();
 			
@@ -315,7 +321,7 @@ public class PruebaBloom {
 			drawHelix(gl);
 			
 			//*
-			drawBlur(gl, center[0], center[1], 30, 0.02f);
+			drawBlur( gl, 0.5f, 0.1f, center[0], center[1], 2.0f, 10 );
 			/*/
 			drawBlur(gl, 0.5f,0.25f, 1, 0);
 			//*/

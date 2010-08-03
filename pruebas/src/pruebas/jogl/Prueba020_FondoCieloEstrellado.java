@@ -25,6 +25,8 @@ import org.sam.jogl.particulas.FactoriaDeParticulas;
 import org.sam.jogl.particulas.Particulas;
 import org.sam.util.Imagen;
 
+import pruebas.jogl.generators.HelixGenerator;
+
 import com.sun.opengl.util.Animator;
 
 public class Prueba020_FondoCieloEstrellado{

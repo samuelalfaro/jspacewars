@@ -8,7 +8,10 @@ import javax.vecmath.Vector4f;
 
 public interface Generator {
 
-	final Generator Vertices = new Generator(){
+	final class VerticesGenerator implements Generator{
+		
+		private VerticesGenerator(){
+		}
 		
 		@Override
 		public void generate(GL gl,
@@ -46,10 +49,14 @@ public interface Generator {
 			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 		}
-	};
+	}
+	final Generator Vertices = new VerticesGenerator();
 
-	final Generator VerticesNormals = new Generator(){
+	final class VerticesNormalsGenerator implements Generator{
 		
+		private VerticesNormalsGenerator(){
+		}
+	
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -106,9 +113,13 @@ public interface Generator {
 			gl.glNormal3f( norm4.x, norm4.y, norm4.z );
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 		}
-	};
+	}
+	final Generator VerticesNormals = new VerticesNormalsGenerator();
 
-	final Generator VerticesWireFrame = new Generator(){
+	final class VerticesWireFrameGenerator implements Generator{
+		
+		private VerticesWireFrameGenerator(){
+		}
 		
 		@Override
 		public void generate(GL gl,
@@ -157,9 +168,13 @@ public interface Generator {
 			gl.glNormal3f( norm4.x, norm4.y, norm4.z );
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 		}
-	};
+	}
+	final Generator VerticesWireFrame = new VerticesWireFrameGenerator();
 
-	final Generator VerticesTexCoords = new Generator(){
+	final class VerticesTexCoordsGenerator implements Generator{
+		
+		private VerticesTexCoordsGenerator(){
+		}
 		
 		@Override
 		public void generate(GL gl,
@@ -217,10 +232,13 @@ public interface Generator {
 			gl.glTexCoord2f( text4.x, text4.y );
 			gl.glVertex3f(   vert4.x, vert4.y, vert4.z );
 		}
-	};
+	}
+	final Generator VerticesTexCoords = new VerticesTexCoordsGenerator();
 
-	final Generator VerticesNormalsTexCoords = new Generator(){
+	final class VerticesNormalsTexCoordsGenerator implements Generator{
 		
+		private VerticesNormalsTexCoordsGenerator(){
+		}	
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -288,10 +306,13 @@ public interface Generator {
 			gl.glTexCoord2f( text4.x, text4.y );
 			gl.glVertex3f(   vert4.x, vert4.y, vert4.z );
 		}
-	};
+	}
+	final Generator VerticesNormalsTexCoords = new VerticesNormalsTexCoordsGenerator();
 
-	final Generator VerticesTangents = new Generator(){
+	final class VerticesTangentsGenerator implements Generator{
 		
+		private VerticesTangentsGenerator(){
+		}	
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -342,16 +363,18 @@ public interface Generator {
 			gl.glTexCoord2f(        text4.x, text4.y );
 			gl.glVertex3f(          vert4.x, vert4.y, vert4.z );
 		}
-	};
+	}
+	final Generator VerticesTangents = new VerticesTangentsGenerator();
 
-	public class VerticesNTB implements Generator{
+	final class NTBGenerator implements Generator{
+	
 		float scale;
 		
-		public VerticesNTB(){
+		public NTBGenerator(){
 			this(1.0f);
 		}
 		
-		public VerticesNTB(float scale) {
+		public NTBGenerator(float scale) {
 			this.scale = scale;
 		}
 

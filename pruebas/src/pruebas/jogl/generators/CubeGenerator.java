@@ -1,4 +1,4 @@
-package pruebas.jogl;
+package pruebas.jogl.generators;
 
 import javax.media.opengl.GL;
 

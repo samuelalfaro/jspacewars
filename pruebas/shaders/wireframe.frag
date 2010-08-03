@@ -25,4 +25,5 @@ void main(){
 	// desired line width.
 	//
 	gl_FragColor = mix( gl_Color, line_color, smoothstep( line_width, line_fadeOut, min_d ) );
+	//gl_FragColor = mix( vec4( 1.0, 0.0, 1.0, 0.0 ), line_color, smoothstep( line_width, line_fadeOut, min_d ) );
 }

@@ -19,6 +19,8 @@ import org.sam.jogl.Textura;
 import org.sam.jspacewars.cliente.MarcoDeIndicadores;
 import org.sam.util.Imagen;
 
+import pruebas.jogl.generators.HelixGenerator;
+
 import com.sun.opengl.util.Animator;
 
 public class Prueba040_Interface{
