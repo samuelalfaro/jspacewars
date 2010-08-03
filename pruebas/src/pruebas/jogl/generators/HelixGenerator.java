@@ -3,7 +3,6 @@ package pruebas.jogl.generators;
 import javax.media.opengl.GL;
 import javax.vecmath.Point3f;
 import javax.vecmath.TexCoord2f;
-import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;

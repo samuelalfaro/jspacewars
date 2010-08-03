@@ -17,8 +17,7 @@ import javax.vecmath.Tuple4f;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 
-import pruebas.jogl.generators.HelixGenerator;
-import pruebas.jogl.generators.SphereGenerator;
+import pruebas.jogl.generators.*;
 
 import com.sun.opengl.util.Animator;
 
