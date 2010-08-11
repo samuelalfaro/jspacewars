@@ -4,39 +4,58 @@ import org.sam.elementos.Prototipo;
 
 public class Poligono implements Prototipo<Poligono>{
 	
-	private static transient boolean testSegmentos1[] = new boolean [50];
-	private static transient boolean testSegmentos2[] = new boolean [50];
+	private static int nextPowOfTwo(int n){
+		if (n < 0)
+			return 0;
+		if (n == 0)
+			return 1;
+		if (n == 1)
+			return 2;
+		return (int)Math.pow( 2.0, Math.floor( Math.log(n) / Math.log(2.0) ) + 1.0 );
+	}
 	
-	private final Poligono prototipo;
+	/** 
+	 * Vectores de booleanos estáticos, dónde se almacenan la posición de los 
+	 * segmentos que están dentro de la interesección de los límites de polígonos.
+	 * De esta forma se evita comparar uno a uno todos los segmentos de un polígono
+	 * con los segmentos del otro polígono.
+	 * Se crean con un tamañano inicial de 32 posiciones y se incrementará este tamaño
+	 * si hay un nuevo polígono con más segmentos. 
+	 */
+	private static transient boolean testSegmentos1[] = new boolean [32];
+	private static transient boolean testSegmentos2[] = new boolean [32];
+	
+	private final transient Poligono prototipo;
 	private final int nLados;
 	private final float coordX[], coordY[];
 	
-	private final LimiteRectangular limiteRectangular;
+	private final transient LimiteRectangular limiteRectangular;
 	
 	public Poligono(float coordX[], float coordY[]){
 
 		if( coordX == null || coordY == null || coordX.length != coordY.length ||  coordX.length < 3 )
 			throw new IllegalArgumentException();
 		
-		if(coordX.length > testSegmentos1.length){
-			testSegmentos1 = new boolean[ 3*coordX.length/2];
-			testSegmentos2 = new boolean[ 3*coordX.length/2];
-		}
-		
 		this.prototipo = null;
 		this.nLados = coordX.length;
 		this.coordX = coordX;
 		this.coordY = coordY;
 		this.limiteRectangular = null;
+		
+		if(this.nLados > testSegmentos1.length){
+			int newLength = nextPowOfTwo( this.nLados );
+			testSegmentos1 = new boolean[ newLength ];
+			testSegmentos2 = new boolean[ newLength ];
+		}
 	}
 	
 	private Poligono(Poligono prototipo){
 		this.prototipo = prototipo;
 		this.nLados = prototipo.nLados;
-		this.coordX = new float[prototipo.coordX.length];
-		System.arraycopy(prototipo.coordX, 0, coordX, 0, coordX.length);
-		this.coordY = new float[prototipo.coordY.length];
-		System.arraycopy(prototipo.coordY, 0, coordX, 0, coordY.length);
+		this.coordX = new float[this.nLados];
+		System.arraycopy(prototipo.coordX, 0, coordX, 0, this.nLados);
+		this.coordY = new float[this.nLados];
+		System.arraycopy(prototipo.coordY, 0, coordY, 0, this.nLados);
 		limiteRectangular = new LimiteRectangular(); 
 		actualizarLimiteRectangular();
 	}
@@ -127,6 +146,10 @@ public class Poligono implements Prototipo<Poligono>{
 		}
 	}
 	
+	public int getNLados(){
+		return nLados;
+	}
+	
 	public LimiteRectangular getLimites(){
 		return limiteRectangular;
 	}
@@ -172,7 +195,7 @@ public class Poligono implements Prototipo<Poligono>{
 		float lasty = coordY[nLados - 1];
 		float curx, cury;
 
-		// Walk the edges of the polygon
+		// Recorrer los lados del poligono
 		for (int i = 0; i < nLados; lastx = curx, lasty = cury, i++) {
 			curx = coordX[i];
 			cury = coordY[i];
@@ -224,6 +247,14 @@ public class Poligono implements Prototipo<Poligono>{
 		return ((hits & 1) != 0);
     }
 	
+	/**
+	 * Evalúa si hay una colision con otro {@code Poligono}.
+	 * @param otro {@code Poligono} con el que se hace la comprobación.
+	 * @return <ul>
+	 * <li>{@code true}: si hay colisión.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
+	 */
 	public boolean hayColision(Poligono otro){
 		
 		LimiteRectangular interseccion = limiteRectangular.interseccion(otro.getLimites());
@@ -286,10 +317,16 @@ public class Poligono implements Prototipo<Poligono>{
 		return false;
 	}
 	
-	int getNLados(){
-		return nLados;
-	}
-
+	/**
+	 * Método para test, igual al método {@linkplain #hayColision(Poligono)}.
+	 * @param otro {@code Poligono} con el que se hace la comprobación.
+	 * @param evaluados Lista de objetos donde se almacenan los puntos y segmentos de los polígonos evaluados
+	 * durante la comprobación de la colisión.
+	 * @return <ul>
+	 * <li>{@code true}: si hay colisión.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
+	 */
 	boolean hayColision(Poligono otro, java.util.List<Object> evaluados){
 
 		evaluados.clear();
@@ -357,7 +394,7 @@ public class Poligono implements Prototipo<Poligono>{
 		return false;
 	}
 	
-	private final Segmento shared = new Segmento();
+	private final transient Segmento shared = new Segmento();
 	
 	Segmento getSegmento(int pos){
 		return getSegmento(pos, shared);

@@ -12,7 +12,12 @@ import javax.swing.JPanel;
 @SuppressWarnings("serial")
 public abstract class Test00Abs extends JPanel implements MouseListener, MouseMotionListener{
 	
-	// Crea un poligono aleatorio convexo
+	/**
+	 * Crea un polígono aleatorio, simple, concavo, irregular de {@code n} lados.
+	 * @param nLados Número de lados del polígono.
+	 * @return El polígono creado.
+	 * @see <a href="http://es.wikipedia.org/wiki/Polígono">Polígono [Wikipedia]</a>
+	 */
 	protected final static Poligono crearPoligono(int nLados){
 		if(nLados < 3)
 			throw new IllegalArgumentException();

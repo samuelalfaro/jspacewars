@@ -11,15 +11,15 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+import javax.vecmath.Matrix4d;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
-
-import pruebas.jogl.generators.SphereGenerator;
 
 import com.sun.opengl.util.Animator;
 
@@ -54,7 +54,7 @@ public class Prueba013_NormalMap{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			//*
+			/*
 //			forma = HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
 //			if(showNTB)
 //				ntb = HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);

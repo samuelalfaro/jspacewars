@@ -1,6 +1,12 @@
 <object-stream>
 	<!-- 01 Nave Prota 1 -->
 	<NaveUsuario type="0x00">
+		<forma class="Poligono" nLados="4">
+			<Punto2F x="-0.5" y="-0.5"/>
+			<Punto2F x="-0.5" y="0.5"/>
+			<Punto2F x="0.5" y="0.5"/>
+			<Punto2F x="0.5" y="-0.5"/>
+		</forma>
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -389,6 +395,12 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D/Grupo/NodoTransformador/Particulas" />
 			</NodoTransformador>
+			<PoligonoTest nLados="4">
+				<Punto2F x="-0.5" y="-0.5"/>
+				<Punto2F x="-0.5" y="0.5"/>
+				<Punto2F x="0.5" y="0.5"/>
+				<Punto2F x="0.5" y="-0.5"/>
+			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
