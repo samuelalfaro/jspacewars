@@ -86,6 +86,7 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	}
 
 	@Override
+	// TODO mirar
 	public final boolean hayColision(Colisionable otro){
 		return forma.hayColision((Poligono)otro);
 	}

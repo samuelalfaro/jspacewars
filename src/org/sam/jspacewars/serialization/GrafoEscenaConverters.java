@@ -10,6 +10,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import org.sam.colisiones.Poligono;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosColor;
 import org.sam.jogl.AtributosLinea;
@@ -178,6 +179,13 @@ public class GrafoEscenaConverters {
 		private static final String Uniform = "Uniform";
 		private static final String name = "name";
 		
+		private static final String PoligonoTest = "PoligonoTest";
+		private static final String nLados = "nLados";
+		private static final String coordX = "coordX";
+		private static final String coordY = "coordY";
+
+		private static final String Punto2F = "Punto2F";
+		
 		private static final String unchecked = "unchecked";
 	}
 
@@ -198,6 +206,8 @@ public class GrafoEscenaConverters {
 				particulas =  particulas.clone();
 			return particulas;
 		}
+		if(name.equals(S.PoligonoTest))
+			return (Objeto3D)context.convertAnother(null, Poligono.class);
 		throw new RuntimeException("Child no soportado: "+name);
 	}
 	
@@ -1186,6 +1196,49 @@ public class GrafoEscenaConverters {
 		}
 	}
 	
+	
+	private static class PoligonoConverter implements Converter {
+
+		@SuppressWarnings(S.unchecked)
+		public boolean canConvert(Class clazz) {
+			return Poligono.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			int nLados = Integer.parseInt(reader.getAttribute(S.nLados));
+			float coordX[] = new float[nLados];
+			float coordY[] = new float[nLados];
+			int i = 0;
+			while( i < nLados && reader.hasMoreChildren() ){
+				reader.moveDown();
+				coordX[i] = Float.parseFloat(reader.getAttribute(S.x));
+				coordY[i] = Float.parseFloat(reader.getAttribute(S.y));
+				reader.moveUp();
+				i++;
+			}
+			
+			GL gl = GLU.getCurrentGL();
+			int lid = gl.glGenLists(1);
+			gl.glNewList(lid, GL.GL_COMPILE);
+			gl.glBegin(GL.GL_LINES);
+			for( i=0; i< nLados-1;){
+				gl.glVertex3f(coordX[i],coordY[i],0);
+				i++;
+				gl.glVertex3f(coordX[i],coordY[i],0);
+			}
+			gl.glVertex3f(coordX[nLados-1],coordY[nLados-1],0);
+			gl.glVertex3f(coordX[0],coordY[0],0);
+			gl.glEnd();
+			gl.glEndList();	
+			
+			return new Objeto3D( new OglList(lid), new Apariencia());
+		}
+	}
+	
+	
 	/**
 	 *
 	 * @param xStream
@@ -1228,6 +1281,9 @@ public class GrafoEscenaConverters {
 		
 		xStream.alias(S.Shader, Shader.class);
 		xStream.registerConverter(new ShaderConverter());
+		
+		xStream.alias(S.PoligonoTest, Poligono.class);
+		xStream.registerConverter(new PoligonoConverter());
 		
 		InterpoladoresConverters.register(xStream);
 		ParticulasConverters.register(xStream);

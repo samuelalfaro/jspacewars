@@ -1,5 +1,6 @@
 package org.sam.jspacewars.serialization;
 
+import org.sam.colisiones.Poligono;
 import org.sam.jspacewars.elementos.Canion;
 import org.sam.jspacewars.elementos.CanionInterpolado;
 import org.sam.jspacewars.elementos.CanionLineal;
@@ -12,6 +13,11 @@ import org.sam.jspacewars.elementos.NaveEnemiga;
 import org.sam.jspacewars.elementos.NaveUsuario;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
  * @author samuel
@@ -19,6 +25,32 @@ import com.thoughtworks.xstream.XStream;
  */
 public class ElementosConverters {
 
+	private static class PoligonoConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return Poligono.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			int nLados = Integer.parseInt(reader.getAttribute("nLados"));
+			float coordX[] = new float[nLados];
+			float coordY[] = new float[nLados];
+			int i = 0;
+			while( i < nLados && reader.hasMoreChildren() ){
+				reader.moveDown();
+				coordX[i] = Float.parseFloat(reader.getAttribute("x"));
+				coordY[i] = Float.parseFloat(reader.getAttribute("y"));
+				reader.moveUp();
+				i++;
+			}
+			return new Poligono( coordX, coordY );
+		}
+	}
+	
 	private ElementosConverters() {
 	}
 
@@ -27,7 +59,9 @@ public class ElementosConverters {
 		InterpoladoresConverters.register(xStream);
 
 		xStream.useAttributeFor(Elemento.class, "type");
-//		xStream.aliasField("codigo", Elemento.class, "type");
+		xStream.alias("Poligono", Poligono.class);
+		xStream.registerConverter(new PoligonoConverter());
+		
 		xStream.alias("NaveUsuario", NaveUsuario.class);
 		xStream.alias("Canion", Canion.class);
 		xStream.alias("CanionLineal", CanionLineal.class);
