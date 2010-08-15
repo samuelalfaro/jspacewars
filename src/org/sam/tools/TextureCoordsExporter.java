@@ -1,4 +1,4 @@
-package org.sam.util;
+package org.sam.tools;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
