@@ -1,5 +1,3 @@
-package org.sam.util.sound;
-
 /*
  * Copyright (c) 2003-2006 jMonkeyEngine
  * All rights reserved.
@@ -32,10 +30,7 @@ package org.sam.util.sound;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * Created on 23 avr. 2005
- * 
- */
+package org.sam.util.sound;
 
 import java.io.*;
 import java.nio.ByteBuffer;

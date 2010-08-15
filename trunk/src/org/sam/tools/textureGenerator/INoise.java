@@ -1,6 +1,6 @@
 // Copyright 2002 Ken Perlin
 // FIXED POINT VERSION OF IMPROVED NOISE:  1.0 IS REPRESENTED BY 2^16
-package textureGenerator;
+package org.sam.tools.textureGenerator;
 
 public final class INoise {
 

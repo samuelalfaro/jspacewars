@@ -1,4 +1,4 @@
-package textureGenerator;
+package org.sam.tools.textureGenerator;
 @Deprecated
 public final class Noise3 {
 	static int i, j, k, A[] = { 0, 0, 0 };

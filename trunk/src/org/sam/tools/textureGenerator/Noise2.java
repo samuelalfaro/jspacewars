@@ -1,4 +1,4 @@
-package textureGenerator;
+package org.sam.tools.textureGenerator;
 @Deprecated
 public class Noise2 {
 	//*

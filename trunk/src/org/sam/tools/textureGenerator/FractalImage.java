@@ -3,23 +3,23 @@
  * 
  * Copyright (c) 2009 Samuel Alfaro <samuelalfaro at gmail.com>. All rights reserved.
  * 
- * This file is part of tips.
+ * This file is part of jspacewars.
  * 
  * tips is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * tips is distributed in the hope that it will be useful,
+ * jspacewars is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with tips.  If not, see <http://www.gnu.org/licenses/>.
+ * along with jspacewars.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package textureGenerator;
+package org.sam.tools.textureGenerator;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -52,7 +52,6 @@ public class FractalImage extends BufferedImage{
 	 * @param height
 	 * @param imageType
 	 */
-	//*
 	public FractalImage(int width, int height, Coulds noiseFunction, ColorRamp colorRamp, int imageType) {
 		super(width, height, imageType);
 		noiseFunction.setWidth(width);
@@ -88,84 +87,10 @@ public class FractalImage extends BufferedImage{
 		else
 			for(int y = 0, i = 0; y < height; y++)
 				for(int x =0; x < width; x++, i++){
-					db.setElem(i, colorRamp.computeToIntRGB( Ramp.Predefinas.ACELERADA_DECELERADA.compute(values[y][x]) ) );
+					db.setElem(i, colorRamp.computeToIntRGB( Ramp.Predefinas.ACELERADA_DECELERADA.compute(Math.pow( values[y][x], 0.5) ) ) );
 					//db.setElem(i, colorRamp.computeToIntRGB(values[y][x]));
 				}
 	}
-    /*/
-	static double valueFromRGB( int rgb ){
-		int i = 0;
-		
-		i |= (((rgb & 0x00800000)>>23) + ((rgb & 0x00008000)>>15) + ((rgb & 0x00000080)>>7)) << 14;
-		i |= (((rgb & 0x00400000)>>22) + ((rgb & 0x00004000)>>14) + ((rgb & 0x00000040)>>6)) << 12;
-		i |= (((rgb & 0x00200000)>>21) + ((rgb & 0x00002000)>>13) + ((rgb & 0x00000020)>>5)) << 10;
-		i |= (((rgb & 0x00100000)>>20) + ((rgb & 0x00001000)>>12) + ((rgb & 0x00000010)>>4)) << 8;
-		i |= (((rgb & 0x00080000)>>19) + ((rgb & 0x00000800)>>11) + ((rgb & 0x00000008)>>3)) << 6;
-		i |= (((rgb & 0x00040000)>>18) + ((rgb & 0x00000400)>>10) + ((rgb & 0x00000004)>>2)) << 4;
-		i |= (((rgb & 0x00020000)>>17) + ((rgb & 0x00000200)>> 9) + ((rgb & 0x00000002)>>1)) << 2;
-		i |= (((rgb & 0x00010000)>>16) + ((rgb & 0x00000100)>> 8) +  (rgb & 0x00000001) );
-		
-		return (double)i/0x10000;
-	}
-
-	public Plasma(int width, int height, int imageType) {
-		super(width, height, imageType);
-		
-		DataBuffer db = this.getRaster().getDataBuffer();
-		
-		z = Math.random()*512;
-		for(int i = 0, y = 0; y < this.getHeight(); y++)
-			for(int x =0; x < this.getWidth(); x++, i++){
-				int pixel = (int)( ( Math.sin( ( perlinNoise2D(x, y) - .5 )*Math.PI* 5 )/2 + 0.5) * 0x100 ) << 16 & 0x00FF0000;
-				db.setElem(i, pixel);
-			}
-		
-		z = Math.random()*512;
-		for(int i = 0, y = 0; y < this.getHeight(); y++)
-			for(int x =0; x < this.getWidth(); x++, i++){
-				int pixel = db.getElem(i) | ((int)( ( Math.sin( ( perlinNoise2D(x, y) - .5 )* Math.PI * 9 )/2 + 0.5) * 0x100 ) << 8 & 0x0000FF00);
-				db.setElem(i, pixel);
-			}
-		
-		z = Math.random()*512;
-		for(int i = 0, y = 0; y < this.getHeight(); y++)
-			for(int x =0; x < this.getWidth(); x++, i++){
-				int pixel = db.getElem(i) | ((int)( ( Math.sin( ( perlinNoise2D(x, y) - .5 )*Math.PI * 13 )/2 + 0.5) * 0x100 ) & 0x000000FF);
-				db.setElem(i, pixel);
-			}
-		
-		for(int i = 0, y = 0; y < this.getHeight(); y++)
-			for(int x =0; x < this.getWidth(); x++, i++)
-				db.setElem(i, ColorRamp.BlackGreenYellowWhite.computeToIntRGB(valueFromRGB(db.getElem(i))));
-	}
-
-	public Plasma(int width, int height, int imageType) {
-		super(width, height, imageType);
-		
-		double values[][] = new double[width][height];
-		
-		z = Math.random();
-		for(int x = 0; x < this.getWidth(); x++)
-			for(int y = 0; y < this.getHeight(); y++)
-				values[x][y] = Math.sin( 5 * Math.PI * ( perlinNoise2D(x, y) - .5 ) )/2 + 0.5;
-		
-		z = Math.random();
-		for(int x = 0; x < this.getWidth(); x++)
-			for(int y = 0; y < this.getHeight(); y++)
-				values[x][y] += Math.sin( 5 * Math.PI * ( perlinNoise2D(x, y) - .5 ) )/2 + 0.5;
-		
-		z = Math.random();
-		for(int x = 0; x < this.getWidth(); x++)
-			for(int y = 0; y < this.getHeight(); y++)
-				values[x][y] += Math.sin( 5 * Math.PI * ( perlinNoise2D(x, y) - .5 ) )/2 + 0.5;
-
-
-		DataBuffer db = this.getRaster().getDataBuffer();
-		for(int i = 0, y = 0; y < this.getHeight(); y++)
-			for(int x =0; x < this.getWidth(); x++, i++)
-				db.setElem(i, ColorRamp.BlackRedYellowWhite.computeToIntRGB( values[x][y]/3 ));
-	}
-	//*/
 	
 	public static void main(String... args) {
 		Coulds noiseFunction = new Puff();

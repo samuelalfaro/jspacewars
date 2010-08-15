@@ -5,7 +5,7 @@
  * 
  * http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
  */
-package textureGenerator;
+package org.sam.tools.textureGenerator;
 
 public class SimplexNoise {
 

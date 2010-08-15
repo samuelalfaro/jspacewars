@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with jspacewars.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sam.util;
+package org.sam.tools;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import javax.imageio.ImageIO;
+
+import org.sam.util.Tipografias;
 
 /**
  * @author Samuel Alfaro <samuelalfaro at gmail dot com>
