@@ -8,8 +8,8 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 /**
- * Clase que proporciona métodos estáticos para poder crear instancias de la clase encapsulada <i>OutputDocumentStream</i>
- * que es un OutputStream que permite mostrar el texto en un componente de texto a modo de consola.
+ * Clase que proporciona métodos estáticos para poder crear instancias de la clase encapsulada {@code OutputDocumentStream},
+ * que es un {@code OutputStream} que permite mostrar el texto en un componente de texto a modo de consola.
  */
 public class Consola {
 
@@ -21,9 +21,9 @@ public class Consola {
 		
 	/**
 	 * Clase derivada de OutputStream que sobreescribe los métodos: <ul>
-	 * <li><code>public void write(int b)</code>
-	 * <li><code>public voidwrite(byte buf[], int off, int len)</code></ul>
-	 * para que ademas de mostrar el texto por su salida orignal, aparezca por un componente de texto asociado
+	 * <li>{@code public void write(int b)}
+	 * <li>{@code public voidwrite(byte buf[], int off, int len)}</ul>
+	 * para que además de mostrar el texto por su salida orignal, aparezca por un componente de texto asociado
 	 */
 	private static final class OutputDocumentStream extends OutputStream{
 		private final JTextComponent textComponent;
@@ -51,7 +51,7 @@ public class Consola {
 					// Se inserta el dato en el documento
 					doc.insertString(doc.getLength(), String.valueOf( ( char )b ), attributeSet);
 					// Se cambia la posicion del JTextComponent para que muestre
-					// lo ultimo insertado
+					// lo último insertado
 					textComponent.setCaretPosition(doc.getLength());
 					// En caso de q se haya definido un tamaño de documento
 					// se comprueba si hay q eliminar algo
@@ -67,7 +67,7 @@ public class Consola {
 			}catch (NullPointerException ignorada){
 				// el documento obtenido es null
 			} catch (BadLocationException ignorada) {
-				// se ha intentado insertar o eliminar en una posicion invalida
+				// se ha intentado insertar o eliminar en una posicion inválida
 				// del documento
 			}
 			if (mirror != null){
@@ -97,7 +97,13 @@ public class Consola {
 	}
 	
 	/**
-	 * Método que llama a <code>getLog( tc, null, -1, null)</code>
+	 * Método que crea un {@code PrintStream}, que mostrará su contenido por un componente de
+	 * texto.
+	 * 
+	 * @param tc Componente de texto donde se va a mostrar el contenido.
+	 * 
+	 * @return El {@code PrintStream} creado.
+	 * 
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc){
@@ -105,7 +111,14 @@ public class Consola {
 	}
 
 	/**
-	 * Método que llama a <code>getLog( tc, at, -1, null)</code>
+	 * Método que crea un {@code PrintStream}, que mostrará su contenido por un componente de
+	 * texto.
+	 * 
+	 * @param tc Componente de texto donde se va a mostrar el contenido.
+	 * @param at Atributos del texto mostrado.
+	 * 
+	 * @return El {@code PrintStream} creado.
+	 * 
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, AttributeSet at){
@@ -113,7 +126,15 @@ public class Consola {
 	}
 	
 	/**
-	 * Método que llama a <code>getLog( tc, null, tamDoc, null)</code>
+	 * Método que crea un {@code PrintStream}, que mostrará su contenido por un componente de
+	 * texto.
+	 * 
+	 * @param tc Componente de texto donde se va a mostrar el contenido.
+	 * @param tamDoc Tamaño máximo del documento, cuando el documento llega al tamaño maximo, se van eliminando
+	 * los caracteres más antiguos. Si el tamaño es menor de 0, y el tamaño máximo es indifenido, y no se elimina nada. 
+	 * 
+	 * @return El {@code PrintStream} creado.
+	 * 
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, int tamDoc){
@@ -121,7 +142,16 @@ public class Consola {
 	}
 
 	/**
-	 * Método que llama a <code>getLog( tc, at, tamDoc, null)</code>
+	 * Método que crea un {@code PrintStream}, que mostrará su contenido por un componente de
+	 * texto.
+	 * 
+	 * @param tc Componente de texto donde se va a mostrar el contenido.
+	 * @param at Atributos del texto mostrado.
+	 * @param tamDoc Tamaño máximo del documento, cuando el documento llega al tamaño maximo, se van eliminando
+	 * los caracteres más antiguos. Si el tamaño es menor de 0, y el tamaño máximo es indifenido, y no se elimina nada. 
+	 * 
+	 * @return El {@code PrintStream} creado.
+	 * 
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, AttributeSet at, int tamDoc){
@@ -129,7 +159,14 @@ public class Consola {
 	}
 	
 	/**
-	 * Método que llama a <code>getLog( tc, null, -1, mirror)</code>
+	 * Método que crea un {@code PrintStream}, que mostrará su contenido por un componente de
+	 * texto.
+	 * 
+	 * @param tc Componente de texto donde se va a mostrar el contenido.
+	 * @param mirror Indica el {@code OutputStream} en el que se copiará el texto mostrado en el componente.
+	 * 
+	 * @return El {@code PrintStream} creado.
+	 * 
 	 * @see #getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror)
 	 */
 	public static PrintStream getLog(JTextComponent tc, OutputStream mirror){
@@ -137,15 +174,16 @@ public class Consola {
 	}
 	
 	/**
-	 * Método que crea un PrintStream, que mostrará su contenido por un componente de
+	 * Método que crea un {@code PrintStream}, que mostrará su contenido por un componente de
 	 * texto.
 	 * 
-	 * @param tc Componente de texto donde se va a mostrar el contenido
-	 * @param at Atributos del texto mostrado
+	 * @param tc Componente de texto donde se va a mostrar el contenido.
+	 * @param at Atributos del texto mostrado.
 	 * @param tamDoc Tamaño máximo del documento, cuando el documento llega al tamaño maximo, se van eliminando
 	 * los caracteres más antiguos. Si el tamaño es menor de 0, y el tamaño máximo es indifenido, y no se elimina nada. 
-	 * @param mirror Indica el OutputStream en el que se copiara el texto mostrado en el componente.
-	 * @return El PrintStream creado
+	 * @param mirror Indica el {@code OutputStream} en el que se copiará el texto mostrado en el componente.
+	 * 
+	 * @return El {@code PrintStream} creado.
 	 */
 	public static PrintStream getLog(JTextComponent tc, AttributeSet at, int tamDoc, OutputStream mirror){
 		return new PrintStream(new OutputDocumentStream(tc, at, tamDoc, mirror));
