@@ -6,6 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -411,11 +414,16 @@ public class GeneradorDeSiluetas {
 	}
 	
 	@SuppressWarnings("serial")
-	private static class PantallaGrafica extends JComponent{
+	private static class PantallaGrafica extends JComponent implements MouseListener, MouseMotionListener{
 		List<Point3f> vertList;
 		List<Line> lines;
 		float coordX[];
 		float coordY[];
+		
+		PantallaGrafica(){
+			this.addMouseListener(this);
+			this.addMouseMotionListener(this);
+		}
 		
 		public void setModel( List<Point3f> vertList, List<Line> lines){
 			this.vertList = vertList;
@@ -452,162 +460,74 @@ public class GeneradorDeSiluetas {
 				g.drawLine((int)(coordX[coordX.length-1] * min) + off_W, (int)(-coordY[coordX.length-1]*min) + off_H, (int)(coordX[0] * min) + off_W, (int)(-coordY[0]*min) + off_H );
 			}
 		}
-	}
-	
-	/*
-	private static class ActualizadorDePoligonos extends KeyAdapter{
-		
-		final int index;
-		float dst[];
-		
-		ActualizadorDePoligonos(int index){
-			this(index, null);
-		}
-		
-		ActualizadorDePoligonos(int index, float dst[]){
-			this.index = index;
-			setDst(dst);
-		}
-		
-		public void setDst(float[] dst){
-			this.dst = dst;
-		}
-		
-		public void keyReleased( KeyEvent e ) {
-			try{
-				float n = Float.parseFloat(((JTextField)e.getSource()).getText());
-				dst[index] = n;
-			}catch(NumberFormatException ex){
-			}
-		}
-	}
-	
-	private static class PanelDePuntos{
 
-		private final JComponent panel;
-		
-		JPanel     rows[];     
-		JTextField  fieldsX[];
-		KeyListener listenersX[];
-		JTextField  fieldsY[];
-		KeyListener listenersY[];
-		
-		PanelDePuntos(Poligono   p){
-			panel = new JPanel();
-			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-			setPoligono(p);
-		}
-		
-		private static JLabel createLabel(String text, Dimension minSize, Dimension maxSize){
-			JLabel label = new JLabel(text);
-			label.setMinimumSize(minSize);
-			label.setMinimumSize(maxSize);
-			return label;
-		}
-		
-		private static JTextField createField(Dimension minSize, Dimension prefSize, Dimension maxSize){
-			JTextField textField = new JTextField(2);
-			textField.setMinimumSize(minSize);
-			textField.setPreferredSize(prefSize);
-			textField.setMinimumSize(maxSize);
-			return textField;
-		}
-		
-		private static JPanel createRow(JLabel labelX, Box.Filler s1, JTextField fieldX, Box.Filler s2, JLabel labelY, Box.Filler s3, JTextField fieldY){
-			JPanel row = new JPanel();
-			row.setLayout(new BoxLayout(row, BoxLayout.LINE_AXIS));
-			row.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-			
-			row.add(labelX);
-			row.add(s1);
-			row.add(fieldX);
-			row.add(s2);
-			row.add(labelY);
-			row.add(s3);
-			row.add(fieldY);
-			
-			return row;
-		}
-		
-		private final transient Dimension minSize = new Dimension(5, 20);
-		private final transient Dimension minSizeT = new Dimension(10, 20);
-		private final transient Dimension prefSize = new Dimension(10, 20);
-		private final transient Dimension prefSizeT = new Dimension(20, 20);
-		private final transient Dimension maxSize = new Dimension(Short.MAX_VALUE, 20);
-		
-		private JPanel createRow(JTextField fieldX, JTextField fieldY){
-			return createRow(
-					createLabel("X:", minSizeT, maxSize),
-					new Box.Filler(minSize, prefSize, maxSize),
-					fieldX,
-					new Box.Filler(minSize, prefSize, maxSize),
-					createLabel("Y:", minSizeT, maxSize),
-					new Box.Filler(minSize, prefSize, maxSize),
-					fieldY
-			);
-		}
-		
-		public void setPoligono(Poligono p){
+		@Override
+		public void mouseClicked(MouseEvent e) {}
 
-			panel.removeAll();
-			if(p == null)
-				return;
+		@Override
+		public void mouseEntered(MouseEvent e){}
+
+		@Override
+		public void mouseExited(MouseEvent e) {}
+
+		int findPoint(int x, int y){
+			if(coordX == null || coordY == null)
+				return -1;
 			
-			float coordX[] = getArray(p, S.coordX);
-			float coordY[] = getArray(p, S.coordY);
-			
-			if(rows == null || rows.length < p.getNLados()){
-				if(rows == null){
-					rows = new JPanel[p.getNLados()];
-					fieldsX = new JTextField[p.getNLados()];
-					listenersX = new KeyListener[p.getNLados()];
-					fieldsY = new JTextField[p.getNLados()];
-					listenersY = new KeyListener[p.getNLados()];
-					for(int i = 0; i < p.getNLados(); i++){
-						fieldsX[i] = createField(minSizeT, prefSizeT, maxSize);
-						listenersX[i] = new ActualizadorDePoligonos(i);
-						fieldsX[i].addKeyListener(listenersX[i]);
-						fieldsY[i] = createField(minSizeT, prefSizeT, maxSize);
-						listenersY[i] = new ActualizadorDePoligonos(i);
-						fieldsY[i].addKeyListener(listenersY[i]);
-						rows[i] = createRow(fieldsX[i], fieldsY[i]);
-					}
-				}else{
-					JPanel newRows[] = new JPanel[p.getNLados()];
-					System.arraycopy(rows, 0, newRows, 0, rows.length);
-					JTextField newfieldsX[] = new JTextField[p.getNLados()];
-					System.arraycopy(fieldsX, 0, newfieldsX, 0, fieldsX.length);
-					JTextField newfieldsY[] = new JTextField[p.getNLados()];
-					System.arraycopy(fieldsY, 0, newfieldsY, 0, fieldsY.length);
-					for(int i = rows.length; i < p.getNLados(); i++){
-						fieldsX[i] = createField(minSizeT, prefSizeT, maxSize);
-						listenersX[i] = new ActualizadorDePoligonos(i);
-						fieldsX[i].addKeyListener(listenersX[i]);
-						fieldsY[i] = createField(minSizeT, prefSizeT, maxSize);
-						listenersY[i] = new ActualizadorDePoligonos(i);
-						fieldsY[i].addKeyListener(listenersY[i]);
-						rows[i] = createRow(fieldsX[i], fieldsY[i]);
-					}
-					fieldsX = newfieldsX;
-					fieldsY = newfieldsY;
-					rows = newRows;
+			int w = this.getWidth();
+			int h = this.getHeight();
+			int min = Math.min(w,h);
+			int off_W = w/2;
+			int off_H = h/2;
+
+			float fx = (float)(x - off_W)/min;
+			float fy = (float)(off_H - y)/min;
+			int pos = -1;
+			float distance = Float.MAX_VALUE;
+			for(int i= 0; i < coordX.length; i++){
+				float d = (float)Math.sqrt(Math.pow(coordX[i]-fx, 2)+Math.pow(coordY[i]-fy, 2));
+				if(d < distance){
+					distance = d;
+					pos = i;
 				}
 			}
-			for(int i = 0; i < p.getNLados(); i++){
-				fieldsX[i].setText(Float.toString(coordX[i]));
-				((ActualizadorDePoligonos)listenersX[i]).setDst(coordX);
-				fieldsY[i].setText(Float.toString(coordY[i]));
-				((ActualizadorDePoligonos)listenersY[i]).setDst(coordY);
-			}
-			for(int i = 0; i < p.getNLados(); i++)
-				panel.add(rows[i]);
+			
+			return distance <= 0.01 ? pos : -1;
 		}
 		
-		JComponent getPanel(){
-			return panel;
+		int pointPos;
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			pointPos = findPoint(e.getX(), e.getY());
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if(pointPos < 0)
+				return;
+			
+			int w = this.getWidth();
+			int h = this.getHeight();
+			int min = Math.min(w,h);
+			int off_W = w/2;
+			int off_H = h/2;
+
+			coordX[pointPos] = (float)(e.getX() - off_W)/min;
+			coordY[pointPos] = (float)(off_H - e.getY())/min;
+			repaint();
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
 		}
 	}
-	*/
+	
+	static Poligono poligono;
 	
 	@SuppressWarnings("serial")
 	public static void main(String... args){
@@ -616,7 +536,7 @@ public class GeneradorDeSiluetas {
 		xStream.registerConverter( new PoligonoConverter() );
 		xStream.alias(S.Poligono, Poligono.class);
 		
-		Poligono poligono = (Poligono)xStream.fromXML(
+		poligono = (Poligono)xStream.fromXML(
 				"<Poligono nLados=\"14\">"+
 				"  <Punto2F x=\"-0.44\" y=\"-0.13\"/>"+
 				"  <Punto2F x=\"-0.47\" y=\"-0.08\"/>"+
@@ -648,9 +568,9 @@ public class GeneradorDeSiluetas {
 //			0.0, 0.0, 0.0, 1.0
 //		);
 		final Matrix4d mt = new Matrix4d(
-			0.0, 0.0, 1.0, 0.0,
+			0.0, 0.0, -1.0, 0.0,
 			0.0, 1.0, 0.0, 0.0,
-		   -1.0, 0.0, 0.0, 0.0,
+		    1.0, 0.0, 0.0, 0.0,
 			0.0, 0.0, 0.0, 1.0
 		);
 //		Matrix4d mt = new Matrix4d(
@@ -704,7 +624,8 @@ public class GeneradorDeSiluetas {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					try{
-						area.setPoligono((Poligono)xStream.fromXML(tLog.getText()));
+						poligono = (Poligono)xStream.fromXML(tLog.getText());
+						area.setPoligono(poligono);
 					}catch(Exception ex){
 						
 					}
@@ -715,6 +636,8 @@ public class GeneradorDeSiluetas {
 			new AbstractAction(" ---> To XML"){
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					tLog.setText("");
+					log1.println(xStream.toXML(poligono));
 				}
 			}
 		));
@@ -769,7 +692,5 @@ public class GeneradorDeSiluetas {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		contentPane.setDividerLocation(500);
-		
-		log1.println(xStream.toXML(poligono));
 	}
 }
