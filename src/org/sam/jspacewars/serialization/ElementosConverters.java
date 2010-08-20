@@ -34,16 +34,27 @@ public class ElementosConverters {
 
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 		}
-
+		
+		private static float getFloatAttribute(HierarchicalStreamReader reader, String att, float defecto){
+			try{
+				return Float.parseFloat(reader.getAttribute(att));
+			}catch(Exception e){
+				return defecto;
+			}
+		}
+		
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			int nLados = Integer.parseInt(reader.getAttribute("nLados"));
+			float scale = getFloatAttribute(reader, "scale", 1.0f);
+			float offX  = getFloatAttribute(reader, "offX",  0.0f);
+			float offY  = getFloatAttribute(reader, "offY",  0.0f);
 			float coordX[] = new float[nLados];
 			float coordY[] = new float[nLados];
 			int i = 0;
 			while( i < nLados && reader.hasMoreChildren() ){
 				reader.moveDown();
-				coordX[i] = Float.parseFloat(reader.getAttribute("x"));
-				coordY[i] = Float.parseFloat(reader.getAttribute("y"));
+				coordX[i] = Float.parseFloat(reader.getAttribute("x"))*scale + offX;
+				coordY[i] = Float.parseFloat(reader.getAttribute("y"))*scale + offY;
 				reader.moveUp();
 				i++;
 			}

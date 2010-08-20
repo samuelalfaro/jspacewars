@@ -1,11 +1,9 @@
 package org.sam.tools;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
@@ -23,18 +21,15 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -160,162 +155,168 @@ public class GeneradorDeSiluetas {
 		}
 	}
 	
-	final List<Point3f> vertList;
-	final List<Line> lines;
+	private static class ObjLoader{
 
-	private GeneradorDeSiluetas(final Reader reader) {
-		this(reader, false, null);
-	}
-	
-	private GeneradorDeSiluetas(final Reader reader, boolean resize, Matrix4d mt){
-		vertList = new ArrayList<Point3f>(128);
-		lines = new ArrayList<Line>(128);
-		read(new ObjParser(new BufferedReader(reader)));
-		
-		if( mt != null || resize ){
-			Matrix4d m;
-			if(mt != null){
-				m = new Matrix4d(mt);
-				if ( resize )
-					m.mul(escalarYCentrar());
-			}else
-				m = escalarYCentrar();
-			
-			for(Point3f v:vertList)
-				m.transform(v);
+		final List<Point3f> vertList;
+		final List<Line> lines;
+
+		private ObjLoader(final Reader reader) {
+			this(reader, false, null);
 		}
-	}
-	
-	private transient float minX, maxX;
-	private transient float minY, maxY;
-	private transient float minZ, maxZ;
-	
-	private void read(ObjParser st) throws ParsingErrorException {
-		
-		minX = Float.MAX_VALUE; maxX= -Float.MAX_VALUE;
-		minY = Float.MAX_VALUE; maxY= -Float.MAX_VALUE;
-		minZ = Float.MAX_VALUE; maxZ= -Float.MAX_VALUE;
-		
-		do{
-			st.getToken();
-			if (st.ttype == StreamTokenizer.TT_WORD) {
-				if (st.sval.equals("v"))
-					readVertex(st);
-				else if (st.sval.equals("vn"))
-					st.skipToNextLine(); // normal
-				else if (st.sval.equals("vt"))
-					st.skipToNextLine(); // text coords
-				else if (st.sval.equals("f")){
-					readFace(st);
-				}
-				else if (st.sval.equals("fo")){
-					readFace(st);
-				}
-				else if (st.sval.equals("g"))
-					st.skipToNextLine();
-				else if (st.sval.equals("s"))
-					st.skipToNextLine();
-				else if (st.sval.equals("p"))
-					st.skipToNextLine();
-				else if (st.sval.equals("l"))
-					st.skipToNextLine();
-				else if (st.sval.equals("mtllib"))
-					st.skipToNextLine();
-				else if (st.sval.equals("usemtl"))
-					st.skipToNextLine();
-				else if (st.sval.equals("maplib"))
-					st.skipToNextLine();
-				else if (st.sval.equals("usemap"))
-					st.skipToNextLine();
-				else
-					throw new ParsingErrorException(
-							"Unrecognized token, line " + st.lineno());
-			}
-			st.skipToNextLine();
-		}while (st.ttype != StreamTokenizer.TT_EOF);
-	}
 
-	private void readVertex(ObjParser st) throws ParsingErrorException {
-		Point3f v = new Point3f();
-		v.x = st.getFloat();
-		v.y = st.getFloat();
-		v.z = st.getFloat();
-		if(v.x < minX)
-			minX = v.x;
-		if(v.x > maxX)
-			maxX = v.x;
-		if(v.y < minY)
-			minY = v.y;
-		if(v.y > maxY)
-			maxY = v.y;
-		if(v.z < minZ)
-			minZ = v.z;
-		if(v.z > maxZ)
-			maxZ = v.z;
-		vertList.add(v);
-	}
-	
-	private void readFace(ObjParser st) throws ParsingErrorException {
-		int[] vertIndex  = new int[4];
-		int count = 0;
-		
-		st.getToken();
-		do{
-			// Se lee el vertice
-			if (st.ttype == StreamTokenizer.TT_WORD) {
-				vertIndex[count] = st.getLastValueAsInteger() - 1;
-				if (vertIndex[count] < 0)
-					vertIndex[count] += vertList.size() + 1;
+		private ObjLoader(final Reader reader, boolean resize, Matrix4d mt){
+			vertList = new ArrayList<Point3f>(128);
+			lines = new ArrayList<Line>(128);
+			read(new ObjParser(new BufferedReader(reader)));
+
+			if( mt != null || resize ){
+				Matrix4d m;
+				if(mt != null){
+					m = new Matrix4d(mt);
+					if ( resize )
+						m.mul(escalarYCentrar());
+				}else
+					m = escalarYCentrar();
+
+				for(Point3f v:vertList)
+					m.transform(v);
 			}
-			st.getToken();
-			if (st.ttype == '/') {
-				st.getToken(); 
+		}
+
+		private transient float minX, maxX;
+		private transient float minY, maxY;
+		private transient float minZ, maxZ;
+
+		private void read(ObjParser st) throws ParsingErrorException {
+
+			minX = Float.MAX_VALUE; maxX= -Float.MAX_VALUE;
+			minY = Float.MAX_VALUE; maxY= -Float.MAX_VALUE;
+			minZ = Float.MAX_VALUE; maxZ= -Float.MAX_VALUE;
+
+			do{
+				st.getToken();
 				if (st.ttype == StreamTokenizer.TT_WORD) {
-					// se lee las coordenadas de textura y el siguiente token que pueder ser el separador
-					st.getToken();
+					if (st.sval.equals("v"))
+						readVertex(st);
+					else if (st.sval.equals("vn"))
+						st.skipToNextLine(); // normal
+					else if (st.sval.equals("vt"))
+						st.skipToNextLine(); // text coords
+					else if (st.sval.equals("f")){
+						readFace(st);
+					}
+					else if (st.sval.equals("fo")){
+						readFace(st);
+					}
+					else if (st.sval.equals("g"))
+						st.skipToNextLine();
+					else if (st.sval.equals("s"))
+						st.skipToNextLine();
+					else if (st.sval.equals("p"))
+						st.skipToNextLine();
+					else if (st.sval.equals("l"))
+						st.skipToNextLine();
+					else if (st.sval.equals("mtllib"))
+						st.skipToNextLine();
+					else if (st.sval.equals("usemtl"))
+						st.skipToNextLine();
+					else if (st.sval.equals("maplib"))
+						st.skipToNextLine();
+					else if (st.sval.equals("usemap"))
+						st.skipToNextLine();
+					else
+						throw new ParsingErrorException(
+								"Unrecognized token, line " + st.lineno());
 				}
+				st.skipToNextLine();
+			}while (st.ttype != StreamTokenizer.TT_EOF);
+		}
+
+		private void readVertex(ObjParser st) throws ParsingErrorException {
+			Point3f v = new Point3f();
+			v.x = st.getFloat();
+			v.y = st.getFloat();
+			v.z = st.getFloat();
+			if(v.x < minX)
+				minX = v.x;
+			if(v.x > maxX)
+				maxX = v.x;
+			if(v.y < minY)
+				minY = v.y;
+			if(v.y > maxY)
+				maxY = v.y;
+			if(v.z < minZ)
+				minZ = v.z;
+			if(v.z > maxZ)
+				maxZ = v.z;
+			vertList.add(v);
+		}
+
+		private void readFace(ObjParser st) throws ParsingErrorException {
+			int[] vertIndex  = new int[4];
+			int count = 0;
+
+			st.getToken();
+			do{
+				// Se lee el vertice
+				if (st.ttype == StreamTokenizer.TT_WORD) {
+					vertIndex[count] = st.getLastValueAsInteger() - 1;
+					if (vertIndex[count] < 0)
+						vertIndex[count] += vertList.size() + 1;
+				}
+				st.getToken();
 				if (st.ttype == '/') {
 					st.getToken(); 
 					if (st.ttype == StreamTokenizer.TT_WORD) {
-						// se lee la normal y el el siguiente valor para continuar el bucle
+						// se lee las coordenadas de textura y el siguiente token que pueder ser el separador
 						st.getToken();
 					}
+					if (st.ttype == '/') {
+						st.getToken(); 
+						if (st.ttype == StreamTokenizer.TT_WORD) {
+							// se lee la normal y el el siguiente valor para continuar el bucle
+							st.getToken();
+						}
+					}
 				}
+				count++;
+			}while (st.ttype != StreamTokenizer.TT_EOF && st.ttype != StreamTokenizer.TT_EOL);
+
+			for(int i=0; i < count-1; i++){
+				lines.add(new Line(vertIndex[i],vertIndex[i+1]));
 			}
-			count++;
-		}while (st.ttype != StreamTokenizer.TT_EOF && st.ttype != StreamTokenizer.TT_EOL);
-		
-		for(int i=0; i < count-1; i++){
-			lines.add(new Line(vertIndex[i],vertIndex[i+1]));
+			lines.add(new Line(vertIndex[count-1],vertIndex[0]));
 		}
-		lines.add(new Line(vertIndex[count-1],vertIndex[0]));
-	}
-	
-	private double getMaxDistance(){
-		double absX = maxX - minX;
-		double absY = maxY - minY;
-		double absZ = maxZ - minZ;
-		
-		return Math.max(absX, Math.max(absY,absZ));
-	}
-	
-	private Matrix4d escalarYCentrar(){
-		double centerX = (minX + maxX)/2;
-		double centerY = (minY + maxY)/2;
-		double centerZ = (minZ + maxZ)/2;
 
-		double scale = 1.0 / Math.max(1.0, getMaxDistance() );
-		//System.err.println("Centro: ("+centerX+", "+centerY+", "+centerZ+")\nEscala: "+scale);
-	
-		Matrix4d mt = new Matrix4d();
-		mt.set(scale, new Vector3d(-centerX*scale,-centerY*scale,-centerZ*scale));
+		private double getMaxDistance(){
+			double absX = maxX - minX;
+			double absY = maxY - minY;
+			double absZ = maxZ - minZ;
 
-		return mt;
+			return Math.max(absX, Math.max(absY,absZ));
+		}
+
+		private Matrix4d escalarYCentrar(){
+			double centerX = (minX + maxX)/2;
+			double centerY = (minY + maxY)/2;
+			double centerZ = (minZ + maxZ)/2;
+
+			double scale = 1.0 / Math.max(1.0, getMaxDistance() );
+			//System.err.println("Centro: ("+centerX+", "+centerY+", "+centerZ+")\nEscala: "+scale);
+
+			Matrix4d mt = new Matrix4d();
+			mt.set(scale, new Vector3d(-centerX*scale,-centerY*scale,-centerZ*scale));
+
+			return mt;
+		}
 	}
 	
 	private static void paintProjection(Graphics2D g2d, List<Point3f> vertList, List<Line> lines, int w, int h){
 		g2d.setBackground(Color.BLACK);
 		g2d.clearRect(0, 0, w, h);
+		
+		if(vertList == null || lines == null)
+			return;
 		
 		int min = Math.min(w,h);
 		
@@ -327,34 +328,17 @@ public class GeneradorDeSiluetas {
 			Point3f v1 = vertList.get(line.p1);
 			Point3f v2 = vertList.get(line.p2);
 			g2d.setColor(Color.GRAY);
-			g2d.drawRect((int)(-v1.x * min) + off_W -1, (int)(-v1.y*min) + off_H -1, 2, 2);
-			g2d.drawRect((int)(-v2.x * min) + off_W -1, (int)(-v2.y*min) + off_H -1, 2, 2);
+			g2d.drawRect((int)(v1.x * min) + off_W -1, (int)(-v1.y*min) + off_H -1, 2, 2);
+			g2d.drawRect((int)(v2.x * min) + off_W -1, (int)(-v2.y*min) + off_H -1, 2, 2);
 			g2d.setColor(Color.DARK_GRAY);
-			g2d.drawLine((int)(-v1.x * min) + off_W, (int)(-v1.y*min) + off_H, (int)(-v2.x * min) + off_W, (int)(-v2.y*min) + off_H );
+			g2d.drawLine((int)(v1.x * min) + off_W, (int)(-v1.y*min) + off_H, (int)(v2.x * min) + off_W, (int)(-v2.y*min) + off_H );
 		}
 	}
 	
-	@SuppressWarnings("serial")
-	private JComponent getComponent(){
-		return new JComponent(){
-			public void paintComponent(Graphics g){
-				paintProjection((Graphics2D)g, vertList, lines, this.getWidth(), this.getHeight());
-			}
-			public Dimension getMinimumSize(){
-				Dimension size = super.getMinimumSize();
-				size.setSize(256,256);
-				return size;
-			}
-			public Dimension getPreferredSize() {
-				return getMinimumSize();
-			}
-		};
-	}
-
 	private static void export(final Reader reader, final int w, final int h, final String formato, final String rutaFichero) throws ParsingErrorException, IOException{
-		GeneradorDeSiluetas g = new GeneradorDeSiluetas(reader);
+		ObjLoader loader = new ObjLoader(reader);
 		BufferedImage img = new BufferedImage(w,h, BufferedImage.TYPE_INT_RGB);
-		paintProjection(img.createGraphics(), g.vertList, g.lines, w, h);
+		paintProjection(img.createGraphics(), loader.vertList, loader.lines, w, h);
 		ImageIO.write( img, formato, new File( rutaFichero ) );
 	}
 
@@ -426,66 +410,236 @@ public class GeneradorDeSiluetas {
 		}
 	}
 	
-	private static JComponent getPuntos(JComponent c, Poligono p){
-		float coordX[] = getArray(p, S.coordX);
-		float coordY[] = getArray(p, S.coordY);
-		if(c == null){
-			c = new JPanel();
-			c.setLayout(new BoxLayout(c, BoxLayout.PAGE_AXIS));
+	@SuppressWarnings("serial")
+	private static class PantallaGrafica extends JComponent{
+		List<Point3f> vertList;
+		List<Line> lines;
+		float coordX[];
+		float coordY[];
+		
+		public void setModel( List<Point3f> vertList, List<Line> lines){
+			this.vertList = vertList;
+			this.lines = lines;
+			repaint();
 		}
 		
-		Dimension minSize = new Dimension(5, 20);
-		Dimension minSizeT = new Dimension(10, 20);
-		Dimension prefSize = new Dimension(10, 20);
-		Dimension prefSizeT = new Dimension(20, 20);
-		Dimension maxSize = new Dimension(Short.MAX_VALUE, 20);
-		
-		for(int i = 0; i < p.getNLados(); i++){
-			JLabel label;
-			JTextField textField;
-			JPanel panel = new JPanel();
-			panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-			panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
-			
-			label = new JLabel("X:");
-			label.setMinimumSize(minSizeT);
-			label.setMinimumSize(maxSize);
-			panel.add(label);
-			panel.add(new Box.Filler(minSize, prefSize, maxSize));
-			
-			textField = new JTextField(Float.toString(coordX[i]),2);
-			textField.setMinimumSize(minSizeT);
-			textField.setPreferredSize(prefSizeT);
-			textField.setMinimumSize(maxSize);
-			panel.add(textField);
-			panel.add(new Box.Filler(minSize, prefSize, maxSize));
-			
-			label = new JLabel("Y:");
-			label.setMinimumSize(minSizeT);
-			label.setMinimumSize(maxSize);
-			panel.add(label);
-			panel.add(new Box.Filler(minSize, prefSize, maxSize));
-			
-			textField = new JTextField(Float.toString(coordY[i]),2);
-			textField.setMinimumSize(minSizeT);
-			textField.setPreferredSize(prefSizeT);
-			textField.setMinimumSize(maxSize);
-			panel.add(textField);
-			
-			//panel.add(Box.createHorizontalGlue());
-			
-			c.add(panel);
+		public void setPoligono(Poligono p){
+			coordX = getArray(p, S.coordX);
+			coordY = getArray(p, S.coordY);
+			repaint();
 		}
-		c.add(Box.createVerticalGlue());
-		c.setMinimumSize(new Dimension(5, 100));
-		c.setPreferredSize(new Dimension(200, 100));
-		return c;
+		
+		public void paintComponent(Graphics g){
+			int w = this.getWidth();
+			int h = this.getHeight();
+			paintProjection((Graphics2D)g, vertList, lines,w,h);
+			
+			if(coordX != null && coordY != null){
+				int min = Math.min(w,h);
+
+				int off_W = w/2;
+				int off_H = h/2;
+
+				for( int i= 0; i< coordX.length-1; i++){
+					g.setColor(Color.CYAN);
+					g.drawRect((int)(coordX[i] * min) + off_W -1, (int)(-coordY[i]*min) + off_H -1, 2, 2);
+					g.setColor(Color.YELLOW);
+					g.drawLine((int)(coordX[i] * min) + off_W, (int)(-coordY[i]*min) + off_H, (int)(coordX[i+1] * min) + off_W, (int)(-coordY[i+1]*min) + off_H );
+				}
+				g.setColor(Color.CYAN);
+				g.drawRect((int)(coordX[coordX.length-1] * min) + off_W -1, (int)(-coordY[coordX.length-1]*min) + off_H -1, 2, 2);
+				g.setColor(Color.YELLOW);
+				g.drawLine((int)(coordX[coordX.length-1] * min) + off_W, (int)(-coordY[coordX.length-1]*min) + off_H, (int)(coordX[0] * min) + off_W, (int)(-coordY[0]*min) + off_H );
+			}
+		}
 	}
 	
+	/*
+	private static class ActualizadorDePoligonos extends KeyAdapter{
+		
+		final int index;
+		float dst[];
+		
+		ActualizadorDePoligonos(int index){
+			this(index, null);
+		}
+		
+		ActualizadorDePoligonos(int index, float dst[]){
+			this.index = index;
+			setDst(dst);
+		}
+		
+		public void setDst(float[] dst){
+			this.dst = dst;
+		}
+		
+		public void keyReleased( KeyEvent e ) {
+			try{
+				float n = Float.parseFloat(((JTextField)e.getSource()).getText());
+				dst[index] = n;
+			}catch(NumberFormatException ex){
+			}
+		}
+	}
+	
+	private static class PanelDePuntos{
+
+		private final JComponent panel;
+		
+		JPanel     rows[];     
+		JTextField  fieldsX[];
+		KeyListener listenersX[];
+		JTextField  fieldsY[];
+		KeyListener listenersY[];
+		
+		PanelDePuntos(Poligono   p){
+			panel = new JPanel();
+			panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+			setPoligono(p);
+		}
+		
+		private static JLabel createLabel(String text, Dimension minSize, Dimension maxSize){
+			JLabel label = new JLabel(text);
+			label.setMinimumSize(minSize);
+			label.setMinimumSize(maxSize);
+			return label;
+		}
+		
+		private static JTextField createField(Dimension minSize, Dimension prefSize, Dimension maxSize){
+			JTextField textField = new JTextField(2);
+			textField.setMinimumSize(minSize);
+			textField.setPreferredSize(prefSize);
+			textField.setMinimumSize(maxSize);
+			return textField;
+		}
+		
+		private static JPanel createRow(JLabel labelX, Box.Filler s1, JTextField fieldX, Box.Filler s2, JLabel labelY, Box.Filler s3, JTextField fieldY){
+			JPanel row = new JPanel();
+			row.setLayout(new BoxLayout(row, BoxLayout.LINE_AXIS));
+			row.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 5));
+			
+			row.add(labelX);
+			row.add(s1);
+			row.add(fieldX);
+			row.add(s2);
+			row.add(labelY);
+			row.add(s3);
+			row.add(fieldY);
+			
+			return row;
+		}
+		
+		private final transient Dimension minSize = new Dimension(5, 20);
+		private final transient Dimension minSizeT = new Dimension(10, 20);
+		private final transient Dimension prefSize = new Dimension(10, 20);
+		private final transient Dimension prefSizeT = new Dimension(20, 20);
+		private final transient Dimension maxSize = new Dimension(Short.MAX_VALUE, 20);
+		
+		private JPanel createRow(JTextField fieldX, JTextField fieldY){
+			return createRow(
+					createLabel("X:", minSizeT, maxSize),
+					new Box.Filler(minSize, prefSize, maxSize),
+					fieldX,
+					new Box.Filler(minSize, prefSize, maxSize),
+					createLabel("Y:", minSizeT, maxSize),
+					new Box.Filler(minSize, prefSize, maxSize),
+					fieldY
+			);
+		}
+		
+		public void setPoligono(Poligono p){
+
+			panel.removeAll();
+			if(p == null)
+				return;
+			
+			float coordX[] = getArray(p, S.coordX);
+			float coordY[] = getArray(p, S.coordY);
+			
+			if(rows == null || rows.length < p.getNLados()){
+				if(rows == null){
+					rows = new JPanel[p.getNLados()];
+					fieldsX = new JTextField[p.getNLados()];
+					listenersX = new KeyListener[p.getNLados()];
+					fieldsY = new JTextField[p.getNLados()];
+					listenersY = new KeyListener[p.getNLados()];
+					for(int i = 0; i < p.getNLados(); i++){
+						fieldsX[i] = createField(minSizeT, prefSizeT, maxSize);
+						listenersX[i] = new ActualizadorDePoligonos(i);
+						fieldsX[i].addKeyListener(listenersX[i]);
+						fieldsY[i] = createField(minSizeT, prefSizeT, maxSize);
+						listenersY[i] = new ActualizadorDePoligonos(i);
+						fieldsY[i].addKeyListener(listenersY[i]);
+						rows[i] = createRow(fieldsX[i], fieldsY[i]);
+					}
+				}else{
+					JPanel newRows[] = new JPanel[p.getNLados()];
+					System.arraycopy(rows, 0, newRows, 0, rows.length);
+					JTextField newfieldsX[] = new JTextField[p.getNLados()];
+					System.arraycopy(fieldsX, 0, newfieldsX, 0, fieldsX.length);
+					JTextField newfieldsY[] = new JTextField[p.getNLados()];
+					System.arraycopy(fieldsY, 0, newfieldsY, 0, fieldsY.length);
+					for(int i = rows.length; i < p.getNLados(); i++){
+						fieldsX[i] = createField(minSizeT, prefSizeT, maxSize);
+						listenersX[i] = new ActualizadorDePoligonos(i);
+						fieldsX[i].addKeyListener(listenersX[i]);
+						fieldsY[i] = createField(minSizeT, prefSizeT, maxSize);
+						listenersY[i] = new ActualizadorDePoligonos(i);
+						fieldsY[i].addKeyListener(listenersY[i]);
+						rows[i] = createRow(fieldsX[i], fieldsY[i]);
+					}
+					fieldsX = newfieldsX;
+					fieldsY = newfieldsY;
+					rows = newRows;
+				}
+			}
+			for(int i = 0; i < p.getNLados(); i++){
+				fieldsX[i].setText(Float.toString(coordX[i]));
+				((ActualizadorDePoligonos)listenersX[i]).setDst(coordX);
+				fieldsY[i].setText(Float.toString(coordY[i]));
+				((ActualizadorDePoligonos)listenersY[i]).setDst(coordY);
+			}
+			for(int i = 0; i < p.getNLados(); i++)
+				panel.add(rows[i]);
+		}
+		
+		JComponent getPanel(){
+			return panel;
+		}
+	}
+	*/
 	
 	@SuppressWarnings("serial")
 	public static void main(String... args){
-		final Poligono poligono = new Poligono( new float[]{-1,-1,1,1}, new float[]{-1,1,1,-1});
+		
+		final XStream xStream = new XStream(new DomDriver());
+		xStream.registerConverter( new PoligonoConverter() );
+		xStream.alias(S.Poligono, Poligono.class);
+		
+		Poligono poligono = (Poligono)xStream.fromXML(
+				"<Poligono nLados=\"14\">"+
+				"  <Punto2F x=\"-0.44\" y=\"-0.13\"/>"+
+				"  <Punto2F x=\"-0.47\" y=\"-0.08\"/>"+
+				"  <Punto2F x=\"-0.50\" y=\"0.13\"/>"+
+				"  <Punto2F x=\"-0.41\" y=\"0.13\"/>"+
+				"  <Punto2F x=\"-0.2\" y=\"0.01\"/>"+
+				"  <Punto2F x=\"0.02\" y=\"0.01\"/>"+
+				"  <Punto2F x=\"0.06\" y=\"0.03\"/>"+
+				"  <Punto2F x=\"0.22\" y=\"0.03\"/>"+
+				"  <Punto2F x=\"0.29\" y=\"-0.02\"/>"+
+				"  <Punto2F x=\"0.52\" y=\"-0.055\"/>"+
+				"  <Punto2F x=\"0.17\" y=\"-0.1\"/>"+
+				"  <Punto2F x=\"0.16\" y=\"-0.12\"/>"+
+				"  <Punto2F x=\"-0.06\" y=\"-0.11\"/>"+
+				"  <Punto2F x=\"-0.15\" y=\"-0.13\"/>"+
+				"</Poligono>"		
+//				"<Poligono nLados=\"4\">"+
+//				"  <Punto2F x=\"-0.45\" y=\"-0.45\"/>"+
+//				"  <Punto2F x=\"-0.45\" y=\"0.45\"/>"+
+//				"  <Punto2F x=\"0.45\" y=\"0.45\"/>"+
+//				"  <Punto2F x=\"0.45\" y=\"-0.45\"/>"+
+//				"</Poligono>"
+		);
 		
 //		Matrix4d mt = new Matrix4d(
 //			1.0, 0.0, 0.0, 0.0,
@@ -509,62 +663,64 @@ public class GeneradorDeSiluetas {
 		final JFrame frame = new JFrame("Generador de Siluetas");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.getContentPane().setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
+		JSplitPane contentPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		contentPane.setResizeWeight(1);
+
 		
-		final JScrollPane area = new JScrollPane(
-				null,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
-		);
-		area.getViewport().setBackground(Color.BLACK);
-		gbc.insets.set(5,5,5,5);
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.EAST;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridwidth = 2;
-		gbc.gridheight = 2;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		frame.getContentPane().add(area, gbc);
+//		contentPane.addComponentListener( new ComponentAdapter(){
+//			public void componentResized(ComponentEvent e){
+//				e.getComponent();
+//				System.out.println("JFrame was resized");
+//			}
+//		});
+
+		frame.setContentPane(contentPane);
+		
+		final PantallaGrafica area = new PantallaGrafica();
+		area.setPoligono(poligono);
 		
 		JScrollPane scrollPane;
-		scrollPane = new JScrollPane(
-				getPuntos(null,poligono),
+		contentPane.setLeftComponent( new JScrollPane(
+				area,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
-		);
-		gbc.insets.set(5,5,5,5);
-		gbc.gridx = 2;
-		gbc.gridy = 0;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;
-		gbc.weightx = 0.0;
-		gbc.weighty = 0.0;
-		frame.getContentPane().add(scrollPane, gbc);
+		));
 		
-		JTextPane tLog = new JTextPane(new DefaultStyledDocument());
-		tLog.setEditable(false);
+		JPanel rightComponent = new JPanel();
+		rightComponent.setLayout(new BorderLayout());
+		
+		final JTextPane tLog = new JTextPane(new DefaultStyledDocument());
 		final PrintStream log1 = Consola.getLog(tLog);
 		
 		scrollPane = new JScrollPane(
 				tLog,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
 		);
-		gbc.insets.set(5,5,5,5);
-		gbc.gridx = 2;
-		gbc.gridy = 1;
-		gbc.anchor = GridBagConstraints.WEST;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridwidth = 1;
-		gbc.gridheight = 1;
-		gbc.weightx = 0.0;
-		gbc.weighty = 0.0;
-		frame.getContentPane().add(scrollPane, gbc);
+		rightComponent.add(scrollPane, BorderLayout.CENTER);
+		JPanel butonsPanel =  new JPanel();
+		butonsPanel.add( new JButton(
+			new AbstractAction(" <--- From XML"){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try{
+						area.setPoligono((Poligono)xStream.fromXML(tLog.getText()));
+					}catch(Exception ex){
+						
+					}
+				}
+			}
+		));
+		butonsPanel.add( new JButton(
+			new AbstractAction(" ---> To XML"){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+				}
+			}
+		));
+		rightComponent.add(butonsPanel, BorderLayout.SOUTH);
+		
+		contentPane.setRightComponent(rightComponent);
 		
 		JMenuBar menubar = new JMenuBar();
 		
@@ -586,7 +742,8 @@ public class GeneradorDeSiluetas {
 						File f = chooser.getSelectedFile();
 						if(f.getName().toLowerCase().endsWith("obj")){
 							try {
-								area.setViewportView(new GeneradorDeSiluetas(new FileReader(f), true, mt).getComponent());
+								ObjLoader loader = new ObjLoader(new FileReader(f), true, mt);
+								area.setModel(loader.vertList, loader.lines);
 							} catch (FileNotFoundException ignorada) {
 							}
 						}
@@ -611,12 +768,8 @@ public class GeneradorDeSiluetas {
 		frame.setSize(800,450);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
-		XStream xStream = new XStream(new DomDriver());
-		xStream.registerConverter( new PoligonoConverter() );
-		xStream.alias(S.Poligono, Poligono.class);
+		contentPane.setDividerLocation(500);
 		
 		log1.println(xStream.toXML(poligono));
-
 	}
 }
