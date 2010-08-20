@@ -1,6 +1,6 @@
 <object-stream>
 	<!-- 01 Nave Prota 1 -->
-	<NaveUsuario type="0x00">
+	<NaveUsuario type="0x01">
 		<forma class="Poligono" nLados="14">
 			<Punto2F x="-0.44" y="-0.13"/>
 			<Punto2F x="-0.47" y="-0.08"/>
@@ -245,7 +245,7 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<Instancia3D type="0x00">
+	<Instancia3D type="0x01">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -425,7 +425,7 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 02 Nave Prota 1 Texturas 2 -->
-	<NaveUsuario type="0x01">
+	<NaveUsuario type="0x02">
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -654,7 +654,7 @@
 			</Canion-array-array>
 		</canionesDisponibles>
 	</NaveUsuario>
-	<Instancia3D type="0x01">
+	<Instancia3D type="0x02">
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
@@ -716,426 +716,6 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 03 Nave Prota 2 -->
-	<NaveUsuario type="0x02">
-		<limitesDeNiveles>
-			<int-array>
-				<int>1</int>
-				<int>1</int>
-				<int>1</int>
-				<int>0</int>
-				<int>0</int>
-			</int-array>
-			<int-array>
-				<int>2</int>
-				<int>2</int>
-				<int>2</int>
-				<int>1</int>
-				<int>1</int>
-			</int-array>
-			<int-array>
-				<int>4</int>
-				<int>4</int>
-				<int>4</int>
-				<int>2</int>
-				<int>2</int>
-			</int-array>
-			<int-array>
-				<int>5</int>
-				<int>5</int>
-				<int>5</int>
-				<int>3</int>
-				<int>3</int>
-			</int-array>
-		</limitesDeNiveles>
-		<velocidadesDisponibles>
-			<float>0.0</float>
-			<float>0.00000000300</float>
-			<float>0.00000000375</float>
-			<float>0.00000000450</float>
-			<float>0.00000000525</float>
-			<float>0.00000000600</float>
-		</velocidadesDisponibles>
-		<canionesDisponibles>
-			<Canion-array-array>
-				<Canion-array/>
-				<Canion-array>
-					<CanionLineal>
-						<data>
-							<vIdDisparos>
-								<int>0x82</int>
-								<int>0x8A</int>
-								<int>0x92</int>
-								<int>0x9A</int>
-								<int>0x9A</int>
-								<int>0x9A</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>136000000</long>
-								<long>124000000</long>
-								<long>112000000</long>
-								<long>100000000</long>
-								<long>88000000</long>
-								<long>88000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.00000001500</float>
-								<float>0.00000001625</float>
-								<float>0.00000001750</float>
-								<float>0.00000001875</float>
-								<float>0.00000002000</float>
-								<float>0.00000002000</float>
-							</vVelocidades>
-						</data>
-						<posX>0.5</posX>
-						<posY>-0.1</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>0</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data>
-							<vIdDisparos>
-								<int>0x89</int>
-								<int>0x91</int>
-								<int>0x99</int>
-								<int>0x99</int>
-								<int>0x99</int>
-								<int>0x99</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>136000000</long>
-								<long>124000000</long>
-								<long>112000000</long>
-								<long>100000000</long>
-								<long>88000000</long>
-								<long>88000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.00000001625</float>
-								<float>0.00000001750</float>
-								<float>0.00000001875</float>
-								<float>0.00000002000</float>
-								<float>0.00000002125</float>
-								<float>0.00000002125</float>
-							</vVelocidades>
-						</data>
-						<posX>0.5</posX>
-						<posY>-0.1</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>-0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0.08726646</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>-0.25</posY>
-						<angulo>-0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>0.05</posY>
-						<angulo>0.08726646</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data>
-							<vIdDisparos>
-								<int>0x90</int>
-								<int>0x98</int>
-								<int>0x98</int>
-								<int>0x98</int>
-								<int>0x98</int>
-								<int>0x98</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>136000000</long>
-								<long>124000000</long>
-								<long>112000000</long>
-								<long>100000000</long>
-								<long>88000000</long>
-								<long>88000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.00000001750</float>
-								<float>0.00000001875</float>
-								<float>0.00000002000</float>
-								<float>0.00000002125</float>
-								<float>0.00000002250</float>
-								<float>0.00000002250</float>
-							</vVelocidades>
-						</data>
-						<posX>0.5</posX>
-						<posY>-0.1</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>-0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>-0.25</posY>
-						<angulo>-0.17453292</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>0.05</posY>
-						<angulo>0.17453292</angulo>
-					</CanionLineal>
-				</Canion-array>
-			</Canion-array-array>
-			<Canion-array-array>
-				<Canion-array/>
-				<Canion-array>
-					<LanzaMisiles>
-						<data>
-							<vIdDisparos>
-								<int>0x40</int>
-								<int>0x40</int>
-								<int>0x41</int>
-								<int>0x42</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>2000000000</long>
-								<long>1000000000</long>
-								<long>1000000000</long>
-								<long>1000000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.000000005</float>
-								<float>0.000000005</float>
-								<float>0.000000005</float>
-								<float>0.000000005</float>
-							</vVelocidades>
-						</data>
-						<posX>0</posX>
-						<posY>-0.5</posY>
-						<angulo>-0.7853981633974483</angulo>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../LanzaMisiles/data"/>
-						<posX>0</posX>
-						<posY>0.5</posY>
-						<angulo>0.7853981633974483</angulo>
-					</LanzaMisiles>
-				</Canion-array>
-				<Canion-array>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>-0.25</posX>
-						<posY>-0.5</posY>
-						<angulo>-1.57079637</angulo>
-						<desfase>0.1</desfase>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>0</posX>
-						<posY>-0.5</posY>
-						<angulo>-0.7853981633974483</angulo>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>0</posX>
-						<posY>0.5</posY>
-						<angulo>0.7853981633974483</angulo>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>-0.25</posX>
-						<posY>0.5</posY>
-						<angulo>1.57079637</angulo>
-						<desfase>0.1</desfase>
-					</LanzaMisiles>
-				</Canion-array>
-				<Canion-array>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>-0.5</posX>
-						<posY>-0.5</posY>
-						<angulo>-2.356194555</angulo>
-						<desfase>0.2</desfase>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>-0.25</posX>
-						<posY>-0.5</posY>
-						<angulo>-1.57079637</angulo>
-						<desfase>0.1</desfase>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>0</posX>
-						<posY>-0.5</posY>
-						<angulo>-0.7853981633974483</angulo>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>0</posX>
-						<posY>0.5</posY>
-						<angulo>0.7853981633974483</angulo>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>-0.25</posX>
-						<posY>0.5</posY>
-						<angulo>1.57079637</angulo>
-						<desfase>0.1</desfase>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
-						<posX>-0.5</posX>
-						<posY>0.5</posY>
-						<angulo>2.356194555</angulo>
-						<desfase>0.2</desfase>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data>
-							<vIdDisparos>
-								<int>0x43</int>
-								<int>0x43</int>
-								<int>0x44</int>
-								<int>0x45</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>8200000000</long>
-								<long>4100000000</long>
-								<long>4100000000</long>
-								<long>4100000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.000000005</float>
-								<float>0.000000005</float>
-								<float>0.000000005</float>
-								<float>0.000000005</float>
-							</vVelocidades>
-						</data>
-						<posX>-1.0</posX>
-						<posY>-1.0</posY>
-						<angulo>0.0</angulo>
-					</LanzaMisiles>
-				</Canion-array>
-			</Canion-array-array>
-		</canionesDisponibles>
-	</NaveUsuario>
-	<Instancia3D type="0x02">
-		<Grupo>
-			<NodoCompartido>
-				<Objeto3D>
-					<Forma3DFromObjFile path="resources/obj3d/nave02/forma.obj">
-						<transformMatrix>
-							<m00>0.0</m00>	<m10>0.0</m10>	<m20>-1.0</m20>	<m30>0.0</m30>
-							<m01>0.0</m01>	<m11>1.0</m11>	<m21>0.0</m21>	<m31>0.0</m31>
-							<m02>1.0</m02>	<m12>0.0</m12>	<m22>0.0</m22>	<m32>0.0</m32>
-							<m03>0.0</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
-						</transformMatrix>
-					</Forma3DFromObjFile>
-					<Apariencia>
-						<Material>
-							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
-							<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
-							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
-							<shininess>8.0</shininess>
-							<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
-						</Material>
-						<unidadesTextura>
-							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
-									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
-							</UnidadTextura>
-							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
-									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
-							</UnidadTextura>
-							<UnidadTextura>
-								<Textura
-									reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
-							</UnidadTextura>
-						</unidadesTextura>
-						<Shader reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
-					</Apariencia>
-				</Objeto3D>
-			</NodoCompartido>
-			<NodoTransformador>
-				<transformMatrix>
-					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
-					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
-					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
-					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>-0.12</m23>	<m33>1.0</m33>
-				</transformMatrix>
-				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
-			</NodoTransformador>
-			<NodoTransformador>
-				<transformMatrix>
-					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
-					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
-					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
-					<m03>-0.5</m03>		<m13>0.07</m13>		<m23>0.0</m23>		<m33>1.0</m33>
-				</transformMatrix>
-				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
-			</NodoTransformador>
-			<NodoTransformador>
-				<transformMatrix>
-					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
-					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
-					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
-					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>0.12</m23>		<m33>1.0</m33>
-				</transformMatrix>
-				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
-			</NodoTransformador>
-		</Grupo>
-		<axis x="1.0" y="0.0" z="0.0"></axis>
-	</Instancia3D>
-	<!-- 04 Nave Prota 2 Texturas 2 -->
 	<NaveUsuario type="0x03">
 		<limitesDeNiveles>
 			<int-array>
@@ -1491,6 +1071,442 @@
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/nave02/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>	<m10>0.0</m10>	<m20>-1.0</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>	<m11>1.0</m11>	<m21>0.0</m21>	<m31>0.0</m31>
+							<m02>1.0</m02>	<m12>0.0</m12>	<m22>0.0</m22>	<m32>0.0</m32>
+							<m03>0.0</m03>	<m13>0.0</m13>	<m23>0.0</m23>	<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.5" g="0.5" b="0.5" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>8.0</shininess>
+							<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>-0.12</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>0.07</m13>		<m23>0.0</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.5</m03>		<m13>-0.15</m13>	<m23>0.12</m23>		<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
+			</NodoTransformador>
+			<PoligonoTest nLados="14">
+				<Punto2F x="-0.49878934" y="-0.25544795"/>
+				<Punto2F x="-0.4552058" y="-0.1937046"/>
+				<Punto2F x="-0.45157385" y="0.11985472"/>
+				<Punto2F x="-0.5024213" y="0.25302663"/>
+				<Punto2F x="-0.40072638" y="0.26029056"/>
+				<Punto2F x="-0.21791768" y="0.124697335"/>
+				<Punto2F x="0.0036319613" y="0.13196126"/>
+				<Punto2F x="-0.06779661" y="0.016949153"/>
+				<Punto2F x="0.13559322" y="-0.042372882"/>
+				<Punto2F x="0.49273607" y="-0.07506053"/>
+				<Punto2F x="0.4915254" y="-0.11501211"/>
+				<Punto2F x="0.0024213076" y="-0.17070217"/>
+				<Punto2F x="0.0" y="-0.24213076"/>
+				<Punto2F x="-0.4031477" y="-0.26271185"/>
+			</PoligonoTest>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 04 Nave Prota 2 Texturas 2 -->
+	<NaveUsuario type="0x04">
+		<limitesDeNiveles>
+			<int-array>
+				<int>1</int>
+				<int>1</int>
+				<int>1</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.0</float>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x82</int>
+								<int>0x8A</int>
+								<int>0x92</int>
+								<int>0x9A</int>
+								<int>0x9A</int>
+								<int>0x9A</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x89</int>
+								<int>0x91</int>
+								<int>0x99</int>
+								<int>0x99</int>
+								<int>0x99</int>
+								<int>0x99</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+								<float>0.00000002125</float>
+								<float>0.00000002125</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+								<int>0x98</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+								<float>0.00000002125</float>
+								<float>0.00000002250</float>
+								<float>0.00000002250</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+								<int>0x40</int>
+								<int>0x41</int>
+								<int>0x42</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>2000000000</long>
+								<long>1000000000</long>
+								<long>1000000000</long>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000005</float>
+								<float>0.000000005</float>
+								<float>0.000000005</float>
+								<float>0.000000005</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+				<Canion-array>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>-0.25</posX>
+						<posY>-0.5</posY>
+						<angulo>-1.57079637</angulo>
+						<desfase>0.1</desfase>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>-0.25</posX>
+						<posY>0.5</posY>
+						<angulo>1.57079637</angulo>
+						<desfase>0.1</desfase>
+					</LanzaMisiles>
+				</Canion-array>
+				<Canion-array>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>-0.5</posX>
+						<posY>-0.5</posY>
+						<angulo>-2.356194555</angulo>
+						<desfase>0.2</desfase>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>-0.25</posX>
+						<posY>-0.5</posY>
+						<angulo>-1.57079637</angulo>
+						<desfase>0.1</desfase>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>-0.25</posX>
+						<posY>0.5</posY>
+						<angulo>1.57079637</angulo>
+						<desfase>0.1</desfase>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../../Canion-array[2]/LanzaMisiles/data"/>
+						<posX>-0.5</posX>
+						<posY>0.5</posY>
+						<angulo>2.356194555</angulo>
+						<desfase>0.2</desfase>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x43</int>
+								<int>0x43</int>
+								<int>0x44</int>
+								<int>0x45</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>8200000000</long>
+								<long>4100000000</long>
+								<long>4100000000</long>
+								<long>4100000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000005</float>
+								<float>0.000000005</float>
+								<float>0.000000005</float>
+								<float>0.000000005</float>
+							</vVelocidades>
+						</data>
+						<posX>-1.0</posX>
+						<posY>-1.0</posY>
+						<angulo>0.0</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<Instancia3D type="0x04">
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
 					<Forma3DFromObjFile reference="/Instancia3D[3]/Grupo/NodoCompartido/Objeto3D/Forma3DFromObjFile" />
 					<Apariencia>
 						<Material>
@@ -1546,324 +1562,6 @@
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 05 Nave Prota 3 -->
-	<NaveUsuario type="0x04">
-		<limitesDeNiveles>
-			<int-array>
-				<int>0</int>
-				<int>0</int>
-				<int>4</int>
-				<int>0</int>
-				<int>0</int>
-			</int-array>
-			<int-array>
-				<int>2</int>
-				<int>2</int>
-				<int>2</int>
-				<int>1</int>
-				<int>1</int>
-			</int-array>
-			<int-array>
-				<int>4</int>
-				<int>4</int>
-				<int>4</int>
-				<int>2</int>
-				<int>2</int>
-			</int-array>
-			<int-array>
-				<int>5</int>
-				<int>5</int>
-				<int>5</int>
-				<int>3</int>
-				<int>3</int>
-			</int-array>
-		</limitesDeNiveles>
-		<velocidadesDisponibles>
-			<float>0.00000000300</float>
-			<float>0.00000000375</float>
-			<float>0.00000000450</float>
-			<float>0.00000000525</float>
-			<float>0.00000000600</float>
-		</velocidadesDisponibles>
-		<canionesDisponibles>
-			<Canion-array-array>
-				<Canion-array>
-					<CanionLineal>
-						<data>
-							<vIdDisparos>
-								<int>0x80</int>
-								<int>0x88</int>
-								<int>0x90</int>
-								<int>0x98</int>
-								<int>0x98</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>136000000</long>
-								<long>124000000</long>
-								<long>112000000</long>
-								<long>100000000</long>
-								<long>88000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.00000001500</float>
-								<float>0.00000001625</float>
-								<float>0.00000001750</float>
-								<float>0.00000001875</float>
-								<float>0.00000002000</float>
-							</vVelocidades>
-						</data>
-						<posX>0.5</posX>
-						<posY>-0.1</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>-0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0.08726646</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.5</posX>
-						<posY>-0.1</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>-0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0.08726646</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>-0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>-0.25</posY>
-						<angulo>-0.17453292</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>0.05</posY>
-						<angulo>0.17453292</angulo>
-					</CanionLineal>
-				</Canion-array>
-				<Canion-array>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.5</posX>
-						<posY>-0.1</posY>
-						<angulo>0.0</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>-0.2</posY>
-						<angulo>-0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.47</posX>
-						<posY>0.0</posY>
-						<angulo>0.08726646</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>-0.25</posY>
-						<angulo>-0.17453292</angulo>
-					</CanionLineal>
-					<CanionLineal>
-						<data reference="../../../Canion-array/CanionLineal/data"/>
-						<posX>0.45</posX>
-						<posY>0.05</posY>
-						<angulo>0.17453292</angulo>
-					</CanionLineal>
-				</Canion-array>
-			</Canion-array-array>
-			<Canion-array-array>
-				<Canion-array/>
-				<Canion-array>
-					<CanionInterpolado>
-						<data>
-							<vIdDisparos>
-								<int>0x60</int>
-								<int>0x60</int>
-								<int>0x60</int>
-								<int>0x60</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>625000000</long>
-								<long>500000000</long>
-								<long>375000000</long>
-								<long>250000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.00000000010</float>
-								<float>0.00000000012</float>
-								<float>0.00000000014</float>
-								<float>0.00000000016</float>
-							</vVelocidades>
-						</data>
-						<posX>-0.5</posX>
-						<posY>0.0</posY>
-						<scaleX>1.0</scaleX>
-						<scaleY>2.0</scaleY>
-					</CanionInterpolado>
-					<CanionInterpolado>
-						<data reference="../../CanionInterpolado/data"/>
-						<posX>-0.5</posX>
-						<posY>0.0</posY>
-						<scaleX>1.0</scaleX>
-						<scaleY>-2.0</scaleY>
-					</CanionInterpolado>
-				</Canion-array>
-				<Canion-array>
-					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
-					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
-					<LanzaMisiles>
-						<data>
-							<vIdDisparos>
-								<int>0x40</int>
-							</vIdDisparos>
-							<vTRecarga>
-								<long>1000000000</long>
-							</vTRecarga>
-							<vVelocidades>
-								<float>0.000000010</float>
-							</vVelocidades>
-						</data>
-						<posX>0</posX>
-						<posY>-0.5</posY>
-						<angulo>-0.7853981633974483</angulo>
-					</LanzaMisiles>
-					<LanzaMisiles>
-						<data reference="../../LanzaMisiles/data"/>
-						<posX>0</posX>
-						<posY>0.5</posY>
-						<angulo>0.7853981633974483</angulo>
-					</LanzaMisiles>
-				</Canion-array>
-			</Canion-array-array>
-		</canionesDisponibles>
-	</NaveUsuario>
-	<Instancia3D type="0x04">
-		<Grupo>
-			<NodoCompartido>
-				<Objeto3D>
-					<Forma3DFromObjFile path="resources/obj3d/nave03/forma.obj">
-						<transformMatrix>
-							<m00>0.0</m00>		<m10>0.0</m10>		<m20>-1.25</m20>	<m30>0.0</m30>
-							<m01>0.0</m01>		<m11>1.25</m11>		<m21>0.0</m21>		<m31>0.0</m31>
-							<m02>1.25</m02>		<m12>0.0</m12>		<m22>0.0</m22>		<m32>0.0</m32>
-							<m03>0.0</m03>		<m13>0.0</m13>		<m23>0.0</m23>		<m33>1.0</m33>
-						</transformMatrix>
-					</Forma3DFromObjFile>
-					<Apariencia>
-						<Material>
-							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
-							<diffuse r="0.25" g="0.25" b="0.25" a="1.0"/>
-							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
-							<shininess>32.0</shininess>
-							<specular r="0.25" g="0.25" b="0.25" a="1.0"/>
-						</Material>
-						<unidadesTextura>
-							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
-									image="resources/obj3d/nave03/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
-							</UnidadTextura>
-							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
-									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
-							</UnidadTextura>
-							<UnidadTextura>
-								<Textura
-									reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
-							</UnidadTextura>
-						</unidadesTextura>
-						<Shader reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
-					</Apariencia>
-				</Objeto3D>
-			</NodoCompartido>
-			<NodoTransformador>
-				<transformMatrix>
-					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
-					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
-					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
-					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>0.135</m23>	<m33>1.0</m33>
-				</transformMatrix>
-				<Particulas nParticulas="9">
-					<Emisor reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
-					<Emision>CONTINUA</Emision>
-					<RangoDeEmision>1.0</RangoDeEmision>
-					<TiempoDeVida>0.015</TiempoDeVida>
-					<Radio class="Getter.Float">
-						<MetodoDeInterpolacion predefinido="LINEAL"/>
-						<Keys length="3">
-							<float>0.0</float>
-							<float>0.1666</float>
-							<float>1.0</float>
-						</Keys>
-						<Values length="3" class="[F">
-							<float>0.025</float>
-							<float>0.05</float>
-							<float>0.01</float>
-						</Values>
-					</Radio>
-					<SemiEje class="float">0.1</SemiEje>
-					<Color>
-						<r class="float">0.5</r>
-						<g class="float">0.3</g>
-						<b class="float">0.15</b>
-						<a class="float">1.0</a>
-					</Color>
-					<PertubacionColor p="0.75" homogenea="false" escalar="true"/>
-					<Velocidad v="10" p="0" s="false"/>
-					<GiroIncial v="0.0" p="180.0" s="true"/>
-					<Apariencia reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Apariencia" />
-				</Particulas>
-			</NodoTransformador>
-			<NodoTransformador>
-				<transformMatrix>
-					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
-					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
-					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
-					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>-0.135</m23>	<m33>1.0</m33>
-				</transformMatrix>
-				<Particulas reference="/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
-			</NodoTransformador>
-		</Grupo>
-		<axis x="1.0" y="0.0" z="0.0"></axis>
-	</Instancia3D>
-	<!-- 06 Nave Prota 3 Texturas 2 -->
 	<NaveUsuario type="0x05">
 		<limitesDeNiveles>
 			<int-array>
@@ -2097,6 +1795,342 @@
 		<Grupo>
 			<NodoCompartido>
 				<Objeto3D>
+					<Forma3DFromObjFile path="resources/obj3d/nave03/forma.obj">
+						<transformMatrix>
+							<m00>0.0</m00>		<m10>0.0</m10>		<m20>-1.25</m20>	<m30>0.0</m30>
+							<m01>0.0</m01>		<m11>1.25</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+							<m02>1.25</m02>		<m12>0.0</m12>		<m22>0.0</m22>		<m32>0.0</m32>
+							<m03>0.0</m03>		<m13>0.0</m13>		<m23>0.0</m23>		<m33>1.0</m33>
+						</transformMatrix>
+					</Forma3DFromObjFile>
+					<Apariencia>
+						<Material>
+							<ambient r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<diffuse r="0.25" g="0.25" b="0.25" a="1.0"/>
+							<emission r="0.0" g="0.0" b="0.0" a="1.0"/>
+							<shininess>32.0</shininess>
+							<specular r="0.25" g="0.25" b="0.25" a="1.0"/>
+						</Material>
+						<unidadesTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+									image="resources/obj3d/nave03/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
+							</UnidadTextura>
+							<UnidadTextura>
+								<Textura
+									reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]/Textura"/>
+							</UnidadTextura>
+						</unidadesTextura>
+						<Shader reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/Shader"></Shader>
+					</Apariencia>
+				</Objeto3D>
+			</NodoCompartido>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>0.135</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas nParticulas="9">
+					<Emisor reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Emisor" />
+					<Emision>CONTINUA</Emision>
+					<RangoDeEmision>1.0</RangoDeEmision>
+					<TiempoDeVida>0.015</TiempoDeVida>
+					<Radio class="Getter.Float">
+						<MetodoDeInterpolacion predefinido="LINEAL"/>
+						<Keys length="3">
+							<float>0.0</float>
+							<float>0.1666</float>
+							<float>1.0</float>
+						</Keys>
+						<Values length="3" class="[F">
+							<float>0.025</float>
+							<float>0.05</float>
+							<float>0.01</float>
+						</Values>
+					</Radio>
+					<SemiEje class="float">0.1</SemiEje>
+					<Color>
+						<r class="float">0.5</r>
+						<g class="float">0.3</g>
+						<b class="float">0.15</b>
+						<a class="float">1.0</a>
+					</Color>
+					<PertubacionColor p="0.75" homogenea="false" escalar="true"/>
+					<Velocidad v="10" p="0" s="false"/>
+					<GiroIncial v="0.0" p="180.0" s="true"/>
+					<Apariencia reference="/Instancia3D/Grupo/NodoTransformador/Particulas/Apariencia" />
+				</Particulas>
+			</NodoTransformador>
+			<NodoTransformador>
+				<transformMatrix>
+					<m00>-1.0</m00>		<m10>0.0</m10>		<m20>0.0</m20>		<m30>0.0</m30>
+					<m01>0.0</m01>		<m11>1.0</m11>		<m21>0.0</m21>		<m31>0.0</m31>
+					<m02>0.0</m02>		<m12>0.0</m12>		<m22>-1.0</m22>		<m32>0.0</m32>
+					<m03>-0.25</m03>	<m13>0.075</m13>	<m23>-0.135</m23>	<m33>1.0</m33>
+				</transformMatrix>
+				<Particulas reference="/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
+			</NodoTransformador>
+			<PoligonoTest nLados="16" scale="1.25">
+				<Punto2F x="-0.50121063" y="-0.041162226"/>
+				<Punto2F x="-0.4479419" y="0.018159807"/>
+				<Punto2F x="-0.5" y="0.19128329"/>
+				<Punto2F x="-0.3765133" y="0.20581114"/>
+				<Punto2F x="-0.13922518" y="0.09927361"/>
+				<Punto2F x="0.12348668" y="0.11380145"/>
+				<Punto2F x="0.17675544" y="0.056900725"/>
+				<Punto2F x="0.3244552" y="0.033898305"/>
+				<Punto2F x="0.40435836" y="-0.013317191"/>
+				<Punto2F x="0.44673124" y="-0.098062955"/>
+				<Punto2F x="0.4951574" y="-0.11985472"/>
+				<Punto2F x="0.50363195" y="-0.17070217"/>
+				<Punto2F x="0.41525424" y="-0.20581114"/>
+				<Punto2F x="0.14043583" y="-0.1598063"/>
+				<Punto2F x="-0.27966103" y="-0.008474576"/>
+				<Punto2F x="-0.38135594" y="-0.053268764"/>
+			</PoligonoTest>
+		</Grupo>
+		<axis x="1.0" y="0.0" z="0.0"></axis>
+	</Instancia3D>
+	<!-- 06 Nave Prota 3 Texturas 2 -->
+	<NaveUsuario type="0x06">
+		<limitesDeNiveles>
+			<int-array>
+				<int>0</int>
+				<int>0</int>
+				<int>4</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x80</int>
+								<int>0x88</int>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionInterpolado>
+						<data>
+							<vIdDisparos>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000000010</float>
+								<float>0.00000000012</float>
+								<float>0.00000000014</float>
+								<float>0.00000000016</float>
+							</vVelocidades>
+						</data>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>2.0</scaleY>
+					</CanionInterpolado>
+					<CanionInterpolado>
+						<data reference="../../CanionInterpolado/data"/>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>-2.0</scaleY>
+					</CanionInterpolado>
+				</Canion-array>
+				<Canion-array>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000010</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<Instancia3D type="0x06">
+		<Grupo>
+			<NodoCompartido>
+				<Objeto3D>
 					<Forma3DFromObjFile reference="/Instancia3D[5]/Grupo/NodoCompartido/Objeto3D/Forma3DFromObjFile" />
 					<Apariencia>
 						<Material>
@@ -2202,6 +2236,22 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
 			</NodoTransformador>
+			<PoligonoTest nLados="14" scale="1.2">
+				<Punto2F x="0.51452786" y="-0.118644066"/>
+				<Punto2F x="0.3983051" y="-0.014527845"/>
+				<Punto2F x="0.45641646" y="0.11985472"/>
+				<Punto2F x="0.35835353" y="0.13317192"/>
+				<Punto2F x="0.1779661" y="0.00968523"/>
+				<Punto2F x="-0.12711865" y="0.02905569"/>
+				<Punto2F x="-0.1646489" y="0.050847456"/>
+				<Punto2F x="-0.31719127" y="0.036319613"/>
+				<Punto2F x="-0.3535109" y="0.0024213076"/>
+				<Punto2F x="-0.5" y="-0.033898305"/>
+				<Punto2F x="-0.49878934" y="-0.070217915"/>
+				<Punto2F x="-0.13801453" y="-0.111380145"/>
+				<Punto2F x="0.32082325" y="-0.10653753"/>
+				<Punto2F x="0.40072638" y="-0.13317192"/>
+			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
@@ -2310,6 +2360,21 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
 			</NodoTransformador>
+			<PoligonoTest nLados="13" scale="1.25">
+				<Punto2F x="0.50605327" y="-0.12711865"/>
+				<Punto2F x="0.4479419" y="-0.065375306"/>
+				<Punto2F x="0.44673124" y="-0.01937046"/>
+				<Punto2F x="0.5084746" y="0.14164649"/>
+				<Punto2F x="0.4164649" y="0.15254237"/>
+				<Punto2F x="0.07990315" y="0.013317191"/>
+				<Punto2F x="-0.08837772" y="0.018159807"/>
+				<Punto2F x="-0.5157385" y="-0.07506053"/>
+				<Punto2F x="-0.27845037" y="-0.098062955"/>
+				<Punto2F x="0.16949153" y="-0.10653753"/>
+				<Punto2F x="0.29903147" y="-0.15254237"/>
+				<Punto2F x="0.37772396" y="-0.14769976"/>
+				<Punto2F x="0.36561742" y="-0.12953995"/>
+			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
@@ -2409,6 +2474,21 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas" />
 			</NodoTransformador>
+			<PoligonoTest nLados="13" scale="1.4">
+				<Punto2F x="0.49878934" y="-0.035108957"/>
+				<Punto2F x="0.5" y="0.02905569"/>
+				<Punto2F x="0.4503632" y="0.049636804"/>
+				<Punto2F x="0.50605327" y="0.10774818"/>
+				<Punto2F x="0.42372882" y="0.111380145"/>
+				<Punto2F x="0.26876512" y="0.04842615"/>
+				<Punto2F x="-0.055690072" y="0.06658596"/>
+				<Punto2F x="-0.5084746" y="-0.02905569"/>
+				<Punto2F x="-0.2905569" y="-0.053268764"/>
+				<Punto2F x="-0.27602905" y="-0.06900726"/>
+				<Punto2F x="0.3292978" y="-0.1125908"/>
+				<Punto2F x="0.44188863" y="-0.098062955"/>
+				<Punto2F x="0.38861984" y="-0.052058112"/>
+			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
