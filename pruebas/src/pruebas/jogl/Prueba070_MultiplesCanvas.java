@@ -62,7 +62,7 @@ public class Prueba070_MultiplesCanvas{
 			orbitBehavior.setEyePos(0.0f, 0.0f, 4.0f);
 			orbitBehavior.addMouseListeners(canvas[i]);
 
-			Prueba060_Loader.Renderer renderer = new Prueba060_Loader.Renderer(data, orbitBehavior);
+			Prueba060_Loader.Renderer renderer = new Prueba060_Loader.Renderer(data, null, orbitBehavior);
 			canvas[i].addGLEventListener(renderer);
 			canvas[i].addKeyListener(renderer);
 

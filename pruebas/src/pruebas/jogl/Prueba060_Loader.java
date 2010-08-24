@@ -4,6 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.EOFException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -13,22 +19,91 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
+import org.sam.colisiones.Poligono;
+import org.sam.jogl.Apariencia;
+import org.sam.jogl.Objeto3D;
 import org.sam.jogl.ObjetosOrientables;
+import org.sam.jogl.OglList;
+import org.sam.jspacewars.elementos.Elemento;
+import org.sam.jspacewars.serialization.ElementosConverters;
 import org.sam.util.ModificableBoolean;
+import org.sam.util.Reflexion;
 
 import com.sun.opengl.util.Animator;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Prueba060_Loader {
+	
+	private static Poligono getPoligono(Elemento e){
+		java.lang.reflect.Field f = Reflexion.findField(Elemento.class, "forma");
+		if (f == null)
+			return null;
+		try {
+			boolean accesible = f.isAccessible();
+			f.setAccessible(true);
+			Poligono p = (Poligono)f.get(e);
+			f.setAccessible(accesible);
+			return p;
+		} catch (IllegalAccessException ignorada) {
+			return null;
+		}
+	}
+	
+	private static float[] getArray(Poligono p, String name){
+		java.lang.reflect.Field f = Reflexion.findField(Poligono.class, name);
+		try {
+			boolean accesible = f.isAccessible();
+			f.setAccessible(true);
+			float[] array = (float[])f.get(p);
+			f.setAccessible(accesible);
+			return array;
+		} catch (IllegalAccessException ignorada) {
+			return null;
+		}
+	}
+	
+	private static Objeto3D from(GL gl, Elemento e){
+		Poligono p = getPoligono(e);
+		if(p == null)
+			return null;
+		
+		int nLados = p.getNLados();
+		float coordX[] = getArray(p, "coordX");
+		float coordY[] = getArray(p, "coordY");
+		
+		int lid = gl.glGenLists(1);
+		gl.glNewList(lid, GL.GL_COMPILE);
+		gl.glBegin(GL.GL_LINES);
+		for(int i=0; i< nLados-1;){
+			gl.glVertex3f(coordX[i],coordY[i],0);
+			i++;
+			gl.glVertex3f(coordX[i],coordY[i],0);
+		}
+		gl.glVertex3f(coordX[nLados-1],coordY[nLados-1],0);
+		gl.glVertex3f(coordX[0],coordY[0],0);
+		gl.glEnd();
+		gl.glEndList();	
+		
+		return new Objeto3D( new OglList(lid), new Apariencia());
+	}
 
 	static class Renderer implements GLEventListener, KeyListener {
 
 		private final Loader.Data data;
+		private final List<Elemento> elementos;
+		private Objeto3D[] siluetas;
 		private final OrbitBehavior orbitBehavior;
 		private transient int index = 0;
+		private boolean mostrarForma;
+		private boolean mostrarSilueta;
 
-		Renderer(Loader.Data data, OrbitBehavior orbitBehavior) {
+		Renderer(Loader.Data data, List<Elemento> elementos, OrbitBehavior orbitBehavior) {
 			this.data = data;
+			this.elementos = elementos;
 			this.orbitBehavior = orbitBehavior;
+			this.mostrarForma = true;
+			this.mostrarSilueta = false;
 		}
 
 		private transient float proporcionesPantalla;
@@ -58,6 +133,13 @@ public class Prueba060_Loader {
 			gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, new float[] { 0.0f,
 					0.0f, 10.0f, 1.0f }, 0);
 			gl.glEnable(GL.GL_CULL_FACE);
+			
+			if(elementos != null){
+				siluetas = new Objeto3D[elementos.size()];
+				for(int i = 0; i < elementos.size(); i++)
+					siluetas[i] = from(gl, elementos.get(i));
+				elementos.clear();
+			}
 
 			data.instancias[index].reset();
 
@@ -119,10 +201,13 @@ public class Prueba060_Loader {
 			orbitBehavior.setLookAt(glu);
 			ObjetosOrientables.loadModelViewMatrix();
 
-			if (data.instancias[index].getModificador() != null)
-				data.instancias[index].getModificador().modificar(incT);
-			data.instancias[index].draw(gl);
-
+			if(mostrarForma){
+				if (data.instancias[index].getModificador() != null)
+					data.instancias[index].getModificador().modificar(incT);
+				data.instancias[index].draw(gl);
+			}
+			if(mostrarSilueta && siluetas!= null && index < siluetas.length && siluetas[index] != null)
+				siluetas[index].draw(gl);
 			gl.glFlush();
 		}
 
@@ -209,6 +294,16 @@ public class Prueba060_Loader {
 					index = data.instancias.length - 1;
 				data.instancias[index].reset();
 				break;
+			case KeyEvent.VK_F:
+				mostrarForma = !mostrarForma;
+				if(!mostrarForma)
+					mostrarSilueta = true;
+				break;
+			case KeyEvent.VK_S:
+				mostrarSilueta = !mostrarSilueta;
+				if(!mostrarSilueta)
+					mostrarForma = true;
+				break;
 			}
 		}
 
@@ -221,10 +316,36 @@ public class Prueba060_Loader {
 		public void keyTyped(KeyEvent e) {
 		}
 	}
+	
+	private static List<Elemento> loadElementos(String path){
+		XStream xStream = new XStream(new DomDriver());
+		ElementosConverters.register(xStream);
+		
+		List<Elemento> l = new ArrayList<Elemento>();
+		try{
+			FileReader fr = new FileReader(path);
+			ObjectInputStream in = xStream.createObjectInputStream(fr);
+			try {
+				while (true) {
+					Object o = in.readObject();
+					if (o != null)
+						l.add((Elemento) o);
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (EOFException eof) {
+				in.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return l;
+	}
 
 	public static void main(String[] args) {
 
 		JFrame frame = new JFrame("Prueba Loader");
+		List<Elemento> elementos = loadElementos("resources/elementos-instancias3D-stream-sh.xml");
 
 		frame.setSize(500, 500);
 		frame.setBackground(Color.BLACK);
@@ -266,7 +387,7 @@ public class Prueba060_Loader {
 		orbitBehavior.setEyePos(0.0f, 0.0f, 4.0f);
 		orbitBehavior.addMouseListeners(canvas);
 
-		Renderer renderer = new Renderer(data, orbitBehavior);
+		Renderer renderer = new Renderer(data, elementos, orbitBehavior);
 		canvas.addGLEventListener(renderer);
 		canvas.addKeyListener(renderer);
 
