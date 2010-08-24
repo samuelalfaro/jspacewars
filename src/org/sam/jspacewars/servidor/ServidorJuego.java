@@ -86,7 +86,7 @@ public class ServidorJuego {
 			naves.add(nave2);
 		}
 
-		NaveEnemiga bomber = (NaveEnemiga) cache.newObject(0x30);
+		NaveEnemiga bomber = (NaveEnemiga)cache.newObject(0x30);
 		bomber.setPosicion(3, -1);
 		SingletonEnemigos.setObjetivo(bomber);
 		naves.add(bomber);

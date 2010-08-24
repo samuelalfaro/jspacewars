@@ -1,7 +1,7 @@
 <object-stream>
 	<!-- 01 Nave Prota 1 -->
 	<NaveUsuario type="0x01">
-		<forma class="Poligono" nLados="14">
+		<forma class="Poligono" nLados="14" scale="1.35">
 			<Punto2F x="-0.44" y="-0.13"/>
 			<Punto2F x="-0.47" y="-0.08"/>
 			<Punto2F x="-0.50" y="0.13"/>
@@ -405,27 +405,27 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D/Grupo/NodoTransformador/Particulas" />
 			</NodoTransformador>
-			<PoligonoTest nLados="14" scale="1.35">
-				<Punto2F x="-0.44" y="-0.13"/>
-				<Punto2F x="-0.47" y="-0.08"/>
-				<Punto2F x="-0.50" y="0.13"/>
-				<Punto2F x="-0.41" y="0.13"/>
-				<Punto2F x="-0.2" y="0.01"/>
-				<Punto2F x="0.02" y="0.01"/>
-				<Punto2F x="0.06" y="0.03"/>
-				<Punto2F x="0.22" y="0.03"/>
-				<Punto2F x="0.29" y="-0.02"/>
-				<Punto2F x="0.52" y="-0.055"/>
-				<Punto2F x="0.17" y="-0.1"/>
-				<Punto2F x="0.16" y="-0.12"/>
-				<Punto2F x="-0.06" y="-0.11"/>
-				<Punto2F x="-0.15" y="-0.13"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 02 Nave Prota 1 Texturas 2 -->
 	<NaveUsuario type="0x02">
+		<forma class="Poligono" nLados="14" scale="1.35">
+			<Punto2F x="-0.44" y="-0.13"/>
+			<Punto2F x="-0.47" y="-0.08"/>
+			<Punto2F x="-0.50" y="0.13"/>
+			<Punto2F x="-0.41" y="0.13"/>
+			<Punto2F x="-0.2" y="0.01"/>
+			<Punto2F x="0.02" y="0.01"/>
+			<Punto2F x="0.06" y="0.03"/>
+			<Punto2F x="0.22" y="0.03"/>
+			<Punto2F x="0.29" y="-0.02"/>
+			<Punto2F x="0.52" y="-0.055"/>
+			<Punto2F x="0.17" y="-0.1"/>
+			<Punto2F x="0.16" y="-0.12"/>
+			<Punto2F x="-0.06" y="-0.11"/>
+			<Punto2F x="-0.15" y="-0.13"/>
+		</forma>
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -717,6 +717,22 @@
 	</Instancia3D>
 	<!-- 03 Nave Prota 2 -->
 	<NaveUsuario type="0x03">
+		<forma class="Poligono" nLados="14" scale="1.0">
+			<Punto2F x="-0.49878934" y="-0.25544795"/>
+			<Punto2F x="-0.4552058" y="-0.1937046"/>
+			<Punto2F x="-0.45157385" y="0.11985472"/>
+			<Punto2F x="-0.5024213" y="0.25302663"/>
+			<Punto2F x="-0.40072638" y="0.26029056"/>
+			<Punto2F x="-0.21791768" y="0.124697335"/>
+			<Punto2F x="0.0036319613" y="0.13196126"/>
+			<Punto2F x="-0.06779661" y="0.016949153"/>
+			<Punto2F x="0.13559322" y="-0.042372882"/>
+			<Punto2F x="0.49273607" y="-0.07506053"/>
+			<Punto2F x="0.4915254" y="-0.11501211"/>
+			<Punto2F x="0.0024213076" y="-0.17070217"/>
+			<Punto2F x="0.0" y="-0.24213076"/>
+			<Punto2F x="-0.4031477" y="-0.26271185"/>
+		</forma>
 		<limitesDeNiveles>
 			<int-array>
 				<int>1</int>
@@ -1132,27 +1148,27 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas"></Particulas>
 			</NodoTransformador>
-			<PoligonoTest nLados="14">
-				<Punto2F x="-0.49878934" y="-0.25544795"/>
-				<Punto2F x="-0.4552058" y="-0.1937046"/>
-				<Punto2F x="-0.45157385" y="0.11985472"/>
-				<Punto2F x="-0.5024213" y="0.25302663"/>
-				<Punto2F x="-0.40072638" y="0.26029056"/>
-				<Punto2F x="-0.21791768" y="0.124697335"/>
-				<Punto2F x="0.0036319613" y="0.13196126"/>
-				<Punto2F x="-0.06779661" y="0.016949153"/>
-				<Punto2F x="0.13559322" y="-0.042372882"/>
-				<Punto2F x="0.49273607" y="-0.07506053"/>
-				<Punto2F x="0.4915254" y="-0.11501211"/>
-				<Punto2F x="0.0024213076" y="-0.17070217"/>
-				<Punto2F x="0.0" y="-0.24213076"/>
-				<Punto2F x="-0.4031477" y="-0.26271185"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 04 Nave Prota 2 Texturas 2 -->
 	<NaveUsuario type="0x04">
+		<forma class="Poligono" nLados="14" scale="1.0">
+			<Punto2F x="-0.49878934" y="-0.25544795"/>
+			<Punto2F x="-0.4552058" y="-0.1937046"/>
+			<Punto2F x="-0.45157385" y="0.11985472"/>
+			<Punto2F x="-0.5024213" y="0.25302663"/>
+			<Punto2F x="-0.40072638" y="0.26029056"/>
+			<Punto2F x="-0.21791768" y="0.124697335"/>
+			<Punto2F x="0.0036319613" y="0.13196126"/>
+			<Punto2F x="-0.06779661" y="0.016949153"/>
+			<Punto2F x="0.13559322" y="-0.042372882"/>
+			<Punto2F x="0.49273607" y="-0.07506053"/>
+			<Punto2F x="0.4915254" y="-0.11501211"/>
+			<Punto2F x="0.0024213076" y="-0.17070217"/>
+			<Punto2F x="0.0" y="-0.24213076"/>
+			<Punto2F x="-0.4031477" y="-0.26271185"/>
+		</forma>
 		<limitesDeNiveles>
 			<int-array>
 				<int>1</int>
@@ -1563,6 +1579,24 @@
 	</Instancia3D>
 	<!-- 05 Nave Prota 3 -->
 	<NaveUsuario type="0x05">
+		<forma class="Poligono" nLados="16" scale="1.25">
+			<Punto2F x="-0.50121063" y="-0.041162226"/>
+			<Punto2F x="-0.4479419" y="0.018159807"/>
+			<Punto2F x="-0.5" y="0.19128329"/>
+			<Punto2F x="-0.3765133" y="0.20581114"/>
+			<Punto2F x="-0.13922518" y="0.09927361"/>
+			<Punto2F x="0.12348668" y="0.11380145"/>
+			<Punto2F x="0.17675544" y="0.056900725"/>
+			<Punto2F x="0.3244552" y="0.033898305"/>
+			<Punto2F x="0.40435836" y="-0.013317191"/>
+			<Punto2F x="0.44673124" y="-0.098062955"/>
+			<Punto2F x="0.4951574" y="-0.11985472"/>
+			<Punto2F x="0.50363195" y="-0.17070217"/>
+			<Punto2F x="0.41525424" y="-0.20581114"/>
+			<Punto2F x="0.14043583" y="-0.1598063"/>
+			<Punto2F x="-0.27966103" y="-0.008474576"/>
+			<Punto2F x="-0.38135594" y="-0.053268764"/>
+		</forma>
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -1876,29 +1910,29 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
 			</NodoTransformador>
-			<PoligonoTest nLados="16" scale="1.25">
-				<Punto2F x="-0.50121063" y="-0.041162226"/>
-				<Punto2F x="-0.4479419" y="0.018159807"/>
-				<Punto2F x="-0.5" y="0.19128329"/>
-				<Punto2F x="-0.3765133" y="0.20581114"/>
-				<Punto2F x="-0.13922518" y="0.09927361"/>
-				<Punto2F x="0.12348668" y="0.11380145"/>
-				<Punto2F x="0.17675544" y="0.056900725"/>
-				<Punto2F x="0.3244552" y="0.033898305"/>
-				<Punto2F x="0.40435836" y="-0.013317191"/>
-				<Punto2F x="0.44673124" y="-0.098062955"/>
-				<Punto2F x="0.4951574" y="-0.11985472"/>
-				<Punto2F x="0.50363195" y="-0.17070217"/>
-				<Punto2F x="0.41525424" y="-0.20581114"/>
-				<Punto2F x="0.14043583" y="-0.1598063"/>
-				<Punto2F x="-0.27966103" y="-0.008474576"/>
-				<Punto2F x="-0.38135594" y="-0.053268764"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 06 Nave Prota 3 Texturas 2 -->
 	<NaveUsuario type="0x06">
+		<forma class="Poligono" nLados="16" scale="1.25">
+			<Punto2F x="-0.50121063" y="-0.041162226"/>
+			<Punto2F x="-0.4479419" y="0.018159807"/>
+			<Punto2F x="-0.5" y="0.19128329"/>
+			<Punto2F x="-0.3765133" y="0.20581114"/>
+			<Punto2F x="-0.13922518" y="0.09927361"/>
+			<Punto2F x="0.12348668" y="0.11380145"/>
+			<Punto2F x="0.17675544" y="0.056900725"/>
+			<Punto2F x="0.3244552" y="0.033898305"/>
+			<Punto2F x="0.40435836" y="-0.013317191"/>
+			<Punto2F x="0.44673124" y="-0.098062955"/>
+			<Punto2F x="0.4951574" y="-0.11985472"/>
+			<Punto2F x="0.50363195" y="-0.17070217"/>
+			<Punto2F x="0.41525424" y="-0.20581114"/>
+			<Punto2F x="0.14043583" y="-0.1598063"/>
+			<Punto2F x="-0.27966103" y="-0.008474576"/>
+			<Punto2F x="-0.38135594" y="-0.053268764"/>
+		</forma>
 		<limitesDeNiveles>
 			<int-array>
 				<int>0</int>
@@ -2181,6 +2215,22 @@
 	</Instancia3D>
 	<!-- 07 Nave Enemiga 1 Texturas 1 -->
 	<NaveEnemiga type="0x10">
+		<forma class="Poligono" nLados="14" scale="1.2">
+			<Punto2F x="0.51452786" y="-0.118644066"/>
+			<Punto2F x="0.3983051" y="-0.014527845"/>
+			<Punto2F x="0.45641646" y="0.11985472"/>
+			<Punto2F x="0.35835353" y="0.13317192"/>
+			<Punto2F x="0.1779661" y="0.00968523"/>
+			<Punto2F x="-0.12711865" y="0.02905569"/>
+			<Punto2F x="-0.1646489" y="0.050847456"/>
+			<Punto2F x="-0.31719127" y="0.036319613"/>
+			<Punto2F x="-0.3535109" y="0.0024213076"/>
+			<Punto2F x="-0.5" y="-0.033898305"/>
+			<Punto2F x="-0.49878934" y="-0.070217915"/>
+			<Punto2F x="-0.13801453" y="-0.111380145"/>
+			<Punto2F x="0.32082325" y="-0.10653753"/>
+			<Punto2F x="0.40072638" y="-0.13317192"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x10">
 		<Grupo>
@@ -2236,27 +2286,27 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
 			</NodoTransformador>
-			<PoligonoTest nLados="14" scale="1.2">
-				<Punto2F x="0.51452786" y="-0.118644066"/>
-				<Punto2F x="0.3983051" y="-0.014527845"/>
-				<Punto2F x="0.45641646" y="0.11985472"/>
-				<Punto2F x="0.35835353" y="0.13317192"/>
-				<Punto2F x="0.1779661" y="0.00968523"/>
-				<Punto2F x="-0.12711865" y="0.02905569"/>
-				<Punto2F x="-0.1646489" y="0.050847456"/>
-				<Punto2F x="-0.31719127" y="0.036319613"/>
-				<Punto2F x="-0.3535109" y="0.0024213076"/>
-				<Punto2F x="-0.5" y="-0.033898305"/>
-				<Punto2F x="-0.49878934" y="-0.070217915"/>
-				<Punto2F x="-0.13801453" y="-0.111380145"/>
-				<Punto2F x="0.32082325" y="-0.10653753"/>
-				<Punto2F x="0.40072638" y="-0.13317192"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 08 Nave Enemiga 1 Texturas 2 -->
 	<NaveEnemiga type="0x11">
+		<forma class="Poligono" nLados="14" scale="1.2">
+			<Punto2F x="0.51452786" y="-0.118644066"/>
+			<Punto2F x="0.3983051" y="-0.014527845"/>
+			<Punto2F x="0.45641646" y="0.11985472"/>
+			<Punto2F x="0.35835353" y="0.13317192"/>
+			<Punto2F x="0.1779661" y="0.00968523"/>
+			<Punto2F x="-0.12711865" y="0.02905569"/>
+			<Punto2F x="-0.1646489" y="0.050847456"/>
+			<Punto2F x="-0.31719127" y="0.036319613"/>
+			<Punto2F x="-0.3535109" y="0.0024213076"/>
+			<Punto2F x="-0.5" y="-0.033898305"/>
+			<Punto2F x="-0.49878934" y="-0.070217915"/>
+			<Punto2F x="-0.13801453" y="-0.111380145"/>
+			<Punto2F x="0.32082325" y="-0.10653753"/>
+			<Punto2F x="0.40072638" y="-0.13317192"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x11">
 		<Grupo>
@@ -2312,6 +2362,21 @@
 	</Instancia3D>
 	<!-- 09 Nave Enemiga 2 Texturas 1 -->
 	<NaveEnemiga type="0x12">
+		<forma class="Poligono" nLados="13" scale="1.25">
+			<Punto2F x="0.50605327" y="-0.12711865"/>
+			<Punto2F x="0.4479419" y="-0.065375306"/>
+			<Punto2F x="0.44673124" y="-0.01937046"/>
+			<Punto2F x="0.5084746" y="0.14164649"/>
+			<Punto2F x="0.4164649" y="0.15254237"/>
+			<Punto2F x="0.07990315" y="0.013317191"/>
+			<Punto2F x="-0.08837772" y="0.018159807"/>
+			<Punto2F x="-0.5157385" y="-0.07506053"/>
+			<Punto2F x="-0.27845037" y="-0.098062955"/>
+			<Punto2F x="0.16949153" y="-0.10653753"/>
+			<Punto2F x="0.29903147" y="-0.15254237"/>
+			<Punto2F x="0.37772396" y="-0.14769976"/>
+			<Punto2F x="0.36561742" y="-0.12953995"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x12">
 		<Grupo>
@@ -2360,26 +2425,26 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D[5]/Grupo/NodoTransformador/Particulas" />
 			</NodoTransformador>
-			<PoligonoTest nLados="13" scale="1.25">
-				<Punto2F x="0.50605327" y="-0.12711865"/>
-				<Punto2F x="0.4479419" y="-0.065375306"/>
-				<Punto2F x="0.44673124" y="-0.01937046"/>
-				<Punto2F x="0.5084746" y="0.14164649"/>
-				<Punto2F x="0.4164649" y="0.15254237"/>
-				<Punto2F x="0.07990315" y="0.013317191"/>
-				<Punto2F x="-0.08837772" y="0.018159807"/>
-				<Punto2F x="-0.5157385" y="-0.07506053"/>
-				<Punto2F x="-0.27845037" y="-0.098062955"/>
-				<Punto2F x="0.16949153" y="-0.10653753"/>
-				<Punto2F x="0.29903147" y="-0.15254237"/>
-				<Punto2F x="0.37772396" y="-0.14769976"/>
-				<Punto2F x="0.36561742" y="-0.12953995"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 10 Nave Enemiga 2 Texturas 2 -->
 	<NaveEnemiga type="0x13">
+		<forma class="Poligono" nLados="13" scale="1.25">
+			<Punto2F x="0.50605327" y="-0.12711865"/>
+			<Punto2F x="0.4479419" y="-0.065375306"/>
+			<Punto2F x="0.44673124" y="-0.01937046"/>
+			<Punto2F x="0.5084746" y="0.14164649"/>
+			<Punto2F x="0.4164649" y="0.15254237"/>
+			<Punto2F x="0.07990315" y="0.013317191"/>
+			<Punto2F x="-0.08837772" y="0.018159807"/>
+			<Punto2F x="-0.5157385" y="-0.07506053"/>
+			<Punto2F x="-0.27845037" y="-0.098062955"/>
+			<Punto2F x="0.16949153" y="-0.10653753"/>
+			<Punto2F x="0.29903147" y="-0.15254237"/>
+			<Punto2F x="0.37772396" y="-0.14769976"/>
+			<Punto2F x="0.36561742" y="-0.12953995"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x13">
 		<Grupo>
@@ -2426,6 +2491,21 @@
 	</Instancia3D>
 	<!-- 11 Nave Enemiga 3 Texturas 1 -->
 	<NaveEnemiga type="0x14">
+		<forma class="Poligono" nLados="13" scale="1.4">
+			<Punto2F x="0.49878934" y="-0.035108957"/>
+			<Punto2F x="0.5" y="0.02905569"/>
+			<Punto2F x="0.4503632" y="0.049636804"/>
+			<Punto2F x="0.50605327" y="0.10774818"/>
+			<Punto2F x="0.42372882" y="0.111380145"/>
+			<Punto2F x="0.26876512" y="0.04842615"/>
+			<Punto2F x="-0.055690072" y="0.06658596"/>
+			<Punto2F x="-0.5084746" y="-0.02905569"/>
+			<Punto2F x="-0.2905569" y="-0.053268764"/>
+			<Punto2F x="-0.27602905" y="-0.06900726"/>
+			<Punto2F x="0.3292978" y="-0.1125908"/>
+			<Punto2F x="0.44188863" y="-0.098062955"/>
+			<Punto2F x="0.38861984" y="-0.052058112"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x14">
 		<Grupo>
@@ -2474,26 +2554,26 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas" />
 			</NodoTransformador>
-			<PoligonoTest nLados="13" scale="1.4">
-				<Punto2F x="0.49878934" y="-0.035108957"/>
-				<Punto2F x="0.5" y="0.02905569"/>
-				<Punto2F x="0.4503632" y="0.049636804"/>
-				<Punto2F x="0.50605327" y="0.10774818"/>
-				<Punto2F x="0.42372882" y="0.111380145"/>
-				<Punto2F x="0.26876512" y="0.04842615"/>
-				<Punto2F x="-0.055690072" y="0.06658596"/>
-				<Punto2F x="-0.5084746" y="-0.02905569"/>
-				<Punto2F x="-0.2905569" y="-0.053268764"/>
-				<Punto2F x="-0.27602905" y="-0.06900726"/>
-				<Punto2F x="0.3292978" y="-0.1125908"/>
-				<Punto2F x="0.44188863" y="-0.098062955"/>
-				<Punto2F x="0.38861984" y="-0.052058112"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
 	<!-- 12 Nave Enemiga 3 Texturas 2 -->
 	<NaveEnemiga type="0x15">
+		<forma class="Poligono" nLados="13" scale="1.4">
+			<Punto2F x="0.49878934" y="-0.035108957"/>
+			<Punto2F x="0.5" y="0.02905569"/>
+			<Punto2F x="0.4503632" y="0.049636804"/>
+			<Punto2F x="0.50605327" y="0.10774818"/>
+			<Punto2F x="0.42372882" y="0.111380145"/>
+			<Punto2F x="0.26876512" y="0.04842615"/>
+			<Punto2F x="-0.055690072" y="0.06658596"/>
+			<Punto2F x="-0.5084746" y="-0.02905569"/>
+			<Punto2F x="-0.2905569" y="-0.053268764"/>
+			<Punto2F x="-0.27602905" y="-0.06900726"/>
+			<Punto2F x="0.3292978" y="-0.1125908"/>
+			<Punto2F x="0.44188863" y="-0.098062955"/>
+			<Punto2F x="0.38861984" y="-0.052058112"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x15">
 		<Grupo>
@@ -2540,6 +2620,20 @@
 	</Instancia3D>
 	<!-- 13 Bombardero 1 -->
 	<NaveEnemiga type="0x20">
+		<forma class="Poligono" nLados="12" scale="2.5">
+			<Punto2F x="0.20217918" y="-0.09443099"/>
+			<Punto2F x="-0.5" y="-0.098062955"/>
+			<Punto2F x="-0.5" y="0.006053269"/>
+			<Punto2F x="-0.09079903" y="0.030266345"/>
+			<Punto2F x="0.25786924" y="0.09443099"/>
+			<Punto2F x="0.29782084" y="0.09322034"/>
+			<Punto2F x="0.4261501" y="0.04842615"/>
+			<Punto2F x="0.48062953" y="0.031476997"/>
+			<Punto2F x="0.5072639" y="-0.0024213076"/>
+			<Punto2F x="0.48062953" y="-0.039951574"/>
+			<Punto2F x="0.4116223" y="-0.06295399"/>
+			<Punto2F x="0.2251816" y="-0.070217915"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x20">
 		<Grupo>
@@ -2609,25 +2703,27 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas" />
 			</NodoTransformador>
-			<PoligonoTest nLados="12" scale="2.5">
-				<Punto2F x="0.20217918" y="-0.09443099"/>
-				<Punto2F x="-0.5" y="-0.098062955"/>
-				<Punto2F x="-0.5" y="0.006053269"/>
-				<Punto2F x="-0.09079903" y="0.030266345"/>
-				<Punto2F x="0.25786924" y="0.09443099"/>
-				<Punto2F x="0.29782084" y="0.09322034"/>
-				<Punto2F x="0.4261501" y="0.04842615"/>
-				<Punto2F x="0.48062953" y="0.031476997"/>
-				<Punto2F x="0.5072639" y="-0.0024213076"/>
-				<Punto2F x="0.48062953" y="-0.039951574"/>
-				<Punto2F x="0.4116223" y="-0.06295399"/>
-				<Punto2F x="0.2251816" y="-0.070217915"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"/>
 	</Instancia3D>
 	<!-- 14 Bombardero 2 -->
 	<NaveEnemiga type="0x21">
+		<forma class="Poligono" nLados="14" scale="2.5">
+			<Punto2F x="-0.4297821" y="-0.0811138"/>
+			<Punto2F x="-0.5" y="-0.078692496"/>
+			<Punto2F x="-0.5" y="0.14164649"/>
+			<Punto2F x="0.08958838" y="0.14164649"/>
+			<Punto2F x="0.11622276" y="0.10774818"/>
+			<Punto2F x="0.25060531" y="0.10290557"/>
+			<Punto2F x="0.25181597" y="0.12227603"/>
+			<Punto2F x="0.44188863" y="0.08837772"/>
+			<Punto2F x="0.5072639" y="-0.0024213076"/>
+			<Punto2F x="0.35230026" y="-0.0012106538"/>
+			<Punto2F x="0.17917676" y="-0.124697335"/>
+			<Punto2F x="0.056900725" y="-0.12590799"/>
+			<Punto2F x="0.049636804" y="-0.13680388"/>
+			<Punto2F x="-0.4297821" y="-0.13801453"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x21">
 		<Grupo>
@@ -2679,27 +2775,34 @@
 				</transformMatrix>
 				<Particulas reference="/Instancia3D/Grupo/NodoTransformador[2]/Particulas" />
 			</NodoTransformador>
-			<PoligonoTest nLados="14" scale="2.5">
-				<Punto2F x="-0.4297821" y="-0.0811138"/>
-				<Punto2F x="-0.5" y="-0.078692496"/>
-				<Punto2F x="-0.5" y="0.14164649"/>
-				<Punto2F x="0.08958838" y="0.14164649"/>
-				<Punto2F x="0.11622276" y="0.10774818"/>
-				<Punto2F x="0.25060531" y="0.10290557"/>
-				<Punto2F x="0.25181597" y="0.12227603"/>
-				<Punto2F x="0.44188863" y="0.08837772"/>
-				<Punto2F x="0.5072639" y="-0.0024213076"/>
-				<Punto2F x="0.35230026" y="-0.0012106538"/>
-				<Punto2F x="0.17917676" y="-0.124697335"/>
-				<Punto2F x="0.056900725" y="-0.12590799"/>
-				<Punto2F x="0.049636804" y="-0.13680388"/>
-				<Punto2F x="-0.4297821" y="-0.13801453"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"/>
 	</Instancia3D>
 	<!-- 15 Fragata -->
 	<NaveEnemiga type="0x30">
+		<forma class="Poligono" nLados="21" scale="7.5">
+			<Punto2F x="-0.41041163" y="-0.030266345"/>
+			<Punto2F x="-0.5" y="-0.030266345"/>
+			<Punto2F x="-0.5" y="0.0012106538"/>
+			<Punto2F x="-0.3849879" y="0.0012106538"/>
+			<Punto2F x="-0.28692493" y="0.17070217"/>
+			<Punto2F x="0.010895884" y="0.1731235"/>
+			<Punto2F x="0.036319613" y="0.31234866"/>
+			<Punto2F x="0.15133172" y="0.31598064"/>
+			<Punto2F x="0.20217918" y="0.14164649"/>
+			<Punto2F x="0.3377724" y="0.1464891"/>
+			<Punto2F x="0.36319613" y="0.11380145"/>
+			<Punto2F x="0.43341404" y="0.111380145"/>
+			<Punto2F x="0.50121063" y="0.0811138"/>
+			<Punto2F x="0.5" y="0.033898305"/>
+			<Punto2F x="0.34503633" y="0.013317191"/>
+			<Punto2F x="0.18038741" y="-0.0811138"/>
+			<Punto2F x="0.104116224" y="-0.31719127"/>
+			<Punto2F x="0.043583535" y="-0.31598064"/>
+			<Punto2F x="0.010895884" y="-0.07748184"/>
+			<Punto2F x="-0.24818403" y="-0.07748184"/>
+			<Punto2F x="-0.40677965" y="-0.049636804"/>
+		</forma>
 	</NaveEnemiga>
 	<Instancia3D type="0x30">
 		<Grupo>
@@ -2733,34 +2836,22 @@
 					</Apariencia>
 				</Objeto3D>
 			</NodoCompartido>
-			<PoligonoTest nLados="21" scale="7.5">
-				<Punto2F x="-0.41041163" y="-0.030266345"/>
-				<Punto2F x="-0.5" y="-0.030266345"/>
-				<Punto2F x="-0.5" y="0.0012106538"/>
-				<Punto2F x="-0.3849879" y="0.0012106538"/>
-				<Punto2F x="-0.28692493" y="0.17070217"/>
-				<Punto2F x="0.010895884" y="0.1731235"/>
-				<Punto2F x="0.036319613" y="0.31234866"/>
-				<Punto2F x="0.15133172" y="0.31598064"/>
-				<Punto2F x="0.20217918" y="0.14164649"/>
-				<Punto2F x="0.3377724" y="0.1464891"/>
-				<Punto2F x="0.36319613" y="0.11380145"/>
-				<Punto2F x="0.43341404" y="0.111380145"/>
-				<Punto2F x="0.50121063" y="0.0811138"/>
-				<Punto2F x="0.5" y="0.033898305"/>
-				<Punto2F x="0.34503633" y="0.013317191"/>
-				<Punto2F x="0.18038741" y="-0.0811138"/>
-				<Punto2F x="0.104116224" y="-0.31719127"/>
-				<Punto2F x="0.043583535" y="-0.31598064"/>
-				<Punto2F x="0.010895884" y="-0.07748184"/>
-				<Punto2F x="-0.24818403" y="-0.07748184"/>
-				<Punto2F x="-0.40677965" y="-0.049636804"/>
-			</PoligonoTest>
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"/>
 	</Instancia3D>
 	<!-- 16 Misil 01 -->
 	<Misil type="0x40">
+		<forma class="Poligono" nLados="9" scale="0.4" offX="0.18">
+			<Punto2F x="0.52" y="0.0"/>
+			<Punto2F x="0.4" y="-0.06"/>
+			<Punto2F x="-0.14" y="-0.06"/>
+			<Punto2F x="-0.42" y="-0.15"/>
+			<Punto2F x="-0.5" y="-0.06"/>
+			<Punto2F x="-0.5" y="0.06"/>
+			<Punto2F x="-0.42" y="0.15"/>
+			<Punto2F x="-0.14" y="0.06"/>
+			<Punto2F x="0.4" y="0.06"/>
+		</forma>
 	</Misil>
 	<Instancia3D type="0x40">
 		<Grupo>
@@ -2850,21 +2941,21 @@
 						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
 				</Apariencia>
 			</Particulas>
-			<PoligonoTest nLados="9" scale="0.4" offX="0.18">
-				<Punto2F x="0.52" y="0.0"/>
-				<Punto2F x="0.4" y="-0.06"/>
-				<Punto2F x="-0.14" y="-0.06"/>
-				<Punto2F x="-0.42" y="-0.15"/>
-				<Punto2F x="-0.5" y="-0.06"/>
-				<Punto2F x="-0.5" y="0.06"/>
-				<Punto2F x="-0.42" y="0.15"/>
-				<Punto2F x="-0.14" y="0.06"/>
-				<Punto2F x="0.4" y="0.06"/>
-			</PoligonoTest>
 		</Grupo>
 	</Instancia3D>
 	<!-- 17 Misil 02 -->
 	<Misil type="0x41">
+		<forma class="Poligono" nLados="9" scale="0.43" offX="0.19">
+			<Punto2F x="0.52" y="0.0"/>
+			<Punto2F x="0.32" y="-0.09"/>
+			<Punto2F x="-0.08" y="-0.06"/>
+			<Punto2F x="-0.38" y="-0.15"/>
+			<Punto2F x="-0.5" y="-0.06"/>
+			<Punto2F x="-0.5" y="0.06"/>
+			<Punto2F x="-0.38" y="0.15"/>
+			<Punto2F x="-0.08" y="0.06"/>
+			<Punto2F x="0.32" y="0.09"/>
+		</forma>
 	</Misil>
 	<Instancia3D type="0x41">
 		<Grupo>
@@ -2928,21 +3019,21 @@
 				<VelocidadGiro v="360.0" p="0.0" s="true"/>
 				<Apariencia reference="/Instancia3D[16]/Grupo/Particulas/Apariencia" />
 			</Particulas>
-			<PoligonoTest nLados="9" scale="0.43" offX="0.19">
-				<Punto2F x="0.52" y="0.0"/>
-				<Punto2F x="0.32" y="-0.09"/>
-				<Punto2F x="-0.08" y="-0.06"/>
-				<Punto2F x="-0.38" y="-0.15"/>
-				<Punto2F x="-0.5" y="-0.06"/>
-				<Punto2F x="-0.5" y="0.06"/>
-				<Punto2F x="-0.38" y="0.15"/>
-				<Punto2F x="-0.08" y="0.06"/>
-				<Punto2F x="0.32" y="0.09"/>
-			</PoligonoTest>
 		</Grupo>
 	</Instancia3D>
 	<!-- 18 Misil 03 -->
 	<Misil type="0x42">
+		<forma class="Poligono" nLados="9" scale="0.46" offX="0.2">
+			<Punto2F x="0.52" y="0.0"/>
+			<Punto2F x="0.28" y="-0.08"/>
+			<Punto2F x="-0.24" y="-0.06"/>
+			<Punto2F x="-0.42" y="-0.15"/>
+			<Punto2F x="-0.5" y="-0.06"/>
+			<Punto2F x="-0.5" y="0.06"/>
+			<Punto2F x="-0.42" y="0.15"/>
+			<Punto2F x="-0.24" y="0.06"/>
+			<Punto2F x="0.28" y="0.08"/>
+		</forma>
 	</Misil>
 	<Instancia3D type="0x42">
 		<Grupo>
@@ -3006,21 +3097,21 @@
 				<VelocidadGiro v="360.0" p="0.0" s="true"/>
 				<Apariencia reference="/Instancia3D[16]/Grupo/Particulas/Apariencia" />
 			</Particulas>
-			<PoligonoTest nLados="9" scale="0.46" offX="0.2">
-				<Punto2F x="0.52" y="0.0"/>
-				<Punto2F x="0.28" y="-0.08"/>
-				<Punto2F x="-0.24" y="-0.06"/>
-				<Punto2F x="-0.42" y="-0.15"/>
-				<Punto2F x="-0.5" y="-0.06"/>
-				<Punto2F x="-0.5" y="0.06"/>
-				<Punto2F x="-0.42" y="0.15"/>
-				<Punto2F x="-0.24" y="0.06"/>
-				<Punto2F x="0.28" y="0.08"/>
-			</PoligonoTest>
 		</Grupo>
 	</Instancia3D>
 	<!-- 19 Misil 04 -->
 	<Misil type="0x43">
+		<forma class="Poligono" nLados="9" scale="0.5" offX="0.23">
+			<Punto2F x="0.52" y="0.0"/>
+			<Punto2F x="0.4" y="-0.06"/>
+			<Punto2F x="-0.24" y="-0.08"/>
+			<Punto2F x="-0.42" y="-0.2"/>
+			<Punto2F x="-0.5" y="-0.08"/>
+			<Punto2F x="-0.5" y="0.08"/>
+			<Punto2F x="-0.42" y="0.2"/>
+			<Punto2F x="-0.24" y="0.08"/>
+			<Punto2F x="0.4" y="0.06"/>
+		</forma>
 	</Misil>
 	<Instancia3D type="0x43">
 		<Grupo>
@@ -3084,21 +3175,21 @@
 				<VelocidadGiro v="360.0" p="0.0" s="true"/>
 				<Apariencia reference="/Instancia3D[16]/Grupo/Particulas/Apariencia" />
 			</Particulas>
-			<PoligonoTest nLados="9" scale="0.5" offX="0.23">
-				<Punto2F x="0.52" y="0.0"/>
-				<Punto2F x="0.4" y="-0.06"/>
-				<Punto2F x="-0.24" y="-0.08"/>
-				<Punto2F x="-0.42" y="-0.2"/>
-				<Punto2F x="-0.5" y="-0.08"/>
-				<Punto2F x="-0.5" y="0.08"/>
-				<Punto2F x="-0.42" y="0.2"/>
-				<Punto2F x="-0.24" y="0.08"/>
-				<Punto2F x="0.4" y="0.06"/>
-			</PoligonoTest>
 		</Grupo>
 	</Instancia3D>
 	<!-- 20 Misil 05 -->
 	<Misil type="0x44">
+		<forma class="Poligono" nLados="9" scale="0.5" offX="0.23">
+			<Punto2F x="0.52" y="0.0"/>
+			<Punto2F x="0.4" y="-0.06"/>
+			<Punto2F x="0.02" y="-0.08"/>
+			<Punto2F x="-0.42" y="-0.2"/>
+			<Punto2F x="-0.5" y="-0.08"/>
+			<Punto2F x="-0.5" y="0.08"/>
+			<Punto2F x="-0.42" y="0.2"/>
+			<Punto2F x="0.02" y="0.08"/>
+			<Punto2F x="0.4" y="0.06"/>
+		</forma>
 	</Misil>
 	<Instancia3D type="0x44">
 		<Grupo>
@@ -3162,21 +3253,21 @@
 				<VelocidadGiro v="360.0" p="0.0" s="true"/>
 				<Apariencia reference="/Instancia3D[16]/Grupo/Particulas/Apariencia" />
 			</Particulas>
-			<PoligonoTest nLados="9" scale="0.5" offX="0.23">
-				<Punto2F x="0.52" y="0.0"/>
-				<Punto2F x="0.4" y="-0.06"/>
-				<Punto2F x="0.02" y="-0.08"/>
-				<Punto2F x="-0.42" y="-0.2"/>
-				<Punto2F x="-0.5" y="-0.08"/>
-				<Punto2F x="-0.5" y="0.08"/>
-				<Punto2F x="-0.42" y="0.2"/>
-				<Punto2F x="0.02" y="0.08"/>
-				<Punto2F x="0.4" y="0.06"/>
-			</PoligonoTest>
 		</Grupo>
 	</Instancia3D>
 	<!-- 21 Misil 06 -->
 	<Misil type="0x45">
+		<forma class="Poligono" nLados="9" scale="0.6" offX="0.27">
+			<Punto2F x="0.52" y="0.0"/>
+			<Punto2F x="0.42" y="-0.1"/>
+			<Punto2F x="-0.24" y="-0.08"/>
+			<Punto2F x="-0.42" y="-0.2"/>
+			<Punto2F x="-0.5" y="-0.08"/>
+			<Punto2F x="-0.5" y="0.08"/>
+			<Punto2F x="-0.42" y="0.2"/>
+			<Punto2F x="-0.24" y="0.08"/>
+			<Punto2F x="0.42" y="0.1"/>
+		</forma>
 	</Misil>
 	<Instancia3D type="0x45">
 		<Grupo>
@@ -3240,17 +3331,6 @@
 				<VelocidadGiro v="360.0" p="0.0" s="true"/>
 				<Apariencia reference="/Instancia3D[16]/Grupo/Particulas/Apariencia" />
 			</Particulas>
-			<PoligonoTest nLados="9" scale="0.6" offX="0.27">
-				<Punto2F x="0.52" y="0.0"/>
-				<Punto2F x="0.42" y="-0.1"/>
-				<Punto2F x="-0.24" y="-0.08"/>
-				<Punto2F x="-0.42" y="-0.2"/>
-				<Punto2F x="-0.5" y="-0.08"/>
-				<Punto2F x="-0.5" y="0.08"/>
-				<Punto2F x="-0.42" y="0.2"/>
-				<Punto2F x="-0.24" y="0.08"/>
-				<Punto2F x="0.42" y="0.1"/>
-			</PoligonoTest>
 		</Grupo>
 	</Instancia3D>
 	<!-- 22 Disparo con Particulas 1 -->
@@ -3333,6 +3413,13 @@
 	</Instancia3D>
 	<!-- 23 Disparos-->
 	<DisparoLineal type="0x80">
+		<forma class="Poligono" nLados="5" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="0.15" y="0.5"/>
+			<Punto2F x="0.5" y="0.25"/>
+			<Punto2F x="0.5" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.5"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x80">
 		<NodoCompartido>
@@ -3344,6 +3431,13 @@
 	</Instancia3D>
 	<!-- 24 Disparos-->
 	<DisparoLineal type="0x81">
+		<forma class="Poligono" nLados="5" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="0.15" y="0.4"/>
+			<Punto2F x="0.4" y="0.25"/>
+			<Punto2F x="0.4" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.4"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x81">
 		<NodoCompartido>
@@ -3355,6 +3449,13 @@
 	</Instancia3D>
 	<!-- 25 Disparos-->
 	<DisparoLineal type="0x82">
+		<forma class="Poligono" nLados="5" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="0.05" y="0.35"/>
+			<Punto2F x="0.42" y="0.22"/>
+			<Punto2F x="0.42" y="-0.22"/>
+			<Punto2F x="0.05" y="-0.35"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x82">
 		<NodoCompartido>
@@ -3366,6 +3467,14 @@
 	</Instancia3D>
 	<!-- 26 Disparos-->
 	<DisparoLineal type="0x83">
+		<forma class="Poligono" nLados="6" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="0.0" y="0.45"/>
+			<Punto2F x="0.31" y="0.36"/>
+			<Punto2F x="0.44" y="0.0"/>
+			<Punto2F x="0.31" y="-0.36"/>
+			<Punto2F x="0.0" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x83">
 		<NodoCompartido>
@@ -3377,6 +3486,14 @@
 	</Instancia3D>
 	<!-- 26 Disparos-->
 	<DisparoLineal type="0x84">
+		<forma class="Poligono" nLados="6" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="0.2" y="0.45"/>
+			<Punto2F x="0.4" y="0.3"/>
+			<Punto2F x="0.46" y="0.0"/>
+			<Punto2F x="0.4" y="-0.3"/>
+			<Punto2F x="0.2" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x84">
 		<NodoCompartido>
@@ -3388,6 +3505,14 @@
 	</Instancia3D>
 	<!-- 27 Disparos-->
 	<DisparoLineal type="0x85">
+		<forma class="Poligono" nLados="6" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="-0.3" y="0.25"/>
+			<Punto2F x="0.35" y="0.4"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.4"/>
+			<Punto2F x="-0.3" y="-0.25"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x85">
 		<NodoCompartido>
@@ -3399,6 +3524,14 @@
 	</Instancia3D>
 	<!-- 28 Disparos-->
 	<DisparoLineal type="0x86">
+		<forma class="Poligono" nLados="6" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="-0.3" y="0.2"/>
+			<Punto2F x="0.35" y="0.25"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.25"/>
+			<Punto2F x="-0.3" y="-0.2"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x86">
 		<NodoCompartido>
@@ -3410,6 +3543,13 @@
 	</Instancia3D>
 	<!-- 28 Disparos-->
 	<DisparoLineal type="0x87">
+		<forma class="Poligono" nLados="5" scaleX="0.25" scaleY="0.125">
+			<Punto2F x="0.1" y="0.3"/>
+			<Punto2F x="0.42" y="0.15"/>
+			<Punto2F x="0.42" y="-0.15"/>
+			<Punto2F x="0.1" y="-0.3"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x87">
 		<NodoCompartido>
@@ -3419,6 +3559,9 @@
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
+	
+	<!-- Seguir aqui-->
+	
 	<!-- 30 Disparos-->
 	<DisparoLineal type="0x88">
 	</DisparoLineal>

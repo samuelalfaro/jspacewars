@@ -46,6 +46,8 @@ public class ElementosConverters {
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			int nLados = Integer.parseInt(reader.getAttribute("nLados"));
 			float scale = getFloatAttribute(reader, "scale", 1.0f);
+			float scaleX = getFloatAttribute(reader, "scaleX", scale);
+			float scaleY = getFloatAttribute(reader, "scaleY", scale);
 			float offX  = getFloatAttribute(reader, "offX",  0.0f);
 			float offY  = getFloatAttribute(reader, "offY",  0.0f);
 			float coordX[] = new float[nLados];
@@ -53,8 +55,8 @@ public class ElementosConverters {
 			int i = 0;
 			while( i < nLados && reader.hasMoreChildren() ){
 				reader.moveDown();
-				coordX[i] = Float.parseFloat(reader.getAttribute("x"))*scale + offX;
-				coordY[i] = Float.parseFloat(reader.getAttribute("y"))*scale + offY;
+				coordX[i] = Float.parseFloat(reader.getAttribute("x"))*scaleX + offX;
+				coordY[i] = Float.parseFloat(reader.getAttribute("y"))*scaleY + offY;
 				reader.moveUp();
 				i++;
 			}
