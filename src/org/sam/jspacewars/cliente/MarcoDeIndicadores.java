@@ -1,5 +1,6 @@
 package org.sam.jspacewars.cliente;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GL;
@@ -273,11 +274,33 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		
 		private transient float proporcionesPantalla;
 		
+		public float getAreaInternaWidth(float w, float h){
+			return 31*w/32;
+		}
+		
+		public float getAreaInternaHeight(float w, float h){
+			return h - 3*w/32;
+		}
+		
 		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.GLComponent#setBounds(float, float, float, float)
+		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#actualizar(java.awt.Rectangle, float, float)
 		 */
-		public void setBounds(float x, float y, float w, float h){
-			super.setBounds(x,y,w,h);
+		@Override
+		protected void actualizar( Rectangle areaInterna, float w, float h){
+			float aWidth = getAreaInternaWidth( w, h );
+			float aHeight = getAreaInternaHeight( w, h );
+			
+			areaInterna.x      = (int)((w - aWidth)/2);
+			areaInterna.y      = (int)((h - aHeight)/6);
+			areaInterna.width  = (int)aWidth;
+			areaInterna.height = (int)aHeight;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#recalcularBoundsComponentesInternos(float, float)
+		 */
+		@Override
+		protected void recalcularBoundsComponentesInternos(float w, float h){
 			proporcionesPantalla = w/h;
 			// guias horizontales
 			float gh0, gh1, gh2, gh3, gh4;
@@ -393,6 +416,8 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 	transient LedsNiveles ledsGrado;
 	transient LedIndicadorGrado ledIndicadorGrado;
 	
+	private transient final Rectangle areaInterna = new Rectangle();
+	
 	/**
 	 * Método que indica si se han cargado todas las texturas necesarias para mostrar el {@code Marco}.
 	 * 
@@ -463,6 +488,28 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		for( LedsIndicadores l: ledsIndicadores )
 			l.actualizar();
 		ledIndicadorGrado.actualizar();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.gui.GLComponent#setBounds(float, float, float, float)
+	 */
+	@Override
+	public final void setBounds( float x, float y, float w, float h ){
+		super.setBounds(x, y, w, h);
+		actualizar( areaInterna, w, h);
+		recalcularBoundsComponentesInternos(w, h);
+	}
+	
+	protected abstract void actualizar( Rectangle areaInterna, float w, float h );
+	
+	protected abstract void recalcularBoundsComponentesInternos(float w, float h);
+	
+	public abstract float getAreaInternaWidth(float w, float h);
+	
+	public abstract float getAreaInternaHeight(float w, float h);
+	
+	public final void setViewportAreaInterna(GL gl){
+		gl.glViewport(areaInterna.x, areaInterna.y, areaInterna.width, areaInterna.height );
 	}
 	
 	/**
