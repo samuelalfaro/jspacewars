@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 import org.sam.elementos.Cache;
-import org.sam.jspacewars.elementos.Canion;
-import org.sam.jspacewars.elementos.Elemento;
+import org.sam.jspacewars.servidor.elementos.Canion;
+import org.sam.jspacewars.servidor.elementos.Elemento;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;

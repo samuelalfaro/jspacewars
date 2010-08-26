@@ -1,16 +1,16 @@
 package org.sam.jspacewars.serialization;
 
 import org.sam.colisiones.Poligono;
-import org.sam.jspacewars.elementos.Canion;
-import org.sam.jspacewars.elementos.CanionInterpolado;
-import org.sam.jspacewars.elementos.CanionLineal;
-import org.sam.jspacewars.elementos.DisparoInterpolado;
-import org.sam.jspacewars.elementos.DisparoLineal;
-import org.sam.jspacewars.elementos.Elemento;
-import org.sam.jspacewars.elementos.LanzaMisiles;
-import org.sam.jspacewars.elementos.Misil;
-import org.sam.jspacewars.elementos.NaveEnemiga;
-import org.sam.jspacewars.elementos.NaveUsuario;
+import org.sam.jspacewars.servidor.elementos.Canion;
+import org.sam.jspacewars.servidor.elementos.CanionInterpolado;
+import org.sam.jspacewars.servidor.elementos.CanionLineal;
+import org.sam.jspacewars.servidor.elementos.DisparoInterpolado;
+import org.sam.jspacewars.servidor.elementos.DisparoLineal;
+import org.sam.jspacewars.servidor.elementos.Elemento;
+import org.sam.jspacewars.servidor.elementos.LanzaMisiles;
+import org.sam.jspacewars.servidor.elementos.Misil;
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+import org.sam.jspacewars.servidor.elementos.NaveUsuario;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;

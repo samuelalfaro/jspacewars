@@ -18,8 +18,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.sam.elementos.Cache;
-import org.sam.jspacewars.elementos.*;
 import org.sam.jspacewars.serialization.Loader;
+import org.sam.jspacewars.servidor.elementos.*;
 
 public class ServidorJuego {
 

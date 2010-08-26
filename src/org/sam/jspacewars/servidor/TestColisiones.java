@@ -11,12 +11,12 @@ import javax.swing.JFrame;
 
 import org.sam.elementos.Cache;
 import org.sam.jspacewars.cliente.ClienteTestColisiones;
-import org.sam.jspacewars.elementos.Disparo;
-import org.sam.jspacewars.elementos.Elemento;
-import org.sam.jspacewars.elementos.NaveEnemiga;
-import org.sam.jspacewars.elementos.NaveUsuario;
-import org.sam.jspacewars.elementos.SingletonEnemigos;
 import org.sam.jspacewars.serialization.Loader;
+import org.sam.jspacewars.servidor.elementos.Disparo;
+import org.sam.jspacewars.servidor.elementos.Elemento;
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+import org.sam.jspacewars.servidor.elementos.NaveUsuario;
+import org.sam.jspacewars.servidor.elementos.SingletonEnemigos;
 
 public class TestColisiones {
 

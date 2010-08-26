@@ -3541,7 +3541,7 @@
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
-	<!-- 28 Disparos-->
+	<!-- 29 Disparos-->
 	<DisparoLineal type="0x87">
 		<forma class="Poligono" nLados="5" scaleX="0.25" scaleY="0.125">
 			<Punto2F x="0.1" y="0.3"/>
@@ -3560,21 +3560,33 @@
 		</NodoCompartido>
 	</Instancia3D>
 	
-	<!-- Seguir aqui-->
-	
 	<!-- 30 Disparos-->
 	<DisparoLineal type="0x88">
+		<forma class="Poligono" nLados="5" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="0.15" y="0.5"/>
+			<Punto2F x="0.5" y="0.25"/>
+			<Punto2F x="0.5" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.5"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x88">
 		<NodoCompartido>
 			<Objeto3D>
-				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0.0" u2="0.25" v2="0.125" />
+				<TexturedQuad ancho="0.333" alto="0.166" u1="0" v1="0" u2="0.25" v2="0.125" />
 				<Apariencia reference="/Instancia3D[16]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 31 Disparos-->
 	<DisparoLineal type="0x89">
+		<forma class="Poligono" nLados="5" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="0.15" y="0.4"/>
+			<Punto2F x="0.4" y="0.25"/>
+			<Punto2F x="0.4" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.4"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x89">
 		<NodoCompartido>
@@ -3586,6 +3598,13 @@
 	</Instancia3D>
 	<!-- 32 Disparos-->
 	<DisparoLineal type="0x8A">
+		<forma class="Poligono" nLados="5" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="0.05" y="0.35"/>
+			<Punto2F x="0.42" y="0.22"/>
+			<Punto2F x="0.42" y="-0.22"/>
+			<Punto2F x="0.05" y="-0.35"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x8A">
 		<NodoCompartido>
@@ -3597,6 +3616,14 @@
 	</Instancia3D>
 	<!-- 33 Disparos-->
 	<DisparoLineal type="0x8B">
+		<forma class="Poligono" nLados="6" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="0.0" y="0.45"/>
+			<Punto2F x="0.31" y="0.36"/>
+			<Punto2F x="0.44" y="0.0"/>
+			<Punto2F x="0.31" y="-0.36"/>
+			<Punto2F x="0.0" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x8B">
 		<NodoCompartido>
@@ -3608,6 +3635,14 @@
 	</Instancia3D>
 	<!-- 34 Disparos-->
 	<DisparoLineal type="0x8C">
+		<forma class="Poligono" nLados="6" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="0.2" y="0.45"/>
+			<Punto2F x="0.4" y="0.3"/>
+			<Punto2F x="0.46" y="0.0"/>
+			<Punto2F x="0.4" y="-0.3"/>
+			<Punto2F x="0.2" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x8C">
 		<NodoCompartido>
@@ -3619,6 +3654,14 @@
 	</Instancia3D>
 	<!-- 35 Disparos-->
 	<DisparoLineal type="0x8D">
+		<forma class="Poligono" nLados="6" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="-0.3" y="0.25"/>
+			<Punto2F x="0.35" y="0.4"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.4"/>
+			<Punto2F x="-0.3" y="-0.25"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x8D">
 		<NodoCompartido>
@@ -3630,6 +3673,14 @@
 	</Instancia3D>
 	<!-- 36 Disparos-->
 	<DisparoLineal type="0x8E">
+		<forma class="Poligono" nLados="6" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="-0.3" y="0.2"/>
+			<Punto2F x="0.35" y="0.25"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.25"/>
+			<Punto2F x="-0.3" y="-0.2"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x8E">
 		<NodoCompartido>
@@ -3641,6 +3692,13 @@
 	</Instancia3D>
 	<!-- 37 Disparos-->
 	<DisparoLineal type="0x8F">
+		<forma class="Poligono" nLados="5" scaleX="0.333" scaleY="0.166">
+			<Punto2F x="0.1" y="0.3"/>
+			<Punto2F x="0.42" y="0.15"/>
+			<Punto2F x="0.42" y="-0.15"/>
+			<Punto2F x="0.1" y="-0.3"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x8F">
 		<NodoCompartido>
@@ -3652,17 +3710,31 @@
 	</Instancia3D>
 	<!-- 38 Disparos-->
 	<DisparoLineal type="0x90">
+		<forma class="Poligono" nLados="5" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="0.15" y="0.5"/>
+			<Punto2F x="0.5" y="0.25"/>
+			<Punto2F x="0.5" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.5"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x90">
 		<NodoCompartido>
 			<Objeto3D>
-				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0.0" u2="0.25" v2="0.125" />
+				<TexturedQuad ancho="0.416" alto="0.208" u1="0" v1="0" u2="0.25" v2="0.125" />
 				<Apariencia reference="/Instancia3D[16]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 39 Disparos-->
 	<DisparoLineal type="0x91">
+		<forma class="Poligono" nLados="5" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="0.15" y="0.4"/>
+			<Punto2F x="0.4" y="0.25"/>
+			<Punto2F x="0.4" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.4"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x91">
 		<NodoCompartido>
@@ -3674,6 +3746,13 @@
 	</Instancia3D>
 	<!-- 40 Disparos-->
 	<DisparoLineal type="0x92">
+		<forma class="Poligono" nLados="5" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="0.05" y="0.35"/>
+			<Punto2F x="0.42" y="0.22"/>
+			<Punto2F x="0.42" y="-0.22"/>
+			<Punto2F x="0.05" y="-0.35"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x92">
 		<NodoCompartido>
@@ -3685,6 +3764,14 @@
 	</Instancia3D>
 	<!-- 41 Disparos-->
 	<DisparoLineal type="0x93">
+		<forma class="Poligono" nLados="6" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="0.0" y="0.45"/>
+			<Punto2F x="0.31" y="0.36"/>
+			<Punto2F x="0.44" y="0.0"/>
+			<Punto2F x="0.31" y="-0.36"/>
+			<Punto2F x="0.0" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x93">
 		<NodoCompartido>
@@ -3696,6 +3783,14 @@
 	</Instancia3D>
 	<!-- 42 Disparos-->
 	<DisparoLineal type="0x94">
+		<forma class="Poligono" nLados="6" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="0.2" y="0.45"/>
+			<Punto2F x="0.4" y="0.3"/>
+			<Punto2F x="0.46" y="0.0"/>
+			<Punto2F x="0.4" y="-0.3"/>
+			<Punto2F x="0.2" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x94">
 		<NodoCompartido>
@@ -3707,6 +3802,14 @@
 	</Instancia3D>
 	<!-- 43 Disparos-->
 	<DisparoLineal type="0x95">
+		<forma class="Poligono" nLados="6" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="-0.3" y="0.25"/>
+			<Punto2F x="0.35" y="0.4"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.4"/>
+			<Punto2F x="-0.3" y="-0.25"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x95">
 		<NodoCompartido>
@@ -3718,6 +3821,14 @@
 	</Instancia3D>
 	<!-- 44 Disparos-->
 	<DisparoLineal type="0x96">
+		<forma class="Poligono" nLados="6" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="-0.3" y="0.2"/>
+			<Punto2F x="0.35" y="0.25"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.25"/>
+			<Punto2F x="-0.3" y="-0.2"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x96">
 		<NodoCompartido>
@@ -3729,6 +3840,13 @@
 	</Instancia3D>
 	<!-- 45 Disparos-->
 	<DisparoLineal type="0x97">
+		<forma class="Poligono" nLados="5" scaleX="0.416" scaleY="0.208">
+			<Punto2F x="0.1" y="0.3"/>
+			<Punto2F x="0.42" y="0.15"/>
+			<Punto2F x="0.42" y="-0.15"/>
+			<Punto2F x="0.1" y="-0.3"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x97">
 		<NodoCompartido>
@@ -3738,19 +3856,34 @@
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
+	
 	<!-- 46 Disparos-->
 	<DisparoLineal type="0x98">
+		<forma class="Poligono" nLados="5" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="0.15" y="0.5"/>
+			<Punto2F x="0.5" y="0.25"/>
+			<Punto2F x="0.5" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.5"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x98">
 		<NodoCompartido>
 			<Objeto3D>
-				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0.0" u2="0.25" v2="0.125" />
+				<TexturedQuad ancho="0.5" alto="0.25" u1="0" v1="0" u2="0.25" v2="0.125" />
 				<Apariencia reference="/Instancia3D[16]/Grupo/NodoCompartido/Grupo/Objeto3D[2]/Apariencia" />
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
 	<!-- 47 Disparos-->
 	<DisparoLineal type="0x99">
+		<forma class="Poligono" nLados="5" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="0.15" y="0.4"/>
+			<Punto2F x="0.4" y="0.25"/>
+			<Punto2F x="0.4" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.4"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x99">
 		<NodoCompartido>
@@ -3762,6 +3895,13 @@
 	</Instancia3D>
 	<!-- 48 Disparos-->
 	<DisparoLineal type="0x9A">
+		<forma class="Poligono" nLados="5" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="0.05" y="0.35"/>
+			<Punto2F x="0.42" y="0.22"/>
+			<Punto2F x="0.42" y="-0.22"/>
+			<Punto2F x="0.05" y="-0.35"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x9A">
 		<NodoCompartido>
@@ -3773,6 +3913,14 @@
 	</Instancia3D>
 	<!-- 49 Disparos-->
 	<DisparoLineal type="0x9B">
+		<forma class="Poligono" nLados="6" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="0.0" y="0.45"/>
+			<Punto2F x="0.31" y="0.36"/>
+			<Punto2F x="0.44" y="0.0"/>
+			<Punto2F x="0.31" y="-0.36"/>
+			<Punto2F x="0.0" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x9B">
 		<NodoCompartido>
@@ -3784,6 +3932,14 @@
 	</Instancia3D>
 	<!-- 50 Disparos-->
 	<DisparoLineal type="0x9C">
+		<forma class="Poligono" nLados="6" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="0.2" y="0.45"/>
+			<Punto2F x="0.4" y="0.3"/>
+			<Punto2F x="0.46" y="0.0"/>
+			<Punto2F x="0.4" y="-0.3"/>
+			<Punto2F x="0.2" y="-0.45"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x9C">
 		<NodoCompartido>
@@ -3795,6 +3951,14 @@
 	</Instancia3D>
 	<!-- 51 Disparos-->
 	<DisparoLineal type="0x9D">
+		<forma class="Poligono" nLados="6" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="-0.3" y="0.25"/>
+			<Punto2F x="0.35" y="0.4"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.4"/>
+			<Punto2F x="-0.3" y="-0.25"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x9D">
 		<NodoCompartido>
@@ -3806,6 +3970,14 @@
 	</Instancia3D>
 	<!-- 52 Disparos-->
 	<DisparoLineal type="0x9E">
+		<forma class="Poligono" nLados="6" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="-0.3" y="0.2"/>
+			<Punto2F x="0.35" y="0.25"/>
+			<Punto2F x="0.5" y="0.0"/>
+			<Punto2F x="0.35" y="-0.25"/>
+			<Punto2F x="-0.3" y="-0.2"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x9E">
 		<NodoCompartido>
@@ -3817,6 +3989,13 @@
 	</Instancia3D>
 	<!-- 53 Disparos-->
 	<DisparoLineal type="0x9F">
+		<forma class="Poligono" nLados="5" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="0.1" y="0.3"/>
+			<Punto2F x="0.42" y="0.15"/>
+			<Punto2F x="0.42" y="-0.15"/>
+			<Punto2F x="0.1" y="-0.3"/>
+			<Punto2F x="-0.45" y="0.0"/>
+		</forma>
 	</DisparoLineal>
 	<Instancia3D type="0x9F">
 		<NodoCompartido>
@@ -3826,6 +4005,7 @@
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
+	
 	<!-- 54 Explosion-->
 	<Instancia3D type="0x0100">
 		<Particulas nParticulas="50">

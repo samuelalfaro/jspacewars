@@ -23,7 +23,7 @@ package org.sam.jspacewars.cliente;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import org.sam.jspacewars.elementos.KeysState;
+import org.sam.jspacewars.servidor.elementos.KeysState;
 
 class GameKeyListener implements KeyListener {
 
