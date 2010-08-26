@@ -24,8 +24,8 @@ import org.sam.jogl.Apariencia;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.ObjetosOrientables;
 import org.sam.jogl.OglList;
-import org.sam.jspacewars.elementos.Elemento;
 import org.sam.jspacewars.serialization.ElementosConverters;
+import org.sam.jspacewars.servidor.elementos.Elemento;
 import org.sam.util.ModificableBoolean;
 import org.sam.util.Reflexion;
 
