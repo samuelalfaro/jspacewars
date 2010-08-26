@@ -20,8 +20,6 @@
  */
 package org.sam.jspacewars.cliente;
 
-import java.awt.Rectangle;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -94,7 +92,7 @@ class Renderer implements GLEventListener {
 		float incT = (float) (tActual - tAnterior) / 1000000000;
 		
 		GL gl = drawable.getGL();
-		gl.glViewport(areaInterna.x, areaInterna.y, areaInterna.width, areaInterna.height );
+		marco.setViewportAreaInterna(gl);
 
 		fondo.getModificador().modificar(incT);
 		fondo.draw(gl);
@@ -133,25 +131,11 @@ class Renderer implements GLEventListener {
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
 
-	private static transient final double W = 4.0;
-	private static transient final double H = 3.0;
-	private static transient final double RATIO_4_3 = (31*W/32) / (H - 3*W/32);
-	
-	private transient final Rectangle areaInterna = new Rectangle();
-	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL gl = drawable.getGL();
 		gl.glViewport(0, 0, width, height);
 		marco.setBounds( 0, 0, width, height );
-		double aWidth = 31.0 * width / 32;
-		double aHeight = height - (3.0 * width / 32);
-		fondo.setProporcionesPantalla( (float)(aWidth / aHeight) );
-		
-		areaInterna.x      = (width -(int)aWidth)/2;
-		areaInterna.y      = (height - (int)aHeight)/6;
-		areaInterna.width  = (int)aWidth;
-		areaInterna.height = (int)aHeight;
-		
+
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
 		double near = 0.5;
@@ -161,9 +145,14 @@ class Renderer implements GLEventListener {
 		double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
 
 		// Formato 4/3 centrado, panorámico a la derecha en caso contrario.
-		gl.glFrustum(-RATIO_4_3 * d, ((2.0 * aWidth) / aHeight - RATIO_4_3) * d, -d, d, near, far);
+		float ratio_4_3 = marco.getAreaInternaWidth(4, 3)/marco.getAreaInternaHeight(4, 3);
+		float aWidth = marco.getAreaInternaWidth( width, height );
+		float aHeight =marco.getAreaInternaHeight( width, height );
+		
+		gl.glFrustum(-ratio_4_3 * d, ((2.0 * aWidth) / aHeight - ratio_4_3) * d, -d, d, near, far);
 		
 		ObjetosOrientables.loadProjectionMatrix();
 		gl.glMatrixMode(GL.GL_MODELVIEW);
+		fondo.setProporcionesPantalla( aWidth / aHeight );
 	}
 }

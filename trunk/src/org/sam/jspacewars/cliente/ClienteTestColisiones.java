@@ -1,7 +1,6 @@
 package org.sam.jspacewars.cliente;
 
 import java.awt.Color;
-import java.awt.Rectangle;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
@@ -10,6 +9,7 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
 import org.sam.colisiones.Poligono;
+import org.sam.jogl.Apariencia;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.Nodo;
 import org.sam.jspacewars.servidor.elementos.Elemento;
@@ -90,13 +90,11 @@ public class ClienteTestColisiones {
 				float coordX[] = getArray(p, "coordX");
 				float coordY[] = getArray(p, "coordY");
 				
-				gl.glBegin(GL.GL_LINES);
-				for(int i=0; i< nLados-1;){
-					gl.glVertex3f(coordX[i],coordY[i],0);
-					i++;
+				gl.glBegin(GL.GL_LINE_STRIP);
+				gl.glColor3f( 0.25f, 1.0f, 0.25f );
+				for(int i=0; i< nLados; i++){
 					gl.glVertex3f(coordX[i],coordY[i],0);
 				}
-				gl.glVertex3f(coordX[nLados-1],coordY[nLados-1],0);
 				gl.glVertex3f(coordX[0],coordY[0],0);
 				gl.glEnd();
 			}
@@ -108,10 +106,12 @@ public class ClienteTestColisiones {
 		private final transient GLU glu = new GLU();
 
 		private final transient ClientData data;
+		private final transient Apariencia apLineas;
 		private final transient MarcoDeIndicadores marco;
 		
 		Renderer( ClientData data) {
 			this.data = data;
+			this.apLineas = new Apariencia();
 			this.marco = MarcoDeIndicadores.getMarco(0);
 		}
 
@@ -141,12 +141,12 @@ public class ClienteTestColisiones {
 			GL gl = drawable.getGL();
 
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-			
-			gl.glViewport(areaInterna.x, areaInterna.y, areaInterna.width, areaInterna.height );
+
+			marco.setViewportAreaInterna(gl);
 			gl.glMatrixMode(GL.GL_MODELVIEW);
 			glu.gluLookAt(0.0, 0.0, 11, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-//			gl.glDepthMask(true);
+			apLineas.usar(gl);
 			for( Instancia3D elemento: data.elementos )
 				elemento.draw(gl);
 //		 	gl.glDepthMask(false);
@@ -159,23 +159,13 @@ public class ClienteTestColisiones {
 		public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 		}
 
-		private static transient final double W = 4.0;
-		private static transient final double H = 3.0;
-		private static transient final double RATIO_4_3 = (31*W/32) / (H - 3*W/32);
-		
-		private transient final Rectangle areaInterna = new Rectangle();
+		//private transient final Rectangle areaInterna = new Rectangle();
 		
 		public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 			GL gl = drawable.getGL();
 			gl.glViewport(0, 0, width, height);
 			marco.setBounds( 0, 0, width, height );
-			double aWidth = 31.0 * width / 32;
-			double aHeight = height - (3.0 * width / 32);
-			
-			areaInterna.x      = (width -(int)aWidth)/2;
-			areaInterna.y      = (height - (int)aHeight)/6;
-			areaInterna.width  = (int)aWidth;
-			areaInterna.height = (int)aHeight;
+
 			
 			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glLoadIdentity();
@@ -186,7 +176,11 @@ public class ClienteTestColisiones {
 			double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
 
 			// Formato 4/3 centrado, panorámico a la derecha en caso contrario.
-			gl.glFrustum(-RATIO_4_3 * d, ((2.0 * aWidth) / aHeight - RATIO_4_3) * d, -d, d, near, far);
+			float ratio_4_3 = marco.getAreaInternaWidth(4, 3)/marco.getAreaInternaHeight(4, 3);
+			float aWidth = marco.getAreaInternaWidth( width, height );
+			float aHeight =marco.getAreaInternaHeight( width, height );
+			
+			gl.glFrustum(-ratio_4_3 * d, ((2.0 * aWidth) / aHeight - ratio_4_3) * d, -d, d, near, far);
 			
 			gl.glMatrixMode(GL.GL_MODELVIEW);
 		}
