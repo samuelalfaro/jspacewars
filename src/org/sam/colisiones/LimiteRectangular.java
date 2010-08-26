@@ -1,8 +1,15 @@
 package org.sam.colisiones;
 
 public class LimiteRectangular implements Limites{
-	float xII, yII;  // esquina inf izda
-	float xSD, ySD;  // esquina sup dcha
+	
+	/**
+	 * Coordenadas de la esquina inferior izquierda.
+	 */
+	float xII, yII;
+	/**
+	 * Coordenadas de la esquina superior derecha.
+	 */
+	float xSD, ySD;
 	
 	public LimiteRectangular(){}
 	
@@ -168,21 +175,33 @@ public class LimiteRectangular implements Limites{
 		return interseccion;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Limites#getXMin()
+	 */
 	@Override
 	public float getXMin() {
 		return 	xII; 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Limites#getYMin()
+	 */
 	@Override
 	public float getYMin() {
 		return yII;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Limites#getXMax()
+	 */
 	@Override
 	public float getXMax() {
 		return xSD;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Limites#getYMax()
+	 */
 	@Override
 	public float getYMax() {
 		return ySD;

@@ -143,25 +143,27 @@ public class NaveUsuario extends Nave {
 	private transient float posXant, posYant;
 	
 	private void mover(long nanos) {
-		posXant = posX;
-		posYant = posY;
+		float x = getX();
+		float y = getY();
+		posXant = x;
+		posYant = y;
 		boolean anguloModificado = false;
 
 		float v = velocidad * nanos;
 
 		if( (key_state & KeysState.SUBE) != 0 ){
-			posY += v;
-			if( posY > alto )
-				posY = alto;
+			y += v;
+			if( y > alto )
+				y = alto;
 			if( angulo > -0.5f )
 				angulo -= 1.5e-9f * nanos;
 			if( angulo < -0.5f )
 				angulo = -0.5f;
 			anguloModificado = true;
 		}else if( (key_state & KeysState.BAJA) != 0 ){
-			posY -= v;
-			if( posY < -alto )
-				posY = -alto;
+			y -= v;
+			if( y < -alto )
+				y = -alto;
 			if( angulo < 0.5f )
 				angulo += 1.5e-9f * nanos;
 			if( angulo > 0.5f )
@@ -180,21 +182,22 @@ public class NaveUsuario extends Nave {
 			}
 		}
 		if( (key_state & KeysState.ACELERA) != 0 ){
-			posX += v;
-			if( posX > ancho )
-				posX = ancho;
+			x += v;
+			if( x > ancho )
+				x = ancho;
 		}else if( (key_state & KeysState.FRENA) != 0 ){
-			posX -= v;
-			if( posX < -ancho )
-				posX = -ancho;
+			x -= v;
+			if( x < -ancho )
+				x = -ancho;
 		}
+		this.setPosicion(x, y);
 	}
 
 	private void dispara(long nanos) {
 		float nX = posXant;
 		float nY = posYant;
-		float mX = (posX - nX) / nanos;
-		float mY = (posY - nY) / nanos;
+		float mX = (getX() - nX) / nanos;
+		float mY = (getY() - nY) / nanos;
 
 		for( Canion canion: caniones[I_PRIMARIO] )
 			canion.dispara(mX, nX, mY, nY, nanos, nanos, getDstDisparos());

@@ -72,6 +72,7 @@ public class ElementosConverters {
 		InterpoladoresConverters.register(xStream);
 
 		xStream.useAttributeFor(Elemento.class, "type");
+		
 		xStream.alias("Poligono", Poligono.class);
 		xStream.registerConverter(new PoligonoConverter());
 		

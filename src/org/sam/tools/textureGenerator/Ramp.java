@@ -80,7 +80,7 @@ public interface Ramp {
 		};
 
 		public double compute(int i, int frames) {
-			return compute( (double)i/frames );
+			return compute(  frames < 2 ? 0 : (double)i/(frames-1) );
 		}
 		
 		public double compute(double min, double max, double alpha){
@@ -88,7 +88,7 @@ public interface Ramp {
 		}
 		
 		public double compute(double min, double max, int i, int frames){
-			return ( max - min ) * compute( (double)i/frames ) + min;
+			return ( max - min ) * compute( frames < 2 ? 0 : (double)i/(frames-1) ) + min;
 		}
 	}
 	

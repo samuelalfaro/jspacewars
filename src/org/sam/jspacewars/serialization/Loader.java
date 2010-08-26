@@ -22,8 +22,11 @@ public class Loader {
 		try {
 			while (true) {
 				Object o = in.readObject();
-				if (o != null)
-					cache.addPrototipo((Elemento) o);
+				if (o != null){
+					Elemento e = (Elemento)o;
+//					System.out.println(e+" -->"+e.getLimites());
+					cache.addPrototipo(e);
+				}
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

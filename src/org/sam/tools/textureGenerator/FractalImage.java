@@ -100,22 +100,22 @@ public class FractalImage extends BufferedImage{
 		noiseFunction.setPersistence(0.7);
 		noiseFunction.setFrequency(2.25);
 		noiseFunction.setHarmonicScale(2.0);
-		noiseFunction.setOctaves(8);
+		noiseFunction.setOctaves(10);
 		
 		ColorRamp colorRamp = new ColorRamp.RGBColorRamp( 2.5, 0.0, 2.0, -0.5, 2.0, -1.0);
 		//ColorRamp colorRamp = ColorRamp.Predefinas.GreyScale;
 		
-		Image[] frames = new Image[16];
+		Image[] frames = new Image[1];
 		
 		for(int i = 0; i < frames.length; i ++){
 //			z = ramp( 0.65, 0.8, i, frames.length-1 );
-			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( -0.1, 1.0, i, frames.length-1 ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 3.90, 4.025, i, frames.length-1 ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 1.69, 2.18, i, frames.length-1 ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 4.05, 4.15, i, frames.length-1 ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 9.2, 9.71, i, frames.length-1 ) );
+			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( -0.1, 1.0, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 3.90, 4.025, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 1.69, 2.18, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 4.05, 4.15, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 9.2, 9.71, i, frames.length ) );
 //			frames[i] = new FractalImage( 256, 256, noiseFunction, ColorRamp.Predefinas.GreyScale, BufferedImage.TYPE_BYTE_GRAY );
-			frames[i] = new FractalImage( 256, 256, noiseFunction, colorRamp, BufferedImage.TYPE_INT_ARGB );
+			frames[i] = new FractalImage( 2048, 2048, noiseFunction, colorRamp, BufferedImage.TYPE_INT_ARGB );
 //			frames[i] = new FractalImage( 256, 256);
 		}
 		JFrame frame = new JFrame("FractalImage");
@@ -128,7 +128,7 @@ public class FractalImage extends BufferedImage{
 			panel.add(new JLabel(new ImageIcon(frames[i])));
 		}
 		JScrollPane scrollPane = new JScrollPane(
-				panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+				panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
 		);
 		frame.setContentPane(scrollPane);

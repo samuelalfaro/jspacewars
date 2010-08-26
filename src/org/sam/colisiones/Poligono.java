@@ -4,14 +4,21 @@ import org.sam.elementos.Prototipo;
 
 public class Poligono implements Prototipo<Poligono>{
 	
-	private static int nextPowOfTwo(int n){
-		if (n < 0)
-			return 0;
+	/**
+	 * Función que calcula el valor de la menor potencia de {@code b} que es mayor que {@code n}.
+	 * @param n Valor a evualuar.
+	 * @param b Base de la potencia.
+	 * @return Valor calculado.
+	 * @throws IllegalArgumentException Si {@code n < 0 || b < 0}.
+	 */
+	private static int nextPowOf(int n, int b){
+		if (n < 0 || b < 0)
+			throw new IllegalArgumentException();
 		if (n == 0)
 			return 1;
-		if (n == 1)
-			return 2;
-		return (int)Math.pow( 2.0, Math.floor( Math.log(n) / Math.log(2.0) ) + 1.0 );
+		if (n < b)
+			return b;
+		return (int)Math.pow( b, Math.floor( Math.log(n) / Math.log(b) ) + 1.0 );
 	}
 	
 	/** 
@@ -22,12 +29,13 @@ public class Poligono implements Prototipo<Poligono>{
 	 * Se crean con un tamañano inicial de 32 posiciones y se incrementará este tamaño
 	 * si hay un nuevo polígono con más segmentos. 
 	 */
-	private static transient boolean testSegmentos1[] = new boolean [32];
-	private static transient boolean testSegmentos2[] = new boolean [32];
+	private static transient
+	boolean testSegmentos1[] = new boolean [32], testSegmentos2[] = new boolean [32];
 	
 	private final transient Poligono prototipo;
 	private final int nLados;
 	private final float coordX[], coordY[];
+	private float posX, posY;
 	
 	private final transient LimiteRectangular limiteRectangular;
 	
@@ -40,10 +48,13 @@ public class Poligono implements Prototipo<Poligono>{
 		this.nLados = coordX.length;
 		this.coordX = coordX;
 		this.coordY = coordY;
-		this.limiteRectangular = null;
+		this.posX = 0.0f;
+		this.posY = 0.0f;
+		this.limiteRectangular = new LimiteRectangular(); 
+		actualizarLimiteRectangular();
 		
 		if(this.nLados > testSegmentos1.length){
-			int newLength = nextPowOfTwo( this.nLados );
+			int newLength = nextPowOf( this.nLados, 2 );
 			testSegmentos1 = new boolean[ newLength ];
 			testSegmentos2 = new boolean[ newLength ];
 		}
@@ -53,18 +64,23 @@ public class Poligono implements Prototipo<Poligono>{
 		this.prototipo = prototipo;
 		this.nLados = prototipo.nLados;
 		this.coordX = new float[this.nLados];
-		System.arraycopy(prototipo.coordX, 0, coordX, 0, this.nLados);
+		System.arraycopy(prototipo.coordX, 0, this.coordX, 0, this.nLados);
 		this.coordY = new float[this.nLados];
-		System.arraycopy(prototipo.coordY, 0, coordY, 0, this.nLados);
-		limiteRectangular = new LimiteRectangular(); 
+		System.arraycopy(prototipo.coordY, 0, this.coordY, 0, this.nLados);
+		this.posX = 0.0f;
+		this.posY = 0.0f;	
+		this.limiteRectangular = new LimiteRectangular(); 
 		actualizarLimiteRectangular();
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
 	public Poligono clone(){
 		return new Poligono(this);
 	}
 
-	// Desplaza todos los puntos del poligono
 	public void actualizarLimiteRectangular(){
 		float minX = Float.MAX_VALUE;
 		float minY = Float.MAX_VALUE;
@@ -86,15 +102,27 @@ public class Poligono implements Prototipo<Poligono>{
 		limiteRectangular.setSortedValues(minX,minY,maxX,maxY);
 	}
 	
-	// Desplaza todos los puntos del poligono
+	/**
+	 * Desplaza todos los puntos del polígono.
+	 * 
+	 * @param despX Desplazamiento en el eje X.
+	 * @param despY Desplazamiento en el eje Y.
+	 */
 	public void trasladar(float despX,float despY){
+		float incX = despX - posX;
+		float incY = despY - posY;
 		for(int loop = 0; loop < nLados; loop++){
-			coordX[loop] = prototipo.coordX[loop] + despX;
-			coordY[loop] = prototipo.coordY[loop] + despY;
+			coordX[loop] += incX;
+			coordY[loop] += incY;
 		}
+		posX = despX;
+		posY = despY;
 	}
 
-	// Rota todos los puntos del poligono desde el centro
+	/**
+	 * Rota todos los puntos del polígono {@code alfa} radianes desde el origen de coodenadas {@code (0,0)}.
+	 * @param alfa Ángulo de rotación en radianes.
+	 */
 	public void rotar(float alfa){
 		float cosAlfa = (float)Math.cos(alfa);
 		float senAlfa = (float)Math.sin(alfa);
@@ -104,9 +132,16 @@ public class Poligono implements Prototipo<Poligono>{
 			coordX[loop] = x * cosAlfa - y * senAlfa;
 			coordY[loop] = x * senAlfa + y * cosAlfa;
 		}
+		this.posX = 0.0f;
+		this.posY = 0.0f;
 	}
 
-	// Rota todos los puntos del poligono desde un punto dado
+	/**
+	 * Rota todos los puntos del polígono {@code alfa} radianes desde el punto {@code (pX,pY)}.
+	 * @param alfa Ángulo de rotación en radianes.
+	 * @param pX Posición X del origen de rotación.
+	 * @param pY Posición Y del origen de rotación.
+	 */
 	public void rotar(float alfa, float pX, float pY){
 		float cosAlfa = (float)Math.cos(alfa);
 		float senAlfa = (float)Math.sin(alfa);
@@ -118,15 +153,21 @@ public class Poligono implements Prototipo<Poligono>{
 		}
 	}
 	
-	// Escala todos los puntos del poligono desde el centro de forma uniforme
-	public void escalar(float fEscala){
-		for(int loop = 0; loop < nLados; loop++){
-			coordX[loop] = prototipo.coordX[loop] * fEscala;
-			coordY[loop] = prototipo.coordY[loop] * fEscala;
-		}
+	/**
+	 * Escala uniformemente todos los puntos del polígono.
+	 * 
+	 * @param escala Valor de escalado.
+	 */
+	public void escalar(float escala){
+		escalar(escala, escala);
 	}
 
-	// Escala todos los puntos del poligono desde el centro de con distinta escala
+	/**
+	 * Escala de forma no uniforme todos los puntos del polígono.
+	 * 
+	 * @param escalaX Valor de escalado en X.
+	 * @param escalaY Valor de escalado en Y.
+	 */
 	public void escalar(float escalaX, float escalaY){
 		for(int loop = 0; loop < nLados; loop++){
 			coordX[loop] = prototipo.coordX[loop] * escalaX;
@@ -134,7 +175,17 @@ public class Poligono implements Prototipo<Poligono>{
 		}
 	}
 
-	// Rota, Escala y Traslada.
+	/**
+	 * Rota, escala y traslada, en este orden, todos los puntos del polígono.
+	 * 
+	 * Rota todos los puntos del polígono {@code alfa} radianes desde el origen de coodenadas {@code (0,0)}.
+	 * Escala uniformemente todos los puntos del polígono.
+	 * 
+	 * @param alfa Ángulo de rotación en radianes.
+	 * @param escala Valor de escalado.
+	 * @param despX Desplazamiento en el eje X.
+	 * @param despY Desplazamiento en el eje Y.
+	 */
 	public void transformar( float alfa, float escala, float despX, float despY ){
 		float cosAlfa = (float)Math.cos(alfa);
 		float senAlfa = (float)Math.sin(alfa);
@@ -146,10 +197,16 @@ public class Poligono implements Prototipo<Poligono>{
 		}
 	}
 	
+	/**
+	 * @return El número de lados del polígono.
+	 */
 	public int getNLados(){
 		return nLados;
 	}
 	
+	/**
+	 * @return El {@code LimiteRectangular} que contiene todos los puntos del polígono.
+	 */
 	public LimiteRectangular getLimites(){
 		return limiteRectangular;
 	}
@@ -179,9 +236,15 @@ public class Poligono implements Prototipo<Poligono>{
 	}
 	
 	/**
-	 * @param x
-	 * @param y
-	 * @return
+	 * Función que evalúa si un punto está en el interior del polígono.</br>
+	 * El código de esta función está basado en {@linkplain java.awt.Polygon#contains(double, double)}.
+	 * 
+	 * @param x Coordenada X del punto a evaluar.
+	 * @param y Coordenada Y del punto a evaluar.
+	 * @return <ul>
+	 * <li>{@code true}: si el punto {@code (x,y)} está en el interior del polígono.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
 	 * @see java.awt.Polygon#contains(double, double)
 	 */
 	boolean contiene(float x, float y) {
@@ -248,7 +311,7 @@ public class Poligono implements Prototipo<Poligono>{
     }
 	
 	/**
-	 * Evalúa si hay una colision con otro {@code Poligono}.
+	 * Función que evalúa si hay una colisión con otro {@code Poligono}.
 	 * @param otro {@code Poligono} con el que se hace la comprobación.
 	 * @return <ul>
 	 * <li>{@code true}: si hay colisión.</li>
@@ -394,19 +457,37 @@ public class Poligono implements Prototipo<Poligono>{
 		return false;
 	}
 	
+	/**
+	 * {@code Segmento} compartido, para evitar crear múltiples instancias al llamar al método {@linkplain #getSegmento(int)}.
+	 */
 	private final transient Segmento shared = new Segmento();
 	
-	Segmento getSegmento(int pos){
-		return getSegmento(pos, shared);
+	/**
+	 * Método que devuelve el {@code Segmento} del polígono que está en la posición {@code index}.
+	 * <p><u>Atención:</u> Este método no genera nuevas instancias y siempre devuelve el 
+	 * {@code Segmento} {@linkplain #shared} con los valores correspondientes a la posición solicitada.</p>
+	 * @param index Posición del {@code Segmento} solicitado.
+	 * @return El {@code Segmento} solicitado.
+	 * @see #getSegmento(int, Segmento).
+	 */
+	Segmento getSegmento(int index){
+		return getSegmento(index, shared);
 	}
 	
-	Segmento getSegmento(int pos, Segmento segmento){
+	/**
+	 * Método que devuelve el {@code Segmento} del polígono que está en la posición {@code index}.
+	 * @param index Posición del {@code Segmento} solicitado.
+	 * @param segmento Instancia donde se almacenarán los valores del {@code Segmento} solicitado. En caso de ser nulo
+	 * se generará una nueva instancia.
+	 * @return El {@code Segmento} solicitado.
+	 */
+	Segmento getSegmento(int index, Segmento segmento){
 		if( segmento == null )
 			segmento = new Segmento();
-		int sig = pos + 1;
+		int sig = index + 1;
 		if( sig == coordX.length )
 			sig = 0;
-		segmento.setPoints(coordX[pos], coordY[pos], coordX[sig], coordY[sig]);
+		segmento.setPoints(coordX[index], coordY[index], coordX[sig], coordY[sig]);
 		return segmento;
 	}
-}	
+}

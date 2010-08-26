@@ -59,7 +59,7 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
@@ -69,7 +69,7 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
@@ -79,7 +79,7 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
@@ -91,7 +91,7 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
@@ -102,7 +102,7 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
@@ -113,7 +113,7 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
@@ -125,7 +125,7 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
@@ -135,19 +135,19 @@ class ClientData {
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
 	 * mostrarlo en pantalla.
 	 * </p>
 	 */
 	transient int grado;
 
 	/**
-	 * Lista que contiene todos los elementos que son visibles en pantalla.
+	 * Lista que contiene todas las {@code Instancia3D} que son visibles en pantalla.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
 	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
-	 * mostrarlo en pantalla.
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para
+	 * mostrar, en pantalla, las distintas {@code Instancia3D} que contiene.
 	 * </p>
 	 */
 	final transient List<Instancia3D> elementos;
@@ -156,9 +156,9 @@ class ClientData {
 	 * que son visibles en pantalla.
 	 * <p>
 	 * Será modificado por la clase {@link org.sam.jspacewars.cliente.Cliente
-	 * Cliente} con los datos recibidos del servidor y leido por la clase
-	 * {@link org.sam.jspacewars.cliente.PantallaCliente PantallaCliente} para
-	 * mostrarlo en pantalla.
+	 * Cliente} con los datos recibidos del servidor y usado por la clase
+	 * {@link org.sam.jspacewars.cliente.Renderer Renderer} para modificar 
+	 * los elementos modificables visibles.
 	 * </p>
 	 */
 	final transient Collection<Modificador> modificadores;

@@ -49,9 +49,4 @@ public abstract class Nave extends Elemento {
 	public boolean isDestruido() {
 		return false;
 	}
-	
-//	@Override
-//	public void reset() {
-//		// TODO Auto-generated method stub
-//	}
 }

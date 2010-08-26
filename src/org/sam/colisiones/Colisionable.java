@@ -1,7 +1,7 @@
 package org.sam.colisiones;
 
 /**
- * Este interface proporciona, los métodos para tratar las colisones entre objetos.
+ * Interface que proporciona los métodos para tratar las colisones entre objetos.
  */
 public interface Colisionable{
 	

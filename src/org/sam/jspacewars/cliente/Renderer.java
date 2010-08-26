@@ -93,7 +93,6 @@ class Renderer implements GLEventListener {
 		tActual = System.nanoTime();
 		float incT = (float) (tActual - tAnterior) / 1000000000;
 		
-//		incT = 0;
 		GL gl = drawable.getGL();
 		gl.glViewport(areaInterna.x, areaInterna.y, areaInterna.width, areaInterna.height );
 
@@ -111,7 +110,7 @@ class Renderer implements GLEventListener {
 		for( Instancia3D elemento: data.elementos )
 			elemento.draw(gl);
 		
-		//*
+		/*
 		gl.glDisable(GL.GL_TEXTURE_2D);
 		gl.glBegin(GL.GL_LINE_STRIP);
 		gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
