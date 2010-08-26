@@ -2,7 +2,6 @@ package org.sam.jogl;
 
 import javax.media.opengl.GL;
 
-
 public abstract class ObjetoAbstracto implements Nodo {
 	private transient Nodo parent;
 	private Apariencia apariencia;

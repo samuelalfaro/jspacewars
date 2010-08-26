@@ -6,7 +6,7 @@ import org.sam.colisiones.Colisionable;
 
 public abstract class Disparo extends Elemento {
 
-	protected transient float angulo;
+	private transient float angulo;
 
 	protected Disparo(short code) {
 		super(code);
@@ -16,6 +16,21 @@ public abstract class Disparo extends Elemento {
 		super(prototipo);
 	}
 
+	/**
+	 * @return el angulo solicitado.
+	 */
+	public float getAngulo() {
+		return angulo;
+	}
+
+	/**
+	 * @param angulo valor del angulo asignado.
+	 */
+	public void setAngulo(float angulo) {
+		this.getForma().rotar(angulo);
+		this.angulo = angulo;
+	}
+	
 	public void enviar(ByteBuffer buff) {
 		super.enviar(buff);
 		buff.putFloat(angulo);
@@ -35,9 +50,4 @@ public abstract class Disparo extends Elemento {
 	public boolean isDestruido() {
 		return false;
 	}
-	
-//	@Override
-//	public void reset() {
-//		// TODO Auto-generated method stub
-//	}
 }

@@ -44,8 +44,7 @@ public class DisparoInterpolado extends Disparo {
 	public void actua(long nanos) {
 		time += nanos;
 		float posTan[][] = trayectoria.getPosTan((time));
-		posX = posTan[0][0] * scaleX + despX;
-		posY = posTan[0][1] * scaleY + despY;
-		angulo = (float)Math.atan2(posTan[1][1] * scaleY, posTan[1][0] * scaleX);
+		setPosicion( posTan[0][0] * scaleX + despX, posTan[0][1] * scaleY + despY );
+		setAngulo((float)Math.atan2(posTan[1][1] * scaleY, posTan[1][0] * scaleX));
 	}
 }

@@ -238,10 +238,16 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		
 		private transient int cont = 0;
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#isLoadComplete()
+		 */
 		public boolean isLoadComplete(){
 			return cont == apariencias.length;
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#loadTexturas(javax.media.opengl.GL)
+		 */
 		public void loadTexturas(GL gl){
 			
 			if(cont >= apariencias.length)
@@ -260,13 +266,16 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		}
 		
 		/**
-		 * Funcion de mosaico/recorte de la textura del los laterales.
+		 * Función de mosaico/recorte de la textura del los laterales.
 		 */
 		private static final transient Funcion.Float f = 
 			GeneradorDeFunciones.Predefinido.LINEAL.generaFuncion(6.0/32, 1, 14.0/32, 0).toFloatFunction();
 		
 		private transient float proporcionesPantalla;
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.GLComponent#setBounds(float, float, float, float)
+		 */
 		public void setBounds(float x, float y, float w, float h){
 			super.setBounds(x,y,w,h);
 			proporcionesPantalla = w/h;
@@ -322,6 +331,9 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 			ledIndicadorGrado .setBounds( x1, y2, w1, h2 );
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.GLComponent#draw(javax.media.opengl.GL)
+		 */
 		public void draw(GL gl){
 			gl.glViewport( 0, 0, (int)( x2 - x1), (int)( y2 - y1 ) );
 			
@@ -381,10 +393,27 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 	transient LedsNiveles ledsGrado;
 	transient LedIndicadorGrado ledIndicadorGrado;
 	
+	/**
+	 * Método que indica si se han cargado todas las texturas necesarias para mostrar el {@code Marco}.
+	 * 
+	 * @return <ul><li>{@code true} si han cargado todas las texturas necesarias.</li>
+	 * <li>{@code false} en caso contrario</li>
+	 */
 	public abstract boolean isLoadComplete();
 	
+	/**
+	 * Método que carga secuencialmente en memoria de video una de las distintas texturas que necesitará el {@code Marco}.
+	 * 
+	 * @param gl El {@code GL} que proporciona acceso a las funciones necesarias.
+	 */
 	public abstract void loadTexturas(GL gl);
 	
+	/**
+	 * Método que actualiza los valores de las distintas {@code BarraImagenes} internas del {@code Marco},
+	 * a partir del valor que se asigna como parámetro.
+	 * 
+	 * @param valor asignado.
+	 */
 	private void setIndicador(int valor) {
 		for( int i = 0; i < ledsIndicadores.length; i++ ){
 			if( valor > 0 ){
@@ -407,6 +436,12 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		ledIndicadorGrado.setIluminado(valor > 0);
 	}
 
+	/**
+	 * Método que actualiza los datos que van a mostrarse con los datos contenidos en {@code ClientData} 
+	 * que se recibe como parámetro.
+	 *
+	 * @param data {@code ClientData} que contiene los datos que serán actualizados en el marco.
+	 */
 	void update(ClientData data) {
 
 		vidas.setValor(data.nVidas);
@@ -431,7 +466,8 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 	}
 	
 	/**
-	 * @param type ignorado, se usará para obtener distintos marcos.
+	 * @param type Actualmente ignorado. En posteriores implementaciones se usará este valor para obtener 
+	 * distintos marcos, personalizados para cada una de las distintas naves protagonistas.
 	 */
 	public static MarcoDeIndicadores getMarco(int type){
 		return new MarcoNave1();

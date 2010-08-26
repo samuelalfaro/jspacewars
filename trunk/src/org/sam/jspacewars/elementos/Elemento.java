@@ -41,10 +41,10 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	
 	private final Elemento prototipo;
 	private final short type;
+	private Poligono forma;
 	
 	private short id;
-	protected transient float posX, posY;
-	protected Poligono forma;
+	private transient float posX, posY;
 
 	Elemento(short type) {
 		this.prototipo = null;
@@ -57,6 +57,7 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	protected Elemento(Elemento prototipo) {
 		this.prototipo = prototipo;
 		this.type = prototipo.type;
+		this.forma = prototipo.forma.clone();
 		this.incrementador = null;
 		this.id = prototipo.getAutoIncrementable().getNextId();
 		this.posX = prototipo.posX;
@@ -70,8 +71,16 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	public void setPosicion(float posX, float posY) {
 		this.posX = posX;
 		this.posY = posY;
+		this.forma.trasladar(posX, posY);
 	}
 
+	/**
+	 * @return el {@code Poligono} solicitado.
+	 */
+	protected final Poligono getForma() {
+		return forma;
+	}
+	
 	public final float getX() {
 		return this.posX;
 	}
@@ -82,7 +91,7 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 
 	@Override
 	public final Limites getLimites(){
-		return forma.getLimites();
+		return forma == null ? null : forma.getLimites();
 	}
 
 	@Override

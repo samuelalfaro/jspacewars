@@ -40,7 +40,17 @@ import org.sam.jspacewars.DataGame;
  */
 public class Cliente extends Thread {
 
-	private static void recibir(ByteBuffer productor, Cache<Instancia3D> cache, ClientData consumidor) {
+	/**
+	 * Método estático que lee desde un {@code ByteBuffer} los datos que se reciben del
+	 * {@link org.sam.jspacewars.servidor.ServidorJuego  ServidorJuego} y los almacena en un objecto {@code ClientData}
+	 * para mostrarlo en pantalla a través de {@link org.sam.jspacewars.cliente.Renderer Renderer}.
+	 * 
+	 * @param productor {@code ByteBuffer} desde donde se leen los datos recibidos.
+	 * @param consumidor {@code Object} donde se almancenan los datos leidos.
+	 * @param cache {@code Cache} desde donde se recuperarán los nuevos elementos necesarios,
+	 * o se almacenarán temporarlmente los elementos desechados.
+	 */
+	private static void recibir(ByteBuffer productor, ClientData consumidor, Cache<Instancia3D> cache) {
 		consumidor.nBombas = productor.getInt();
 		consumidor.nVidas = productor.getInt();
 		consumidor.puntos = productor.getInt();
@@ -143,9 +153,8 @@ public class Cliente extends Thread {
 	/**
 	 * @param channelIn
 	 * @param channelOut
-	 * @param cache
-	 * @param data
-	 * @param pantalla
+	 * @param dataGame
+	 * @param canvas
 	 */
 	public Cliente(ReadableByteChannel channelIn, WritableByteChannel channelOut, DataGame dataGame, GLCanvas canvas) {
 
@@ -188,7 +197,7 @@ public class Cliente extends Thread {
 				e.printStackTrace();
 			}
 			buff.flip();
-			recibir(buff, cache, data);
+			recibir(buff, data, cache );
 			
 //			System.out.println("canvas.display()");
 			canvas.display();

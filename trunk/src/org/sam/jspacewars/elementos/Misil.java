@@ -20,13 +20,18 @@ public class Misil extends Disparo {
 		return new Misil(this);
 	}
 
+	private static float anguloAcotado(float angulo){
+		float a = angulo;
+		while( a < 0 )
+			a += PI2;
+		while(a > PI2 )
+			a -= PI2;
+		return a;
+	}
+	
 	public void setValues(float posX, float posY, float angulo, float velocidad) {
 		super.setPosicion(posX, posY);
-		this.angulo = angulo;
-		while( this.angulo < 0 )
-			this.angulo += PI2;
-		while( this.angulo > PI2 )
-			this.angulo -= PI2;
+		super.setAngulo(anguloAcotado(angulo));
 		this.vTangencial = velocidad;
 		this.aceleracion = velocidad / 500000000;
 	}
@@ -46,14 +51,10 @@ public class Misil extends Disparo {
 	private static transient final float PI2 = (float) (2 * Math.PI);
 	private static transient final float PI = (float) Math.PI;
 
-	private void rotarPos(float alfa, float pX, float pY) {
+	private void rotarPos(float alfa, float x, float y, float pX, float pY) {
 		float cosAlfa = (float) Math.cos(alfa);
 		float senAlfa = (float) Math.sin(alfa);
-
-		float x = posX - pX;
-		float y = posY - pY;
-		posX = x * cosAlfa - y * senAlfa + pX;
-		posY = x * senAlfa + y * cosAlfa + pY;
+		setPosicion( x * cosAlfa - y * senAlfa + pX, x * senAlfa + y * cosAlfa + pY );
 	}
 
 	/*
@@ -64,8 +65,12 @@ public class Misil extends Disparo {
 	public void actua(long nanos) {
 
 		float vel = vTangencial * nanos;
+		float x = getX(), y = getY(), a = getAngulo();
 
 		if( objetivo != null && !objetivo.isDestruido()){
+
+			float oX =  objetivo.getX(), oY =  objetivo.getY();
+			
 			// w = velocidad Angular
 			// v = velocidad Tangencial
 			// v = w · radio
@@ -74,21 +79,21 @@ public class Misil extends Disparo {
 			float radio = vTangencial / vAngular;
 			float dx, dy;
 
-			float normalX = (float) Math.sin(angulo) * radio;
-			float normalY = (float) Math.cos(angulo) * radio;
+			float perpendicularX = (float) Math.sin(a) * radio;
+			float perpendicularY = (float) Math.cos(a) * radio;
 
 			// Centro de giro 1
-			float c1X = posX - normalX;
-			float c1Y = posY + normalY;
-			dx = objetivo.posX - c1X;
-			dy = objetivo.posY - c1Y;
+			float c1X = x - perpendicularX;
+			float c1Y = y + perpendicularY;
+			dx = oX - c1X;
+			dy = oY - c1Y;
 			float dist1 = dx * dx + dy * dy;
 
 			// Centro de giro 2
-			float c2X = posX + normalX;
-			float c2Y = posY - normalY;
-			dx = objetivo.posX - c2X;
-			dy = objetivo.posY - c2Y;
+			float c2X = x + perpendicularX;
+			float c2Y = y - perpendicularY;
+			dx = oX - c2X;
+			dy = oY - c2Y;
 			float dist2 = dx * dx + dy * dy;
 
 			float iAng = vAngular * nanos;
@@ -97,16 +102,18 @@ public class Misil extends Disparo {
 			// giro, es inalcanzable por tanto se gira en el contrario.
 			float r2 = radio * radio;
 			if( dist1 < r2 ){
-				angulo -= iAng;
-				while( angulo < 0 )
-					angulo += PI2;
-				rotarPos(-iAng, c2X, c2Y);
+				a -= iAng;
+				while( a < 0 )
+					a += PI2;
+				setAngulo(a);
+				rotarPos(-iAng, x - c2X, y - c2Y, c2X, c2Y);
 				return;
 			}else if( dist2 < r2 ){
-				angulo += iAng;
-				while( angulo > PI2 )
-					angulo -= PI2;
-				rotarPos(iAng, c1X, c1Y);
+				a += iAng;
+				while( a > PI2 )
+					a -= PI2;
+				setAngulo(a);
+				rotarPos(iAng, x - c1X, y - c1Y, c1X, c1Y);
 				return;
 			}
 
@@ -114,40 +121,36 @@ public class Misil extends Disparo {
 				// circunferencias de giro
 				// El angulo al objetivo es alcanzable en este intervalo se
 				// iguala y se avanza en dicha dirección
-				dx = objetivo.posX - posX;
-				dy = objetivo.posY - posY;
-
-				float angOb = (float) Math.atan2(dy, dx);
+				float angOb = (float) Math.atan2( oY - y, oX - x );
 				if( angOb < 0 )
 					angOb = PI2 + angOb;
 
-				float absDif = Math.abs(angOb - angulo);
+				float absDif = Math.abs(angOb - a);
 				if( absDif > PI )
 					absDif = PI2 - absDif;
 
 				if( absDif < iAng ){
-					angulo = angOb;
-					posX += vel * (float) Math.cos(angulo);
-					posY += vel * (float) Math.sin(angulo);
+					setAngulo(angOb);
+					setPosicion(x + vel * (float) Math.cos(a), y + vel * (float) Math.sin(a) );
 					vTangencial += aceleracion * nanos;
 					return;
 				}
 			}
 			// Se gira en el centro de giro más próximo al objetivo
 			if( dist1 < dist2 ){
-				angulo += iAng;
-				while( angulo > PI2 )
-					angulo -= PI2;
-				rotarPos(iAng, c1X, c1Y);
+				a += iAng;
+				while( a > PI2 )
+					a -= PI2;
+				setAngulo(a);
+				rotarPos(iAng, x - c1X, y - c1Y, c1X, c1Y);
 			}else{
-				angulo -= iAng;
-				while( angulo < 0 )
-					angulo += PI2;
-				rotarPos(-iAng, c2X, c2Y);
+				a -= iAng;
+				while( a < 0 )
+					a += PI2;
+				setAngulo(a);
+				rotarPos(-iAng, x - c2X, y - c2Y, c2X, c2Y);
 			}
-		}else{
-			posX += vel * (float) Math.cos(angulo);
-			posY += vel * (float) Math.sin(angulo);
-		}
+		}else
+			setPosicion(x + vel * (float) Math.cos(a), y + vel * (float) Math.sin(a) );
 	}
 }
