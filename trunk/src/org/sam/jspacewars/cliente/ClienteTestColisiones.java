@@ -12,7 +12,7 @@ import javax.media.opengl.glu.GLU;
 import org.sam.colisiones.Poligono;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.Nodo;
-import org.sam.jspacewars.elementos.Elemento;
+import org.sam.jspacewars.servidor.elementos.Elemento;
 import org.sam.util.Reflexion;
 
 /**
