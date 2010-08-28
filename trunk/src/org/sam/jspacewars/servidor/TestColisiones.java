@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.media.opengl.GLCanvas;
 import javax.swing.JFrame;
 
+import org.sam.colisiones.ComprobadorDeColisones;
 import org.sam.elementos.Cache;
 import org.sam.jspacewars.cliente.ClienteTestColisiones;
 import org.sam.jspacewars.serialization.Loader;
@@ -22,9 +25,16 @@ public class TestColisiones {
 
 	private transient Cache<Elemento> cache;
 	private transient NaveUsuario nave;
-	private transient Collection<Elemento> naves;
-	private transient Collection<Collection<Disparo>> listasDeDisparos;
-
+	
+	private transient Collection<Collection<? extends Elemento>> elementos;
+	
+	private transient Collection<Elemento> navesProtagonistas;
+	private transient Collection<Collection<Disparo>> listasDeDisparosProtagonistas;
+	private transient Collection<Elemento> navesEnemigas;
+	private transient Collection<Disparo> disparosEnemigos;
+	
+	private transient SortedSet<Elemento> elementosOrdenados;
+	
 	private transient ComprobadorDeColisones comprobador;
 	
 	public TestColisiones() throws IOException {
@@ -34,50 +44,73 @@ public class TestColisiones {
 	}
 
 	private void initData() {
+		elementosOrdenados = new TreeSet<Elemento>(Elemento.COMPARADOR_POSICIONES);
 		comprobador = new ComprobadorDeColisones(250);
 
-		naves = new LinkedList<Elemento>();
-		listasDeDisparos = new LinkedList<Collection<Disparo>>();
-
+		elementos = new LinkedList<Collection<? extends Elemento>>();
+		
+		navesProtagonistas = new LinkedList<Elemento>();
+		elementos.add(navesProtagonistas);
+		
+		listasDeDisparosProtagonistas = new LinkedList<Collection<Disparo>>();
+		
 		Collection<Disparo> disparosNave;
 
 		nave = (NaveUsuario) cache.newObject(0x03);
 		disparosNave = new LinkedList<Disparo>();
 		nave.setDstDisparos(disparosNave);
-		listasDeDisparos.add(disparosNave);
+		listasDeDisparosProtagonistas.add(disparosNave);
+		elementos.add(disparosNave);
+		
 		nave.iniciar();
-		nave.setPosicion(0, 0);
+		nave.setPosicion(-3, 0);
 		
 		float ratio = (30*4.0f/32) / (3.0f - 4*4.0f/32); // ratio 4/3 sin bordes GUI
 		float h = 2.9f;
 		float w = ratio * h;
 		
 		nave.setLimites(w, h);
-		naves.add(nave);
+		navesProtagonistas.add(nave);
+		
+		navesEnemigas = new LinkedList<Elemento>();
+		elementos.add(navesEnemigas);
+		
+		disparosEnemigos = new LinkedList<Disparo>();
+		elementos.add(disparosEnemigos);
 
-		NaveEnemiga bomber = (NaveEnemiga)cache.newObject(0x30);
-		bomber.setPosicion(3, -1);
-		SingletonEnemigos.setObjetivo(bomber);
-		naves.add(bomber);
+		NaveEnemiga naveEnemiga = (NaveEnemiga)cache.newObject(0x30);
+		naveEnemiga.setPosicion(3, -0.5f);
+		SingletonEnemigos.setObjetivo(naveEnemiga);
+		navesEnemigas.add(naveEnemiga);
+		
+		naveEnemiga = (NaveEnemiga)cache.newObject(0x10);
+		naveEnemiga.setPosicion(0, -2.5f);
+		navesEnemigas.add(naveEnemiga);
+		
+		naveEnemiga = (NaveEnemiga)cache.newObject(0x12);
+		naveEnemiga.setPosicion(3, 2.5f);
+		navesEnemigas.add(naveEnemiga);
 	}
 
 	private void calcularAcciones(long nanos) {
-		for( Collection<Disparo> listaDisparo: listasDeDisparos ){
-			Iterator<Disparo> iDisparo = listaDisparo.iterator();
-			while( iDisparo.hasNext() ){
-				Disparo d = iDisparo.next();
-				if( d.getX() > 10 || d.getY() < -4.0 || d.getY() > 4.0 || d.isDestruido() ){
-					iDisparo.remove();
-					cache.cached(d);
+		
+		elementosOrdenados.clear();
+		for(Collection<Disparo> listaDisparo: listasDeDisparosProtagonistas)
+			for(Disparo d: listaDisparo)
+				elementosOrdenados.add(d);
+		comprobador.comprobarColisiones(elementosOrdenados, navesEnemigas);
+		
+		for( Collection<? extends Elemento> listaElementos: elementos ){
+			Iterator<? extends Elemento> iElemento = listaElementos.iterator();
+			while( iElemento.hasNext() ){
+				Elemento e = iElemento.next();
+				if( e.getX() > 10 || e.getY() < -4.0 || e.getY() > 4.0 || e.isDestruido() ){
+					iElemento.remove();
+					cache.cached(e);
 				}else
-					d.actua(nanos);
+					e.actua(nanos);
 			}
 		}
-		for( Elemento nave: naves )
-			nave.actua(nanos);
-		// iListaDisparos = listasDeDisparos.iterator();
-		// while(iListaDisparos.hasNext())
-		// comprobador.comprobarColisiones(naves,iListaDisparos.next());
 	}
 
 	public void atender(final ClienteTestColisiones cliente, long nanos){
@@ -94,11 +127,8 @@ public class TestColisiones {
 		cliente.setGrado(nave.getGradoNave());
 		
 		cliente.clearList();
-		for( Elemento elemento: naves )
-			cliente.add(elemento);
-
-		for( Collection<Disparo> listaDisparos: listasDeDisparos )
-			for( Elemento elemento: listaDisparos )
+		for( Collection<? extends Elemento> listaElementos: elementos )
+			for( Elemento elemento : listaElementos)
 				cliente.add(elemento);
 	}
 	
@@ -128,5 +158,6 @@ public class TestColisiones {
 			}
 		};
 		animador.start();
+		canvas.requestFocus();
 	}
 }

@@ -1,5 +1,7 @@
 package org.sam.jspacewars.servidor.elementos;
 
+import org.sam.colisiones.Poligono;
+
 public class NaveUsuario extends Nave {
 
 	private static final int I_VELOCIDAD = 0;
@@ -32,9 +34,9 @@ public class NaveUsuario extends Nave {
 	 * @param velocidadesDisponibles
 	 * @param canionesDisponibles
 	 */
-	public NaveUsuario(short code, int[][] limitesDeNiveles, float[] velocidadesDisponibles,
+	public NaveUsuario(short code,  Poligono forma, int[][] limitesDeNiveles, float[] velocidadesDisponibles,
 			Canion[][][] canionesDisponibles) {
-		super(code);
+		super(code, forma);
 		this.limitesDeNiveles = limitesDeNiveles;
 		this.velocidadesDisponibles = velocidadesDisponibles;
 		this.canionesDisponibles = canionesDisponibles;

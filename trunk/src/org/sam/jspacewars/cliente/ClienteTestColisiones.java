@@ -8,6 +8,7 @@ import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import org.sam.colisiones.LimiteRectangular;
 import org.sam.colisiones.Poligono;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.Instancia3D;
@@ -86,6 +87,15 @@ public class ClienteTestColisiones {
 		@Override
 		public void draw(GL gl) {
 			if(p != null){
+				LimiteRectangular l = p.getLimites();
+				gl.glBegin(GL.GL_LINE_STRIP);
+				gl.glColor3f( 0.25f, 0.25f, 0.25f );
+					gl.glVertex3f(l.getXMin(),l.getYMin(),0);
+					gl.glVertex3f(l.getXMin(),l.getYMax(),0);
+					gl.glVertex3f(l.getXMax(),l.getYMax(),0);
+					gl.glVertex3f(l.getXMax(),l.getYMin(),0);
+					gl.glVertex3f(l.getXMin(),l.getYMin(),0);
+				gl.glEnd();
 				int nLados = p.getNLados();
 				float coordX[] = getArray(p, "coordX");
 				float coordY[] = getArray(p, "coordY");
@@ -121,15 +131,6 @@ public class ClienteTestColisiones {
 			GL gl = drawable.getGL();
 			while(!marco.isLoadComplete())
 				marco.loadTexturas(gl);
-
-//			gl.glShadeModel(GL.GL_SMOOTH);
-//
-//			gl.glEnable(GL.GL_DEPTH_TEST);
-//			gl.glDepthFunc(GL.GL_LESS);
-//			
-//
-//			gl.glEnable(GL.GL_CULL_FACE);
-
 			iniciado = true;
 		}
 

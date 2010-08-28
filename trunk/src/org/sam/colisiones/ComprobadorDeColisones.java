@@ -1,12 +1,11 @@
-package org.sam.jspacewars.servidor;
+package org.sam.colisiones;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
-import org.sam.colisiones.Colisionable;
 
-class ComprobadorDeColisones {
+public class ComprobadorDeColisones {
 	
 	private static int compare(float f1, float f2){
 		return
@@ -22,14 +21,14 @@ class ComprobadorDeColisones {
 	private static int compararInicioFin(Colisionable c1, Colisionable c2) {
 		return compare( c1.getLimites().getXMin(), c2.getLimites().getXMax() );
 	}
-
+	
 	private final Deque<Colisionable> colaConjuntoA;
 	private final Deque<Colisionable> colaConjuntoB;
 
 	private final Deque<Colisionable> colaActivosA;
 	private final Deque<Colisionable> colaActivosB;
 
-	ComprobadorDeColisones(int tamColas) {
+	public ComprobadorDeColisones(int tamColas) {
 		colaConjuntoA = new ArrayDeque<Colisionable>(tamColas);
 		colaConjuntoB = new ArrayDeque<Colisionable>(tamColas);
 		colaActivosA = new ArrayDeque<Colisionable>(tamColas);

@@ -3,6 +3,8 @@
  */
 package org.sam.jspacewars.servidor.elementos;
 
+import org.sam.colisiones.Poligono;
+
 /**
  * @author samuel
  * 
@@ -12,8 +14,8 @@ public class NaveEnemiga extends Nave {
 	/**
 	 * @param tipo
 	 */
-	public NaveEnemiga(short tipo) {
-		super(tipo);
+	public NaveEnemiga(short code, Poligono forma) {
+		super(code, forma);
 		dstDisparos = null;
 	}
 

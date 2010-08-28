@@ -1,11 +1,13 @@
 package org.sam.jspacewars.servidor.elementos;
 
+import org.sam.colisiones.Poligono;
+
 public class DisparoLineal extends Disparo {
 
 	private transient float incX, incY;
 
-	DisparoLineal(short code) {
-		super(code);
+	DisparoLineal(short code, Poligono forma) {
+		super(code, forma);
 	}
 
 	protected DisparoLineal(Disparo prototipo) {

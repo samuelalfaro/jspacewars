@@ -1,5 +1,6 @@
 package org.sam.jspacewars.servidor.elementos;
 
+import org.sam.colisiones.Poligono;
 import org.sam.interpoladores.Trayectoria;
 
 public class DisparoInterpolado extends Disparo {
@@ -9,8 +10,8 @@ public class DisparoInterpolado extends Disparo {
 	private transient long time;
 	private final Trayectoria.Float<float[]> trayectoria;
 
-	DisparoInterpolado(short code, Trayectoria.Float<float[]> trayectoria) {
-		super(code);
+	DisparoInterpolado(short code,  Poligono forma, Trayectoria.Float<float[]> trayectoria) {
+		super(code, forma);
 		this.trayectoria = trayectoria;
 	}
 
@@ -44,7 +45,7 @@ public class DisparoInterpolado extends Disparo {
 	public void actua(long nanos) {
 		time += nanos;
 		float posTan[][] = trayectoria.getPosTan((time));
-		setPosicion( posTan[0][0] * scaleX + despX, posTan[0][1] * scaleY + despY );
 		setAngulo((float)Math.atan2(posTan[1][1] * scaleY, posTan[1][0] * scaleX));
+		setPosicion( posTan[0][0] * scaleX + despX, posTan[0][1] * scaleY + despY );
 	}
 }

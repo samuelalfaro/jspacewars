@@ -1,5 +1,7 @@
 package org.sam.jspacewars.servidor.elementos;
 
+import org.sam.colisiones.Poligono;
+
 public class Misil extends Disparo {
 	private transient float vTangencial;
 	// TODO ajustar valores angulo
@@ -8,8 +10,8 @@ public class Misil extends Disparo {
 
 	private transient Elemento objetivo;
 
-	Misil(short code) {
-		super(code);
+	Misil(short code, Poligono forma) {
+		super(code, forma);
 	}
 
 	protected Misil(Misil prototipo) {
@@ -38,14 +40,6 @@ public class Misil extends Disparo {
 
 	public void setObjetivo(Elemento objetivo) {
 		this.objetivo = objetivo;
-//		objetivoAlcanzado = false;
-	}
-
-	@Override
-	public boolean isDestruido() {
-//		if( objetivo == null )
-			return false;
-//		return objetivoAlcanzado;
 	}
 
 	private static transient final float PI2 = (float) (2 * Math.PI);

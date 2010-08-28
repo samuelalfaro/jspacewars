@@ -25,16 +25,27 @@ import java.io.IOException;
 
 import org.fenggui.Button;
 import org.fenggui.appearance.LabelAppearance;
-import org.fenggui.binding.render.*;
+import org.fenggui.binding.render.Graphics;
+import org.fenggui.binding.render.IOpenGL;
+import org.fenggui.binding.render.ITexture;
+import org.fenggui.binding.render.ImageFont;
+import org.fenggui.binding.render.Pixmap;
 import org.fenggui.binding.render.text.DirectTextRenderer;
 import org.fenggui.binding.render.text.ITextRenderer;
-import org.fenggui.decorator.background.*;
-import org.fenggui.decorator.border.*;
+import org.fenggui.decorator.background.Background;
+import org.fenggui.decorator.background.PixmapBackground;
+import org.fenggui.decorator.background.PlainBackground;
+import org.fenggui.decorator.border.Border;
+import org.fenggui.decorator.border.PixmapBorder;
+import org.fenggui.decorator.border.PlainBorder;
+import org.fenggui.event.IButtonPressedListener;
 import org.fenggui.text.ITextContentManager;
-import org.fenggui.util.*;
+import org.fenggui.util.Color;
+import org.fenggui.util.Dimension;
+import org.fenggui.util.Spacing;
 
 public class MyGameMenuButton extends Button {
-
+	
 	private static ImageFont font = null;
 	static{
 		try{
@@ -115,13 +126,32 @@ public class MyGameMenuButton extends Button {
 		return new PixmapBorder(pixmaps);
 	}
 
-
 	private static Background generatePixmapBackground(Pixmap pixmap) {
 		if( pixmap == null )
 			return new PlainBackground();
 		return new PixmapBackground(new Pixmap(pixmap.getTexture(), 18, 12, 100, 16), true);
 	}
+	
+	private static MyGameMenuButton prototipo;
 
+	public static boolean hasPrototipo() {
+		return MyGameMenuButton.prototipo != null;
+	}
+
+	public static void setPrototipo(MyGameMenuButton prototipo) {
+		MyGameMenuButton.prototipo = prototipo;
+	}
+
+	public static MyGameMenuButton derive(String name, IButtonPressedListener listener) {
+		MyGameMenuButton result = new MyGameMenuButton(name);
+		result.addButtonPressedListener(listener);
+		result.setAppearance(prototipo.getAppearance().clone(result));
+		result.updateState();
+		return result;
+	}
+
+	private final String name;
+	
 	/**
 	 * Constructs a new MyGameMenuButton.
 	 * 
@@ -130,8 +160,8 @@ public class MyGameMenuButton extends Button {
 	 * @param hoverState
 	 * @param pressedState
 	 */
-	public MyGameMenuButton(String text, Pixmap defaultState, Pixmap hoverState, Pixmap pressedState) {
-		this(text, defaultState, hoverState, null, pressedState, null);
+	public MyGameMenuButton(String name, Pixmap defaultState, Pixmap hoverState, Pixmap pressedState) {
+		this(name, defaultState, hoverState, null, pressedState, null);
 	}
 
 	/**
@@ -144,10 +174,22 @@ public class MyGameMenuButton extends Button {
 	 * @param pressedState
 	 * @param disabledState
 	 */
-	public MyGameMenuButton(String text, Pixmap defaultState, Pixmap hoverState, Pixmap focusState,
+	public MyGameMenuButton(String name, Pixmap defaultState, Pixmap hoverState, Pixmap focusState,
 			Pixmap pressedState, Pixmap disabledState) {
-		setText(text);
+		this(name);
 		initButton(defaultState, hoverState, focusState, pressedState, disabledState);
+	}
+	
+	private MyGameMenuButton(String name){
+		this.name = name;
+		setText(name);
+	}
+
+	/**
+	 * @return el nombre solicitado.
+	 */
+	public String getName() {
+		return name;
 	}
 
 	private Dimension minSize;
@@ -159,8 +201,13 @@ public class MyGameMenuButton extends Button {
 		return minSize;
 	}
 
-	private void initButton(Pixmap defaultState, Pixmap hoverState, Pixmap focusState, Pixmap pressedState,
-			Pixmap disabledState) {
+	private void initButton(
+			Pixmap defaultState,
+			Pixmap hoverState,
+			Pixmap focusState,
+			Pixmap pressedState,
+			Pixmap disabledState
+		) {
 		LabelAppearance appearance = this.getAppearance();
 
 		appearance.removeAll();
@@ -291,21 +338,5 @@ public class MyGameMenuButton extends Button {
 			else
 				textData.render(x, y, g, getAppearance());
 		}
-	}
-
-	private static MyGameMenuButton prototipo;
-
-	public static boolean hasPrototipo() {
-		return MyGameMenuButton.prototipo != null;
-	}
-
-	public static void setPrototipo(MyGameMenuButton prototipo) {
-		MyGameMenuButton.prototipo = prototipo;
-	}
-
-	public static MyGameMenuButton derive(String text) {
-		MyGameMenuButton result = (MyGameMenuButton) prototipo.clone();
-		result.setText(text);
-		return result;
 	}
 }
