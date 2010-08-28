@@ -18,6 +18,21 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 			return comparacion != 0 ? comparacion: e1.id - e2.id;
 		}
 	};
+	
+	private static int compareFloats(float f1, float f2){
+		return
+			f1 < f2 ? -1:
+			f1 > f2 ?  1:
+			0;
+	}
+	
+	public static Comparator<Elemento> COMPARADOR_POSICIONES = new Comparator<Elemento>() {
+
+		public int compare(Elemento e1, Elemento e2) {
+			int comparacion = compareFloats(e1.getLimites().getXMin(), e2.getLimites().getXMin());
+			return comparacion != 0 ? comparacion: e1.id - e2.id;
+		}
+	};
 
 	private transient AutoIncrementable incrementador;
 	
@@ -41,14 +56,15 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	
 	private final Elemento prototipo;
 	private final short type;
-	private Poligono forma;
+	private final Poligono forma;
 	
 	private short id;
 	private transient float posX, posY;
 
-	Elemento(short type) {
+	Elemento(short type, Poligono forma) {
 		this.prototipo = null;
 		this.type = type;
+		this.forma = forma;
 		this.id = 0;
 		this.posX = 0.0f;
 		this.posY = 0.0f;
@@ -94,10 +110,22 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		return forma == null ? null : forma.getLimites();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Colisionable#hayColision(org.sam.colisiones.Colisionable)
+	 */
 	@Override
 	// TODO mirar
 	public final boolean hayColision(Colisionable otro){
-		return forma.hayColision((Poligono)otro);
+		return forma.hayColision(((Elemento)otro).forma);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Colisionable#colisionar(org.sam.colisiones.Colisionable)
+	 */
+	@Override
+	public final void colisionar(Colisionable otro) {
+		if( otro instanceof Destruible )
+			((Destruible)otro).recibirImpacto(1);
 	}
 	
 	public void enviar(ByteBuffer buff) {
@@ -112,5 +140,8 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	@Override
 	public final void reset() {
 		this.id = prototipo.getAutoIncrementable().getNextId();
+		inicializar();
 	}
+	
+	public abstract void inicializar();
 }

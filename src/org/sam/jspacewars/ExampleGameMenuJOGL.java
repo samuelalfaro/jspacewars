@@ -28,6 +28,7 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
@@ -37,10 +38,11 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.swing.JFrame;
 
-import org.fenggui.event.ButtonPressedEvent;
-import org.fenggui.event.IButtonPressedListener;
+import org.sam.elementos.Cache;
 import org.sam.jspacewars.cliente.Cliente;
+import org.sam.jspacewars.serialization.Loader;
 import org.sam.jspacewars.servidor.ServidorJuego;
+import org.sam.jspacewars.servidor.elementos.Elemento;
 
 import com.sun.opengl.util.Animator;
 
@@ -99,7 +101,6 @@ public class ExampleGameMenuJOGL {
 		ServidorJuego server;
 	}
 	
-	
 	public static void main(String[] args) {
 
 		final ClientServer clientServer= new ClientServer();
@@ -109,6 +110,15 @@ public class ExampleGameMenuJOGL {
 
 		SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
 		splashWindow.setVisible(true);
+		
+		final Cache<Elemento> cache = new Cache<Elemento>(1000);
+		try {
+			Loader.loadData(cache);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		final Animator animator = new Animator();
 		animator.setRunAsFastAsPossible(true);
@@ -116,12 +126,11 @@ public class ExampleGameMenuJOGL {
 		splashWindow.waitForLoading();
 		splashWindow.setVisible(false);
 
-//		canvas.removeAllGLEventListeners();
 		final GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);
 		
 		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer(dataGame.getFondo());
-		Map<String,IButtonPressedListener> actions = new Hashtable<String,IButtonPressedListener>();
-		final GLEventListener displayGUI = new GLEventListenerDisplayGUI(actions);
+		Map<String,ButtonAction> actions = new Hashtable<String,ButtonAction>();
+		final GLEventListenerDisplayGUI displayGUI = new GLEventListenerDisplayGUI(actions);
 		
 		canvas.addGLEventListener(backgroundRenderer);
 		canvas.addGLEventListener(displayGUI);
@@ -131,21 +140,22 @@ public class ExampleGameMenuJOGL {
 
 		final JFrame frame = getFullScreenFrame();
 		
-		IButtonPressedListener lanzarUnJugador =  new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent event) {
+		ButtonAction lanzarUnJugador =  new ButtonAction() {
+			public void run() {
 				try{
+					displayGUI.hideMenu();
 					animator.stop();
 					animator.remove(canvas);
 					canvas.removeGLEventListener(backgroundRenderer);
-					canvas.removeGLEventListener(displayGUI);
-					
-					clientServer.server = new ServidorJuego();
+					//canvas.removeGLEventListener(displayGUI);
+						
+					clientServer.server = new ServidorJuego(cache);
 					
 					clientServer.cliente = new Cliente(
 							clientServer.server.getLocalChannelClientIn(), clientServer.server.getLocalChannelClientOut(),
 							dataGame, canvas
 					);
-					canvas.addGLEventListener(displayGUI);
+					//canvas.addGLEventListener(displayGUI);
 					clientServer.cliente.start();
 					
 					new Thread(){
@@ -164,7 +174,7 @@ public class ExampleGameMenuJOGL {
 			}
 		};
 		
-		actions.put("lanzarUnJugador", lanzarUnJugador);
+		actions.put("player1", lanzarUnJugador);
 		
 		animator.add(canvas);
 		mostrar(frame, canvas);

@@ -115,6 +115,10 @@ public class Poligono implements Prototipo<Poligono>{
 			coordX[loop] += incX;
 			coordY[loop] += incY;
 		}
+		limiteRectangular.xII += incX;
+		limiteRectangular.xSD += incX;
+		limiteRectangular.yII += incY;
+		limiteRectangular.ySD += incY;
 		posX = despX;
 		posY = despY;
 	}

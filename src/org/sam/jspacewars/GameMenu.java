@@ -33,73 +33,90 @@ import org.fenggui.util.Spacing;
 
 public class GameMenu extends Container {
 
+	private static class MyListener implements IButtonPressedListener{
+		final Map<String,ButtonAction> actions;
+		
+		MyListener(Map<String,ButtonAction> actions){
+			this.actions = actions;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.fenggui.event.IButtonPressedListener#buttonPressed(org.fenggui.event.ButtonPressedEvent)
+		 */
+		@Override
+		public void buttonPressed(ButtonPressedEvent e) {
+			actions.get(((MyGameMenuButton)e.getSource()).getName() ).run();
+		}
+		
+	}
+
 	private final MyGameMenuButton player1, player2, server, client, options, quit;
 	private final MyGameMenuButton sound, graphics, network, back;
-
-	public GameMenu(Map<String,IButtonPressedListener> actions) {
+	
+	public GameMenu(Map<String,ButtonAction> actions) {
+		MyListener listener = new MyListener(actions);
 
 		this.setLayoutManager(new RowLayout(false));
 		this.getAppearance().add(
 				new GradientBackground(new Color(0.0f, 1.0f, 1.0f, 0.25f), new Color(0.0f, 0.0f, 1.0f, 0.5f)));
 		this.getAppearance().setPadding(new Spacing(10, 10));
 
-		player1 = MyGameMenuButton.derive("1 Player");
-		player1.addButtonPressedListener(actions.get("lanzarUnJugador"));
+		player1 = MyGameMenuButton.derive( "player1", listener );
 
-		player2 = MyGameMenuButton.derive("2 Players");
-		player2.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		player2 = MyGameMenuButton.derive( "player2", listener );
+		actions.put("player2", new ButtonAction() {
+			public void run() {
 				buildTowPlayersMenu();
 			}
 		});
 		
-		server = MyGameMenuButton.derive("Server");
-		server.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		server = MyGameMenuButton.derive( "server", listener );
+		actions.put("server", new ButtonAction() {
+			public void run() {
 			}
 		});
 		
-		client = MyGameMenuButton.derive("Client");
-		client.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		client = MyGameMenuButton.derive( "client", listener );
+		actions.put("server", new ButtonAction() {
+			public void run() {
 			}
 		});
 
-		options = MyGameMenuButton.derive("Options");
-		options.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		options = MyGameMenuButton.derive( "options", listener );
+		actions.put("options", new ButtonAction() {
+			public void run() {
 				GameMenu.this.buildOptionsMenu();
 			}
 		});
 
-		sound = MyGameMenuButton.derive("Sound");
-		sound.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		sound = MyGameMenuButton.derive( "sound", listener );
+		actions.put("sound", new ButtonAction() {
+			public void run() {
 			}
 		});
 
-		graphics = MyGameMenuButton.derive("Graphics ...");
-		graphics.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		graphics = MyGameMenuButton.derive( "graphics", listener );
+		actions.put("graphics", new ButtonAction() {
+			public void run() {
 			}
 		});
 
-		network = MyGameMenuButton.derive("Network");
-		network.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		network = MyGameMenuButton.derive( "network", listener );
+		actions.put("network", new ButtonAction() {
+			public void run() {
 			}
 		});
 
-		back = MyGameMenuButton.derive("Back");
-		back.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		back = MyGameMenuButton.derive( "back", listener );
+		actions.put("back", new ButtonAction() {
+			public void run() {
 				GameMenu.this.buildMainMenu();
 			}
 		});
 
-		quit = MyGameMenuButton.derive("Quit");
-		quit.addButtonPressedListener(new IButtonPressedListener() {
-			public void buttonPressed(ButtonPressedEvent e) {
+		quit = MyGameMenuButton.derive( "quit", listener );
+		actions.put("server", new ButtonAction() {
+			public void run() {
 				GameMenu.this.getDisplay().removeWidget(GameMenu.this);
 				System.exit(0);
 			}

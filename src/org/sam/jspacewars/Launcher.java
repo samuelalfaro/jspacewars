@@ -39,8 +39,11 @@ import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.swing.JFrame;
 
+import org.sam.elementos.Cache;
 import org.sam.jspacewars.cliente.Cliente;
+import org.sam.jspacewars.serialization.Loader;
 import org.sam.jspacewars.servidor.ServidorJuego;
+import org.sam.jspacewars.servidor.elementos.Elemento;
 
 /**
  * 
@@ -105,7 +108,10 @@ public class Launcher {
 			SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
 			splashWindow.setVisible(true);
 			
-			ServidorJuego server = new ServidorJuego();
+			Cache<Elemento> cache = new Cache<Elemento>(1000);
+			Loader.loadData(cache);
+			
+			ServidorJuego server = new ServidorJuego(cache);
 			splashWindow.waitForLoading();
 			
 			splashWindow.setVisible(false);
@@ -133,7 +139,10 @@ public class Launcher {
 			SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
 			splashWindow.setVisible(true);
 
-			ServidorJuego server = new ServidorJuego(port);
+			Cache<Elemento> cache = new Cache<Elemento>(1000);
+			Loader.loadData(cache);
+			
+			ServidorJuego server = new ServidorJuego( cache, port );
 			splashWindow.waitForLoading();
 			
 			GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);

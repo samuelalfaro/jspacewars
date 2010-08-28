@@ -3,15 +3,15 @@ package org.sam.jspacewars.servidor.elementos;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 
-import org.sam.colisiones.Colisionable;
+import org.sam.colisiones.Poligono;
 
 public abstract class Nave extends Elemento {
 
 	protected transient float angulo;
 	protected transient Collection<Disparo> dstDisparos;
 
-	public Nave(short tipo) {
-		super(tipo);
+	public Nave(short code, Poligono forma) {
+		super(code, forma);
 		dstDisparos = null;
 	}
 
@@ -35,18 +35,21 @@ public abstract class Nave extends Elemento {
 		buff.putFloat(angulo);
 	}
 	
-	@Override
-	public void colisionar(Colisionable otro) {
-		// TODO Auto-generated method stub
+	int resistencia = 1000;
+	public void inicializar(){
+		resistencia = 1000;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.elementos.Destruible#recibirImpacto(int)
+	 */
 	@Override
 	public void recibirImpacto(int fuerzaDeImpacto) {
-		// TODO Auto-generated method stub
+		//resistencia -= fuerzaDeImpacto;
 	}
 
 	@Override
 	public boolean isDestruido() {
-		return false;
+		return resistencia <= 0;
 	}
 }

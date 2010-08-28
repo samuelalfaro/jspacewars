@@ -2,14 +2,14 @@ package org.sam.jspacewars.servidor.elementos;
 
 import java.nio.ByteBuffer;
 
-import org.sam.colisiones.Colisionable;
+import org.sam.colisiones.Poligono;
 
 public abstract class Disparo extends Elemento {
 
 	private transient float angulo;
 
-	protected Disparo(short code) {
-		super(code);
+	protected Disparo(short code, Poligono forma) {
+		super(code, forma);
 	}
 
 	protected Disparo(Disparo prototipo) {
@@ -28,6 +28,7 @@ public abstract class Disparo extends Elemento {
 	 */
 	public void setAngulo(float angulo) {
 		this.getForma().rotar(angulo);
+		this.getForma().actualizarLimiteRectangular();
 		this.angulo = angulo;
 	}
 	
@@ -36,18 +37,20 @@ public abstract class Disparo extends Elemento {
 		buff.putFloat(angulo);
 	}
 	
-	@Override
-	public void colisionar(Colisionable otro) {
-		// TODO Auto-generated method stub
+	boolean destruido = false;
+	public void inicializar(){
+		destruido = false;
 	}
-	
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.elementos.Destruible#recibirImpacto(int)
+	 */
 	@Override
 	public void recibirImpacto(int fuerzaDeImpacto) {
-		// TODO Auto-generated method stub
+		destruido = true;
 	}
 
 	@Override
 	public boolean isDestruido() {
-		return false;
+		return destruido;
 	}
 }

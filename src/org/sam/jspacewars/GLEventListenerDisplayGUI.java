@@ -35,11 +35,12 @@ import org.fenggui.event.IButtonPressedListener;
 class GLEventListenerDisplayGUI implements GLEventListener {
 
 	private transient Display display;
-//	private final transient GameMenu gameMenu;
-	Map<String,IButtonPressedListener> actions;
+	private final transient GameMenu gameMenu;
+	private transient boolean menu_isVisible;
 
-	GLEventListenerDisplayGUI(Map<String,IButtonPressedListener> actions) {
-		this.actions = actions;
+	GLEventListenerDisplayGUI(Map<String, ButtonAction> actions) {
+		this.gameMenu = new GameMenu(actions);
+		menu_isVisible = false;
 	}
 
 	/*
@@ -57,8 +58,7 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 		// }catch( IXMLStreamableException ignorada ){
 		// }
 		new EventBinding((GLCanvas) drawable, display);
-
-		display.addWidget(new GameMenu(actions));
+		showMenu();
 	}
 
 	/*
@@ -91,4 +91,20 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 */
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 	}
+	
+	public void showMenu(){
+		if(!menu_isVisible){
+			menu_isVisible = true;
+			display.addWidget(gameMenu);
+		}
+	}
+	
+	public void hideMenu(){
+		if(menu_isVisible){
+			menu_isVisible = false;
+			display.removeAllWidgets();
+			//display.removeWidget(gameMenu);
+		}
+	}
+	
 }
