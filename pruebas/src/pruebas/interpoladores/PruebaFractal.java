@@ -34,7 +34,7 @@ public class PruebaFractal{
 		}
 
 		/**
-		 * @param w  
+		 * @param w ignorado.
 		 */
 		private void rellenar(int w, int h){
 			float ik = 1.0f/(N_PUNTOS-1);
