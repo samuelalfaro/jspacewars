@@ -21,6 +21,8 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+
 /**
  * @author samuel
  */
@@ -46,14 +48,16 @@ public abstract class Accion implements Tarea {
 	 * @param stopTime ignorado
 	 */
 	@Override
-	final public void realizar(long startTime, long stopTime){
-		realizar();
+	final public void realizar(NaveEnemiga owner, long startTime, long stopTime){
+		realizar(owner);
 	}
 	
 	/**
 	 * Realiza la  {@code Accion}.
+	 * 
+	 * @param owner {@code NaveEnemiga} que realiza la {@code Accion}.
 	 */
-	public abstract void realizar();
+	public abstract void realizar(NaveEnemiga owner);
 	
 	/**
 	 * Metodo que muestra por consola las llamadas para test.

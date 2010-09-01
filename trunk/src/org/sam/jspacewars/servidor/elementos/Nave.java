@@ -45,7 +45,7 @@ public abstract class Nave extends Elemento {
 	 */
 	@Override
 	public void recibirImpacto(int fuerzaDeImpacto) {
-		//resistencia -= fuerzaDeImpacto;
+		resistencia -= fuerzaDeImpacto;
 	}
 
 	@Override

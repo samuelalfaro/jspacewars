@@ -126,10 +126,18 @@ public class ServidorJuego {
 		disparosEnemigos.clear();
 		elementos.add(disparosEnemigos);
 		
-		NaveEnemiga bomber = (NaveEnemiga)cache.newObject(0x30);
-		bomber.setPosicion(3, -1);
-		SingletonEnemigos.setObjetivo(bomber);
-		navesEnemigas.add(bomber);
+		NaveEnemiga naveEnemiga = (NaveEnemiga)cache.newObject(0x30);
+		naveEnemiga.setPosicion(3, -0.5f);
+		SingletonEnemigos.setObjetivo(naveEnemiga);
+		navesEnemigas.add(naveEnemiga);
+		
+		naveEnemiga = (NaveEnemiga)cache.newObject(0x10);
+		naveEnemiga.setPosicion(0, -2.5f);
+		navesEnemigas.add(naveEnemiga);
+		
+		naveEnemiga = (NaveEnemiga)cache.newObject(0x12);
+		naveEnemiga.setPosicion(3, 2.5f);
+		navesEnemigas.add(naveEnemiga);
 	}
 
 	private transient Selector selector;

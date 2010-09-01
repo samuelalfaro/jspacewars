@@ -21,6 +21,10 @@ import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 import org.sam.jspacewars.servidor.elementos.NaveUsuario;
 import org.sam.jspacewars.servidor.elementos.SingletonEnemigos;
 
+/**
+ * Clase para testear las colisiones entre los distintos elementos que forman parte del juego, muestra por pantalla,
+ * tanto los polígonos asociados a cada elemento como sus límites.
+ */
 public class TestColisiones {
 
 	private transient Cache<Elemento> cache;
@@ -37,7 +41,7 @@ public class TestColisiones {
 	
 	private transient ComprobadorDeColisones comprobador;
 	
-	public TestColisiones() throws IOException {
+	private TestColisiones() throws IOException {
 		cache = new Cache<Elemento>(1000);
 		Loader.loadData(cache);
 		initData();
@@ -113,7 +117,7 @@ public class TestColisiones {
 		}
 	}
 
-	public void atender(final ClienteTestColisiones cliente, long nanos){
+	private void atender(final ClienteTestColisiones cliente, long nanos){
 		nave.setKeyState(cliente.getKeyState());
 		calcularAcciones(nanos);
 
@@ -132,6 +136,11 @@ public class TestColisiones {
 				cliente.add(elemento);
 	}
 	
+	/**
+	 * Método principal que lanza el test de colisiones.
+	 * @param args ignorados.
+	 * @throws IOException Si se produce un error en la lectura del ficharo que contine los elementos del juego.
+	 */
 	public static void main(String... args) throws IOException{
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

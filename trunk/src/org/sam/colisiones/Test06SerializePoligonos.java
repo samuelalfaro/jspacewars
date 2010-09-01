@@ -10,6 +10,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
+/**
+ * Clase para testear la serializacion en XML de un {@code Poligono}.
+ */
 public class Test06SerializePoligonos {
 
 	/**
@@ -80,6 +83,10 @@ public class Test06SerializePoligonos {
 		}
 	}
 	
+	/**
+	 * Método principal encargado de lanzar este test.
+	 * @param args ignorados.
+	 */
 	public static void main(String args[]){
 		XStream xStream = new XStream(new DomDriver());
 		xStream.registerConverter( new PoligonoConverter() );

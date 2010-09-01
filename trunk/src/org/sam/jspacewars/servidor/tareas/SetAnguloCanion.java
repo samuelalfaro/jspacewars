@@ -21,6 +21,8 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+
 /**
  * @author samuel
  *
@@ -39,7 +41,7 @@ public class SetAnguloCanion extends Accion {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void realizar() {
+	public void realizar(NaveEnemiga owner) {
 		// TODO hacer realmente
 		realizarTest();
 	}

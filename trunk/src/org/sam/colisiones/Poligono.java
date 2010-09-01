@@ -2,6 +2,9 @@ package org.sam.colisiones;
 
 import org.sam.elementos.Prototipo;
 
+/**
+ * Clase que define un polígono.
+ */
 public class Poligono implements Prototipo<Poligono>{
 	
 	/**
@@ -39,6 +42,11 @@ public class Poligono implements Prototipo<Poligono>{
 	
 	private final transient LimiteRectangular limiteRectangular;
 	
+	/**
+	 * Constructor que crea un poligono formado por los puntos que se pasan como parámetros.
+	 * @param coordX Coordenadas en el eje X de los puntos.
+	 * @param coordY Coordenadas en el eje Y de los puntos.
+	 */
 	public Poligono(float coordX[], float coordY[]){
 
 		if( coordX == null || coordY == null || coordX.length != coordY.length ||  coordX.length < 3 )
@@ -81,6 +89,9 @@ public class Poligono implements Prototipo<Poligono>{
 		return new Poligono(this);
 	}
 
+	/**
+	 * Método que actualiza el {@code LimiteRectangular} que contiene este {@code Poligono}.
+	 */
 	public void actualizarLimiteRectangular(){
 		float minX = Float.MAX_VALUE;
 		float minY = Float.MAX_VALUE;
@@ -472,7 +483,7 @@ public class Poligono implements Prototipo<Poligono>{
 	 * {@code Segmento} {@linkplain #shared} con los valores correspondientes a la posición solicitada.</p>
 	 * @param index Posición del {@code Segmento} solicitado.
 	 * @return El {@code Segmento} solicitado.
-	 * @see #getSegmento(int, Segmento).
+	 * @see #getSegmento(int, Segmento)
 	 */
 	Segmento getSegmento(int index){
 		return getSegmento(index, shared);

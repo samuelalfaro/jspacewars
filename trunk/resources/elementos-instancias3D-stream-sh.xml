@@ -203,17 +203,55 @@
 								<float>0.00000000016</float>
 							</vVelocidades>
 						</data>
-						<posX>-0.5</posX>
-						<posY>0.0</posY>
+						<trayectoria>
+							<Keys keyGen="PROPORCIONALES" scale="1000000000.0" translation="0.0"/>
+							<Values class="[[F" length="31">
+								<Punto2F x="0.0" y="0.0"/>
+								<Punto2F x="-0.10" y="0.0"/>
+								<Punto2F x="-0.25" y="0.15"/>
+								<Punto2F x="-0.25" y="0.25"/>
+								<Punto2F x="-0.25" y="0.35"/>
+								<Punto2F x="0.5" y="0.5"/>
+								<Punto2F x="1.0" y="0.5"/>
+								<Punto2F x="1.5" y="0.5"/>
+								<Punto2F x="2.5" y="-0.25"/>
+								<Punto2F x="3.0" y="-0.25"/>
+								<Punto2F x="3.5" y="-0.25"/>
+								<Punto2F x="4.5" y="0.25"/>
+								<Punto2F x="5.0" y="0.25"/>
+								<Punto2F x="5.5" y="0.25"/>
+								<Punto2F x="6.5" y="-0.25"/>
+								<Punto2F x="7.0" y="-0.25"/>
+								<Punto2F x="7.5" y="-0.25"/>
+								<Punto2F x="8.5" y="0.25"/>
+								<Punto2F x="9.0" y="0.25"/>
+								<Punto2F x="9.5" y="0.25"/>
+								<Punto2F x="10.5" y="-0.25"/>
+								<Punto2F x="11.0" y="-0.25"/>
+								<Punto2F x="11.5" y="-0.25"/>
+								<Punto2F x="12.5" y="0.25"/>
+								<Punto2F x="13.0" y="0.25"/>
+								<Punto2F x="13.5" y="0.25"/>
+								<Punto2F x="14.5" y="-0.25"/>
+								<Punto2F x="15.0" y="-0.25"/>
+								<Punto2F x="15.5" y="-0.25"/>
+								<Punto2F x="16.5" y="0.25"/>
+								<Punto2F x="17.0" y="0.25"/>
+							</Values>
+							<MetodoDeInterpolacion predefinido="BEZIER"/>
+						</trayectoria>
 						<scaleX>1.0</scaleX>
 						<scaleY>2.0</scaleY>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
 					</CanionInterpolado>
 					<CanionInterpolado>
 						<data reference="../../CanionInterpolado/data"/>
-						<posX>-0.5</posX>
-						<posY>0.0</posY>
+						<trayectoria reference="../../CanionInterpolado/trayectoria"/>
 						<scaleX>1.0</scaleX>
 						<scaleY>-2.0</scaleY>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
 					</CanionInterpolado>
 				</Canion-array>
 				<Canion-array>
@@ -612,17 +650,55 @@
 								<float>0.00000000016</float>
 							</vVelocidades>
 						</data>
-						<posX>-0.5</posX>
-						<posY>0.0</posY>
+						<trayectoria>
+							<Keys keyGen="PROPORCIONALES" scale="1000000000.0" translation="0.0"/>
+							<Values class="[[F" length="31">
+								<Punto2F x="0.0" y="0.0"/>
+								<Punto2F x="-0.10" y="0.0"/>
+								<Punto2F x="-0.25" y="0.15"/>
+								<Punto2F x="-0.25" y="0.25"/>
+								<Punto2F x="-0.25" y="0.35"/>
+								<Punto2F x="0.5" y="0.5"/>
+								<Punto2F x="1.0" y="0.5"/>
+								<Punto2F x="1.5" y="0.5"/>
+								<Punto2F x="2.5" y="-0.25"/>
+								<Punto2F x="3.0" y="-0.25"/>
+								<Punto2F x="3.5" y="-0.25"/>
+								<Punto2F x="4.5" y="0.25"/>
+								<Punto2F x="5.0" y="0.25"/>
+								<Punto2F x="5.5" y="0.25"/>
+								<Punto2F x="6.5" y="-0.25"/>
+								<Punto2F x="7.0" y="-0.25"/>
+								<Punto2F x="7.5" y="-0.25"/>
+								<Punto2F x="8.5" y="0.25"/>
+								<Punto2F x="9.0" y="0.25"/>
+								<Punto2F x="9.5" y="0.25"/>
+								<Punto2F x="10.5" y="-0.25"/>
+								<Punto2F x="11.0" y="-0.25"/>
+								<Punto2F x="11.5" y="-0.25"/>
+								<Punto2F x="12.5" y="0.25"/>
+								<Punto2F x="13.0" y="0.25"/>
+								<Punto2F x="13.5" y="0.25"/>
+								<Punto2F x="14.5" y="-0.25"/>
+								<Punto2F x="15.0" y="-0.25"/>
+								<Punto2F x="15.5" y="-0.25"/>
+								<Punto2F x="16.5" y="0.25"/>
+								<Punto2F x="17.0" y="0.25"/>
+							</Values>
+							<MetodoDeInterpolacion predefinido="BEZIER"/>
+						</trayectoria>
 						<scaleX>1.0</scaleX>
 						<scaleY>2.0</scaleY>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
 					</CanionInterpolado>
 					<CanionInterpolado>
 						<data reference="../../CanionInterpolado/data"/>
-						<posX>-0.5</posX>
-						<posY>0.0</posY>
+						<trayectoria reference="../../CanionInterpolado/trayectoria"/>
 						<scaleX>1.0</scaleX>
 						<scaleY>-2.0</scaleY>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
 					</CanionInterpolado>
 				</Canion-array>
 				<Canion-array>
@@ -3335,43 +3411,13 @@
 	</Instancia3D>
 	<!-- 22 Disparo con Particulas 1 -->
 	<DisparoInterpolado type="0x60">
-		<trayectoria>
-			<Keys keyGen="PROPORCIONALES" scale="1000000000.0" translation="0.0"/>
-			<Values class="[[F" length="31">
-				<Punto2F x="0.0" y="0.0"/>
-				<Punto2F x="-0.10" y="0.0"/>
-				<Punto2F x="-0.25" y="0.15"/>
-				<Punto2F x="-0.25" y="0.25"/>
-				<Punto2F x="-0.25" y="0.35"/>
-				<Punto2F x="0.5" y="0.5"/>
-				<Punto2F x="1.0" y="0.5"/>
-				<Punto2F x="1.5" y="0.5"/>
-				<Punto2F x="2.5" y="-0.25"/>
-				<Punto2F x="3.0" y="-0.25"/>
-				<Punto2F x="3.5" y="-0.25"/>
-				<Punto2F x="4.5" y="0.25"/>
-				<Punto2F x="5.0" y="0.25"/>
-				<Punto2F x="5.5" y="0.25"/>
-				<Punto2F x="6.5" y="-0.25"/>
-				<Punto2F x="7.0" y="-0.25"/>
-				<Punto2F x="7.5" y="-0.25"/>
-				<Punto2F x="8.5" y="0.25"/>
-				<Punto2F x="9.0" y="0.25"/>
-				<Punto2F x="9.5" y="0.25"/>
-				<Punto2F x="10.5" y="-0.25"/>
-				<Punto2F x="11.0" y="-0.25"/>
-				<Punto2F x="11.5" y="-0.25"/>
-				<Punto2F x="12.5" y="0.25"/>
-				<Punto2F x="13.0" y="0.25"/>
-				<Punto2F x="13.5" y="0.25"/>
-				<Punto2F x="14.5" y="-0.25"/>
-				<Punto2F x="15.0" y="-0.25"/>
-				<Punto2F x="15.5" y="-0.25"/>
-				<Punto2F x="16.5" y="0.25"/>
-				<Punto2F x="17.0" y="0.25"/>
-			</Values>
-			<MetodoDeInterpolacion predefinido="BEZIER"/>
-		</trayectoria>
+		<forma class="Poligono" nLados="5" scaleX="0.5" scaleY="0.25">
+			<Punto2F x="0.15" y="0.5"/>
+			<Punto2F x="0.5" y="0.25"/>
+			<Punto2F x="0.5" y="-0.25"/>
+			<Punto2F x="0.15" y="-0.5"/>
+			<Punto2F x="-0.5" y="0.0"/>
+		</forma>
 	</DisparoInterpolado>
 	<Instancia3D type="0x60">
 		<Grupo>
@@ -3856,7 +3902,6 @@
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
-	
 	<!-- 46 Disparos-->
 	<DisparoLineal type="0x98">
 		<forma class="Poligono" nLados="5" scaleX="0.5" scaleY="0.25">
@@ -4012,7 +4057,7 @@
 			<Emisor class="Emisor.Puntual" cache="256"/>
 			<Emision>UNICA</Emision>
 			<RangoDeEmision>0.5</RangoDeEmision>
-			<TiempoDeVida>0.5</TiempoDeVida>
+			<TiempoDeVida>0.65</TiempoDeVida>
 			<Radio class="Getter.Float">
 				<MetodoDeInterpolacion predefinido="COSENOIDAL"/>
 				<Keys length="2">
@@ -4028,11 +4073,10 @@
 			<GiroIncial v="0.0" p="180.0" s="true"/>
 			<VelocidadGiro v="90.0" p="30.0" s="true"/>
 			<Color>
-				<!-- 
 				<r class="float">0.176</r>
 				<g class="float">0.104</g>
 				<b class="float">0.044</b>
-				-->
+				<!-- 
 				<rgb class="Getter.Float">
 					<MetodoDeInterpolacion predefinido="LINEAL"/>
 					<Keys length="2">
@@ -4042,9 +4086,9 @@
 					<Values class="[[F" length="2">
 						<Color3F r="0.104" g="0.044" b="0.176"/>
 						<Color3F r="0.104" g="0.176" b="0.044" />
-						<!--<Color3F r="0.176" g="0.104" b="0.044"/> -->
 					</Values>
 				</rgb>
+				-->
 				<a class="Getter.Float">
 					<MetodoDeInterpolacion predefinido="LINEAL"/>
 					<Keys length="4">

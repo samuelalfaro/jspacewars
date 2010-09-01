@@ -20,14 +20,14 @@ public interface MetodoDeInterpolacion{
         ESCALON {
         	/**
         	 * Operación no soportada.
-        	 * @throws UnsupportedOperationException
+        	 * @throws UnsupportedOperationException puesto que no se generan funciones.
         	 */
 			public Funcion.Double[][] generarFunciones( ArrayExtractor values, Object... parametros){
 				throw new UnsupportedOperationException();
 			}
         	/**
         	 * Operación no soportada.
-        	 * @throws UnsupportedOperationException
+        	 * @throws UnsupportedOperationException puesto que no se generan funciones.
         	 */
 			public Funcion.Double[][] generarFunciones( ArrayExtractor keys, ArrayExtractor values, Object... parametros){
 				throw new UnsupportedOperationException();
@@ -44,10 +44,10 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor values, Object... parametros){
-				int len = values.length() - 1;
-				Funcion.Double[][] funciones = new Funcion.Double[values.length(0)][len];
+				int len = values.rows() - 1;
+				Funcion.Double[][] funciones = new Funcion.Double[values.columns()][len];
 
-				for(int i=0; i< values.length(0); i++)
+				for(int i=0; i< values.columns(); i++)
 					for(int j=0; j<len; j++)
 						funciones[i][j] = GeneradorDeFunciones.Predefinido.LINEAL.generaFuncion(
 								0.0, values.at( j, i),
@@ -63,10 +63,10 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor keys, ArrayExtractor values, Object... parametros){
-				int len = keys.length() - 1;
-				Funcion.Double[][] funciones = new Funcion.Double[values.length(0)][len];
+				int len = keys.rows() - 1;
+				Funcion.Double[][] funciones = new Funcion.Double[values.columns()][len];
 
-				for(int i=0; i< values.length(0); i++)
+				for(int i=0; i< values.columns(); i++)
 					for(int j=0; j<len; j++)
 						funciones[i][j] = GeneradorDeFunciones.Predefinido.LINEAL.generaFuncion(
 								keys.at(j), values.at( j, i),
@@ -90,10 +90,10 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor values, Object... parametros){
-				int len = values.length() - 1;
-				Funcion.Double[][] funciones = new Funcion.Double[values.length(0)][len];
+				int len = values.rows() - 1;
+				Funcion.Double[][] funciones = new Funcion.Double[values.columns()][len];
 
-				for(int i=0; i< values.length(0); i++)
+				for(int i=0; i< values.columns(); i++)
 					for(int j=0; j<len; j++)
 						funciones[i][j] = GeneradorDeFunciones.Predefinido.EXPONENCIAL_PUNTO_MEDIO.generaFuncion(
 								0.0, values.at( j, i),
@@ -114,10 +114,10 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor keys, ArrayExtractor values, Object... parametros){
-				int len = keys.length() - 1;
-				Funcion.Double[][] funciones = new Funcion.Double[values.length(0)][len];
+				int len = keys.rows() - 1;
+				Funcion.Double[][] funciones = new Funcion.Double[values.columns()][len];
 
-				for(int i=0; i< values.length(0); i++)
+				for(int i=0; i< values.columns(); i++)
 					for(int j=0; j<len; j++)
 						funciones[i][j] = GeneradorDeFunciones.Predefinido.EXPONENCIAL_PUNTO_MEDIO.generaFuncion(
 								keys.at(j), values.at( j, i),
@@ -142,10 +142,10 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor values, Object... parametros){
-				int len = values.length() - 1;
-				Funcion.Double[][] funciones = new Funcion.Double[values.length(0)][len];
+				int len = values.rows() - 1;
+				Funcion.Double[][] funciones = new Funcion.Double[values.columns()][len];
 
-				for(int i=0; i< values.length(0); i++)
+				for(int i=0; i< values.columns(); i++)
 					for(int j=0; j<len; j++)
 						funciones[i][j] = GeneradorDeFunciones.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO.generaFuncion(
 								0.0, values.at( j, i),
@@ -166,10 +166,10 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor keys, ArrayExtractor values, Object... parametros){
-				int len = keys.length() - 1;
-				Funcion.Double[][] funciones = new Funcion.Double[values.length(0)][len];
+				int len = keys.rows() - 1;
+				Funcion.Double[][] funciones = new Funcion.Double[values.columns()][len];
 
-				for(int i=0; i< values.length(0); i++)
+				for(int i=0; i< values.columns(); i++)
 					for(int j=0; j<len; j++)
 						funciones[i][j] = GeneradorDeFunciones.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO.generaFuncion(
 								keys.at(j), values.at( j, i),
@@ -203,8 +203,8 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor keys, ArrayExtractor values, Object... parametros){
-				int len = keys.length() - 1; 
-				Funcion.Double funciones[][] = new Funcion.Double[values.length(0)][len];
+				int len = keys.rows() - 1; 
+				Funcion.Double funciones[][] = new Funcion.Double[values.columns()][len];
 
 				double a, fa , b, fb, f1a, f1b, t;
 
@@ -212,7 +212,7 @@ public interface MetodoDeInterpolacion{
 					a = keys.at(i);
 					b = keys.at(i+1);
 
-					for(int j=0; j < values.length(0);j++){
+					for(int j=0; j < values.columns();j++){
 						fa = values.at( i, j);
 						fb = values.at( i+1, j);
 
@@ -249,13 +249,13 @@ public interface MetodoDeInterpolacion{
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor values, Object... parametros){
 				double tension = (1.0 - ((Number)parametros[0]).doubleValue())/ 2.0;
-				int len = values.length() - 1; 
-				Funcion.Double funciones[][] = new Funcion.Double[values.length(0)][len];
+				int len = values.rows() - 1; 
+				Funcion.Double funciones[][] = new Funcion.Double[values.columns()][len];
 
 				double fa, f1a, fb, f1b;
 
 				for(int i=0; i < len; i++ ){
-					for(int j=0; j < values.length(0);j++){
+					for(int j=0; j < values.columns();j++){
 						fa = values.at( i, j );
 						fb = values.at( i+1, j );
 
@@ -286,15 +286,15 @@ public interface MetodoDeInterpolacion{
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor keys, ArrayExtractor values, Object... parametros){
 				double tension = (1.0 - ((Number)parametros[0]).doubleValue())/ 2.0;
-				int len = keys.length() - 1; 
-				Funcion.Double funciones[][] = new Funcion.Double[values.length(0)][len];
+				int len = keys.rows() - 1; 
+				Funcion.Double funciones[][] = new Funcion.Double[values.columns()][len];
 
 				double fa, f1a, fb, f1b, s, t;
 
 				for(int i=0; i < len; i++ ){
 					s = 1 / (keys.at(i+1) - keys.at(i));
 					t = -keys.at(i);
-					for(int j=0; j < values.length(0);j++){
+					for(int j=0; j < values.columns();j++){
 						fa = values.at( i, j );
 						fb = values.at( i+1, j );
 
@@ -383,12 +383,12 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor values, Object... parametros){
-				assert(values.length() / 3 > 0 && values.length() % 3 == 1);
+				assert(values.rows() / 3 > 0 && values.rows() % 3 == 1);
 
-				int len = values.length() / 3;
-				Funcion.Double funciones[][] = new Funcion.Double[values.length(0)][len];
+				int len = values.rows() / 3;
+				Funcion.Double funciones[][] = new Funcion.Double[values.columns()][len];
 
-				for (int i = 0; i < values.length(0); i++) {
+				for (int i = 0; i < values.columns(); i++) {
 					for(int j1=0, j2=0; j1 < len; j1++ ){
 						funciones[i][j1] = GeneradorDeFunciones.Predefinido.BEZIER_CUBICO.generaFuncion(
 								values.at( j2++, i),
@@ -411,12 +411,12 @@ public interface MetodoDeInterpolacion{
 			 */
 			@Override
 			public Funcion.Double[][] generarFunciones( ArrayExtractor keys, ArrayExtractor values, Object... parametros){
-				assert(keys.length() > 1 && values.length() / 3 == keys.length() -1 && values.length() % 3 == 1);
+				assert(keys.rows() > 1 && values.rows() / 3 == keys.rows() -1 && values.rows() % 3 == 1);
 
-				int len = keys.length() - 1;
-				Funcion.Double funciones[][] = new Funcion.Double[values.length(0)][len];
+				int len = keys.rows() - 1;
+				Funcion.Double funciones[][] = new Funcion.Double[values.columns()][len];
 
-				for (int i = 0; i < values.length(0); i++) {
+				for (int i = 0; i < values.columns(); i++) {
 					for(int j1=0, j2=0; j1 < len; j1++ ){
 						funciones[i][j1] = GeneradorDeFunciones.Predefinido.BEZIER_CUBICO.generaFuncion(
 								values.at( j2++, i),

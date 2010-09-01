@@ -1,19 +1,19 @@
 package org.sam.interpoladores;
+
 /**
  *
  */
-abstract class ArrayExtractor{ 
+interface ArrayExtractor{ 
 	
     /**
      *
      * @param <T>
      */
-    static final class GenericoDouble<T> extends ArrayExtractor{
+    static final class GenericoDouble<T> implements ArrayExtractor{
 		private final T v[];
 		private final Extractor.Double<? super T> extractor;
 		
         /**
-         *
          * @param v
          * @param extractor
          */
@@ -23,22 +23,24 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return extractor.get(v[0]).length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -55,7 +57,7 @@ abstract class ArrayExtractor{
      *
      * @param <T>
      */
-    static final class GenericoFloat<T> extends ArrayExtractor{
+    static final class GenericoFloat<T> implements ArrayExtractor{
     	private final T v[];
 		private final Extractor.Float<? super T> extractor;
 		
@@ -72,20 +74,22 @@ abstract class ArrayExtractor{
         /* (non-Javadoc)
          * @see org.sam.interpoladores.ArrayExtractor#length()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
          * @see org.sam.interpoladores.ArrayExtractor#length(int)
          */
-        public int length(int index) {
+        public int columns() {
 			return extractor.get(v[0]).length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -102,7 +106,7 @@ abstract class ArrayExtractor{
      *
      * @param <T>
      */
-    static final class Numerico<T extends Number> extends ArrayExtractor{
+    static final class Numerico<T extends Number> implements ArrayExtractor{
 		private final T v[];
 		
         /**
@@ -114,16 +118,16 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 1;
 		}
 
@@ -145,7 +149,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E1D extends ArrayExtractor{
+    static final class E1D implements ArrayExtractor{
 		private final double v[];
 		
         /**
@@ -157,16 +161,16 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 1;
 		}
         
@@ -188,7 +192,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E1F extends ArrayExtractor{
+    static final class E1F implements ArrayExtractor{
 		private final float v[];
 		
         /**
@@ -200,16 +204,16 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 1;
 		}
 
@@ -231,7 +235,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E1I extends ArrayExtractor{
+    static final class E1I implements ArrayExtractor{
 		private final int v[];
 		
         /**
@@ -243,16 +247,16 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 1;
 		}
 
@@ -274,7 +278,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E2D extends ArrayExtractor{
+    static final class E2D implements ArrayExtractor{
 		private final double[] v[];
 		
         /**
@@ -286,22 +290,24 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 2;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -317,7 +323,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E2F extends ArrayExtractor{
+    static final class E2F implements ArrayExtractor{
 		private final float[] v[];
 		
         /**
@@ -329,22 +335,24 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 2;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -360,7 +368,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E2I extends ArrayExtractor{
+    static final class E2I implements ArrayExtractor{
 		private final int[] v[];
 		
         /**
@@ -372,22 +380,24 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 2;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -403,7 +413,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E3D extends ArrayExtractor{
+    static final class E3D implements ArrayExtractor{
 		private final double[] v[];
 		
         /**
@@ -415,22 +425,24 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 3;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -446,7 +458,7 @@ abstract class ArrayExtractor{
     /**
      *
      */
-    static final class E3F extends ArrayExtractor{
+    static final class E3F implements ArrayExtractor{
 		private final float[] v[];
 		
         /**
@@ -458,22 +470,24 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 3;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -486,10 +500,7 @@ abstract class ArrayExtractor{
 		}
 	}
 
-    /**
-     *
-     */
-    static final class E3I extends ArrayExtractor{
+    static final class E3I implements ArrayExtractor{
 		private final int[] v[];
 		
         /**
@@ -501,22 +512,24 @@ abstract class ArrayExtractor{
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
+         * @see org.sam.interpoladores.ArrayExtractor#rows()
          */
-        public int length() {
+        public int rows() {
 			return v.length;
 		}
 
         /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
+         * @see org.sam.interpoladores.ArrayExtractor#columns()
          */
-        public int length(int index) {
+        public int columns() {
 			return 3;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * Operación no soportada.
+    	 * @throws UnsupportedOperationException
+    	 * puesto que este método es una optimización para los valores de una única dimensión.
+    	 */
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
@@ -533,21 +546,20 @@ abstract class ArrayExtractor{
      *
      * @return
      */
-    public abstract int length();
+    public abstract int rows();
 	
     /**
-     *
-     * @param index
      * @return
      */
-    public abstract int length(int index);
+    public abstract int columns();
 	
     /**
-     *
      * @param index
      * @return
+     * @throws UnsupportedOperationException cuando la operación no está soportada.
+     * Puesto que este método es una optimización para los valores de una única dimensión.
      */
-    public abstract double at(int index);
+    public abstract double at(int index) throws UnsupportedOperationException;
 	
     /**
      *

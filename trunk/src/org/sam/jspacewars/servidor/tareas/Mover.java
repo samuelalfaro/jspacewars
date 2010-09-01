@@ -21,6 +21,8 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+
 /**
  * @author samuel
  *
@@ -35,7 +37,7 @@ public class Mover extends TareaAbs {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void realizar(long startTime, long stopTime){
+	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
 		// TODO hacer realmente
 		realizarTest( startTime, stopTime);
 	}
