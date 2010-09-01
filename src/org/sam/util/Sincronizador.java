@@ -1,12 +1,12 @@
 package org.sam.util;
 
 /**
- * Esta clase proporciona un objeto para que varios objetos de otras clases lo compartan y se puedan sincronizar.
+ * Clase que proporciona un objeto para que varios objetos de otras clases lo compartan y se puedan sincronizar.
  */
 public class Sincronizador {
 	
 	/**
-	 * Bloquea a la hebra llamante hasta que es notificada
+	 * Bloquea a la hebra llamante hasta que es notificada.
 	 */
 	public void esperar() {
 		synchronized(this){
@@ -19,7 +19,9 @@ public class Sincronizador {
 	}
 	
 	/**
-	 * Bloquea a la hebra llamante hasta que es notificada
+	 * Bloquea a la hebra llamante hasta que es notificada.
+	 * 
+	 * @param milis máximo tiempo de espera en milisegundos.
 	 */
 	public void esperar(long milis) {
 		synchronized(this){
@@ -31,14 +33,12 @@ public class Sincronizador {
 		}
 	}
 	
-	
 	/**
-	 * Notifica a las hebras que están esperando en el método <code>esperar()</code> que continuen.
+	 * Notifica a las hebras bloquadas por los métodos {@linkplain #esperar()} o {@linkplain #esperar(long)} que continuen.
 	 */
 	public void notificar() {
 		synchronized(this){
 			notifyAll();
 		}
 	}
-	
 }

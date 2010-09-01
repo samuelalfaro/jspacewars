@@ -78,16 +78,18 @@ public class VectorUtils {
 	}
 	
 	/**
-	 * Reflejo coplanar
+	 * Reflejo coplanar</br>
 	 * <PRE>
-	 * Calculo del vector perpendicular a s y coplanar al plano(v,s)
+	 * Cálculo del vector perpendicular a s y coplanar al plano(v,s)
 	 * cross(v, s) = normal del plano(v,s)
 	 * cross(n, s) = cross( cross(v, s), s ) = vector perpendicular a la normal y a s
 	 * 
-	 * cross( cross(v1, v2), v2)
-	 * c.x = ( v1.y*v2.z - v1.z*v2.y )
-	 * c.y = ( v2.x*v1.z - v2.z*v1.x )
-	 * c.z = ( v1.x*v2.y - v1.y*v2.x )
+	 * cc = cross( cross(v1, v2), v2)
+	 * 
+	 *      c = cross(v1, v2)
+	 *           c.x = ( v1.y*v2.z - v1.z*v2.y )
+	 *           c.y = ( v2.x*v1.z - v2.z*v1.x )
+	 *           c.z = ( v1.x*v2.y - v1.y*v2.x )
 	 * 
 	 * cc.x = c.y*v2.z - c.z*v2.y = ( v2.x*v1.z - v2.z*v1.x )*v2.z - ( v1.x*v2.y - v1.y*v2.x )*v2.y =
 	 *      = v1.z*v2.x*v2.z - v1.x*v2.z² - v1.x*v2.y² + v1.y*v2.x*v2.y =
@@ -189,6 +191,9 @@ public class VectorUtils {
 	 * rb3.y = s.y*2*dot(v,s)/|s|² - v.y
 	 * rb3.z = s.z*2*dot(v,s)/|s|² - v.z
 	 * </PRE>
+	 * @param v {@code Vector3f} a reflejar.
+	 * @param s {@code Vector3f} con la dirección del eje de simetría.
+	 * @return el {@code Vector3f} reflejado.
 	 */
 	public static Vector3f reflect(Vector3f v, Vector3f s){
 		float d = 2 * dot(v,s)/dot(s,s);

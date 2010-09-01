@@ -1,9 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * @author Samuel
- *
- * @param <T>
+ * 
  */
 final class Interpolador{
 

@@ -7,6 +7,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
+/**
+ * Clase para testear las interseciones entre un {@code Segmento} distintos objetos {@code LimiteRectangular}.
+ */
 @SuppressWarnings("serial")
 public final class Test02LimiteRectangular extends Test00Abs{
 	
@@ -70,6 +73,10 @@ public final class Test02LimiteRectangular extends Test00Abs{
 		}
 	}
 	
+	/**
+	 * Método principal encargado de lanzar este test.
+	 * @param args ignorados.
+	 */
 	static public void main(String args[]){
 		JFrame frame=new JFrame("Test 02: Interseccion Segmento Limites Rectangulares");
 		frame.getContentPane().add(new Test02LimiteRectangular());

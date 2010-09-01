@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Deque;
 
 
+/**
+ * Clase que sirve para comprobar las colisiones entre dos conjuntos de objetos {@code Colisionable}.
+ */
 public class ComprobadorDeColisones {
 	
 	private static int compare(float f1, float f2){
@@ -28,6 +31,10 @@ public class ComprobadorDeColisones {
 	private final Deque<Colisionable> colaActivosA;
 	private final Deque<Colisionable> colaActivosB;
 
+	/**
+	 * Constructor que inicializa las colas internas que se emplearán para realizar las comprobaciones.
+	 * @param tamColas Tamaño inicial de las colas internas.
+	 */
 	public ComprobadorDeColisones(int tamColas) {
 		colaConjuntoA = new ArrayDeque<Colisionable>(tamColas);
 		colaConjuntoB = new ArrayDeque<Colisionable>(tamColas);
@@ -35,6 +42,16 @@ public class ComprobadorDeColisones {
 		colaActivosB = new ArrayDeque<Colisionable>(tamColas);
 	}
 
+	/**
+	 * Método que comprueba las posibles colisiones entre los elementos de los dos conjuntos de {@code Colisionable},
+	 * que se reciben como parámetros.</br>
+	 * Emplea un algoritmo de barrido horizontal, comprobando únicamente los elementos que se encuentran en la misma
+	 * franja vertical, evitando las comprobaciones por fuerza bruta.</br>
+	 * No se hacen comprobaciones entre los elementos de un mismo conjunto.
+	 * 
+	 * @param unConjuntoA Primer conjunto de {@code Colisionable} a evaluar.
+	 * @param unConjuntoB Segundo conjunto de {@code Colisionable} a evaluar.
+	 */
 	public void comprobarColisiones(
 			Collection<? extends Colisionable> unConjuntoA,
 			Collection<? extends Colisionable> unConjuntoB) {

@@ -1,12 +1,8 @@
 package org.sam.jspacewars.servidor.elementos;
 
-/**
- * @author samuel
- * 
- */
 public class CanionData {
 	/**
-	 * Referencias al codigo de los distintos {@code Disparo}, que puede lanzar el {@code Canion}, segun su grado.
+	 * Referencias al código de los distintos {@code Disparo}, que puede lanzar el {@code Canion}, segun su grado.
 	 */
 	private final int[] vIdDisparos;
 

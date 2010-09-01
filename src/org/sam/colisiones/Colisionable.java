@@ -5,6 +5,9 @@ package org.sam.colisiones;
  */
 public interface Colisionable{
 	
+	/**
+	 * @return Los {@code Limites} del objeto solicitados.
+	 */
 	public Limites getLimites();
 	
 	/**

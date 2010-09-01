@@ -6,6 +6,9 @@ import java.awt.Graphics;
 
 import javax.swing.JFrame;
 
+/**
+ * Clase para testear si un {@code Poligono} contiene distintos puntos.
+ */
 @SuppressWarnings("serial")
 public final class Test04Poligonos extends Test00Abs{
 	private static final int N_LADOS = 20;
@@ -60,6 +63,10 @@ public final class Test04Poligonos extends Test00Abs{
 		dibuja(g,poligono);
 	}
 	
+	/**
+	 * Método principal encargado de lanzar este test.
+	 * @param args ignorados.
+	 */
 	static public void main(String args[]){
 		JFrame frame=new JFrame("Test 04: Poligono de "+N_LADOS+" lados");
 		frame.getContentPane().add(new Test04Poligonos());

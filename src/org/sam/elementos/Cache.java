@@ -7,7 +7,12 @@ import java.util.Queue;
 import java.util.TreeMap;
 
 /**
- *
+ * Clase que implementa una caché de objetos.</br>
+ * Los objetos que aquí almacenados deberán implementar el interface {@code PrototipoCacheable<T>}.
+ * Esto permite, tanto inicializar de nuevo las antiguas instancias almacenadas, como generar
+ * nuevas instancias a partir del prototipo almacenado, cuando no quedan más instancias para reutilizar.
+ * 
+ * @param <T> Tipo genérico de datos almacenados en la caché.
  */
 public class Cache<T extends PrototipoCacheable<T>>{
 
@@ -36,10 +41,14 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	
 	private static Comparator<Integer> COMPARADOR = new Comparator<Integer>(){
 		public int compare(Integer o1, Integer o2) {
-			return o1.hashCode() - o2.hashCode();
+			return o1.compareTo(o2);
 		}
 	};
 	
+	/**
+	 * Constructor que genera una {@code Cache} con una capacidad determinada.
+	 * @param tam valor de la capacidad deseada de la {@code Cache}.
+	 */
 	public Cache(int tam){
 		this.prototipos = new TreeMap<Integer,Nodo>(COMPARADOR);
 		this.elementos = 0;
@@ -49,10 +58,23 @@ public class Cache<T extends PrototipoCacheable<T>>{
 		//this.dRecuperados = 0;
 	}
 	
+	/**
+	 * Método que registra un {@code PrototipoCacheable<T>} en la {@code Cache}.
+	 * @param prototipo registrado.
+	 */
 	public void addPrototipo(PrototipoCacheable<T> prototipo){
 		prototipos.put(prototipo.hashCode(),new Nodo(prototipo));
 	}
 	
+	/**
+	 * Método que recupera una instancia del tipo solicitado, o genera una nueva 
+	 * cuando no quedan.
+	 * 
+	 * @param tipo valor entero que define el tipo de instancia solicitado.
+	 * @return Una instancia del tipo solicitado.
+	 * @throws PrototipoDesconocidoException
+	 * Si la {@code Cache} no contine ningún prototipo con el código solicitado.
+	 */
 	public T newObject(int tipo) throws PrototipoDesconocidoException{
 		Nodo nodo = prototipos.get(tipo);
 		if( nodo == null)
@@ -70,6 +92,16 @@ public class Cache<T extends PrototipoCacheable<T>>{
 		return newObject;
 	}
 	
+	/**
+	 * Método que almacena una instancia para su posterior reutilización.</br>
+	 * En caso de que al almacenar esta última instancia, se sobrepase la capacidad máxima de la {@code Cache},
+	 * se elimina un determinado número de instancias de cada tipo almacenando hasta llegar a la capacidad deseada.
+	 * De esta forma, siempre habrá más instancias almacenadas de los tipos usados más recientemente.
+	 * 
+	 * @param elemento a almacenar.
+	 * @throws PrototipoDesconocidoException
+	 * Si la {@code Cache} no contine ningún prototipo con el código solicitado.
+	 */
 	public void cached(T elemento) throws PrototipoDesconocidoException{
 		Nodo nodo = prototipos.get(elemento.hashCode());
 		if( nodo == null)
@@ -87,6 +119,10 @@ public class Cache<T extends PrototipoCacheable<T>>{
 			}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
 	public String toString(){
 		String me = "Caché con capacidad para "+tam+" elementos:\n"+
 		"\tElementos en cache:\t"+elementos+"\n"+

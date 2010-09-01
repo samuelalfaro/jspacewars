@@ -21,25 +21,49 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+
 /**
  * @author samuel
  * 
  */
 public final class Esperar extends TareaAbs {
 
+	private final long duracionMin, duracionMax;
+	
 	public Esperar(long duracion) {
-		super(duracion);
+		this(duracion, duracion);
 	}
 
 	public Esperar(long duracionMin, long duracionMax) {
 		super( (long)(Math.random() * (duracionMax - duracionMin) + 0.5) + duracionMin );
+		this.duracionMin = duracionMin;
+		this.duracionMax = duracionMax;
 	}
 
+	/**
+	 * Devuelve la duración mínima de esta tarea.
+	 * 
+	 * @return el valor solicitado.
+	 */
+	public long getDuracionMin() {
+		return duracionMin;
+	}
+
+	/**
+	 * Devuelve la duración máxima de esta tarea.
+	 * 
+	 * @return el valor solicitado.
+	 */
+	public long getDuracionMax() {
+		return duracionMax;
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void realizar(long startTime, long stopTime) {
+	public void realizar(NaveEnemiga owner, long startTime, long stopTime) {
 		realizarTest(startTime, stopTime);
 	}
 

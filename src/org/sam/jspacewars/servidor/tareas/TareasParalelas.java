@@ -21,6 +21,8 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+
 public final class TareasParalelas extends TareaAbs {
 	
 	private final Tarea[] tareas;
@@ -42,11 +44,11 @@ public final class TareasParalelas extends TareaAbs {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void realizar(long startTime, long stopTime){
+	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
 		if( startTime >= this.getDuracion() )
 			return;
 		for(Tarea t:tareas)
 			if(startTime < t.getDuracion() )
-				t.realizar( startTime, stopTime );
+				t.realizar(owner, startTime, stopTime );
 	}
 }

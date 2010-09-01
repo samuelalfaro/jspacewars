@@ -17,8 +17,9 @@ import org.sam.jspacewars.servidor.elementos.Elemento;
 import org.sam.util.Reflexion;
 
 /**
- * 
- * @author Samuel Alfaro
+ * Clase que encapsula los distintos métodos necesarios para mostrar por pantalla,
+ * tanto los polígonos como sus límites asociados a cada elemento del juego.</br>
+ * Esta clase es usada llamada por la clase {@code TestColisiones}.
  */
 public class ClienteTestColisiones {
 	
@@ -189,6 +190,11 @@ public class ClienteTestColisiones {
 
 	private final transient ClientData data;
 
+	/**
+	 * Constructor que genera un cliente que se encarga de mostrar un {@code GLCanvas} los poligonos asociados
+	 * a los distintos elementos elementos del juego. 
+	 * @param canvas {@code GLCanvas} donde se mostrarán dichos polígonos.
+	 */
 	public ClienteTestColisiones(GLCanvas canvas) {
 		this.data =  new ClientData();
 				
@@ -198,49 +204,83 @@ public class ClienteTestColisiones {
 		canvas.addKeyListener(new GameKeyListener(data));	
 	}
 	
+	/**
+	 * @return {@code int} que enmascara las distintas teclas pulsadas.
+	 */
 	public int getKeyState(){
 		return data.key_state;
 	}
 	
+	/**
+	 * @param nVidas valor del número de vidas asignado.
+	 */
 	public void setNVidas(int nVidas){
 		data.nVidas = nVidas;
 	}
 	
+	/**
+	 * @param nBombas valor del número de bombas asignado.
+	 */
 	public void setNBombas(int nBombas){
 		data.nBombas = nBombas;
 	}
 	
+	/**
+	 * @param puntos valor de los puntos asignados.
+	 */
 	public void setPuntos(int puntos){
 		data.puntos = puntos;
 	}
 	
+	/**
+	 * @param nivelesFijos valores de los niveles fijos asignados.
+	 */
 	public void setNivelesFijos(int[] nivelesFijos) {
 		for(int i = 0; i < nivelesFijos.length; i++ )
 			data.nivelesFijos[i] = nivelesFijos[i];
 	}
 
+	/**
+	 * @param nivelesActuales valores de los niveles actuales asignados.
+	 */
 	public void setNivelesActuales(int[] nivelesActuales) {
 		for(int i = 0; i < nivelesActuales.length; i++ )
 			data.nivelesActuales[i] = nivelesActuales[i];
 	}
 
+	/**
+	 * @param nivelesDisponibles valores de los niveles disponibles asignados.
+	 */
 	public void setNivelesDisponibles(int[] nivelesDisponibles) {
 		for(int i = 0; i < nivelesDisponibles.length; i++ )
 			data.nivelesDisponibles[i] = nivelesDisponibles[i];
 	}
 	
+	/**
+	 * @param indicador valor del indicador asignado.
+	 */
 	public void setIndicador(int indicador){
 		data.indicador = indicador;
 	}
 	
+	/**
+	 * @param grado valor del grado asignado.
+	 */
 	public void setGrado(int grado){
 		data.grado = grado;
 	}
 	
+	/**
+	 * Método que limpia la lista de elementos.
+	 */
 	public void clearList(){
 		data.elementos.clear();
 	}
 	
+	/**
+	 * Método que añade un nuevo elemento la lista de elementos.
+	 * @param e elemento a añadir.
+	 */
 	public void add(Elemento e){
 		data.elementos.add( new Instancia3D( (short)0, new PoligonoDibujable (e)) );
 	}

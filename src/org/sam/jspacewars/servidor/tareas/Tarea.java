@@ -21,6 +21,8 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+
 /**
  * @author Samuel Alfaro
  *
@@ -37,6 +39,8 @@ public interface Tarea {
 	 * Realiza la {@code Tarea} durante el periodo comprendido entre {@code startTime} y {@code stopTime},
 	 * ambos relativos a la duracion de dicha {@code Tarea}.
 	 * 
+	 * @param owner {@code NaveEnemiga} que realiza la {@code Tarea}.
+	 * 
 	 * @param startTime Tiempo inicial.<br/>
 	 * Si es negativo, o mayor de {@code stopTime}, el comportamiento no esta definido.<br/>
 	 * Si es mayor de la duracion de la {@code Tarea}, se interpreta que dicha {@code Tarea},
@@ -44,9 +48,9 @@ public interface Tarea {
 	 * 
 	 * @param stopTime Tiempo final.<br/>
 	 * Si negativo, o menor de {@code startTime}, el comportamiento no esta definido.<br/>
-	 * Si es mayor que la duracion que la {@code Tarea}, se completara dicha {@code Tarea},
-	 * teniendo en cuenta el tiempo transcurrido tras su finalizacion.
+	 * Si es mayor que la duracion que la {@code Tarea}, se completará dicha {@code Tarea},
+	 * teniendo en cuenta el tiempo transcurrido tras su finalización.
 	 */
-	public void realizar(long startTime, long stopTime);
+	public void realizar(NaveEnemiga owner, long startTime, long stopTime);
 	
 }

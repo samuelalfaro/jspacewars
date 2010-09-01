@@ -21,10 +21,12 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
+
 public final class Secuencia extends TareaAbs {
 	
 	private final Tarea[] tareas;
-	private final long[] finales;
+	private transient final long[] finales;
 
 	private static long calcularDuracion(Tarea[] tareas){
 		long duracion = 0;
@@ -52,7 +54,7 @@ public final class Secuencia extends TareaAbs {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void realizar(long startTime, long stopTime){
+	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
 		if(startTime < 0 || startTime >= this.getDuracion() )
 			return;
 		// Se realiza una búsqueda secuencial pues puede haber valores repetidos 
@@ -72,10 +74,10 @@ public final class Secuencia extends TareaAbs {
 		while(tarea < tareas.length){
 			if(stopTime < finales[tarea] ){
 				if(startTimeTarea != stopTimeTarea )
-					tareas[tarea].realizar(startTimeTarea, stopTimeTarea);
+					tareas[tarea].realizar(owner, startTimeTarea, stopTimeTarea);
 				break;
 			}
-			tareas[tarea].realizar(startTimeTarea, stopTimeTarea);
+			tareas[tarea].realizar(owner, startTimeTarea, stopTimeTarea);
 			stopTimeTarea  = stopTime - finales[tarea];
 			startTimeTarea = 0;
 			tarea++;

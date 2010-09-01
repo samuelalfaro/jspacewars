@@ -19,11 +19,15 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-/**
- * @author samuel
- * 
- */
 public class ElementosConverters {
+	
+	private static float getFloatAttribute(HierarchicalStreamReader reader, String att, float defecto){
+		try{
+			return Float.parseFloat(reader.getAttribute(att));
+		}catch(Exception e){
+			return defecto;
+		}
+	}
 
 	private static class PoligonoConverter implements Converter {
 
@@ -33,14 +37,6 @@ public class ElementosConverters {
 		}
 
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
-		}
-		
-		private static float getFloatAttribute(HierarchicalStreamReader reader, String att, float defecto){
-			try{
-				return Float.parseFloat(reader.getAttribute(att));
-			}catch(Exception e){
-				return defecto;
-			}
 		}
 		
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {

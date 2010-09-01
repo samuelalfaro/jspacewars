@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * Clase para optimizar operaciones en coma flotante, mediante tablas precalculadas,
- * algo no recomendable en Java. Puesto que en muchos casos es mas costoso el adceso
+ * algo no recomendable en Java. Puesto que en muchos casos es mas costoso el acceso
  * a una posicion de memoria de forma segura a traves de un vector, que el calculo de
  * dichas operaciones, mas aun, con la reduccion de coste computacional de estos calculos
  * en los procesadores modernos y el cacheo de resultados anteriores.<br/>
@@ -36,12 +36,11 @@ import java.util.Random;
  * <tr><td>Tiempo FastMath.len (i,i):    </td><td align=right> 7.982.940.708 nSegundos</td></tr>
  * </tbody></table>
  * 
- * @author Samuel Alfaro
  */
 @Deprecated
 public class FastMath {
 	
-    public static int highestOneBitPos(int i) {
+    private static int highestOneBitPos(int i) {
         if (i == 0)
             return 0;
         int n = 1;
@@ -90,8 +89,8 @@ public class FastMath {
 		return cosTable[ index == 240 ? 0 : index ];
 	}
 
-	public static final float cos240(int index){
-		return cosTable[ index ];
+	public static final float cos240(int ang240){
+		return cosTable[ ang240 ];
 	}
 	
 	private static final float[] sinTable = new float[240];
@@ -128,8 +127,8 @@ public class FastMath {
 		return sinTable[ index == 240 ? 0 : index ];
 	}
 	
-	public static final float sin240(int index){
-		return sinTable[index];
+	public static final float sin240(int ang240){
+		return sinTable[ang240];
 	}
 	
 	private static final int TABLE_LEN = 0x100;
@@ -329,6 +328,10 @@ public class FastMath {
 		return (dif > 120)? 240 - dif: dif;
 	}
 	
+	/**
+	 * Método principal que realiza distintas comprobaciones tanto de fiabilidad como de velocidad.
+	 * @param args ignorados.
+	 */
 	public static void main(String args[]){
 
 		System.out.printf(" %8.4f\n",atan( 1, 4));

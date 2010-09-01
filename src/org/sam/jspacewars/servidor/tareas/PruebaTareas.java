@@ -1,35 +1,207 @@
 package org.sam.jspacewars.servidor.tareas;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Random;
 
-public class PruebaTareas {
+import org.sam.util.Reflexion;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
+public class PruebaTareas {
+	
+	private static Tarea[] getSubTareas(Tarea t){
+		java.lang.reflect.Field f = Reflexion.findField(t.getClass(), "tareas");
+		Tarea[] array = null;
+		try {
+			boolean accesible = f.isAccessible();
+			f.setAccessible(true);
+			array = (Tarea[])f.get(t);
+			f.setAccessible(accesible);
+			return array;
+		} catch (IllegalAccessException ignorada) {
+			return null;
+		}
+	}
+	
+	private static Tarea[] getSubTareas(HierarchicalStreamReader reader, UnmarshallingContext context){
+		Collection<Tarea> subTareas = new LinkedList<Tarea>();
+		while(reader.hasMoreChildren()){
+			reader.moveDown();
+			Class<?> clazz;
+			String className = reader.getNodeName();
+			if(className.equalsIgnoreCase("TareasParalelas"))
+				clazz = TareasParalelas.class;
+			else if(className.equalsIgnoreCase("Secuencia"))
+				clazz = Secuencia.class;
+			else if(className.equalsIgnoreCase("Esperar"))
+				clazz = Esperar.class;
+			else if(className.equalsIgnoreCase("Mover"))
+				clazz = Mover.class;
+			else if(className.equalsIgnoreCase("SetAnguloCanion"))
+				clazz = SetAnguloCanion.class;
+			else if(className.equalsIgnoreCase("OrientarCanion"))
+				clazz = OrientarCanion.class;
+			else if(className.equalsIgnoreCase("Disparar"))
+				clazz = Disparar.class;
+			else
+				clazz = null;
+			subTareas.add((Tarea)context.convertAnother(null, clazz));
+			reader.moveUp();
+		}
+		Tarea[] result =subTareas.toArray(new Tarea[subTareas.size()]);
+		subTareas.clear();
+		return result;
+	}
+	
+	private static long getLongAttribute(HierarchicalStreamReader reader, String att, long defecto){
+		try{
+			return Long.parseLong(reader.getAttribute(att));
+		}catch(Exception e){
+			return defecto;
+		}
+	}
+
+	private static class TareasParalelasConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return TareasParalelas.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+			context.convertAnother(getSubTareas((TareasParalelas)value));
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			return new TareasParalelas(getSubTareas(reader, context));
+		}
+	}
+	
+	private static class SecuenciaConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return Secuencia.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+			context.convertAnother(getSubTareas((Secuencia)value));
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			return new Secuencia(getSubTareas(reader, context));
+		}
+	}
+	
+	private static class EsperarConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return Esperar.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+			Esperar tarea = (Esperar)value;
+			long dMin = tarea.getDuracionMin();
+			long dMax = tarea.getDuracionMax();
+			if(dMin == dMax)
+				writer.addAttribute("duracion", Long.toString(tarea.getDuracion()));
+			else{
+				writer.addAttribute("duracionMin", Long.toString(dMin));
+				writer.addAttribute("duracionMax", Long.toString(dMax));
+			}
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			long duracion = getLongAttribute( reader, "duracion", -1);
+			if(duracion < 0)
+				return new Esperar(
+						getLongAttribute( reader, "duracionMin", 0),
+						getLongAttribute( reader, "duracionMax", 0)
+						);
+			return new Esperar(duracion);
+		}
+	}
+	
+	private static class MoverConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return Mover.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+			Mover tarea = (Mover)value;
+			writer.addAttribute("duracion", Long.toString(tarea.getDuracion()));
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			return new Mover( getLongAttribute( reader, "duracion", 0) );
+		}
+	}
+	
+	private static class SetAnguloCanionConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return SetAnguloCanion.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			return new SetAnguloCanion( 0, 0.0f );
+		}
+	}
+	
+	private static class OrientarCanionConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return OrientarCanion.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+			OrientarCanion tarea = (OrientarCanion)value;
+			writer.addAttribute("duracion", Long.toString(tarea.getDuracion()));
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			return new OrientarCanion( 0, 0.0f, getLongAttribute( reader, "duracion", 0) );
+		}
+	}
+	
+	private static class DispararConverter implements Converter {
+
+		@SuppressWarnings("unchecked")
+		public boolean canConvert(Class clazz) {
+			return Disparar.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+			Disparar tarea = (Disparar)value;
+			writer.addAttribute("duracion", Long.toString(tarea.getDuracion()));
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			return new Disparar( 0, getLongAttribute( reader, "duracion", 0) );
+		}
+	}
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+	
 		/*
-		Tarea tarea = new Secuencia( new Tarea[]{
-			new SetAnguloCanion(1,0),
-			new Disparar(1, 2l),
-			new SetAnguloCanion(11,0),
-			new SetAnguloCanion(12,0),
-			new Disparar(1, 4l),
-			new SetAnguloCanion(2,0),
-			new SetAnguloCanion(3,0),
-			new Disparar(2, 7l),
-			new Disparar(3, 4l),
-			new SetAnguloCanion(4,0),
-			new SetAnguloCanion(5,0),
-			new Disparar(4, 2l),
-			new Disparar(5, 1l),
-			new SetAnguloCanion(6,0),
-			new SetAnguloCanion(7,0),
-			new SetAnguloCanion(8,0),
-			new SetAnguloCanion(9,0)
-		});
-		
-		/*/
 		Tarea tarea = new TareasParalelas( new Tarea[]{
 			new Mover(30),
 			new Secuencia( new Tarea[]{
@@ -55,6 +227,56 @@ public class PruebaTareas {
 				})	
 			}),
 		});
+		/*/
+		
+		XStream xStream = new XStream(new DomDriver());
+		
+		xStream.alias("TareasParalelas", TareasParalelas.class);
+		xStream.registerConverter( new TareasParalelasConverter() );
+		xStream.alias("Secuencia", Secuencia.class);
+		xStream.registerConverter( new SecuenciaConverter() );
+		xStream.alias("Esperar", Esperar.class);
+		xStream.registerConverter( new EsperarConverter() );
+		xStream.alias("Mover", Mover.class);
+		xStream.registerConverter( new MoverConverter() );
+		xStream.alias("SetAnguloCanion", SetAnguloCanion.class);
+		xStream.registerConverter( new SetAnguloCanionConverter() );
+		xStream.alias("OrientarCanion", OrientarCanion.class);
+		xStream.registerConverter( new OrientarCanionConverter() );
+		xStream.alias("Disparar", Disparar.class);
+		xStream.registerConverter( new DispararConverter() );
+		
+		String xmlIN = 
+			"<TareasParalelas>"+
+			"  <Mover duracion=\"30\"/>"+
+			"  <Secuencia>"+
+			"    <Esperar duracion=\"10\"/>"+
+			"    <Esperar duracionMin=\"3\" duracionMax=\"5\"/>"+
+			"    <TareasParalelas>"+
+			"      <Secuencia>"+
+			"        <SetAnguloCanion/>"+
+			"        <OrientarCanion duracion=\"5\"/>"+
+			"      </Secuencia>"+
+			"      <Disparar duracion=\"5\"/>"+
+			"    </TareasParalelas>"+
+			"  </Secuencia>"+
+			"  <Secuencia>"+
+			"    <Esperar duracion=\"15\"/>"+
+			"    <Esperar duracionMin=\"3\" duracionMax=\"5\"/>"+
+			"    <TareasParalelas>"+
+			"      <Secuencia>"+
+			"        <SetAnguloCanion/>"+
+			"        <OrientarCanion duracion=\"5\"/>"+
+			"      </Secuencia>"+
+			"      <Disparar duracion=\"5\"/>"+
+			"    </TareasParalelas>"+
+			"  </Secuencia>"+
+			"</TareasParalelas>";
+		
+		Tarea tarea = (Tarea)xStream.fromXML(xmlIN);
+		
+		System.out.println(xStream.toXML(tarea));
+		
 		//*/
 		
 		Random r = new Random();
@@ -62,7 +284,7 @@ public class PruebaTareas {
 		while(i <= 30){
 			System.out.println("\nInstante: " + i);
 			long f = i + r.nextInt(4) +1;
-			tarea.realizar( i, f );
+			tarea.realizar( null, i, f );
 			i = f;
 		}
 	}

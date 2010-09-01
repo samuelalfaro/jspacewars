@@ -7,6 +7,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
+/**
+ * Clase para testear las interseciones entre distintos objetos {@code LimiteRectangular}.
+ */
 @SuppressWarnings("serial")
 public final class Test01LimiteRectangular extends Test00Abs{
 	
@@ -34,6 +37,9 @@ public final class Test01LimiteRectangular extends Test00Abs{
 		puntoAsignado = false;
 	}
 	
+    /* (non-Javadoc)
+     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+     */
     @Override
 	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);
@@ -54,7 +60,11 @@ public final class Test01LimiteRectangular extends Test00Abs{
 		dibuja(g, limiteRectangular);
 	}
 
-	public void mouseReleased(MouseEvent e) {
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Test00Abs#mouseReleased(java.awt.event.MouseEvent)
+	 */
+    @Override
+    public void mouseReleased(MouseEvent e) {
 		if(!puntoAsignado){
 			wX1 = wX2 = xPantallaMundo(e.getX());
 			wY1 = wY2 = yPantallaMundo(e.getY());
@@ -66,7 +76,11 @@ public final class Test01LimiteRectangular extends Test00Abs{
 		puntoAsignado = !puntoAsignado;
 	}
 
-	public void mouseMoved(MouseEvent e) {
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Test00Abs#mouseMoved(java.awt.event.MouseEvent)
+	 */
+    @Override
+    public void mouseMoved(MouseEvent e) {
 		if(puntoAsignado){
 			wX2 = xPantallaMundo(e.getX());
 			wY2 = yPantallaMundo(e.getY());
@@ -75,6 +89,10 @@ public final class Test01LimiteRectangular extends Test00Abs{
 		}
 	}
 
+	/**
+	 * Método principal encargado de lanzar este test.
+	 * @param args ignorados.
+	 */
 	static public void main(String args[]){
 		JFrame frame=new JFrame("Test 01: Interseccion Limites Rectangulares");
 		frame.getContentPane().add(new Test01LimiteRectangular());

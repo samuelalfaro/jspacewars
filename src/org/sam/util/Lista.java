@@ -3,8 +3,10 @@ package org.sam.util;
 import java.util.*;
 
 /**
- * @author Samuel
- *
+ * Clase que implementa {@code List<E>}. La peculiaridad de esta implementación, es que permite
+ * seguir recorriendo la lista con un {@code ListIterator<E>}, a la vez que se añaden elementos
+ * al final de la lista, sin lanzar una excepción de acceso concurrente.
+ * @param <E> Tipo genérico contenido por la lista.
  */
 public class Lista<E> implements List<E>{
 	

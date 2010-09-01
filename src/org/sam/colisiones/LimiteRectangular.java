@@ -1,5 +1,8 @@
 package org.sam.colisiones;
 
+/**
+ * Implementación del interface {@code Limites} en forma de rectángulo.
+ */
 public class LimiteRectangular implements Limites{
 	
 	/**
@@ -11,8 +14,18 @@ public class LimiteRectangular implements Limites{
 	 */
 	float xSD, ySD;
 	
-	public LimiteRectangular(){}
+	/**
+	 * Constructor por defecto, crea un {@code LimiteRectangular} de 0 unidades de ancho por 0 unides de alto.
+	 */
+	public LimiteRectangular(){
+		this(0,0);
+	}
 	
+	/**
+	 * Constructor que crea un {@code LimiteRectangular} de dimensiones {@code ancho x alto}.
+	 * @param ancho anchura del rectangulo creado.
+	 * @param alto  altura del rectangulo creado.
+	 */
 	public LimiteRectangular(float ancho, float alto){
 		xSD = ancho/2;
 		xII = - xSD;
@@ -20,11 +33,28 @@ public class LimiteRectangular implements Limites{
 		yII = - ySD;
 	}
 	
-	public LimiteRectangular(float xII,float yII,float xSD,float ySD){
-		setValues(xII,yII,xSD,ySD);
+	/**
+	 * Constructor que crea un {@code LimiteRectangular} a partir de las coordenadas de dos puntos.
+	 * 
+	 * @param x1 Coordenada X del primer punto.
+	 * @param y1 Coordenada Y del primer punto.
+	 * @param x2 Coordenada X del segundo punto.
+	 * @param y2 Coordenada Y del segundo punto.
+	 */
+	public LimiteRectangular(float x1, float y1, float x2, float y2){
+		setValues( x1, y1, x2, y2 );
 	}
 	
-	public void setValues(float x1,float y1,float x2,float y2){
+	/**
+	 * Método que asigna las coodenadas de los esquinas del {@code LimiteRectangular} a partir de las coordenadas
+	 * de dos puntos.
+	 * 
+	 * @param x1 Coordenada X del primer punto.
+	 * @param y1 Coordenada Y del primer punto.
+	 * @param x2 Coordenada X del segundo punto.
+	 * @param y2 Coordenada Y del segundo punto.
+	 */
+	public void setValues(float x1, float y1, float x2, float y2){
 		if(x1 < x2){
 			this.xII = x1;
 			this.xSD = x2;
@@ -41,28 +71,72 @@ public class LimiteRectangular implements Limites{
 		}
 	}
 	
-	public void setSortedValues(float xII,float yII,float xSD,float ySD){
+	/**
+	 * Método que asigna directamente las coodenadas de los esquinas del {@code LimiteRectangular}.
+	 * 
+	 * @param xII Coordenada X de la esquina inferior izquierda.
+	 * @param yII Coordenada Y de la esquina inferior izquierda.
+	 * @param xSD Coordenada X de la esquina superior derecha.
+	 * @param ySD Coordenada Y de la esquina superior derecha.
+	 */
+	public void setSortedValues(float xII, float yII, float xSD, float ySD) {
 		this.xII = xII;
 		this.yII = yII;
 		this.xSD = xSD;
 		this.ySD = ySD;
 	}
 
-	public void trasladar(float desX,float desY){
+	/**
+	 * Método que traslada el {@code LimiteRectangular}.
+	 * @param desX desplazamiento en el eje X.
+	 * @param desY desplazamiento en el eje Y.
+	 */
+	public void trasladar(float desX, float desY) {
 		xII += desX;
 		yII += desY;
 		xSD += desX;
 		ySD += desY;
 	}
 
+	/**
+	 * Función que evalúa si un determinado punto está dentro de los límites definidos por el objeto.
+	 * @param x Coordenada X del punto evaluado.
+	 * @param y Coordenada Y del punto evaluado.
+	 * @return <ul>
+	 * <li>{@code true}: si contiene el punto evaluado.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
+	 */
 	public boolean contiene(float x, float y){
 		return xII<= x && x<=xSD && yII<=y && y<=ySD;
 	}
 
+	/**
+	 * Función que evalúa si un determinado {@code Segmento} corta alguno de los lados que forman
+	 * el {@code LimiteRectangular} definido por el objeto.
+	 * @param segmento {@code Segmento} con el que se hace la comprobación.
+	 * @return <ul>
+	 * <li>{@code true}: si hay intersección.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
+	 */
 	public boolean hayInterseccion(Segmento segmento){
 		return hayInterseccion(segmento.x1, segmento.y1, segmento.x2, segmento.y2 );
 	}
 	
+	/**
+	 * Función que evalúa si un determinado segmento, definido por dos puntos, corta alguno de los lados que forman
+	 * el {@code LimiteRectangular} definido por el objeto.
+	 * 
+	 * @param px1 Coordenada X del primer punto.
+	 * @param py1 Coordenada Y del primer punto.
+	 * @param px2 Coordenada X del segundo punto.
+	 * @param py2 Coordenada Y del segundo punto.
+	 * @return <ul>
+	 * <li>{@code true}: si hay intersección.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
+	 */
 	public boolean hayInterseccion(float px1, float py1,float px2, float py2){
 		/*  Cuadrantes:
 		 *  1001 | 1000 | 1010
@@ -146,6 +220,15 @@ public class LimiteRectangular implements Limites{
 		return (y_dx >= limIzq && y_dx <= limDer);
 	}
 	
+	/**
+	 * Función que comprueba que si este {@code LimiteRectangular} es igual o equivalente a otro {@code LimiteRectangular},
+	 * que se pasa como parámetro.
+	 * @param otro {@code LimiteRectangular} con el que se hace la comprobación.
+	 * @return <ul>
+	 * <li>{@code true}: si son iguales o tienen las mismas dimensiones y posiciones.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
+	 */
 	public boolean equals(LimiteRectangular otro){
 		return	(otro != null) && (
 					( otro == this ) || 
@@ -153,16 +236,46 @@ public class LimiteRectangular implements Limites{
 				);
 	}
 	
+	/**
+	 * Función que comprueba que si este {@code LimiteRectangular} intersecta
+	 * con otro {@code LimiteRectangular}, que se pasa como parámetro.
+	 * @param otro {@code LimiteRectangular} con el que se hace la comprobación.
+	 * @return <ul>
+	 * <li>{@code true}: si hay intersección.</li>
+	 * <li>{@code false}: en caso contrario.</li>
+	 * </ul>
+	 */
 	public boolean hayInterseccion(LimiteRectangular otro){
 		return (xII<=otro.xSD && xSD>=otro.xII && yII<=otro.ySD && ySD>=otro.yII);
 	}
 
 	private final static LimiteRectangular shared = new LimiteRectangular();
 	
+	/**
+	 * Función que devuelve un {@code LimiteRectangular} correspondiente a la intersección 
+	 * entre este {@code LimiteRectangular} con otro {@code LimiteRectangular}, que se pasa como parámetro.
+	 * @param otro {@code LimiteRectangular} con el que se hace la comprobación.
+	 * @return <ul>
+	 * <li> {@code LimiteRectangular}: con el area que forma la intersección.</li>
+	 * <li>{@code null}: si no hay intersección.</li>
+	 * </ul>
+	 * <u>Nota:</u> esta función no genera nuevas instancias, y siempre devuelve el mismo {@code LimiteRectangular}
+	 * compartido. Si se necesitan instancias nuevas, use {@link #interseccion(LimiteRectangular, LimiteRectangular)}.
+	 */
 	public LimiteRectangular interseccion(LimiteRectangular otro){
 		return interseccion(otro, shared);
 	}
 	
+	/**
+	 * Función que devuelve un {@code LimiteRectangular} correspondiente a la intersección
+	 * entre este {@code LimiteRectangular} con otro {@code LimiteRectangular}, que se pasa como parámetro.
+	 * @param otro {@code LimiteRectangular} con el que se hace la comprobación.
+	 * @param interseccion Instancia dónde almacenar los valores de la intersección.
+	 * @return <ul>
+	 * <li> {@code LimiteRectangular}: con el area que forma la intersección.</li>
+	 * <li>{@code null}: si no hay intersección.</li>
+	 * </ul>
+	 */
 	public LimiteRectangular interseccion(LimiteRectangular otro, LimiteRectangular interseccion){
 		if(!hayInterseccion(otro))
 			return null;

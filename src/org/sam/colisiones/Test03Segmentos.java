@@ -7,6 +7,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
+/**
+ * Clase para testear las interseciones objetos {@code Segmento}.
+ */
 @SuppressWarnings("serial")
 public final class Test03Segmentos extends Test00Abs{
 	
@@ -91,6 +94,10 @@ public final class Test03Segmentos extends Test00Abs{
 		}
 	}
 	
+	/**
+	 * Método principal encargado de lanzar este test.
+	 * @param args ignorados.
+	 */
 	static public void main(String args[]){
 		JFrame frame=new JFrame("Test 03: Interseccion Segmentos");
 		frame.getContentPane().add(new Test03Segmentos());

@@ -11,6 +11,9 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+/**
+ * Clase para testear las interseciones entre dos objetos {@code Poligono}.
+ */
 @SuppressWarnings("serial")
 public final class Test05ColisionPoligonos extends Test00Abs{
 
@@ -141,6 +144,10 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 		poligono2.actualizarLimiteRectangular();
 	}
 	
+	/**
+	 * Método principal encargado de lanzar este test.
+	 * @param args ignorados.
+	 */
 	static public void main(String args[]){
 		JFrame frame=new JFrame("Test 05: Colision de Poligonos");
 		frame.getContentPane().add(new Test05ColisionPoligonos());

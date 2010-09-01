@@ -4,6 +4,7 @@
 package org.sam.jspacewars.servidor.elementos;
 
 import org.sam.colisiones.Poligono;
+import org.sam.jspacewars.servidor.tareas.Tarea;
 
 /**
  * @author samuel
@@ -11,6 +12,8 @@ import org.sam.colisiones.Poligono;
  */
 public class NaveEnemiga extends Nave {
 
+	private Tarea tarea;
+	
 	/**
 	 * @param tipo
 	 */
@@ -36,6 +39,7 @@ public class NaveEnemiga extends Nave {
 		return new NaveEnemiga(this);
 	}
 
+	private transient long time;
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -43,7 +47,8 @@ public class NaveEnemiga extends Nave {
 	 */
 	@Override
 	public void iniciar() {
-		// TODO Auto-generated method stub
+		super.inicializar();
+		time = 0;
 	}
 
 	/*
@@ -52,6 +57,9 @@ public class NaveEnemiga extends Nave {
 	 * @see org.sam.elementos.Dinamico#actua(long)
 	 */
 	public void actua(long nanos) {
-		// TODO Auto-generated method stub
+		long startTime = time;
+		time += nanos;
+		if(tarea != null)
+			tarea.realizar(this, startTime, time);
 	}
 }
