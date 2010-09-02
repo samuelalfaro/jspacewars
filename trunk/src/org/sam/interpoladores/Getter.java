@@ -1,44 +1,49 @@
 package org.sam.interpoladores;
 
 /**
- * @author Samuel
- *
+ * 
  */
 public final class Getter{
 	private Getter(){}
 
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     public interface Double<T>{
 		/**
-		 * @param key
-		 * @return
+		 * Método que devuelve el dato correspondiente a la clave pasada como parámetro.
+		 * 
+		 * @param key clave empleada para obtener el dato.
+		 * @return el dato correspondiente.
 		 */
 		public T get(double key);
 	}
 
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     public interface Float<T>{
 		/**
-		 * @param key
-		 * @return
+		 * Método que devuelve el dato correspondiente a la clave pasada como parámetro.
+		 * 
+		 * @param key clave empleada para obtener el dato.
+		 * @return el dato correspondiente.
 		 */
 		public T get(float key);
 	}
 
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     public interface Integer<T>{
 		/**
-		 * @param key
-		 * @return
+		 * Método que devuelve el dato correspondiente a la clave pasada como parámetro.
+		 * 
+		 * @param key clave empleada para obtener el dato.
+		 * @return el dato correspondiente.
 		 */
 		public T get(int key);
 	}

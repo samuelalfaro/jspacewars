@@ -1,8 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * @author samuel
- *
+ * 
  */
 public final class CompositeGetter{
 	private CompositeGetter(){}

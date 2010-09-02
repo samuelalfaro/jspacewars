@@ -45,13 +45,20 @@ public interface GeneradorDeFunciones {
 		},
 	
 		/**
-		 * Calcula los valores de la función exponencial que pasa por los puntos (a,fa) (b,fb)
-		 * y cuyo punto medio es pm.<br>
+		 * Calcula los valores de la función exponencial que pasa por los puntos {@code (a,fa) (b,fb)},
+		 * con una distancia relativa del punto medio igual a {@code pm}.<br>
+		 * El valor de {@code pm}, corresponde a una fracción comprendida entre {@code (0 .. 1)}
+		 * e indica la distancia relativa del punto medio {@code (fa +fb)/2} respecto a los otros puntos:</br>
+		 * <i>f(a) = fa</br>
+		 * f(a + pm·(b-a)) = (fa +fb)/2</br>
+		 * f(b) = fb</i></br>
+		 * comportandose la función como una interpolación lineal cuando este valor es {@code 0.5}.
          */
         EXPONENCIAL_PUNTO_MEDIO {
 			/**
-			 * Calcula los valores de la función exponencial que pasa por los puntos (a,fa) (b,fb)
-			 * y cuyo punto medio es pm.<br>
+			 * Crea y calcula la función exponencial que pasa por los puntos {@code (a,fa) (b,fb)},
+			 * con una distancia relativa del punto medio igual a {@code pm}.
+			 * 
 			 * @return La funcion generada.
 			 */
 			public Funcion.Double generaFuncion(double a, double fa, double b, double fb, double pm){
@@ -76,8 +83,9 @@ public interface GeneradorDeFunciones {
 			}
 			
 			/**
-			 * Calcula los valores de la función exponencial que pasa por los puntos (a,fa) (b,fb)
-			 * y cuyo punto medio es pm.<br>
+			 * Crea y calcula la función exponencial que pasa por los puntos {@code (a,fa) (b,fb)},
+			 * con una distancia relativa del punto medio igual a {@code pm}.
+			 * 
 			 * @param p {@inheritDoc} Siendo:<ul>
 			 * <li>p[0] = <b>a</b></li>
 			 * <li>p[1] = <b>fa</b></li>
@@ -98,13 +106,20 @@ public interface GeneradorDeFunciones {
 		},
 
 		/**
-		 * Calcula los valores del cociente polinómico que pasa por los puntos (a,fa) (b,fb)
-		 * y cuyo punto medio es pm.<br>
+		 * Calcula los valores del cociente polinómico que pasa por los puntos {@code (a,fa) (b,fb)},
+		 * con una distancia relativa del punto medio igual a {@code pm}.<br>
+		 * El valor de {@code pm}, corresponde a una fracción comprendida entre {@code (0 .. 1)}
+		 * e indica la distancia relativa del punto medio {@code (fa +fb)/2} respecto a los otros puntos:</br>
+		 * <i>f(a) = fa</br>
+		 * f(a + pm·(b-a)) = (fa +fb)/2</br>
+		 * f(b) = fb</i></br>
+		 * comportandose la función como una interpolación lineal cuando este valor es {@code 0.5}.
          */
         COCIENTE_POLINOMICO_PUNTO_MEDIO {
 			/**
-			 * Calcula los valores del cociente polinómico que pasa por los puntos (a,fa) (b,fb)
-			 * y cuyo punto medio es pm.<br>
+			 * Crea y calcula el cociente polinómico que pasa por los puntos {@code (a,fa) (b,fb)},
+			 * con una distancia relativa del punto medio igual a {@code pm}.
+			 * 
 			 * @return La funcion generada.
 			 */
 			public Funcion.Double generaFuncion(double a, double fa, double b, double fb, double pm){
@@ -130,7 +145,9 @@ public interface GeneradorDeFunciones {
 			}
 			
 			/**
-			 * Calcula los valores del cociente polinómico que pasa por los puntos (a,fa) (b,fb) y cuyo punto medio es pm.<br>
+			 * Crea y calcula el cociente polinómico que pasa por los puntos {@code (a,fa) (b,fb)},
+			 * con una distancia relativa del punto medio igual a {@code pm}.
+			 * 
 			 * @param p {@inheritDoc} Siendo:<ul>
 			 * <li>p[0] = <b>a</b></li>
 			 * <li>p[1] = <b>fa</b></li>
@@ -300,7 +317,8 @@ public interface GeneradorDeFunciones {
 	 * Método que genera una función a partir de los parámetros necesarios.
 	 * @param p Parámetros necesarios para calcular la función.
 	 * @return La función generada.
-	 * @throws IllegalArgumentException Excepcion que se lanza cuando no hay suficientes parámetros para calcular la función.
+	 * @throws IllegalArgumentException
+	 * Excepcion lanzada cuando no hay suficientes parámetros para calcular la función.
 	 */
 	public Funcion.Double generaFuncion(double... p)throws IllegalArgumentException;
 }

@@ -1,15 +1,14 @@
 package org.sam.interpoladores;
 
 /**
- * @author samuel
- *
+ * 
  */
 public final class GetterGroup{
 	private GetterGroup(){}
 	
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     public static final class Double<T> implements Getter.Double<T>{
 
@@ -43,7 +42,7 @@ public final class GetterGroup{
 
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     public static final class Float<T> implements Getter.Float<T>{
 
@@ -77,7 +76,7 @@ public final class GetterGroup{
 
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     public static final class Integer<T> implements Getter.Integer<T>{
 

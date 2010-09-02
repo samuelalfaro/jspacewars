@@ -1,8 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * @author Samuel
- *
+ * 
  */
 public final class Keys{
 
