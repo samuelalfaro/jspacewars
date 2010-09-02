@@ -1,7 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * Función que representa el siguiente exponencial: <code>f(x) = A·Math.pow( (C·x + D), gamma ) + B</code>
+ * Función exponencial correspondiente a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
  */
 public final class Exponencial{
 
@@ -14,13 +14,13 @@ public final class Exponencial{
 		private double A, B, C, D, gamma;
 
 		/**
-		 * Crea la función exponencial correspondiente a <code>f(x) = A·Math.pow( (C·x + D), gamma ) + B</code>
+		 * Crea la función exponencial, con precisión {@code double} correspondiente a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
          *
-         * @param A
-         * @param B
-         * @param C 
-         * @param gamma
-         * @param D
+         * @param A escala de la potencia.
+         * @param B desplazamiento de la potencia.
+         * @param C factor lineal.
+         * @param D factor independiente.
+         * @param gamma exponente.
          */
 		public Double(double A ,double B, double C, double D, double gamma){
 			this.A = A;
@@ -43,6 +43,7 @@ public final class Exponencial{
 		 */
 		@Override
 		public double f1(double x) {
+			//TODO calcular la derivada
 			throw new UnsupportedOperationException();
 		}
 
@@ -51,6 +52,7 @@ public final class Exponencial{
 		 */
 		@Override
 		public double f2(double x) {
+			//TODO calcular la segunda derivada
 			throw new UnsupportedOperationException();
 		}
 
@@ -60,7 +62,7 @@ public final class Exponencial{
 		@Override
         public void scaleIn(double scale) {
 			/*
-			 *  A(C*( x * K ) + D)^gamma + B = A(CK*x + D)^gamma + B
+			 *  A·(C·(K·x) + D)^gamma + B = A(C·K·x + D)^gamma + B
 			 */
 			C*= scale;
 		}
@@ -71,7 +73,7 @@ public final class Exponencial{
 		@Override
         public void scaleOut(double scale) {
 			/*
-			 *  ( A(Cx + D)^gamma + B ) * K = AK(Cx + D)^gamma + BK
+			 *  (A·(C·x + D)^gamma + B)·K = A·K·(C·x + D)^gamma + B·K
 			 */
 			A*= scale;
 			B*= scale;
@@ -83,7 +85,7 @@ public final class Exponencial{
 		@Override
         public void translateIn(double translation) {
 			/*
-			 *  A( C( x + K ) + D)^gamma + B = A(Cx + (CK + D) )^gamma + B
+			 *  A·(C·(x + K) + D)^gamma + B = A·(C·x + C·K + D)^gamma + B
 			 */
 			D += C * translation;
 		}
@@ -94,7 +96,7 @@ public final class Exponencial{
 		@Override
         public void translateOut(double translation) {
 			/*
-			 *  ( A(Cx + D)^gamma + B ) + K = A(Cx + D)^gamma + (B+K)
+			 *  (A·(C·x + D)^gamma + B) + K = A·(C·x + D)^gamma + B + K
 			 */
 			B += translation;
 		}
@@ -104,7 +106,7 @@ public final class Exponencial{
 		 */
 		@Override
         public Funcion.Float toFloatFunction() {
-			return new Exponencial.Float(A,B,C,D,gamma);
+			return new Exponencial.Float( (float)A, (float)B, (float)C, (float)D, (float)gamma );
 		}
 	}
 
@@ -116,20 +118,20 @@ public final class Exponencial{
 		private float A, B, C, D, gamma;
 
 		/**
-		 * Crea la función exponencial correspondiente a <code>f(x) = A·Math.pow( (C·x + D), gamma ) + B</code>
+		 * Crea la función exponencial, con precisión {@code float} correspondiente a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
          *
-         * @param A
-         * @param B
-         * @param C
-         * @param D
-         * @param gamma
+         * @param A escala de la potencia.
+         * @param B desplazamiento de la potencia.
+         * @param C factor lineal.
+         * @param D factor independiente.
+         * @param gamma exponente.
          */
-		public Float(double A ,double B, double C, double D, double gamma){
-			this.A = (float)A;
-			this.B = (float)B;
-			this.C = (float)C;
-			this.D = (float)D;
-			this.gamma = (float)gamma;
+		public Float(float A ,float B, float C, float D, float gamma){
+			this.A = A;
+			this.B = B;
+			this.C = C;
+			this.D = D;
+			this.gamma = gamma;
 		}
 
 		/**
@@ -145,6 +147,7 @@ public final class Exponencial{
 		 */
 		@Override
 		public float f1(float x) {
+			//TODO calcular la derivada
 			throw new UnsupportedOperationException();
 		}
 
@@ -153,6 +156,7 @@ public final class Exponencial{
 		 */
 		@Override
 		public float f2(float x) {
+			//TODO calcular la segunda derivada
 			throw new UnsupportedOperationException();
 		}
 	}

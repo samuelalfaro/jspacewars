@@ -1,8 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * @author Samuel
- *
+ * 
  */
 final class Interpolador1F implements Getter.Float<Float> {
 
@@ -60,9 +59,10 @@ final class Interpolador1F implements Getter.Float<Float> {
 		this.valorFinal = values[values.length-1];
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.interpoladores.Interpolador#get(double)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public final Float get(float key) {
 		int index = Keys.findIndexKey(key,keys);
 		return (index < 0) ?

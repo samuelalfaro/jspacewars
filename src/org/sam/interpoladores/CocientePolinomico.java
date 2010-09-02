@@ -1,7 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * Función que representa el siguiente cociente polinómico: <code>(A*x + B)/(C*x + D)</code>
+ * Función que representa el siguiente cociente polinómico: {@code (A·x + B)/(C·x + D)}.
  */
 public final class CocientePolinomico{
 
@@ -15,12 +15,12 @@ public final class CocientePolinomico{
 		private double A, B, C, D;
 
 		/**
-		 * Crea el cociente polinómico correspondiente a: <code>(A*x + B)/(C*x + D)</code>
+		 * Crea el cociente polinómico, con precisión {@code double}, correspondiente a: {@code (A·x + B)/(C·x + D)}.
          *
-         * @param A
-         * @param B
-         * @param C
-         * @param D
+         * @param A pendiente del numerador.
+         * @param B desplazamiento del numerador.
+         * @param C pendiente del denominador.
+         * @param D desplazamiento del numerador.
          */
 		public Double(double A ,double B, double C, double D){
 			this.A = A;
@@ -127,7 +127,7 @@ public final class CocientePolinomico{
 		 */
 		@Override
         public Funcion.Float toFloatFunction() {
-			return new CocientePolinomico.Float(A,B,C,D);
+			return new CocientePolinomico.Float( (float)A, (float)B, (float)C, (float)D );
 		}
 	}
 
@@ -139,18 +139,18 @@ public final class CocientePolinomico{
 		private float A, B, C, D;
 
 		/**
-		 * Crea el cociente polinómico correspondiente a: <code>(A*x + B)/(C*x + D)</code>
+		 * Crea el cociente polinómico, con precisión {@code float}, correspondiente a: {@code (A·x + B)/(C·x + D)}.
          *
-         * @param A
-         * @param D
-         * @param B
-         * @param C
+         * @param A pendiente del numerador.
+         * @param B desplazamiento del numerador.
+         * @param C pendiente del denominador.
+         * @param D desplazamiento del numerador.
          */
-		public Float(double A ,double B, double C, double D){
-			this.A = (float)A;
-			this.B = (float)B;
-			this.C = (float)C;
-			this.D = (float)D;
+		public Float(float A ,float B, float C, float D){
+			this.A = A;
+			this.B = B;
+			this.C = C;
+			this.D = D;
 		}
 
 		/**

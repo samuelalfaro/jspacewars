@@ -1,60 +1,49 @@
 package org.sam.interpoladores;
 
 /**
- *
- * @author Samuel
+ * 
  */
 public final class Trayectoria{
 	private Trayectoria(){}
 	
     /**
-     * 
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
-    public interface Integer<T> extends Getter.Integer<T>{
+    public interface Double<T> extends Getter.Double<T>{
 		/**
-		 * @param key
-		 * @return
+		 * Método que devuelve la tangencia correspondiente a la clave pasada como parámetro.
+		 * 
+		 * @param key clave empleada para obtener el tangencia.
+		 * @return la tangencia correspondiente.
 		 */
-		public T getTan(int key);
+		public T getTan(double key);
 		/**
-		 * @param key
-		 * @return
+		 * Método que devuelve el dato y la tangencia correspondientes a la clave pasada como parámetro.
+		 * 
+		 * @param key clave empleada para obtener el dato.
+		 * @return el dato y la tangencia correspondiente.
 		 */
-		public T[] getPosTan(int key);
+		public T[] getPosTan(double key);
 	}
-
+	
     /**
-     *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     public interface Float<T> extends Getter.Float<T>{
 		/**
-		 * @param key
-		 * @return
+		 * Método que devuelve la tangencia correspondiente a la clave pasada como parámetro.
+		 * 
+		 * @param key clave empleada para obtener el tangencia.
+		 * @return la tangencia correspondiente.
 		 */
 		public T getTan(float key);
 		/**
-		 * @param key
-		 * @return
+		 * Método que devuelve el dato y la tangencia correspondientes a la clave pasada como parámetro.
+		 *  
+		 * @param key clave empleada para obtener el dato.
+		 * @return el dato y la tangencia correspondiente.
 		 */
 		public T[] getPosTan(float key);
 	}
 
-    /**
-     *
-     * @param <T>
-     */
-    public interface Double<T> extends Getter.Double<T>{
-		/**
-		 * @param key
-		 * @return
-		 */
-		public T getTan(double key);
-		/**
-		 * @param key
-		 * @return
-		 */
-		public T[] getPosTan(double key);
-	}
 }

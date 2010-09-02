@@ -15,12 +15,12 @@ public final class PolinomioCubico{
 		private double A, B, C, D;
 
 		/**
-		 * Crea el polinomio cúbico correspondiente a <code>f(x) = Ax³ + Bx² + Cx + D</code>
+		 * Crea el polinomio cúbico, con precisión {@code double}, correspondiente a {@code f(x) = Ax³ + Bx² + Cx + D}.
          *
-         * @param A
-         * @param B
-         * @param D
-         * @param C
+         * @param A factor cúbico
+         * @param C factor cuadrado
+         * @param B factor lineal
+         * @param D factor independiente
          */
 		public Double(double A, double B, double C, double D){
 			this.A = A;
@@ -113,7 +113,7 @@ public final class PolinomioCubico{
 		 */
 		@Override
         public Funcion.Float toFloatFunction() {
-			return new PolinomioCubico.Float(A,B,C,D);
+			return new PolinomioCubico.Float((float)A,(float)B,(float)C,(float)D);
 		}
 	}
 
@@ -125,18 +125,18 @@ public final class PolinomioCubico{
 		private float A, B, C, D;
 
 		/**
-		 * Crea el polinomio cúbico correspondiente a <code>f(x) = Ax³ + Bx² + Cx + D</code>
+		 * Crea el polinomio cúbico, con precisión {@code float}, correspondiente a {@code f(x) = Ax³ + Bx² + Cx + D}.
          *
-         * @param A
-         * @param C
-         * @param B
-         * @param D
+         * @param A factor cúbico
+         * @param C factor cuadrado
+         * @param B factor lineal
+         * @param D factor independiente
          */
-		public Float(double A, double B, double C, double D){
-			this.A = (float)A;
-			this.B = (float)B;
-			this.C = (float)C;
-			this.D = (float)D;
+		public Float(float A, float B, float C, float D){
+			this.A = A;
+			this.B = B;
+			this.C = C;
+			this.D = D;
 		}
 
 		/**

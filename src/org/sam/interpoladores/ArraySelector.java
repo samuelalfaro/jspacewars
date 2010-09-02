@@ -1,11 +1,7 @@
 package org.sam.interpoladores;
 
-/**
- * @author samuel
- *
- * @param <T>
- */
 final class ArraySelector{
+	
 	private ArraySelector(){}
 	
 	private static<T> T valueAt(int index, T[] array){

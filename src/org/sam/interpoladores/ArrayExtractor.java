@@ -7,7 +7,7 @@ interface ArrayExtractor{
 	
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     static final class GenericoDouble<T> implements ArrayExtractor{
 		private final T v[];
@@ -22,17 +22,19 @@ interface ArrayExtractor{
 			this.extractor = extractor;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return extractor.get(v[0]).length;
 		}
 
@@ -41,21 +43,23 @@ interface ArrayExtractor{
     	 * @throws UnsupportedOperationException
     	 * puesto que este método es una optimización para los valores de una única dimensión.
     	 */
+    	@Override
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return extractor.get(v[f])[c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return extractor.get(v[index])[dim];
 		}
 	}
 
     /**
      *
-     * @param <T>
+     * @param <T> Tipo genérico de datos empleados.
      */
     static final class GenericoFloat<T> implements ArrayExtractor{
     	private final T v[];
@@ -71,17 +75,19 @@ interface ArrayExtractor{
 			this.extractor = extractor;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#length(int)
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return extractor.get(v[0]).length;
 		}
 
@@ -90,21 +96,23 @@ interface ArrayExtractor{
     	 * @throws UnsupportedOperationException
     	 * puesto que este método es una optimización para los valores de una única dimensión.
     	 */
-        public double at(int index){
+    	@Override
+    	public double at(int index){
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return extractor.get(v[f])[c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return extractor.get(v[index])[dim];
 		}
 	}
 	
     /**
      *
-     * @param <T>
+     * @param <T> Tipo numérico genérico de datos empleados.
      */
     static final class Numerico<T extends Number> implements ArrayExtractor{
 		private final T v[];
@@ -117,32 +125,36 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 1;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
         public double at(int index){
 			return v[index].doubleValue();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f].doubleValue();
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index].doubleValue();
 		}
 	}
 	
@@ -160,32 +172,36 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 1;
 		}
         
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
         public double at(int index){
 			return v[index];
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index];
 		}
 	}
 	
@@ -203,32 +219,36 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 1;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
         public double at(int index){
 			return v[index];
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index];
 		}
 	}
 
@@ -246,32 +266,36 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 1;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int)
-         */
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
         public double at(int index){
 			return v[index];
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index];
 		}
 	}
 	
@@ -289,17 +313,19 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 2;
 		}
 
@@ -312,11 +338,12 @@ interface ArrayExtractor{
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f][c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index][dim];
 		}
 	}
 	
@@ -334,17 +361,19 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 2;
 		}
 
@@ -353,15 +382,17 @@ interface ArrayExtractor{
     	 * @throws UnsupportedOperationException
     	 * puesto que este método es una optimización para los valores de una única dimensión.
     	 */
+    	@Override
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f][c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index][dim];
 		}
 	}
 
@@ -379,17 +410,19 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 2;
 		}
 
@@ -398,15 +431,17 @@ interface ArrayExtractor{
     	 * @throws UnsupportedOperationException
     	 * puesto que este método es una optimización para los valores de una única dimensión.
     	 */
+    	@Override
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f][c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index][dim];
 		}
 	}
 	
@@ -424,17 +459,19 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 3;
 		}
 
@@ -443,15 +480,17 @@ interface ArrayExtractor{
     	 * @throws UnsupportedOperationException
     	 * puesto que este método es una optimización para los valores de una única dimensión.
     	 */
+        @Override
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f][c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index][dim];
 		}
 	}
 	
@@ -469,17 +508,19 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 3;
 		}
 
@@ -488,15 +529,17 @@ interface ArrayExtractor{
     	 * @throws UnsupportedOperationException
     	 * puesto que este método es una optimización para los valores de una única dimensión.
     	 */
+    	@Override
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f][c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index][dim];
 		}
 	}
 
@@ -511,17 +554,19 @@ interface ArrayExtractor{
 			this.v = v;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#rows()
-         */
-        public int rows() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int length() {
 			return v.length;
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#columns()
-         */
-        public int columns() {
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public int dimensions() {
 			return 3;
 		}
 
@@ -530,42 +575,44 @@ interface ArrayExtractor{
     	 * @throws UnsupportedOperationException
     	 * puesto que este método es una optimización para los valores de una única dimensión.
     	 */
+    	@Override
         public double at(int index){
 			throw new UnsupportedOperationException();
 		}
 
-        /* (non-Javadoc)
-         * @see org.sam.interpoladores.ArrayExtractor#at(int, int)
-         */
-        public double at(int f, int c){
-			return v[f][c];
+    	/**
+    	 * {@inheritDoc}
+    	 */
+    	@Override
+        public double at(int index, int dim){
+			return v[index][dim];
 		}
 	}
 	
     /**
      *
-     * @return
+     * @return longitud del vector encapsulado.
      */
-    public abstract int rows();
+    public int length();
 	
     /**
-     * @return
+     * @return dimensiones de los elementos que contiene el vector.
      */
-    public abstract int columns();
+    public int dimensions();
 	
     /**
-     * @param index
-     * @return
+     * @param index índice dentro del vector encapusulado.
+     * @return el valor de esa posición.
      * @throws UnsupportedOperationException cuando la operación no está soportada.
      * Puesto que este método es una optimización para los valores de una única dimensión.
      */
-    public abstract double at(int index) throws UnsupportedOperationException;
+    public double at(int index) throws UnsupportedOperationException;
 	
     /**
      *
-     * @param f
-     * @param c
-     * @return
+     * @param index índice dentro del vector encapusulado.
+     * @param dim índice dentro de las dimensiónes del elemento correspondiente.
+     * @return el valor de esa posición.
      */
-    public abstract double at(int f, int c);
+    public double at(int index, int dim);
 }

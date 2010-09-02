@@ -1,8 +1,7 @@
 package org.sam.interpoladores;
 
 /**
- * @author Samuel
- *
+ * 
  */
 final class Interpolador1D implements Getter.Double<Double>{
 
@@ -60,9 +59,10 @@ final class Interpolador1D implements Getter.Double<Double>{
 		this.valorFinal = values[values.length-1];
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.interpoladores.Getter.Double#get(double)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public final Double get(double key) {
 		int index = Keys.findIndexKey(key,keys);
 		return (index < 0) ?
