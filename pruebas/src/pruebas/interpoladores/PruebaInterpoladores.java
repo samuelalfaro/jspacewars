@@ -19,13 +19,16 @@ public class PruebaInterpoladores{
 
 		final double keys[];
 		final double dvalues[];
+		final double pMedios[];
 
 		Getter.Double<Double> i1, i2, i3;
 		Getter.Double<Double> i4, i5;
+		Getter.Double<Double> i6, i7;
 
 		Resultados(){
 			keys = new double[N_PUNTOS];
 			dvalues = new double[N_PUNTOS];
+			pMedios = new double[N_PUNTOS-1];
 
 			rellenar();
 			this.addMouseListener(this);
@@ -38,6 +41,7 @@ public class PruebaInterpoladores{
 			for (int i = 1; i < N_PUNTOS; i++){
 				keys[i] = keys[i-1]+ Math.max(0.05, Math.random());
 				dvalues[i]=(Math.random() - 0.5)/2;
+				pMedios[i-1] = 0.8 * Math.random() +0.1;
 			}
 			double scaleKeys = (N_PUNTOS-1)/(N_PUNTOS*(keys[N_PUNTOS-1]-keys[0]));
 			for (int i = 1; i < N_PUNTOS; i++){
@@ -48,10 +52,11 @@ public class PruebaInterpoladores{
 
 			i1 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.ESCALON);
 			i2 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.LINEAL);
-			i3 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.COSENOIDAL);
-			i4 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.CARDINAL_SPLINE, 0.5f);
-			i5 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.FINITE_DIFFERENCE_SPLINE);
-
+			i3 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO, pMedios);
+			i4 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.EXPONENCIAL_PUNTO_MEDIO, pMedios);
+			i5 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.COSENOIDAL);
+			i6 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.CARDINAL_SPLINE, 0.5f);
+			i7 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.FINITE_DIFFERENCE_SPLINE);
 		}
 
 		@Override
@@ -70,31 +75,42 @@ public class PruebaInterpoladores{
 			int v30 = (int)(i3.get(0)* getHeight()), v31;
 			int v40 = (int)(i4.get(0)* getHeight()), v41;
 			int v50 = (int)(i5.get(0)* getHeight()), v51;
+			int v60 = (int)(i4.get(0)* getHeight()), v61;
+			int v70 = (int)(i5.get(0)* getHeight()), v71;
 
 			for(int x=0; x < getWidth(); x++){
-
-				v11 = (int)(i1.get((double)x/getWidth())* getHeight());
-				v21 = (int)(i2.get((double)x/getWidth())* getHeight());
-				v31 = (int)(i3.get((double)x/getWidth())* getHeight());
-				v41 = (int)(i4.get((double)x/getWidth())* getHeight());
-				v51 = (int)(i5.get((double)x/getWidth())* getHeight());
+				double key = (double)x/getWidth();
+				
+				v11 = (int)( i1.get(key)* getHeight() );
+				v21 = (int)( i2.get(key)* getHeight() );
+				v31 = (int)( i3.get(key)* getHeight() );
+				v41 = (int)( i4.get(key)* getHeight() );
+				v51 = (int)( i5.get(key)* getHeight() );
+				v61 = (int)( i6.get(key)* getHeight() );
+				v71 = (int)( i7.get(key)* getHeight() );
 
 				g.setColor(Color.BLUE);  // Por Pasos
 				g.drawLine(x,-v10,x,-v11);
 				g.setColor(Color.GREEN); // Lineal
 				g.drawLine(x,-v20,x,-v21);
-				g.setColor(Color.RED); // Cosenoidal
+				g.setColor(Color.RED); // COCIENTE_POLINOMICO_PUNTO_MEDIO
 				g.drawLine(x,-v30,x,-v31);
-				g.setColor(Color.MAGENTA.darker().darker()); // Hermite
+				g.setColor(Color.MAGENTA.darker().darker()); // EXPONENCIAL_PUNTO_MEDIO
 				g.drawLine(x,-v40,x,-v41);
-				g.setColor(Color.YELLOW.darker().darker()); // Bezier
+				g.setColor(Color.YELLOW.darker().darker()); // COSENOIDAL
 				g.drawLine(x,-v50,x,-v51);
+				g.setColor(Color.ORANGE.darker().darker()); // CARDINAL_SPLINE
+				g.drawLine(x,-v60,x,-v61);
+				g.setColor(Color.PINK.darker().darker()); // FINITE_DIFFERENCE_SPLINE
+				g.drawLine(x,-v70,x,-v71);
 
 				v10 = v11;
 				v20 = v21;
 				v30 = v31;
 				v40 = v41;
 				v50 = v51;
+				v60 = v61;
+				v70 = v71;
 			}
 		}
 
