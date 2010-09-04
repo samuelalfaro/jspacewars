@@ -1,68 +1,124 @@
 package org.sam.interpoladores;
 
 /**
- * 
+ * Clase contenedora con las implementaciones de un <i>CompositeGetter</i>, tanto en precisión {@code double},
+ * {@code float}, como {@code int}.
+ * <p>Este <i>Getter</i> permite hacer una composición similar a <i>g(f(x))</i>.</p>
  */
 public final class CompositeGetter{
 	private CompositeGetter(){}
 	
     /**
-     *
-     * @param <T>
+     * Clase que implementa un {@code CompositeGetter} con precisión {@code double}.
+     * @param <T> Tipo genérico de datos empleados.
      */
-    public static final class Double<T> implements Getter.Double<T>{
+    public static final class Double<T> implements Trayectoria.Double<T>{
 
 		private final Getter.Double<java.lang.Double> key;
 		private final Getter.Double<T> getter;
+		private final Trayectoria.Double<T> trayectoria;
 
         /**
-         *
-         * @param key
-         * @param getter
+         * Constructor que genera un {@code CompositeGetter} con precisión {@code double}.
+         * @param key {@code Getter} que genera la clave empleada para obtener el dato.
+         * @param getter {@code Getter} que contiene los valores que serán devueltos.
          */
         public Double(Getter.Double<java.lang.Double> key, Getter.Double<T> getter) {
 			this.key = key;
 			this.getter = getter;
+			this.trayectoria = getter instanceof Trayectoria.Double<?> ?(Trayectoria.Double<T>) getter : null;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter.Double#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(double key) {
 			return this.getter.get(this.key.get(key));
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 * @throws UnsupportedOperationException si el {@code Getter} encapsulado no es una {@code Trayectoria}.
+		 */
+		@Override
+		public T getTan(double key) throws UnsupportedOperationException{
+			if (this.trayectoria == null)
+				throw new UnsupportedOperationException();
+			// TODO calcular bien las derivadas, pues estás deben estar tb en función key.getTan(key)
+			return this.trayectoria.getTan(this.key.get(key));
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 * @throws UnsupportedOperationException si el {@code Getter} encapsulado no es una {@code Trayectoria}.
+		 */
+		@Override
+		public T[] getPosTan(double key) throws UnsupportedOperationException{
+			if (this.trayectoria == null)
+				throw new UnsupportedOperationException();
+			// TODO calcular bien las derivadas, pues estás deben estar tb en función key.getTan(key)
+			return this.trayectoria.getPosTan(this.key.get(key));
 		}
 	}
 
     /**
-     * 
-     * @param <T>
+     * Clase que implementa un {@code CompositeGetter} con precisión {@code float}.
+     * @param <T> Tipo genérico de datos empleados.
      */
-    public static final class Float<T> implements Getter.Float<T>{
+    public static final class Float<T> implements Trayectoria.Float<T>{
 
 		private final Getter.Float<java.lang.Float> key;
 		private final Getter.Float<T> getter;
+		private final Trayectoria.Float<T> trayectoria;
 
         /**
-         *
-         * @param key
-         * @param getter
+         * Constructor que genera un {@code CompositeGetter} con precisión {@code float}.
+         * @param key {@code Getter} que genera la clave empleada para obtener el dato.
+         * @param getter {@code Getter} que contiene los valores que serán devueltos.
          */
         public Float(Getter.Float<java.lang.Float> key, Getter.Float<T> getter) {
 			this.key = key;
 			this.getter = getter;
+			this.trayectoria = getter instanceof Trayectoria.Float<?> ?(Trayectoria.Float<T>) getter : null;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter.Double#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(float key) {
 			return this.getter.get(this.key.get(key));
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 * @throws UnsupportedOperationException si el {@code Getter} encapsulado no es una {@code Trayectoria}.
+		 */
+		@Override
+		public T getTan(float key) throws UnsupportedOperationException{
+			if (this.trayectoria == null)
+				throw new UnsupportedOperationException();
+			// TODO calcular bien las derivadas, pues estás deben estar tb en función key.getTan(key)
+			return this.trayectoria.getTan(this.key.get(key));
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 * @throws UnsupportedOperationException si el {@code Getter} encapsulado no es una {@code Trayectoria}.
+		 */
+		@Override
+		public T[] getPosTan(float key) throws UnsupportedOperationException{
+			if (this.trayectoria == null)
+				throw new UnsupportedOperationException();
+			// TODO calcular bien las derivadas, pues estás deben estar tb en función key.getTan(key)
+			return this.trayectoria.getPosTan(this.key.get(key));
 		}
 	}
 
     /**
-     *
-     * @param <T>
+     * Clase que implementa un {@code CompositeGetter} con precisión {@code int}.
+     * @param <T> Tipo genérico de datos empleados.
      */
     public static final class Integer<T> implements Getter.Integer<T>{
 
@@ -70,18 +126,19 @@ public final class CompositeGetter{
 		private final Getter.Integer<T> getter;
 
         /**
-         *
-         * @param key
-         * @param getter
+         * Constructor que genera un {@code CompositeGetter} con precisión {@code int}.
+         * @param key {@code Getter} que genera la clave empleada para obtener el dato.
+         * @param getter {@code Getter} que contiene los valores que serán devueltos.
          */
         public Integer(Getter.Integer<java.lang.Integer> key, Getter.Integer<T> getter) {
 			this.key = key;
 			this.getter = getter;
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.interpoladores.Getter.Double#get(double)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public T get(int key) {
 			return this.getter.get(this.key.get(key));
 		}

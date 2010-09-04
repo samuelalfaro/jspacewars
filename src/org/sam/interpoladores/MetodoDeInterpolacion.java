@@ -2,8 +2,8 @@ package org.sam.interpoladores;
 
 /**
  * Interface que representa un método de interpolación.<br/>
- * Proporciona métodos para generar las funciones de interpolación a partir de las claves ({@code keys }),
- * los valores ({@code values }) y los parámetros ({@code parametros }) necesarios.
+ * Proporciona métodos para generar las funciones de interpolación a partir de las claves ({@code keys}),
+ * los valores ({@code values}) y los parámetros ({@code parametros}) necesarios.
  */
 public interface MetodoDeInterpolacion{
 

@@ -1,7 +1,8 @@
 package org.sam.interpoladores;
 
 /**
- *
+ * Clase optimizada para interpolar valores {@code float} de dos dimensiones.
+ * @see Interpolador
  */
 final class Interpolador2F  implements Trayectoria.Float<float[]>{
 
@@ -11,29 +12,39 @@ final class Interpolador2F  implements Trayectoria.Float<float[]>{
 	private final transient Funcion.Float funcionesX[];
 	private final transient Funcion.Float funcionesY[];
 
-	private static final float[][] tratarDatos(float[] value) {
-		float[][] newVal = new float[2][2];
-		newVal[0][0] = value[0];
-		newVal[0][1] = value[1];
-		newVal[1][0] = 0; // No definimos la tangente para el valor inicial
-		newVal[1][1] = 0;
-//		return newVal;
-		return new float[][]{value.clone(),{0,0}};
-	}
-
+	/**
+	 * Constructor que crea un {@code Interpolador2F}.
+	 * @param keys Claves asociadas a los valores.
+	 * @param values Valores a interpolar.
+	 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+	 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+	 */
 	Interpolador2F(float keys[], float[][] values, MetodoDeInterpolacion mdi, Object... params) {
 		this.keys = keys;
-		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.E1F(keys), new ArrayExtractor.E2F(values), params );
+		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.E1F(keys), new ArrayExtractor.EAF(values), params );
 		this.funcionesX = Funcion.toFloatFunctions( funciones[0] );
 		this.funcionesY = Funcion.toFloatFunctions( funciones[1] );
-		this.valorInicial = tratarDatos(values[0]);
-		this.valorFinal = tratarDatos(values[values.length-1]);
+		this.valorInicial = new float[][]{values[0].clone(),{0,0}};
+		this.valorFinal = new float[][]{values[values.length-1].clone(),{0,0}};
 		this.compartido = new float[][]{ {0, 0}, {0, 0} };
 	}
 
+	/**
+	 * Constructor que crea un {@code Interpolador2F}.
+	 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+	 * Los valores posibles son:<ul>
+	 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+	 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+	 * </ul>
+	 * @param scale Valor de escalado que se aplicará a las claves generadas.
+	 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+	 * @param values Valores a interpolar.
+	 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+	 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+	 */
 	Interpolador2F(int genKey, float scale, float translation, float[][] values, MetodoDeInterpolacion mdi, Object... params) {
 
-		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.E2F(values), params );
+		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.EAF(values), params );
 		double keys[];
 		if(genKey == Keys.PROPORCIONALES)
 			keys = Keys.generateKeys(funciones);
@@ -46,8 +57,8 @@ final class Interpolador2F  implements Trayectoria.Float<float[]>{
 		this.keys = Keys.toFloat(keys);
 		this.funcionesX = Funcion.toFloatFunctions( funciones[0]);
 		this.funcionesY = Funcion.toFloatFunctions( funciones[1]);
-		this.valorInicial = tratarDatos(values[0]);
-		this.valorFinal = tratarDatos(values[values.length-1]);
+		this.valorInicial = new float[][]{values[0].clone(),{0,0}};
+		this.valorFinal = new float[][]{values[values.length-1].clone(),{0,0}};
 		this.compartido = new float[][]{ {0, 0}, {0, 0} };
 	}
 
