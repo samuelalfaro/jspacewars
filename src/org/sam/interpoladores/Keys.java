@@ -1,32 +1,50 @@
 package org.sam.interpoladores;
 
+/**
+ * Clase que proporciona las constantes para definir la forma de autogenerar claves
+ * y los métodos estáticos para generarlas.
+ */
 public final class Keys{
 
 	private Keys(){}
 	
+    /**
+     * Constante que indica que las claves autogeneradas, estarán distrubidas homogeneamente.
+     */
     public static final int HOMOGENEAS = 0;
 
+    /**
+     * Constante que indica que la distribución de las claves autogeneradas, será propocional
+     * a la longitud de los segmentos de la curva. 
+     */
     public static final int PROPORCIONALES = 1;
 
-	static final double[] generateKeys(int tam){
-		double keys[] = new double[tam];
-		double k = 0.0, iK = 1.0/(tam-1);
-		for (int i=0; i<tam; i++, k+=iK)
-			keys[i] = k;
-		return keys;
-	}
-
-	static final void scale(double[] keys, double scale) {
+	/**
+	 * Método que escala un vector de claves multiplicandolo por un valor escalar.
+	 * @param keys Vector de claves que será escalado.
+	 * @param scale Valor escalar.
+	 */
+	static void scale(double[] keys, double scale) {
 		for (int i = 0; i < keys.length; i++)
 			keys[i] *= scale;
 	}
 
-	static final void translate(double[] keys, double translation) {
+	/**
+	 * Método que despalza un vector de claves sumandole por un valor de despalzamiento.
+	 * @param keys Vector de claves que será despalzado.
+	 * @param translation Valor de despalzamiento.
+	 */
+	static void translate(double[] keys, double translation) {
 		for (int i = 0; i < keys.length; i++)
 			keys[i] += translation;
 	}
-
-	static final void normalize(double[] keys){
+	
+	/**
+	 * Método que normaliza un vector de claves, despalzando y escalando sus valores de tal forma
+	 * que el valor mínimo sea {@code 0} y el valor máximo sea {@code 1}.
+	 * @param keys Vector de claves que será normalizado.
+	 */
+	static void normalize(double[] keys){
 		double scaleKeys = 1/(keys[keys.length-1]-keys[0]);
 		for (int i = 1; i < keys.length; i++){
 			keys[i]-=keys[0];
@@ -34,6 +52,13 @@ public final class Keys{
 		}
 	}
 
+	/**
+	 * Método que calcula mediante aproximación por subdivisión la longitud de una
+	 * curva paramétrica de varias dimensiones.
+	 * @param f Vector que contiene las funciones para cada una de las dimensiones.
+	 * @param pasos Número de subdivisiones empleadas para calcular la longitud.
+	 * @return La longitud de la curva.
+	 */
 	static double longitudCurva(Funcion.Double f[], int pasos){
 		double ant[] = new double[f.length];
 		for(int i=0; i< f.length; i++)
@@ -53,7 +78,28 @@ public final class Keys{
 		return len;
 	}
 	
-	static final double[] generateKeys(Funcion.Double[][] funciones){
+	/**
+	 * Método que genera un vector de claves distribuidas homogeneamente entre los valores {@code 0} y {@code 1}.
+	 * @param tam Tamaño del vector a generar.
+	 * @return El vector de claves geneado.
+	 */
+	static double[] generateKeys(int tam){
+		double keys[] = new double[tam];
+		double k = 0.0, iK = 1.0/(tam-1);
+		for (int i=0; i<tam; i++, k+=iK)
+			keys[i] = k;
+		return keys;
+	}
+	
+	/**
+	 * Método que gerena un vector de claves, distribuidas entre los valores {@code 0} y {@code 1}, proporcionales a la
+	 * longitud de los tramos de las curva, definidos por el vector bidimensional de {@linkplain Funcion.Double
+	 * funciones con precisión double}, que recibe como parámetro.
+	 * 
+	 * @param funciones Funciones que definen los tramos.
+	 * @return El vector de claves geneado.
+	 */
+	static double[] generateKeys(Funcion.Double[][] funciones){
 		Funcion.Double f[] = new Funcion.Double[funciones.length];
 		int len = funciones[0].length;
 		double keys[] = new double[len+1];
@@ -66,41 +112,28 @@ public final class Keys{
 		normalize(keys);
 		return keys;
 	}
-
-	static final void ajustarFunciones(double[] keys, Funcion.Double[][] funciones) {
-		assert (keys.length == funciones[0].length+1);
-		for (int i = 0; i < funciones[0].length; i++) {
-			double s = 1 / (keys[i + 1] - keys[i]);
-			double t = -keys[i];
-			for (int j = 0; j < funciones.length; j++) {
-				funciones[j][i].scaleIn(s);
-				funciones[j][i].translateIn(t);
-			}
-		}
-	}
-
-	static final float[] toFloat(double keys[]){
+	
+	/**
+	 * Método que genera un vector de claves {@code float} a partir de un vector de claves {@code double}.
+	 * @param keys El vector de claves {@code double} a convertir.
+	 * @return El vector de claves {@code float} generado.
+	 */
+	static float[] toFloat(double keys[]){
 		float[] fKeys = new float[keys.length];
 		for(int i= 0; i< keys.length; i++)
 			fKeys[i] = (float)keys[i];
 		return fKeys;
 	}
 
-	static final boolean estaOrdenado(double keys[]){
-		for(int i = 0, len = keys.length -1; i < len; )
-			if(keys[i] > keys[++i])
-				return false;
-		return true;
-	}
-	
-	static final boolean estaOrdenado(float keys[]){
-		for(int i = 0, len = keys.length -1; i < len; )
-			if(keys[i] > keys[++i])
-				return false;
-		return true;
-	}
-	
-	static final boolean estaOrdenado(int keys[]){
+	/**
+	 * Método que indica si un vector de claves está ordenado.
+	 * @param keys El vector de claves a evaluar.
+	 * @return <ul>
+	 * <li>{@code true} si el vector está ordenado.</li>
+	 * <li>{@code false} en caso contrario.</li>
+	 * </ul>
+	 */
+	static boolean estaOrdenado(double keys[]){
 		for(int i = 0, len = keys.length -1; i < len; )
 			if(keys[i] > keys[++i])
 				return false;
@@ -108,16 +141,45 @@ public final class Keys{
 	}
 	
 	/**
-	 * Realiza la busqueda dicotomica en un vector.
-	 * @param key Elemento buscado.
-	 * @param keys Vector donde buscar el elemento.
-	 * @return 
-	 * <ul>
-	 * <li> El índice del mayor elemento del vector que es menor o igual al elemento buscado.</li>
-	 * <li><code>-1</code> en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
+	 * Método que indica si un vector de claves está ordenado.
+	 * @param keys El vector de claves a evaluar.
+	 * @return <ul>
+	 * <li>{@code true} si el vector está ordenado.</li>
+	 * <li>{@code false} en caso contrario.</li>
 	 * </ul>
 	 */
-	static final int findIndexKey(double key, double keys[]){
+	static boolean estaOrdenado(float keys[]){
+		for(int i = 0, len = keys.length -1; i < len; )
+			if(keys[i] > keys[++i])
+				return false;
+		return true;
+	}
+	
+	/**
+	 * Método que indica si un vector de claves está ordenado.
+	 * @param keys El vector de claves a evaluar.
+	 * @return <ul>
+	 * <li>{@code true} si el vector está ordenado.</li>
+	 * <li>{@code false} en caso contrario.</li>
+	 * </ul>
+	 */
+	static boolean estaOrdenado(int keys[]){
+		for(int i = 0, len = keys.length -1; i < len; )
+			if(keys[i] > keys[++i])
+				return false;
+		return true;
+	}
+	
+	/**
+	 * Realiza una busqueda dicotómica en un vector.
+	 * @param key El elemento buscado.
+	 * @param keys El vector donde buscar el elemento.
+	 * @return <ul>
+	 * <li> El índice del mayor elemento del vector que es menor o igual al elemento buscado.</li>
+	 * <li>{@code -1} en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
+	 * </ul>
+	 */
+	static int findIndexKey(double key, double keys[]){
 		int izq = 0;
 		int der = keys.length - 1;
 		int med = der >> 1;
@@ -142,16 +204,15 @@ public final class Keys{
 	}
 
 	/**
-	 * Realiza la busqueda dicotomica en un vector.
-	 * @param key Elemento buscado.
-	 * @param keys Vector donde buscar el elemento.
-	 * @return 
-	 * <ul>
+	 * Realiza una busqueda dicotómica en un vector.
+	 * @param key El elemento buscado.
+	 * @param keys El vector donde buscar el elemento.
+	 * @return <ul>
 	 * <li> El índice del mayor elemento del vector que es menor o igual al elemento buscado.</li>
-	 * <li><code>-1</code> en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
+	 * <li>{@code -1} en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
 	 * </ul>
 	 */
-	static final int findIndexKey(float key, float keys[]){
+	static int findIndexKey(float key, float keys[]){
 		int izq = 0;
 		int der = keys.length - 1;
 		int med = der >> 1;
@@ -176,16 +237,15 @@ public final class Keys{
 	}
 	
 	/**
-	 * Realiza la busqueda dicotomica en un vector.
-	 * @param key Elemento buscado.
-	 * @param keys Vector donde buscar el elemento.
-	 * @return 
-	 * <ul>
+	 * Realiza una busqueda dicotómica en un vector.
+	 * @param key El elemento buscado.
+	 * @param keys El vector donde buscar el elemento.
+	 * @return <ul>
 	 * <li> El índice del mayor elemento del vector que es menor o igual al elemento buscado.</li>
-	 * <li><code>-1</code> en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
+	 * <li>{@code -1} en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
 	 * </ul>
 	 */
-	static final int findIndexKey(int key, int keys[]){
+	static int findIndexKey(int key, int keys[]){
 		int izq = 0;
 		int der = keys.length - 1;
 		int med = der >> 1;
