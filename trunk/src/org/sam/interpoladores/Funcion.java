@@ -126,14 +126,45 @@ public final class Funcion {
 		public float f2(float x);
 	}
 
+	/**
+	 * Método estático que ajusta un vector bidimensional de {@linkplain Funcion.Double funciones con precisión double}, a las claves
+	 * que recibe como parámetro.
+	 * <p>
+	 * Este método se emplea para poder hacer que las claves sean propocionales al tamaño de la curva.<br/>
+	 * Esto se hace de la siguiente forma:<ul>
+	 * <li>Se calculan todas las funciones tomando como valor inicial de entrada {@code 0} y como valor final de entrada
+	 * {@code 1}.</li>
+	 * <li>A partir de estas funciones generadas, se calcula la longitud de la curva para cada tramo de funciones, y se
+	 * generan las claves, proporcionales a la longitud de estos tramos.</li>
+	 * <li>Por último, se ajustan las funciones de cada tramo, para que sus valore inciales y finales de entrada, sean
+	 * las claves previamente generadas.</li></ul>
+	 * </p>
+	 * 
+	 * @param keys
+	 *            El vector de claves a las que ajustar las funciones.
+	 * @param funciones
+	 *            El vector de funciones a ajustar.
+	 */
+	static void ajustarFunciones(double[] keys, Funcion.Double[][] funciones) {
+		assert (keys.length == funciones[0].length+1);
+		for (int i = 0; i < funciones[0].length; i++) {
+			double s = 1 / (keys[i + 1] - keys[i]);
+			double t = -keys[i];
+			for (int j = 0; j < funciones.length; j++) {
+				funciones[j][i].scaleIn(s);
+				funciones[j][i].translateIn(t);
+			}
+		}
+	}
+    
     /**
      * Método estático que convierte un vector de {@linkplain Funcion.Double funciones con precisión double},
      * en un vector {@linkplain Funcion.Float funciones con precisión float}.
      *
-     * @param funciones el vector de {@linkplain Funcion.Double funciones con precisión double} a convertir.
-     * @return  el vector de {@linkplain Funcion.Float funciones con precisión float} generado.
+     * @param funciones El vector de {@linkplain Funcion.Double funciones con precisión double} a convertir.
+     * @return  El vector de {@linkplain Funcion.Float funciones con precisión float} generado.
      */
-    public static Funcion.Float[] toFloatFunctions(Funcion.Double[] funciones) {
+    static Funcion.Float[] toFloatFunctions(Funcion.Double[] funciones) {
 		Funcion.Float[] funcionesFloat = new Funcion.Float[funciones.length];
 		for(int i = 0; i < funciones.length; i++)
 			funcionesFloat[i]  = funciones[i].toFloatFunction();

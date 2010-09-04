@@ -1,7 +1,8 @@
 package org.sam.interpoladores;
 
 /**
- * 
+ * Clase contenedora con las clases <i>Factory</i> para crear <i>Getters</i> tanto en precisión {@code double},
+ * como {@code float}.
  */
 public final class GettersFactory {
 
@@ -22,17 +23,18 @@ public final class GettersFactory {
 	};
 	
     /**
-     *
+     * <i>Factory</i> con los métodos estáticos para crear <i>Getters</i> precisión {@code double}.
      */
     public static class Double{
 		private Double(){}
 
 		/**
-		 * @param keys
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Double<java.lang.Double> create(double keys[], java.lang.Double values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
@@ -41,13 +43,18 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Double<java.lang.Double> create(int genKey, double scale, double translation, java.lang.Double values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
@@ -56,11 +63,12 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param keys
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Double<java.lang.Double> create(double keys[], double values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON){
@@ -73,13 +81,18 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Double<java.lang.Double> create(int genKey, double scale, double translation, double values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON){
@@ -92,11 +105,12 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param keys
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Double<double[]> create(double keys[], double[] values[], MetodoDeInterpolacion mdi, Object... params ){
 			if( values[0].length == 2)
@@ -107,13 +121,18 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Double<double[]> create(int genKey, double scale, double translation, double[] values[], MetodoDeInterpolacion mdi, Object... params ){
 			if( values[0].length == 2)
@@ -124,14 +143,15 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param <T>
-		 * @param keys
-		 * @param in
-		 * @param values
-		 * @param ex
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param <T> Tipo genérico de datos empleados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param in {@code Conversor} encargado de convetir los resultados de las funciones {@code double[]} en un valor del tipo genérico {@code T}.
+		 * @param values Valores a interpolar.
+		 * @param ex {@code Conversor} encargado de extraer los datos en forma {@code double[]} del tipo genérico {@code T}.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static <T> Getter.Double<T> create(double keys[], Conversor<double[], T> in, T values[], Conversor<? super T, double[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
@@ -140,16 +160,21 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param <T>
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param in
-		 * @param values
-		 * @param ex
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param <T> Tipo genérico de datos empleados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param in {@code Conversor} encargado de convetir los resultados de las funciones {@code double[]} en un valor del tipo genérico {@code T}.
+		 * @param values Valores a interpolar.
+		 * @param ex {@code Conversor} encargado de extraer los datos en forma {@code double[]} del tipo genérico {@code T}.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static <T> Getter.Double<T> create(int genKey, double scale, double translation, Conversor<double[], T> in, T values[], Conversor<? super T, double[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
@@ -159,17 +184,18 @@ public final class GettersFactory {
 	}
 
     /**
-     *
+     * <i>Factory</i> con los métodos estáticos para crear <i>Getters</i> precisión {@code float}.
      */
     public static class Float{
     	private Float(){}
 
 		/**
-		 * @param keys
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Float<java.lang.Float> create(float keys[], java.lang.Float values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null)
@@ -178,13 +204,18 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Float<java.lang.Float> create(int genKey, float scale, float translation, java.lang.Float values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null)
@@ -193,11 +224,12 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param keys
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Float<java.lang.Float> create(float keys[], float values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null){
@@ -210,13 +242,18 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Float<java.lang.Float> create(int genKey, float scale, float translation, float values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null){
@@ -229,11 +266,12 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param keys
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Float<float[]> create(float keys[], float[] values[], MetodoDeInterpolacion mdi, Object... params ){
 			if( values[0].length == 2)
@@ -244,13 +282,18 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param values
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param values Valores a interpolar.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static Getter.Float<float[]> create(int genKey, float scale, float translation, float[] values[], MetodoDeInterpolacion mdi, Object... params ){
 			if( values[0].length == 2)
@@ -261,14 +304,15 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param <T>
-		 * @param keys
-		 * @param in
-		 * @param values
-		 * @param ex
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param <T> Tipo genérico de datos empleados.
+		 * @param keys Claves asociadas a los valores.
+		 * @param in {@code Conversor} encargado de convetir los resultados de las funciones {@code double[]} en un valor del tipo genérico {@code T}.
+		 * @param values Valores a interpolar.
+		 * @param ex {@code Conversor} encargado de extraer los datos en forma {@code double[]} del tipo genérico {@code T}.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static <T> Getter.Float<T> create(float keys[], Conversor<float[], T> in, T values[], Conversor<? super T, float[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
@@ -277,16 +321,21 @@ public final class GettersFactory {
 		}
 
 		/**
-		 * @param <T>
-		 * @param genKey
-		 * @param scale
-		 * @param translation
-		 * @param in
-		 * @param values
-		 * @param ex
-		 * @param mdi
-		 * @param params
-		 * @return
+		 * Método estático que crea el <i>Getter</i> apropiado en función de los parámetros pasados.
+		 * @param <T> Tipo genérico de datos empleados.
+		 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+		 * Los valores posibles son:<ul>
+		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+		 * </ul>
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+		 * @param in {@code Conversor} encargado de convetir los resultados de las funciones {@code double[]} en un valor del tipo genérico {@code T}.
+		 * @param values Valores a interpolar.
+		 * @param ex {@code Conversor} encargado de extraer los datos en forma {@code double[]} del tipo genérico {@code T}.
+		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+		 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+		 * @return El <i>Getter</i> creado.
 		 */
 		public static <T> Getter.Float<T> create(int genKey, float scale, float translation, Conversor<float[], T> in, T values[], Conversor<? super T, float[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)

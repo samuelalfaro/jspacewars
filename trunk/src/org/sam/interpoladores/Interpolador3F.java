@@ -54,7 +54,7 @@ final class Interpolador3F implements Trayectoria.Float<float[]>{
 			keys = Keys.generateKeys(funciones[0].length +1);
 		Keys.scale(keys, scale);
 		Keys.translate(keys, translation);
-		Keys.ajustarFunciones(keys, funciones);
+		Funcion.ajustarFunciones(keys, funciones);
 
 		this.keys = Keys.toFloat(keys);
 		this.funcionesX = Funcion.toFloatFunctions(funciones[0]);

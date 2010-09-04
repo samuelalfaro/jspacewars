@@ -47,7 +47,7 @@ final class Interpolador1F implements Trayectoria.Float<Float> {
 			keys = Keys.generateKeys(funciones[0].length +1);
 		Keys.scale(keys, scale);
 		Keys.translate(keys, translation);
-		Keys.ajustarFunciones(keys, funciones);
+		Funcion.ajustarFunciones(keys, funciones);
 
 		this.keys = Keys.toFloat(keys);
 		this.funciones = Funcion.toFloatFunctions( funciones[0]);
@@ -92,7 +92,7 @@ final class Interpolador1F implements Trayectoria.Float<Float> {
 			keys = Keys.generateKeys(funciones[0].length +1);
 		Keys.scale(keys, scale);
 		Keys.translate(keys, translation);
-		Keys.ajustarFunciones(keys, funciones);
+		Funcion.ajustarFunciones(keys, funciones);
 
 		this.keys = Keys.toFloat(keys);
 		this.funciones = Funcion.toFloatFunctions( funciones[0] );

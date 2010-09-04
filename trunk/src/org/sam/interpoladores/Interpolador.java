@@ -72,7 +72,7 @@ final class Interpolador{
 				keys = Keys.generateKeys(funciones[0].length +1);
 			Keys.scale(keys, scale);
 			Keys.translate(keys, translation);
-			Keys.ajustarFunciones(keys, funciones);
+			Funcion.ajustarFunciones(keys, funciones);
 
 			this.keys = keys;
 			this.valorInicial = values[0];
@@ -159,7 +159,7 @@ final class Interpolador{
 				keys = Keys.generateKeys(funciones[0].length +1);
 			Keys.scale(keys, scale);
 			Keys.translate(keys, translation);
-			Keys.ajustarFunciones(keys, funciones);
+			Funcion.ajustarFunciones(keys, funciones);
 
 			this.keys = Keys.toFloat(keys);
 			this.funciones = new Funcion.Float[funciones.length][];

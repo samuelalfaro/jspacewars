@@ -54,7 +54,7 @@ final class Interpolador3D implements Trayectoria.Double<double[]>{
 			keys = Keys.generateKeys(funciones[0].length +1);
 		Keys.scale(keys, scale);
 		Keys.translate(keys, translation);
-		Keys.ajustarFunciones(keys, funciones);
+		Funcion.ajustarFunciones(keys, funciones);
 
 		this.keys = keys;
 		this.funcionesX = funciones[0];
