@@ -1,9 +1,8 @@
 package org.sam.jspacewars.serialization;
 
-import org.sam.interpoladores.Extractor;
+import org.sam.interpoladores.Conversor;
 import org.sam.interpoladores.Getter;
 import org.sam.interpoladores.GettersFactory;
-import org.sam.interpoladores.Introductor;
 import org.sam.interpoladores.Keys;
 import org.sam.interpoladores.MetodoDeInterpolacion;
 
@@ -314,8 +313,8 @@ public class InterpoladoresConverters {
 			private double keysScale;
 			private double keysTranslation;
 			private Object values;
-			private Introductor.Double<?> introductor;
-			private Extractor.Double<?> extractor;
+			private Conversor<?, ?> introductor;
+			private Conversor<?, ?> extractor;
 			private MetodoDeInterpolacion metodoDeInterpolacion;
 			private Object mdiParams[];
 		}
@@ -329,7 +328,7 @@ public class InterpoladoresConverters {
 					return GettersFactory.Double.create(params.keys, (double[])params.values, params.metodoDeInterpolacion, params.mdiParams );
 				if(params.values instanceof double[][])
 					return GettersFactory.Double.create(params.keys, (double[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
-				return GettersFactory.Double.create(params.keys, (Introductor.Double<T>) params.introductor, (T[])params.values, (Extractor.Double<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+				return GettersFactory.Double.create(params.keys, (Conversor<double[], T>)params.introductor, (T[])params.values, (Conversor<? super T, double[]>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 			}
 			if(params.values instanceof Double[])
 				return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (Double[])params.values, params.metodoDeInterpolacion, params.mdiParams );
@@ -337,7 +336,7 @@ public class InterpoladoresConverters {
 				return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (double[])params.values, params.metodoDeInterpolacion, params.mdiParams );
 			if(params.values instanceof double[][])
 				return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (double[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
-			return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (Introductor.Double<T>) params.introductor, (T[])params.values, (Extractor.Double<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+			return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (Conversor<double[], T>)params.introductor, (T[])params.values, (Conversor<? super T, double[]>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 		}
 		
 		@SuppressWarnings(S.unchecked)
@@ -421,13 +420,13 @@ public class InterpoladoresConverters {
 						}
 
 					else if(nodeName.equals(S.Introductor))
-						params.introductor = (Introductor.Double<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
+						params.introductor = (Conversor<?, ?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if (reader.getNodeName().equals(S.Values))
 						params.values =	context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if(nodeName.equals(S.Extractor))
-						params.extractor =	(Extractor.Double<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
+						params.extractor =	(Conversor<?, ?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if (nodeName.equals(S.MetodoDeInterpolacion)) {
 						att = reader.getAttribute(S.predefinido);
@@ -461,8 +460,8 @@ public class InterpoladoresConverters {
 			private float keysScale;
 			private float keysTranslation;
 			private Object values;
-			private Introductor.Float<?> introductor;
-			private Extractor.Float<?> extractor;
+			private Conversor<?, ?> introductor;
+			private Conversor<?, ?> extractor;
 			private MetodoDeInterpolacion metodoDeInterpolacion;
 			private Object mdiParams[];
 		}
@@ -476,7 +475,7 @@ public class InterpoladoresConverters {
 					return GettersFactory.Float.create(params.keys, (float[])params.values, params.metodoDeInterpolacion, params.mdiParams );
 				if(params.values instanceof float[][])
 					return GettersFactory.Float.create(params.keys, (float[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
-				return GettersFactory.Float.create(params.keys, null, (Introductor.Float<T>) params.introductor, (T[])params.values, (Extractor.Float<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+				return GettersFactory.Float.create(params.keys, (Conversor<float[], T>) params.introductor, (T[])params.values, (Conversor<? super T, float[]>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 			}
 			if(params.values instanceof Float[])
 				return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (Float[])params.values, params.metodoDeInterpolacion, params.mdiParams );
@@ -485,7 +484,7 @@ public class InterpoladoresConverters {
 			if(params.values instanceof float[][])
 				return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (float[][])params.values, params.metodoDeInterpolacion, params.mdiParams );
 			
-			return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (Introductor.Float<T>) params.introductor, (T[])params.values, (Extractor.Float<? super T>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
+			return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (Conversor<float[], T>) params.introductor, (T[])params.values, (Conversor<? super T, float[]>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 		}
 		
 		@SuppressWarnings(S.unchecked)
@@ -569,13 +568,13 @@ public class InterpoladoresConverters {
 						}
 
 					else if(nodeName.equals(S.Introductor))
-						params.introductor = (Introductor.Float<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
+						params.introductor = (Conversor<?, ?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if (reader.getNodeName().equals(S.Values))
 						params.values =	context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if(nodeName.equals(S.Extractor))
-						params.extractor =	(Extractor.Float<?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
+						params.extractor =	(Conversor<?, ?>)context.convertAnother(null, Class.forName(reader.getAttribute(S.clazz)));
 
 					else if (nodeName.equals(S.MetodoDeInterpolacion)) {
 						att = reader.getAttribute(S.predefinido);

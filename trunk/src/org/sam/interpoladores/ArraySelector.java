@@ -1,5 +1,17 @@
 package org.sam.interpoladores;
 
+/**
+ * Clase contenedora con las implementaciones de un <i>ArraySelector</i>, tanto en precisión {@code double},
+ * {@code float}, como {@code int}.
+ * <p>Se considera un <i>ArraySelector</i> a un tipo de <i>Getter</i> que contiene los valores distribuidos
+ * uniformente, por tanto no es necesario almacenar las claves.
+ * En esta implemetación se almacena la escala y traslación que se aplica a la clave para obtener el índice
+ * del vector dónde se encuentra el valor que será devuelto.</p>
+ * <p>Esta implementación es usada por {@code GettersFactory} cuando no pasan claves y
+ * el {@code MetodoDeInterpolacion} seleccionado es {@linkplain MetodoDeInterpolacion.Predefinido#ESCALON}.</p>
+ * <p><u>Nota:</u> Los valores no se interpolan realmente, pasando bruscamente de un valor a otro, lo que da esta
+ * forma característica de escalón.</p>
+ */
 final class ArraySelector{
 	
 	private ArraySelector(){}
@@ -8,15 +20,30 @@ final class ArraySelector{
 		return array[(index < 0) ? 0 : index < array.length ? index : array.length - 1 ];
 	}
 	
-	static class Double<T> implements Getter.Double<T>{
+    /**
+     * Clase que implementa un {@code ArraySelector} con precisión {@code double}.
+     * @param <T> Tipo genérico de datos empleados.
+     */
+	final static class Double<T> implements Getter.Double<T>{
 		private final double scale;
 		private final double translation;
 		private final T values[];
 
+		/**
+		 * Constructor que crea un {@code ArraySelector} con precisión {@code double}, 
+		 * con una escala = 1 y una traslación = 0.
+		 * @param values valores que serán devueltos.
+		 */
 		Double(T[] values) {
 			this(1.0, 0.0, values);
 		}
 
+		/**
+		 * Constructor que crea un {@code ArraySelector} con precisión {@code double}.
+		 * @param scale escala que se aplicará a la clave.
+		 * @param translation traslación que se aplicará a la clave.
+		 * @param values valores que serán devueltos.
+		 */
 		Double(double scale, double translation, T[] values) {
 			this.scale = (values.length-1)/ scale;
 			this.translation = -translation;
@@ -32,15 +59,30 @@ final class ArraySelector{
 		}
 	}
 	
-	static class Float<T> implements Getter.Float<T>{
+    /**
+     * Clase que implementa un {@code ArraySelector} con precisión {@code float}.
+     * @param <T> Tipo genérico de datos empleados.
+     */
+	final static class Float<T> implements Getter.Float<T>{
 		private final float scale;
 		private final float translation;
 		private final T values[];
 
+		/**
+		 * Constructor que crea un {@code ArraySelector} con precisión {@code float}, 
+		 * con una escala = 1 y una traslación = 0.
+		 * @param values valores que serán devueltos.
+		 */
 		Float(T[] values) {
 			this(1.0f, 0.0f, values);
 		}
 
+		/**
+		 * Constructor que crea un {@code ArraySelector} con precisión {@code float}.
+		 * @param scale escala que se aplicará a la clave.
+		 * @param translation traslación que se aplicará a la clave.
+		 * @param values valores que serán devueltos.
+		 */
 		Float(float scale, float translation, T[] values) {
 			this.scale = (values.length-1)/ scale;
 			this.translation = -translation;
@@ -56,15 +98,30 @@ final class ArraySelector{
 		}
 	}
 	
-	static class Integer<T> implements Getter.Integer<T>{
+    /**
+     * Clase que implementa un {@code ArraySelector} con precisión {@code int}.
+     * @param <T> Tipo genérico de datos empleados.
+     */
+	final static class Integer<T> implements Getter.Integer<T>{
 		private final int scale;
 		private final int translation;
 		private final T values[];
 
+		/**
+		 * Constructor que crea un {@code ArraySelector} con precisión {@code int}, 
+		 * con una escala = 1 y una traslación = 0.
+		 * @param values valores que serán devueltos.
+		 */
 		Integer(T[] values) {
 			this(1, 0, values);
 		}
 
+		/**
+		 * Constructor que crea un {@code ArraySelector} con precisión {@code int}.
+		 * @param scale escala que se aplicará a la clave.
+		 * @param translation traslación que se aplicará a la clave.
+		 * @param values valores que serán devueltos.
+		 */
 		Integer(int scale, int translation, T[] values) {
 			this.scale = (values.length-1)/ scale;
 			this.translation = -translation;

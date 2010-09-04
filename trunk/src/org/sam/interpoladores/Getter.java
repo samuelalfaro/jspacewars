@@ -1,13 +1,16 @@
 package org.sam.interpoladores;
 
 /**
- * 
+ * Clase contenedora que provee los interfaces que representan un <i>Getter</i>,
+ * tanto en precisión {@code double}, {@code float}, como {@code int}.<br/>
+ * Se considera <i>Getter</i> a una clase que posee un método <i>T get(I clave)</i>
+ * que devuelve un dato de tipo {@code T} partir de una clave de tipo {@code I}.
  */
 public final class Getter{
 	private Getter(){}
 
     /**
-     *
+     * Interface que representa un {@code Getter} con precisión {@code double}.
      * @param <T> Tipo genérico de datos empleados.
      */
     public interface Double<T>{
@@ -21,7 +24,7 @@ public final class Getter{
 	}
 
     /**
-     *
+     * Interface que representa un {@code Getter} con precisión {@code float}.
      * @param <T> Tipo genérico de datos empleados.
      */
     public interface Float<T>{
@@ -35,7 +38,7 @@ public final class Getter{
 	}
 
     /**
-     *
+     * Interface que representa un {@code Getter} con precisión {@code int}.
      * @param <T> Tipo genérico de datos empleados.
      */
     public interface Integer<T>{

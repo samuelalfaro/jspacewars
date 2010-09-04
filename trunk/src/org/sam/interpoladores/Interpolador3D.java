@@ -1,7 +1,8 @@
 package org.sam.interpoladores;
 
 /**
- *
+ * Clase optimizada para interpolar valores {@code double} de tres dimensiones.
+ * @see Interpolador
  */
 final class Interpolador3D implements Trayectoria.Double<double[]>{
 
@@ -12,31 +13,40 @@ final class Interpolador3D implements Trayectoria.Double<double[]>{
 	private final transient Funcion.Double funcionesY[];
 	private final transient Funcion.Double funcionesZ[];
 
-	private static final double[][] tratarDatos(double[] value) {
-		double[][] newVal = new double[2][3];
-		newVal[0][0] = value[0];
-		newVal[0][1] = value[1];
-		newVal[0][2] = value[2];
-		newVal[1][0] = 0; // No definimos la tangente para el valor inicial
-		newVal[1][1] = 0;
-		newVal[1][2] = 0;
-		return newVal;
-	}
-
+	/**
+	 * Constructor que crea un {@code Interpolador3D}.
+	 * @param keys Claves asociadas a los valores.
+	 * @param values Valores a interpolar.
+	 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+	 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+	 */
 	Interpolador3D(double keys[], double[][] values, MetodoDeInterpolacion mdi, Object... params) {
 		this.keys = keys;
-		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.E1D(keys), new ArrayExtractor.E3D(values), params );
+		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.E1D(keys), new ArrayExtractor.EAD(values), params );
 		this.funcionesX = funciones[0];
 		this.funcionesY = funciones[1];
 		this.funcionesZ = funciones[2];
-		this.valorInicial = tratarDatos(values[0]);
-		this.valorFinal = tratarDatos(values[values.length-1]);
-		this.compartido = new double[][]{{0, 0, 0},{ 0, 0, 0}};
+		this.valorInicial = new double[][]{ values[0].clone(), {0, 0, 0} };
+		this.valorFinal = new double[][]{ values[values.length-1].clone(), {0, 0, 0} };
+		this.compartido = new double[][]{ {0, 0, 0}, { 0, 0, 0} };
 	}
 
+	/**
+	 * Constructor que crea un {@code Interpolador3D}.
+	 * @param genKey Entero que indica como se gerenarán las claves a partir de las funciones obtenidas.<br/>
+	 * Los valores posibles son:<ul>
+	 * <li>{@linkplain Keys#HOMOGENEAS}</li>
+	 * <li>{@linkplain Keys#PROPORCIONALES}</li>
+	 * </ul>
+	 * @param scale Valor de escalado que se aplicará a las claves generadas.
+	 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
+	 * @param values Valores a interpolar.
+	 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
+	 * @param params Parámetros necesarios para el método de interpolación correspondiente, puede estar vacio.
+	 */
 	Interpolador3D(int genKey, double scale, double translation, double[][] values, MetodoDeInterpolacion mdi, Object... params) {
 
-		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.E3D(values), params );
+		Funcion.Double[][] funciones = mdi.generarFunciones( new ArrayExtractor.EAD(values), params );
 		double keys[];
 		if(genKey == Keys.PROPORCIONALES)
 			keys = Keys.generateKeys(funciones);
@@ -50,8 +60,8 @@ final class Interpolador3D implements Trayectoria.Double<double[]>{
 		this.funcionesX = funciones[0];
 		this.funcionesY = funciones[1];
 		this.funcionesZ = funciones[2];
-		this.valorInicial = tratarDatos(values[0]);
-		this.valorFinal = tratarDatos(values[values.length-1]);
+		this.valorInicial = new double[][]{ values[0].clone(), {0, 0, 0} };
+		this.valorFinal = new double[][]{ values[values.length-1].clone(), {0, 0, 0} };
 		this.compartido = new double[][]{{0, 0, 0},{ 0, 0, 0}};
 	}
 

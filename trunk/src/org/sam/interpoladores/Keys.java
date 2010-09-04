@@ -1,19 +1,11 @@
 package org.sam.interpoladores;
 
-/**
- * 
- */
 public final class Keys{
 
 	private Keys(){}
 	
-    /**
-     * 
-     */
     public static final int HOMOGENEAS = 0;
-    /**
-     *
-     */
+
     public static final int PROPORCIONALES = 1;
 
 	static final double[] generateKeys(int tam){
@@ -150,7 +142,14 @@ public final class Keys{
 	}
 
 	/**
-	 * @see #findIndexKey(double, double[])
+	 * Realiza la busqueda dicotomica en un vector.
+	 * @param key Elemento buscado.
+	 * @param keys Vector donde buscar el elemento.
+	 * @return 
+	 * <ul>
+	 * <li> El índice del mayor elemento del vector que es menor o igual al elemento buscado.</li>
+	 * <li><code>-1</code> en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
+	 * </ul>
 	 */
 	static final int findIndexKey(float key, float keys[]){
 		int izq = 0;
@@ -177,7 +176,14 @@ public final class Keys{
 	}
 	
 	/**
-	 * @see #findIndexKey(double, double[])
+	 * Realiza la busqueda dicotomica en un vector.
+	 * @param key Elemento buscado.
+	 * @param keys Vector donde buscar el elemento.
+	 * @return 
+	 * <ul>
+	 * <li> El índice del mayor elemento del vector que es menor o igual al elemento buscado.</li>
+	 * <li><code>-1</code> en caso de que el vector no contenga ningun elemento menor que el buscado.</li>
+	 * </ul>
 	 */
 	static final int findIndexKey(int key, int keys[]){
 		int izq = 0;
