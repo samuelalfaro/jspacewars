@@ -6,13 +6,21 @@ package org.sam.colisiones;
 public class LimiteRectangular implements Limites{
 	
 	/**
-	 * Coordenadas de la esquina inferior izquierda.
+	 * Coordenada X de la esquina inferior izquierda.
 	 */
-	float xII, yII;
+	float xII;
 	/**
-	 * Coordenadas de la esquina superior derecha.
+	 * Coordenada Y de la esquina inferior izquierda.
 	 */
-	float xSD, ySD;
+	float yII;
+	/**
+	 * Coordenada X de la esquina superior derecha.
+	 */
+	float xSD;
+	/**
+	 * Coordenada Y de la esquina superior derecha.
+	 */
+	float ySD;
 	
 	/**
 	 * Constructor por defecto, crea un {@code LimiteRectangular} de 0 unidades de ancho por 0 unides de alto.

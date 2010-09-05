@@ -123,7 +123,6 @@ public class Textura{
 	public enum Format{
 		LUMINANCE	(GL.GL_LUMINANCE),
 		ALPHA		(GL.GL_ALPHA),
-		
 		RGB			(GL.GL_RGB),
 		RGBA		(GL.GL_RGBA);
 		
