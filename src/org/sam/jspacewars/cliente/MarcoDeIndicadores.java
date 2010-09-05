@@ -20,7 +20,7 @@ import org.sam.util.Imagen;
 
 public abstract class MarcoDeIndicadores extends GLComponent{
 	
-	static class LedsNiveles extends BarraImagenes {
+	private static class LedsNiveles extends BarraImagenes {
 
 		private int vFijos, vActuales, vDisponibles;
 		private boolean hayCambios = false;
@@ -71,7 +71,7 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		}
 	}
 
-	static class LedsIndicadores extends BarraImagenes {
+	private static class LedsIndicadores extends BarraImagenes {
 
 		private final LedsNiveles indicadorAsociado;
 
@@ -124,7 +124,7 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		}
 	}
 
-	static class LedIndicadorGrado extends BarraImagenes {
+	private static class LedIndicadorGrado extends BarraImagenes {
 
 		private final LedsNiveles indicadorAsociado;
 		private boolean iluminado;
@@ -239,16 +239,18 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		
 		private transient int cont = 0;
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#isLoadComplete()
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public boolean isLoadComplete(){
 			return cont == apariencias.length;
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#loadTexturas(javax.media.opengl.GL)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public void loadTexturas(GL gl){
 			
 			if(cont >= apariencias.length)
@@ -282,8 +284,8 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 			return h - 3*w/32;
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#actualizar(java.awt.Rectangle, float, float)
+		/**
+		 * {@inheritDoc}
 		 */
 		@Override
 		protected void actualizar( Rectangle areaInterna, float w, float h){
@@ -296,8 +298,8 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 			areaInterna.height = (int)aHeight;
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#recalcularBoundsComponentesInternos(float, float)
+		/**
+		 * {@inheritDoc}
 		 */
 		@Override
 		protected void recalcularBoundsComponentesInternos(float w, float h){
@@ -354,9 +356,10 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 			ledIndicadorGrado .setBounds( x1, y2, w1, h2 );
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.GLComponent#draw(javax.media.opengl.GL)
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public void draw(GL gl){
 			gl.glViewport( 0, 0, (int)( x2 - x1), (int)( y2 - y1 ) );
 			
@@ -490,8 +493,8 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		ledIndicadorGrado.actualizar();
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.sam.jogl.gui.GLComponent#setBounds(float, float, float, float)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public final void setBounds( float x, float y, float w, float h ){
@@ -513,8 +516,11 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 	}
 	
 	/**
-	 * @param type Actualmente ignorado. En posteriores implementaciones se usará este valor para obtener 
-	 * distintos marcos, personalizados para cada una de las distintas naves protagonistas.
+	 * Método estático que poporcionará una marco en función del valor del parámetro {@code type}.<br/>
+	 * <u>Nota:</u> Actualmente se genera siempre el mismo marco. En posteriores implementaciones
+	 * se generarán distintos marcos, personalizados para cada una de las distintas naves protagonistas.
+	 * @param type  ignorado.
+	 * @return El {@code MarcoDeIndicadores} generado.
 	 */
 	public static MarcoDeIndicadores getMarco(int type){
 		return new MarcoNave1();
