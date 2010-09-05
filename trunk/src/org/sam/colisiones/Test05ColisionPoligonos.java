@@ -17,12 +17,12 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public final class Test05ColisionPoligonos extends Test00Abs{
 
-	static final int N_LADOS = 15;
+	private static final int N_LADOS = 15;
 	
-	Poligono poligono1, poligono2;
-	List<Object> elementosEvaluados;
+	private Poligono poligono1, poligono2;
+	private List<Object> elementosEvaluados;
 	
-	class Animador extends Thread{
+	private class Animador extends Thread{
 		public void run(){
 			float alfa = 0.0f;
 			float incAlfa = 0.001f;
@@ -47,7 +47,7 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 		}
 	}
 	
-	Test05ColisionPoligonos(){
+	private Test05ColisionPoligonos(){
 		super(new Dimension(500,500));
 		elementosEvaluados = new ArrayList<Object>(30);
 		poligono1 = crearPoligono(N_LADOS);
@@ -56,8 +56,6 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 		poligono2 = null;
 		new Animador().start();
 	}		
-	
-	int segmentosInterseccion[] = new int[2];
 	
 	public void paintComponent(Graphics g){
 		g.setColor(Color.WHITE);

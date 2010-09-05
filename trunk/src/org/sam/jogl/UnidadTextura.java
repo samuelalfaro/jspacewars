@@ -2,6 +2,9 @@ package org.sam.jogl;
 
 import javax.media.opengl.GL;
 
+/**
+ * Clase que contiene los miembros relativos al manejo de texturas.
+ */
 public class UnidadTextura {
 	
 	private final transient static int[] units = new int[]{
@@ -14,6 +17,12 @@ public class UnidadTextura {
 		GL.GL_TEXTURE6,
 		GL.GL_TEXTURE7,
 	};
+	
+	/**
+	 * Entero que indica el número máximo de unidades de textura que puede contener una {@code Apariencia}.<br/>
+	 * Actualmente tiene un valor constante de 8. Queda para posteriores implementaciones, ajustar este valor,
+	 * dinámicamente, en función de la capacidad del hardware.
+	 */
 	public final transient static int MAX = units.length;
 	
 	private final transient static Textura[] tAnteriores =			new Textura[MAX];
@@ -26,36 +35,69 @@ public class UnidadTextura {
 	private AtributosTextura atributosTextura;
 	private GenCoordTextura genCoordTextura;
 	
+	/**
+	 * Constructor que crea una {@code UnidadTextura}.
+	 */
 	public UnidadTextura(){
 		textura = null;
 		atributosTextura = AtributosTextura.DEFAULT;
 		genCoordTextura = null;
 	}
 	
+	/**
+	 * <i>Getter</i> que devuelve la {@code Textura} de esta {@code UnidadTextura}.
+	 * @return La {@code Textura} solicitada.
+	 */
 	public Textura getTextura() {
 		return textura;
 	}
 	
+	/**
+	 * <i>Setter</i> que asigna la {@code Textura} a esta {@code UnidadTextura}.
+	 * @param textura La {@code Textura} asignada.
+	 */
 	public void setTextura(Textura textura) {
 		this.textura = textura;
 	}
 	
+	/**
+	 * <i>Getter</i> que devuelve los {@code AtributosTextura} de esta {@code UnidadTextura}.
+	 * @return Los {@code AtributosTextura} solicitados.
+	 */
 	public AtributosTextura getAtributosTextura() {
 		return atributosTextura;
 	}
 	
+	/**
+	 * <i>Setter</i> que asigna los {@code AtributosTextura} a esta {@code UnidadTextura}.
+	 * @param atributosTextura Los {@code AtributosTextura} asignados.
+	 */
 	public void setAtributosTextura(AtributosTextura atributosTextura) {
 		this.atributosTextura = atributosTextura;
 	}
 	
+	/**
+	 * <i>Getter</i> que devuelve el {@code GenCoordTextura} de esta {@code UnidadTextura}.
+	 * @return El {@code GenCoordTextura} solicitado.
+	 */
 	public GenCoordTextura getGenCoordTextura() {
 		return genCoordTextura;
 	}
 	
+	/**
+	 * <i>Setter</i> que asigna el {@code GenCoordTextura} a esta {@code UnidadTextura}.
+	 * @param genCoordTextura El {@code GenCoordTextura} asignado.
+	 */
 	public void setGenCoordTextura(GenCoordTextura genCoordTextura) {
 		this.genCoordTextura = genCoordTextura;
 	}
 	
+	/**
+	 * Método que se encarga de usar activar esta {@code UnidadTextura}, activando o desactivando
+	 * los atributos necesarios, dependiendo del estado anterior.
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * @param unit Índice de la unidad de textura correspondiente.
+	 */
 	public void activar(GL gl, int unit){
 		if(textura == null)
 			return;
@@ -82,6 +124,12 @@ public class UnidadTextura {
 		lastUnit = unit;
 	}
 	
+	/**
+	 * Método que se encarga de usar desactivar esta {@code UnidadTextura}, activando o desactivando
+	 * los atributos necesarios, dependiendo del estado anterior.
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * @param unit Índice de la unidad de textura correspondiente.
+	 */
 	public static void desactivar(GL gl, int unit){
 		if(tAnteriores[unit] == null)
 	        return;

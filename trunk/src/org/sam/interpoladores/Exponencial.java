@@ -14,7 +14,8 @@ public final class Exponencial{
 		private double A, B, C, D, gamma;
 
 		/**
-		 * Crea la función exponencial, con precisión {@code double} correspondiente a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
+		 * Crea la función exponencial, con precisión {@code double} correspondiente
+		 * a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
          *
          * @param A escala de la potencia.
          * @param B desplazamiento de la potencia.
@@ -118,7 +119,8 @@ public final class Exponencial{
 		private float A, B, C, D, gamma;
 
 		/**
-		 * Crea la función exponencial, con precisión {@code float} correspondiente a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
+		 * Crea la función exponencial, con precisión {@code float} correspondiente
+		 * a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
          *
          * @param A escala de la potencia.
          * @param B desplazamiento de la potencia.

@@ -61,37 +61,83 @@ public abstract class Test00Abs extends JPanel implements MouseListener, MouseMo
 		return new Poligono(coordX, coordY).clone();
 	}
 	
-	Test00Abs(Dimension size){
+	/**
+	 * Constructor empleado por las clases derivadas, que obliga a estas a establecer una {@code Dimension},
+	 * que será considerada como mínima y preferida, del {@code JPanel} creado.
+	 * @param size {@code Dimension} mínima y preferida del {@code JPanel} creado.
+	 */
+	Test00Abs(final Dimension size){
 		this.setMinimumSize(size);
 		this.setPreferredSize(size);
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 	}
 	
+	/**
+	 * Método que convierte la coordenada X de coordenadas <i>world</i>
+	 * a coordenadas de pantalla.
+	 * @param c Valor de X en coordenadas <i>world</i>.
+	 * @return  Valor de X en coordenadas de pantalla.
+	 */
 	protected final int xMundoPantalla(float c){
 		return (int)((c+0.5f)*getWidth());	
 	}
 
+	/**
+	 * Método que convierte la coordenada X de coordenadas de pantalla
+	 * a coordenadas <i>world</i>.
+	 * @param c Valor de X en coordenadas de pantalla.
+	 * @return  Valor de X en coordenadas <i>world</i>.
+	 */
 	protected final float xPantallaMundo(int c){
 		return ((float)c)/getWidth() - 0.5f;
 	}
 
+	/**
+	 * Método que convierte la coordenada Y de coordenadas <i>world</i>
+	 * a coordenadas de pantalla.
+	 * @param c Valor de Y en coordenadas <i>world</i>.
+	 * @return  Valor de Y en coordenadas de pantalla.
+	 */
 	protected final int yMundoPantalla(float c){
 		return -(int)((c-0.5f)*getHeight());
 	}
 
+	/**
+	 * Método que convierte la coordenada Y de coordenadas de pantalla
+	 * a coordenadas <i>world</i>.
+	 * @param c Valor de Y en coordenadas de pantalla.
+	 * @return  Valor de Y en coordenadas <i>world</i>.
+	 */
 	protected final float yPantallaMundo(int c){
 		return ((float)-c)/getHeight() + 0.5f;
 	}
 	
+	/**
+	 * Método que dibuja un punto a partir de sus coordenadas de <i>world</i>.
+	 * @param g Contexto gráfico empleado para dibujar.
+	 * @param pX Valor de X en coordenadas <i>world</i>.
+	 * @param pY Valor de Y en coordenadas <i>world</i>.
+	 */
 	protected final void dibuja(Graphics g, float pX, float pY){
 		dibuja(g,  xMundoPantalla(pX),  yMundoPantalla(pY));
 	}
 	
+	/**
+	 * Método que dibuja un punto a partir de sus coordenadas de pantalla.
+	 * @param g Contexto gráfico empleado para dibujar.
+	 * @param pX Valor de X en coordenadas de pantalla.
+	 * @param pY Valor de Y en coordenadas de pantalla.
+	 */
 	protected final void dibuja(Graphics g, int pX, int pY){
 		g.fillRect( pX-1, pY-1, 3, 3 );
 	}
 	
+	/**
+	 * Método que dibuja un {@code LimiteRectangular}.
+	 * @param g Contexto gráfico empleado para dibujar.
+	 * @param rectangulo {@code LimiteRectangular} que será dibujado.
+	 */
 	protected final void dibuja(Graphics g, LimiteRectangular rectangulo){
 		int pX1 = xMundoPantalla(rectangulo.xII);
 		int pY1 = yMundoPantalla(rectangulo.yII);
@@ -103,6 +149,11 @@ public abstract class Test00Abs extends JPanel implements MouseListener, MouseMo
 		dibuja(g, pX2, pY2);
 	}
 	
+	/**
+	 * Método que pinta un {@code LimiteRectangular}.
+	 * @param g Contexto gráfico empleado para pintar.
+	 * @param rectangulo {@code LimiteRectangular} que será pintado.
+	 */
 	protected final void pinta(Graphics g, LimiteRectangular rectangulo){
 		int pX1 = xMundoPantalla(rectangulo.xII);
 		int pY1 = yMundoPantalla(rectangulo.yII);
@@ -112,6 +163,11 @@ public abstract class Test00Abs extends JPanel implements MouseListener, MouseMo
 		g.fillRect(pX1,pY2,pX2-pX1,pY1-pY2);
 	}
 	
+	/**
+	 * Método que dibuja un {@code Segmento}.
+	 * @param g Contexto gráfico empleado para dibujar.
+	 * @param segmento {@code Segmento} que será dibujado.
+	 */
 	protected final void dibuja(Graphics g, Segmento segmento){
 		int pX1 = xMundoPantalla(segmento.x1);
 		int pY1 = yMundoPantalla(segmento.y1);
@@ -123,11 +179,22 @@ public abstract class Test00Abs extends JPanel implements MouseListener, MouseMo
 		dibuja(g, pX2, pY2);
 	}
 
+	/**
+	 * Método que dibuja un {@code Poligono}.
+	 * @param g Contexto gráfico empleado para dibujar.
+	 * @param poligono {@code Poligono} que será dibujado.
+	 */
 	protected final void dibuja(Graphics g, Poligono poligono){
 		for (int loop = 0; loop < poligono.getNLados(); loop++)
 			dibuja(g, poligono.getSegmento(loop) );
 	}
 	
+	/**
+	 * Método que dibuja los {@code Segmento}s de un {@code Poligono} que están dentro o cortan un {@code LimiteRectangular}.
+	 * @param g Contexto gráfico empleado para dibujar.
+	 * @param poligono {@code Poligono} del que se dibujarán sus segmentos.
+	 * @param rectangulo {@code LimiteRectangular} con que se hace la comprobación.
+	 */
 	protected final void dibujaSegmentosInteriores(Graphics g, Poligono poligono, LimiteRectangular rectangulo){
 		for (int loop = 0; loop < poligono.getNLados(); loop++){
 			Segmento segmento = poligono.getSegmento(loop);
@@ -136,6 +203,12 @@ public abstract class Test00Abs extends JPanel implements MouseListener, MouseMo
 		}
 	}
 	
+	/**
+	 * Método que dibuja los {@code Segmento}s de un {@code Poligono} que están fuera de un {@code LimiteRectangular}.
+	 * @param g Contexto gráfico empleado para dibujar.
+	 * @param poligono {@code Poligono} del que se dibujarán sus segmentos.
+	 * @param rectangulo {@code LimiteRectangular} con que se hace la comprobación.
+	 */
 	protected final void dibujaSegmentosExteriores(Graphics g, Poligono poligono, LimiteRectangular rectangulo){
 		for (int loop = 0; loop < poligono.getNLados(); loop++){
 			Segmento segmento = poligono.getSegmento(loop);

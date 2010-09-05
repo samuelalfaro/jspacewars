@@ -250,7 +250,8 @@ public class Shader{
 	
 	private transient static Shader anterior;
 	
-	public transient final int programObject;
+	private transient final int programObject;
+	
 	private transient final Map<String,Atributo<? extends Object>> uniforms;
 	
 	public Shader(GL gl, String vertexFile, String fragmentFile){
@@ -341,6 +342,10 @@ public class Shader{
     	Atributo<?> att = uniforms.get( name );
     	if( att != null)
     		att.setValue(value);
+    }
+    
+    public void bindAttribLocation(GL gl, int index, String name){
+    	gl.glBindAttribLocation(programObject, index, name);
     }
     
 	public void activar(GL gl) {

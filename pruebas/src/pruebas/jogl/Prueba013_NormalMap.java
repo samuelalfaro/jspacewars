@@ -99,7 +99,7 @@ public class Prueba013_NormalMap{
         			"shaders/normal2.vert",
 					"shaders/normal2.frag"
         	);
-        	gl.glBindAttribLocation(shader.programObject, 1, "vTangent");
+        	shader.bindAttribLocation(gl, 1, "vTangent");
         	shader.addUniform(gl, "normalMap", 0 );
    	
         	forma.getApariencia().setShader(shader);

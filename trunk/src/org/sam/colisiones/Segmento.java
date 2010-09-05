@@ -6,9 +6,21 @@ package org.sam.colisiones;
 public class Segmento {
 
 	/**
-	 * Coordenadas de los puntos que forman el {@code Segmento}.
+	 * Coordenada X del primer punto que forma el {@code Segmento}.
 	 */
-	float x1, y1, x2, y2;
+	float x1;
+	/**
+	 * Coordenada Y del primer punto que forma el {@code Segmento}.
+	 */
+	float y1;
+	/**
+	 * Coordenada X del segundo punto que forma el {@code Segmento}.
+	 */
+	float x2;
+	/**
+	 * Coordenada Y del segundo punto que forma el {@code Segmento}.
+	 */
+	float y2;
 	
 	/**
 	 * Constructor que crea un {@code Segmento} por defecto, con sus dos puntos en las coordenadas {@code (0, 0)}.
