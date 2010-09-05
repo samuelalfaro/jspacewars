@@ -27,18 +27,12 @@ import org.sam.jogl.Instancia3D;
 import org.sam.util.Lista;
 
 /**
- * <p>
- * Clase que encapsula todos los datos que enviará y recibirá el cliente, para
+ * <p>Clase que encapsula todos los datos que enviará y recibirá el cliente, para
  * facilitar la comunicacion entre las distintas clases que componen de la parte
- * cliente.
- * </p>
- * <p>
- * Los atributos de esta clase no contienen modificadores de visibilidad, para
+ * cliente.</p>
+ * <p>Los atributos de esta clase no contienen modificadores de visibilidad, para
  * evitar la necesidad de crear <i>getters</i> ni <i>setters</i>, ya que sólo
- * serán accesibles por las clases que formen parte de este paquete.
- * </p>
- * 
- * @author Samuel Alfaro.
+ * serán accesibles por las clases que formen parte de este paquete.</p>
  */
 class ClientData {
 
