@@ -64,9 +64,10 @@ public interface Emisor {
 			v = new VectorLibre();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.particulas.Emisor#emite()
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public VectorLibre emite(){
 			int i = ALEATORIO.nextInt(nBits)*3;
 			v.posicion.x = pos[i]; v.direccion.x = dir[i++];
@@ -93,9 +94,10 @@ public interface Emisor {
 			v = new VectorLibre();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.particulas.Emisor#emite()
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public VectorLibre emite(){
 			// distribucion homogenea de los puntos en el circulo.
 			// float r  = (float)Math.sqrt(ALEATORIO.nextFloat()) * radio;
@@ -128,9 +130,10 @@ public interface Emisor {
 			v = new VectorLibre();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.particulas.Emisor#emite()
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public VectorLibre emite(){
 			v.posicion.set(0.0f,(ALEATORIO.nextFloat()-0.5f)*longitud, 0.0f);
 			float a = (ALEATORIO.nextFloat()-0.5f)*rangoGiro;
@@ -155,9 +158,10 @@ public interface Emisor {
 			v = new VectorLibre();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.particulas.Emisor#emite()
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public VectorLibre emite(){
 			v.posicion.set(0.0f,(ALEATORIO.nextFloat()-0.5f)*lado,(ALEATORIO.nextFloat()-0.5f)*lado);
 
@@ -188,9 +192,10 @@ public interface Emisor {
 			v = new VectorLibre();
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.particulas.Emisor#emite()
+		/**
+		 * {@inheritDoc}
 		 */
+		@Override
 		public VectorLibre emite(){
 			v.posicion.set(0.0f,0.0f,0.0f);
 

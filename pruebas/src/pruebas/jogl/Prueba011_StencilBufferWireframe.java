@@ -18,7 +18,7 @@ import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
-import org.sam.jogl.ObjetosOrientables;
+import org.sam.jogl.MatrixSingleton;
 import org.sam.jogl.Textura;
 import org.sam.jogl.ObjLoader.ParsingErrorException;
 import org.sam.util.Imagen;
@@ -93,13 +93,13 @@ public class Prueba011_StencilBufferWireframe{
 
 			gl.glMatrixMode( GL.GL_MODELVIEW );
 			gl.glLoadIdentity();
-			ObjetosOrientables.loadModelViewMatrix();
+			MatrixSingleton.loadModelViewMatrix();
 
 			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
 			gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
-			ObjetosOrientables.loadProjectionMatrix();
+			MatrixSingleton.loadProjectionMatrix();
 
 			apFondo.usar(gl);
 			gl.glStencilMask(~0);
@@ -129,7 +129,7 @@ public class Prueba011_StencilBufferWireframe{
 			gl.glColorMask(false, false, false, false);
 			gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
 			gl.glPolygonOffset( 1.1f, 0.1f);
-			forma.getForma3D().draw(gl);
+			forma.getGeometria().draw(gl);
 			gl.glDisable( GL.GL_POLYGON_OFFSET_FILL );
 			gl.glPolygonOffset( 0.f, 0.f);
 			
@@ -142,7 +142,7 @@ public class Prueba011_StencilBufferWireframe{
 			
 			gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE);
 			gl.glLineWidth(1);
-			forma.getForma3D().draw(gl);
+			forma.getGeometria().draw(gl);
 
 			gl.glColorMask(true, true, true, true);
 			gl.glPolygonMode( GL.GL_FRONT_AND_BACK, GL.GL_FILL );

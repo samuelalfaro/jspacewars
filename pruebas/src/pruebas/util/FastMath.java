@@ -1,4 +1,4 @@
-package org.sam.util;
+package pruebas.util;
 
 import java.util.Random;
 

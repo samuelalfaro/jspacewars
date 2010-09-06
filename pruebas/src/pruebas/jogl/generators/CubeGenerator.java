@@ -207,9 +207,8 @@ public class CubeGenerator {
 	private static OglList generate(GL gl, float lado, Generator generator) {
 		float l = lado / 2;
 		
-		int lid = gl.glGenLists(1);
+		OglList oglList = new OglList(gl);
 		
-		gl.glNewList(lid, GL.GL_COMPILE);
 		gl.glBegin(generator.getMode());
 		generator.generarPlanoZ( gl, 
 				 0,  1,  0, 1,
@@ -313,9 +312,9 @@ public class CubeGenerator {
 				 0,  l,  0, l,
 				-l );
 		gl.glEnd();
-		gl.glEndList();
+		OglList.endList(gl);
 		
-		return new OglList(lid);
+		return oglList;
 	}
 	
 	public static Objeto3D generate(GL gl, float lado) {

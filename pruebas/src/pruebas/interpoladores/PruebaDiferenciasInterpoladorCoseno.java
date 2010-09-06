@@ -1,7 +1,8 @@
 package pruebas.interpoladores;
 
 import org.sam.interpoladores.*;
-import org.sam.util.FastMath;
+
+import pruebas.util.FastMath;
 
 @SuppressWarnings("deprecation")
 public class PruebaDiferenciasInterpoladorCoseno {

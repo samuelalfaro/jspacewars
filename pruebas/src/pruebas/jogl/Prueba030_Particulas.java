@@ -199,7 +199,7 @@ public class Prueba030_Particulas extends JFrame implements GLEventListener{
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 //		gl.glLoadIdentity();
 		orbitBehavior.setLookAt(glu);
-		ObjetosOrientables.loadModelViewMatrix();
+		MatrixSingleton.loadModelViewMatrix();
 		
 		gl.glEnable(GL.GL_BLEND);
 		gl.glDepthMask(false);
@@ -261,7 +261,7 @@ public class Prueba030_Particulas extends JFrame implements GLEventListener{
 			else
 				gl.glFrustum(-d * ratio, d * ratio, -d, d, near, far);
 
-			ObjetosOrientables.loadProjectionMatrix();
+			MatrixSingleton.loadProjectionMatrix();
 			gl.glMatrixMode(GL.GL_MODELVIEW);
 		}
 	}

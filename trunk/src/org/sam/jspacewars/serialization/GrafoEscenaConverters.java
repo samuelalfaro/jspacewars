@@ -18,7 +18,7 @@ import org.sam.jogl.AtributosPunto;
 import org.sam.jogl.AtributosRender;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
-import org.sam.jogl.Forma3D;
+import org.sam.jogl.Geometria;
 import org.sam.jogl.GenCoordTextura;
 import org.sam.jogl.Grupo;
 import org.sam.jogl.Instancia3D;
@@ -421,7 +421,7 @@ public class GrafoEscenaConverters {
 				reader.moveUp();
 			}
 			try{
-				return ObjLoader.load(loaderData.path, loaderData.flags, loaderData.transformMatrix).getForma3D();
+				return ObjLoader.load(loaderData.path, loaderData.flags, loaderData.transformMatrix).getGeometria();
 			}catch( Exception e ){
 				e.printStackTrace();
 			}
@@ -443,22 +443,22 @@ public class GrafoEscenaConverters {
 	
 	private static OglList createTexturedQuad(GL gl, TexturedQuadData data){
 		
-		int lid = gl.glGenLists(1);
-		gl.glNewList(lid, GL.GL_COMPILE);
-		gl.glBegin(GL.GL_QUADS);
-
-		gl.glTexCoord2f(data.u1,data.v1);
-		gl.glVertex3f(data.x1,data.y1,0);
-		gl.glTexCoord2f(data.u2,data.v1);
-		gl.glVertex3f(data.x2,data.y1,0);
-		gl.glTexCoord2f(data.u2,data.v2);
-		gl.glVertex3f(data.x2,data.y2,0);
-		gl.glTexCoord2f(data.u1,data.v2);
-		gl.glVertex3f(data.x1,data.y2,0);
-		gl.glEnd();
-		gl.glEndList();	
+		OglList oglList = new OglList(gl);
 		
-		return new OglList(lid);
+		gl.glBegin(GL.GL_QUADS);
+			gl.glTexCoord2f(data.u1,data.v1);
+			gl.glVertex3f(data.x1,data.y1,0);
+			gl.glTexCoord2f(data.u2,data.v1);
+			gl.glVertex3f(data.x2,data.y1,0);
+			gl.glTexCoord2f(data.u2,data.v2);
+			gl.glVertex3f(data.x2,data.y2,0);
+			gl.glTexCoord2f(data.u1,data.v2);
+			gl.glVertex3f(data.x1,data.y2,0);
+		gl.glEnd();
+		
+		OglList.endList(gl);
+		
+		return oglList;
 	}
 	
 	private static class TexturedQuadDataConverter implements Converter {
@@ -539,9 +539,9 @@ public class GrafoEscenaConverters {
 				if(nodeName.equals(S.Apariencia)){
 					objeto3D.setApariencia((Apariencia)context.convertAnother(null, Apariencia.class));
 				}else if( nodeName.equals(S.Forma3DFromObjFile) ){
-					objeto3D.setForma3D((Forma3D)context.convertAnother(null, ObjLoaderData.class));
+					objeto3D.setGeometria((Geometria)context.convertAnother(null, ObjLoaderData.class));
 				}else if( nodeName.equals(S.TexturedQuad) ){
-					objeto3D.setForma3D((Forma3D)context.convertAnother(null, TexturedQuadData.class));
+					objeto3D.setGeometria((Geometria)context.convertAnother(null, TexturedQuadData.class));
 				}
 				reader.moveUp();
 			}

@@ -32,6 +32,15 @@ public class GenCoordTextura {
     	this.coordinates = coordinates;
     }
     
+	/**
+	 * Método que activa la generación automática de las coordenadas de textura
+	 * con los valores de este {@code GenCoordTextura}.<br/>
+	 * Este método compara el {@code GenCoordTextura} anteriormente usado para,
+	 * activar o desactivar los atributos correspondientes.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+     * @param anterior {@code GenCoordTextura} anteriormente usado.
+     */
     public void activar(GL gl, GenCoordTextura anterior ){
     	switch(coordinates){
     	case TEXTURE_COORDINATE_2:
@@ -99,6 +108,10 @@ public class GenCoordTextura {
     	}
 	}
 	
+	/**
+	 * Método estático que desactiva la generación automática de las coordenadas de textura.
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 */
 	public void desactivar(GL gl){
     	switch(coordinates){
     	case TEXTURE_COORDINATE_2:

@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.sam.util.FastMath;
+import pruebas.util.FastMath;
 
 @SuppressWarnings({ "serial", "deprecation" })
 public class Test02Misil extends JPanel implements MouseListener, MouseMotionListener{

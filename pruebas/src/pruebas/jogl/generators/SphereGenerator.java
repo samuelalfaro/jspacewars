@@ -216,8 +216,8 @@ public class SphereGenerator {
 			}
 		}
 		
-		int lid = gl.glGenLists(1);
-		gl.glNewList(lid, GL.GL_COMPILE);
+		OglList oglList = new OglList(gl);
+		
 		gl.glBegin((flags & GENERATE_NTB_MASK) != 0 ? GL.GL_LINES : GL.GL_QUADS );
 		
 		final Vector2f s = new Vector2f();
@@ -279,9 +279,9 @@ public class SphereGenerator {
 			}
 		}
 		gl.glEnd();
-		gl.glEndList();
+		OglList.endList(gl);
 		
-		return new OglList(lid);
+		return oglList;
 	}
 	
 	public static Objeto3D generate(GL gl, int flags, float r, int steps1, int steps2) {

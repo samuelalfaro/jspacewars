@@ -8,7 +8,7 @@ import javax.vecmath.*;
 
 import org.sam.elementos.Modificador;
 import org.sam.interpoladores.Getter;
-import org.sam.jogl.ObjetosOrientables;
+import org.sam.jogl.MatrixSingleton;
 
 import com.sun.opengl.util.BufferUtil;
 
@@ -86,8 +86,8 @@ class ParticulasQuads extends Particulas{
 				transform_matrix.get(pEmisorAct);
 			}
 			
-			Matrix4f model_view_matrix = ObjetosOrientables.getModelViewMatrix();
-			Matrix4f projection_matrix = ObjetosOrientables.getProjectionMatrix();
+			Matrix4f model_view_matrix = MatrixSingleton.getModelViewMatrix();
+			Matrix4f projection_matrix = MatrixSingleton.getProjectionMatrix();
 			
 			for (int i=0, j=0, k=0, len=vidas.length; i < len; i++, j+=3, k+=12){
 				vidas[i] += iVidaT;

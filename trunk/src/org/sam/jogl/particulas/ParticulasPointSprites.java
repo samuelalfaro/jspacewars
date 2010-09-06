@@ -8,7 +8,7 @@ import javax.vecmath.Matrix4f;
 
 import org.sam.elementos.Modificador;
 import org.sam.interpoladores.Getter;
-import org.sam.jogl.ObjetosOrientables;
+import org.sam.jogl.MatrixSingleton;
 
 import com.sun.opengl.util.BufferUtil;
 
@@ -313,7 +313,7 @@ class ParticulasPointSprites extends Particulas{
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		
-		Matrix4f mt = ObjetosOrientables.getModelViewMatrix();
+		Matrix4f mt = MatrixSingleton.getModelViewMatrix();
 		
 		mt_array[ 0] = mt.m00; mt_array[ 1] = mt.m10; mt_array[ 2] = mt.m20; mt_array[ 3] = mt.m30;
 		mt_array[ 4] = mt.m01; mt_array[ 5] = mt.m11; mt_array[ 6] = mt.m21; mt_array[ 7] = mt.m31;

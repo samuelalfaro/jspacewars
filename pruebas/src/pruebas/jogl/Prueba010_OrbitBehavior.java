@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.Objeto3D;
-import org.sam.jogl.ObjetosOrientables;
+import org.sam.jogl.MatrixSingleton;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
 
@@ -71,13 +71,13 @@ public class Prueba010_OrbitBehavior{
 
 			gl.glMatrixMode( GL.GL_MODELVIEW );
 			gl.glLoadIdentity();
-			ObjetosOrientables.loadModelViewMatrix();
+			MatrixSingleton.loadModelViewMatrix();
 
 			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
 			gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
-			ObjetosOrientables.loadProjectionMatrix();
+			MatrixSingleton.loadProjectionMatrix();
 
 			apFondo.usar(gl);
 			gl.glClear(GL.GL_DEPTH_BUFFER_BIT);

@@ -5,7 +5,7 @@ import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.sam.util.FastMath;
+import pruebas.util.FastMath;
 
 @SuppressWarnings("deprecation")
 public class TestLen extends JPanel {

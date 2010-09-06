@@ -22,7 +22,7 @@ import javax.swing.JFrame;
 import org.sam.colisiones.Poligono;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.Objeto3D;
-import org.sam.jogl.ObjetosOrientables;
+import org.sam.jogl.MatrixSingleton;
 import org.sam.jogl.OglList;
 import org.sam.jspacewars.serialization.ElementosConverters;
 import org.sam.jspacewars.servidor.elementos.Elemento;
@@ -72,20 +72,19 @@ public class Prueba060_Loader {
 		float coordX[] = getArray(p, "coordX");
 		float coordY[] = getArray(p, "coordY");
 		
-		int lid = gl.glGenLists(1);
-		gl.glNewList(lid, GL.GL_COMPILE);
+		OglList oglList = new OglList(gl);
 		gl.glBegin(GL.GL_LINES);
-		for(int i=0; i< nLados-1;){
-			gl.glVertex3f(coordX[i],coordY[i],0);
-			i++;
-			gl.glVertex3f(coordX[i],coordY[i],0);
-		}
-		gl.glVertex3f(coordX[nLados-1],coordY[nLados-1],0);
-		gl.glVertex3f(coordX[0],coordY[0],0);
+			for(int i=0; i< nLados-1;){
+				gl.glVertex3f(coordX[i],coordY[i],0);
+				i++;
+				gl.glVertex3f(coordX[i],coordY[i],0);
+			}
+			gl.glVertex3f(coordX[nLados-1],coordY[nLados-1],0);
+			gl.glVertex3f(coordX[0],coordY[0],0);
 		gl.glEnd();
-		gl.glEndList();	
+		OglList.endList(gl);
 		
-		return new Objeto3D( new OglList(lid), new Apariencia());
+		return new Objeto3D( oglList, new Apariencia());
 	}
 
 	static class Renderer implements GLEventListener, KeyListener {
@@ -199,7 +198,7 @@ public class Prueba060_Loader {
 			gl.glPopMatrix();
 			gl.glMatrixMode(GL.GL_MODELVIEW);
 			orbitBehavior.setLookAt(glu);
-			ObjetosOrientables.loadModelViewMatrix();
+			MatrixSingleton.loadModelViewMatrix();
 
 			if(mostrarForma){
 				if (data.instancias[index].getModificador() != null)
@@ -250,7 +249,7 @@ public class Prueba060_Loader {
 			 * -1.0)*d, -d, d, near, far); //
 			 */
 
-			ObjetosOrientables.loadProjectionMatrix();
+			MatrixSingleton.loadProjectionMatrix();
 			gl.glMatrixMode(GL.GL_MODELVIEW);
 		}
 

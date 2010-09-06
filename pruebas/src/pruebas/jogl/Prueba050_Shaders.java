@@ -195,7 +195,7 @@ public class Prueba050_Shaders{
 		gl.glPopMatrix();
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		orbitBehavior.setLookAt(glu);
-		ObjetosOrientables.loadModelViewMatrix();
+		MatrixSingleton.loadModelViewMatrix();
 		
 		for( Modificador modificador: gestorDeParticulas )
 			modificador.modificar(incT);
@@ -239,7 +239,7 @@ public class Prueba050_Shaders{
 		gl.glFrustum(-d,((2.0*w)/h -1.0)*d, -d, d, near, far);
 		//*/
 		
-		ObjetosOrientables.loadProjectionMatrix();
+		MatrixSingleton.loadProjectionMatrix();
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 	}
 
