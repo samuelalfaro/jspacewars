@@ -3,7 +3,7 @@ package org.sam.jogl;
 import java.nio.IntBuffer;
 import com.sun.opengl.util.BufferUtil;
 
-public abstract class GeometriaIndexada extends Geometria {
+public abstract class GeometriaIndexada extends GeometriaAbs {
 
 	protected int[]		texCoordIndices[];
 	protected int[]	 	colorIndices;

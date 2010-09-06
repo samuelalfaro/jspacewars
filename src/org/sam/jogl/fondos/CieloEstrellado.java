@@ -89,7 +89,7 @@ public class CieloEstrellado implements Fondo, Modificador{
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
-		ObjetosOrientables.loadModelViewMatrix();
+		MatrixSingleton.loadModelViewMatrix();
 
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glPushMatrix();
@@ -115,7 +115,7 @@ public class CieloEstrellado implements Fondo, Modificador{
 		
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glPopMatrix();
-		ObjetosOrientables.loadProjectionMatrix();
+		MatrixSingleton.loadProjectionMatrix();
 		
 	}
 

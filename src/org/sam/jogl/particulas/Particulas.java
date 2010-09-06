@@ -9,26 +9,25 @@ import org.sam.elementos.*;
 import org.sam.interpoladores.Getter;
 import org.sam.jogl.*;
 
-public abstract class Particulas extends ObjetoAbstracto implements Modificable, PrototipoCacheable<Particulas>{
+public abstract class Particulas extends Objeto3DAbs implements Modificable, PrototipoCacheable<Particulas>{
 
 	/**
-	 * @author samuel
-	 *
+	 * Enumeración que contiene los distintos modos de emisión aceptados.
 	 */
 	public enum Emision{
 		/**
-		 * Establece el tipo de emisión, con este parámetro, el sistema finaliza cuando todas
-		 * las partículas han muerto
+		 * Modo de emisión que indica que: el sistema finaliza cuando todas
+		 * las partículas han muerto.
 		 */
 		UNICA,
 		/**
-		 * Establece el tipo de emisión, con este parámetro, cuando todas las partículas han
-		 * muerto, comienza la emisión de nuevo
+		 * Modo de emisión que indica que: cuando todas las partículas han
+		 * muerto, comienza la emisión de nuevo.
 		 */
 		PULSOS,
 		/**
-		 * Establece el tipo de emisión, con este parámetro, cuando muere una partícula, vuelve
-		 * a regenerarse
+		 * Modo de emisión que indica que: cuando muere una partícula, vuelve
+		 * a regenerarse.
 		 */
 		CONTINUA
 	}
@@ -42,11 +41,14 @@ public abstract class Particulas extends ObjetoAbstracto implements Modificable,
 	 * Número de particulas activas.
 	 */
 	protected transient int particulasActivas;
-
+	
+	/**
+	 * Objeto encargado de emitir las partículas.
+	 */
 	protected Emisor emisor;
 	/**
 	 * Modo de emisión de las particulas
-	 * @see org.sam.jogl.Particulas.Emision
+	 * @see Particulas.Emision
 	 */
 	protected Emision emision;
 	/**
@@ -218,7 +220,7 @@ public abstract class Particulas extends ObjetoAbstracto implements Modificable,
 			throw new IllegalArgumentException("El tiempo de vida debe de ser mayor de 0");
 		/*
 		Pasamos todos los valores que estaban en funcion de la vida otra vez a funcion
-		del tiempo y los volvemos a poner en funcion del nuevo indice de vida.
+		del tiempo y los volvemos a poner en funcion del nuevo tiempo de vida.
 		*/
 		velocidad  = velocidad  * iVida * tVida;
 		pVelocidad = pVelocidad * iVida * tVida;

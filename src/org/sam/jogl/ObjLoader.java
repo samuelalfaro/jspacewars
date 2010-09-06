@@ -37,13 +37,23 @@ public class ObjLoader {
 	public static final int GENERATE_TANGENTS				= 0x20;
 	public static final int GENERATE_NTB					= 0x40;
 	
+	/**
+	 * Excepción que será lanzada cuando se produzca un error al interpretar
+	 * los datos del fichero.
+	 */
 	@SuppressWarnings("serial")
 	public static class ParsingErrorException extends RuntimeException {
+	    /** Crea una {@code ParsingErrorException} sin mensaje de detalle.
+	     */
 		public ParsingErrorException() {
 			super();
 		}
-		public ParsingErrorException(String s) {
-			super(s);
+	    /** Crea una {@code ParsingErrorException} con el mensaje de detalle
+	     *  especifico.
+	     * @param   message  Mensaje que detalla la causa de la excepción.
+	     */
+		public ParsingErrorException(String message) {
+			super(message);
 		}
 	}
 	
@@ -825,6 +835,7 @@ public class ObjLoader {
 		return ((v1.y*v2.z - v1.z*v2.y)*v3.x + (v2.x*v1.z - v2.z*v1.x)*v3.y + (v1.x*v2.y - v1.y*v2.x)*v3.z);
 	}
 
+	@SuppressWarnings("unused")
 	private static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector3f uVec, Vector3f vVec, Vector4f t4f){
 		Vector3f sDir = new Vector3f(
 				(t.y * uVec.x - t.x * vVec.x),
@@ -841,6 +852,7 @@ public class ObjLoader {
 		//t4f.set( uVec.x, uVec.y, uVec.z, dotcross( normal, uVec, vVec ) < 0.0f ? -1.0f : 1.0f );
 	}
 	
+	@SuppressWarnings("unused")
 	private static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector4f t4f){
 		
 		Vector3f sDir = new Vector3f(
@@ -865,7 +877,6 @@ public class ObjLoader {
 	private final List<Vector3f> normList;
 	private final List<TexCoord2f> texList;
 	
-	int nVertex = 0;
 	private final Queue<Primitive> primitives;
 	
 	private float minX, maxX;
@@ -962,20 +973,20 @@ public class ObjLoader {
 	/**
 	 * @param mt  
 	 */
-	private Geometria generarGeometria(Matrix4d mt){
+	private GeometriaAbs generarGeometria(Matrix4d mt){
 		throw new UnsupportedOperationException();
 		/* TODO Ajustar
 		
 		boolean textCoord = texList.size() > 0;
 		boolean normal = normList.size() > 0;
-		int att = Geometria.COORDENADAS
-			| Geometria.USAR_BUFFERS
-			| Geometria.POR_REFERENCIA;
+		int att = GeometriaAbs.COORDENADAS
+			| GeometriaAbs.USAR_BUFFERS
+			| GeometriaAbs.POR_REFERENCIA;
 		if (textCoord)
-			att |= Geometria.COORDENADAS_TEXTURA;
+			att |= GeometriaAbs.COORDENADAS_TEXTURA;
 		if (normal)
-			att |= Geometria.NORMALES; 
-		Geometria gt = (flags & ObjLoader.TRIANGULATE)!=0 ?
+			att |= GeometriaAbs.NORMALES; 
+		GeometriaAbs gt = (flags & ObjLoader.TRIANGULATE)!=0 ?
 				new GeometriaTriangulos(nVertex, att):
 				new GeometriaQuads(nVertex, att);
 				
@@ -1069,8 +1080,7 @@ public class ObjLoader {
 			}
 		}
 		
-		int lid = gl.glGenLists(1);
-		gl.glNewList(lid, GL.GL_COMPILE);
+		OglList  oglList = new OglList(gl);
 		
 		if( (flags & ObjLoader.GENERATE_TANGENTS) != 0){
 			
@@ -1138,7 +1148,7 @@ public class ObjLoader {
 			}
 		}
 		gl.glEnd();
-		gl.glEndList();
+		OglList.endList(gl);
 
 		if(textCoord)
 			texList.clear();
@@ -1146,7 +1156,7 @@ public class ObjLoader {
 			normList.clear();
 		coordList.clear();
 		primitives.clear();
-		return new OglList(lid);
+		return oglList;
 	}
 	
 	private static Objeto3D load(Reader reader, int flags, Matrix4d mt) throws ParsingErrorException{
@@ -1160,34 +1170,106 @@ public class ObjLoader {
 		return new Objeto3D( loader.almacenarGeometria( GLU.getCurrentGL(), mt), ap );
 	}
 
+	/**
+	 * Método que carga un fichero <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param filename Ruta y nombre del fichero a cargar.
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws FileNotFoundException Si no se encuentra el fichero indicado.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(String filename) throws FileNotFoundException, ParsingErrorException{
 		return load(filename, NONE, null);
 	}
 	
+	/**
+	 * Método que carga un fichero <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param filename Ruta y nombre del fichero a cargar.
+	 * @param flags
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws FileNotFoundException Si no se encuentra el fichero indicado.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(String filename, int flags) throws FileNotFoundException, ParsingErrorException{
 		return load(filename, flags, null);
 	}
 	
+	/**
+	 * Método que carga un fichero <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param filename Ruta y nombre del fichero a cargar.
+	 * @param mt
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws FileNotFoundException Si no se encuentra el fichero indicado.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(String filename, Matrix4d mt) throws FileNotFoundException, ParsingErrorException{
 		return load(filename, NONE, mt);
 	}
 	
+	/**
+	 * Método que carga un fichero <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param filename Ruta y nombre del fichero a cargar.
+	 * @param flags
+	 * @param mt
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws FileNotFoundException Si no se encuentra el fichero indicado.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(String filename, int flags, Matrix4d mt) throws FileNotFoundException, ParsingErrorException{
 		return load(new FileReader(filename),flags, mt);
 	}
 
+	/**
+	 * Método que carga un archivo <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param url {@code URL} del archivo a cargar.
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws IOException Si se produce un error durante la lectura.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(URL url) throws IOException, ParsingErrorException{
 		return load( url, NONE, null);
 	}
 	
+	/**
+	 * Método que carga un archivo <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param url {@code URL} del archivo a cargar.
+	 * @param flags
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws IOException Si se produce un error durante la lectura.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(URL url, int flags) throws IOException, ParsingErrorException{
 		return load( url, flags, null );
 	}
 	
+	/**
+	 * Método que carga un archivo <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param url {@code URL} del archivo a cargar.
+	 * @param mt
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws IOException Si se produce un error durante la lectura.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(URL url, Matrix4d mt) throws IOException, ParsingErrorException{
 		return load( url, NONE, mt );
 	}
 	
+	/**
+	 * Método que carga un archivo <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
+	 * ahí almacenado.
+	 * @param url {@code URL} del archivo a cargar.
+	 * @param flags 
+	 * @param mt
+	 * @return El {@code Objeto3D} cargado.
+	 * @throws IOException Si se produce un error durante la lectura.
+	 * @throws ParsingErrorException Si el fichero está malformado.
+	 */
 	public static Objeto3D load(URL url, int flags, Matrix4d mt) throws IOException, ParsingErrorException{
 		return load(new InputStreamReader(url.openStream()),flags, mt);
 	}

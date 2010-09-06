@@ -27,13 +27,9 @@ import javax.media.opengl.glu.GLU;
 
 import org.sam.elementos.Modificador;
 import org.sam.jogl.Instancia3D;
-import org.sam.jogl.ObjetosOrientables;
+import org.sam.jogl.MatrixSingleton;
 import org.sam.jogl.fondos.Fondo;
 
-/**
- * 
- * @author Samuel Alfaro
- */
 class Renderer implements GLEventListener {
 
 	private final transient GLU glu = new GLU();
@@ -99,7 +95,7 @@ class Renderer implements GLEventListener {
 
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		glu.gluLookAt(0.0, 0.0, 11, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-		ObjetosOrientables.loadModelViewMatrix();
+		MatrixSingleton.loadModelViewMatrix();
 
 		for( Modificador modificador: data.modificadores )
 			modificador.modificar(incT);
@@ -151,7 +147,7 @@ class Renderer implements GLEventListener {
 		
 		gl.glFrustum(-ratio_4_3 * d, ((2.0 * aWidth) / aHeight - ratio_4_3) * d, -d, d, near, far);
 		
-		ObjetosOrientables.loadProjectionMatrix();
+		MatrixSingleton.loadProjectionMatrix();
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		fondo.setProporcionesPantalla( aWidth / aHeight );
 	}
