@@ -12,10 +12,12 @@ public final class SingletonObjetivos {
 		return me instanceof NaveUsuario ? objetivoProtas : objetivoEnemigos;
 	}
 
-	public static void setObjetivoProtas(NaveEnemiga objetivo) {
+	@Deprecated
+	public static void setObjetivoUsuario(NaveEnemiga objetivo) {
 		SingletonObjetivos.objetivoProtas = objetivo;
 	}
 	
+	@Deprecated
 	public static void setObjetivoEnemigos(NaveUsuario objetivo) {
 		SingletonObjetivos.objetivoEnemigos = objetivo;
 	}

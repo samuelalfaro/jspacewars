@@ -19,7 +19,7 @@ import org.sam.jspacewars.servidor.elementos.Disparo;
 import org.sam.jspacewars.servidor.elementos.Elemento;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 import org.sam.jspacewars.servidor.elementos.NaveUsuario;
-import org.sam.jspacewars.servidor.elementos.SingletonEnemigos;
+import org.sam.jspacewars.servidor.elementos.SingletonObjetivos;
 
 /**
  * Clase para testear las colisiones entre los distintos elementos que forman parte del juego, muestra por pantalla,
@@ -84,7 +84,7 @@ public class TestColisiones {
 
 		NaveEnemiga naveEnemiga = (NaveEnemiga)cache.newObject(0x30);
 		naveEnemiga.setPosicion(3, -0.5f);
-		SingletonEnemigos.setObjetivo(naveEnemiga);
+		SingletonObjetivos.setObjetivoUsuario(naveEnemiga);
 		navesEnemigas.add(naveEnemiga);
 		
 		naveEnemiga = (NaveEnemiga)cache.newObject(0x10);
