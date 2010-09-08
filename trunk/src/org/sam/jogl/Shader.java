@@ -367,10 +367,11 @@ public class Shader{
     }
     
     /**
-     * Método que (traducir bind) la localización de los atributos de vértice.
+     * Método que liga los atributos de vértice a una posición.
+     * 
      * @param gl Contexto gráfico en el que se realiza a acción.
-     * @param index Valor de la localización donde (traducir bind).
-     * @param _name {@code String} que identifica los atributos de vértice (traducir bind).
+     * @param index Posición donde serán ligados los atributos de vértice.
+     * @param name {@code String} que identifica los atributos de vértice ligados.
      */
     public void bindAttribLocation(GL gl, int index, String name){
     	gl.glBindAttribLocation(programObject, index, name);
