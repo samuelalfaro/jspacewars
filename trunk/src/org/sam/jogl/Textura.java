@@ -6,8 +6,15 @@ import java.nio.ByteBuffer;
 
 import javax.media.opengl.GL;
 
+/**
+ * Clase que encapsula los datos necesarios en el manejo de texturas y proporciona
+ * los métodos para facilitar su empleo.
+ */
 public class Textura{
 	
+	/**
+	 * Clase proporciona métodos estáticos útiles para el manejo de texturas.
+	 */
 	public static class Util{
 		
 		private Util(){
@@ -37,6 +44,14 @@ public class Textura{
 			return RGBA;
 		}
 
+		/**
+		 * Método que convierte una {@code BufferedImage} en un {@code ByteBuffer} que
+		 * puede emplearse para crear una {@code Textura}.
+		 * @param img {@code BufferedImage} que será convertida.
+		 * @param format {@code Format} que tendrá la textura para la que se genera el {@code ByteBuffer}.
+		 * @param flipY Booleano que indica si deben reflejarse verticalmente los pixels de la imagen.
+		 * @return El {@code ByteBuffer} generado.
+		 */
 		public static ByteBuffer toByteBuffer(BufferedImage img, Format format, boolean flipY){
 			
 			int nBands = 1;
@@ -87,10 +102,23 @@ public class Textura{
 		}
 	}
 	
+	/**
+	 * Enumeración que contiene los valores que describen los
+	 * distintos de modos <i>MagFilter</i> soportados.
+	 */
 	public enum MinFilter{
-		NEAREST		(GL.GL_NEAREST),
-		LINEAR		(GL.GL_LINEAR),
-		MIPMAP		(GL.GL_LINEAR_MIPMAP_NEAREST);
+		/**
+		 * Encapsula el valor GL_NEAREST.
+		 */
+		NEAREST		      (GL.GL_NEAREST),
+		/**
+		 * Encapsula el valor GL_LINEAR.
+		 */
+		LINEAR		      (GL.GL_LINEAR),
+		/**
+		 * Encapsula el valor GL_LINEAR_MIPMAP_NEAREST.
+		 */
+		MIPMAP		      (GL.GL_LINEAR_MIPMAP_NEAREST);
 
 		private final int value;
 		private MinFilter(int value){
@@ -98,9 +126,19 @@ public class Textura{
 		}
 	}
 	
+	/**
+	 * Enumeración que contiene los valores que describen los
+	 * distintos de modos <i>MagFilter</i> soportados.
+	 */
 	public enum MagFilter{
-		NEAREST		(GL.GL_NEAREST),
-		LINEAR		(GL.GL_LINEAR);
+		/**
+		 * Encapsula el valor GL_NEAREST.
+		 */
+		NEAREST		      (GL.GL_NEAREST),
+		/**
+		 * Encapsula el valor GL_LINEAR.
+		 */
+		LINEAR		      (GL.GL_LINEAR);
 
 		private final int value;
 		private MagFilter(int value){
@@ -108,10 +146,26 @@ public class Textura{
 		}
 	}
 	
+	/**
+	 * Enumeración que contiene los valores que describen los
+	 * distintos de modos <i>Wrap</i> soportados.
+	 */
 	public enum Wrap{
+		/**
+		 * Encapsula el valor   GL_CLAMP.
+		 */
 		CLAMP				(GL.GL_CLAMP),
+		/**
+		 * Encapsula el valor   GL_REPEAT.
+		 */
 		REPEAT				(GL.GL_REPEAT),
+		/**
+		 * Encapsula el valor   GL_CLAMP_TO_EDGE.
+		 */
 		CLAMP_TO_EDGE		(GL.GL_CLAMP_TO_EDGE),
+		/**
+		 * Encapsula el valor   GL_CLAMP_TO_BORDER.
+		 */
 		CLAMP_TO_BORDER		(GL.GL_CLAMP_TO_BORDER);
 
 		private final int value;
@@ -120,11 +174,27 @@ public class Textura{
 		}
 	}
 	
+	/**
+	 * Enumeración que contiene los valores que describen los
+	 * distintos de formatos de textura soportados.
+	 */
 	public enum Format{
-		LUMINANCE	(GL.GL_LUMINANCE),
-		ALPHA		(GL.GL_ALPHA),
-		RGB			(GL.GL_RGB),
-		RGBA		(GL.GL_RGBA);
+		/**
+		 * Encapsula el valor GL_LUMINANCE.
+		 */
+		LUMINANCE	      (GL.GL_LUMINANCE),
+		/**
+		 * Encapsula el valor GL_ALPHA.
+		 */
+		ALPHA		      (GL.GL_ALPHA),
+		/**
+		 * Encapsula el valor GL_RGB.
+		 */
+		RGB			      (GL.GL_RGB),
+		/**
+		 * Encapsula el valor GL_RGBA.
+		 */
+		RGBA		      (GL.GL_RGBA);
 		
 		private final int value;
 		private Format(int value){
@@ -137,16 +207,45 @@ public class Textura{
 	private Wrap wrapS;
 	private Wrap wrapT;
 	
+	/**
+	 * Constructor que genera una {@code Textura} a partir de los datos indicados.
+	 * 
+	 * @param gl Contexto gráfico empleado para almacenar los pixels en memoria de vídeo.
+	 * @param format {@code Format} de la {@code Textura} generada.
+	 * @param image {@code BufferedImage} que contiene los pixels de la {@code Textura} generada.
+	 * @param flipY Booleano que indica si deben reflejarse verticalmente los pixels de la imagen.
+	 */
 	public Textura(GL gl, Format format, BufferedImage image, boolean flipY){
 		this(gl, MinFilter.LINEAR, MagFilter.LINEAR, format, image, flipY);
 	}
 
+	/**
+	 * Constructor que genera una {@code Textura} a partir de los datos indicados.
+	 * 
+	 * @param gl Contexto gráfico empleado para almacenar los pixels en memoria de vídeo.
+	 * @param minFilter {@code MinFilter} de la {@code Textura} generada.
+	 * @param magFilter {@code MagFilter} de la {@code Textura} generada.
+	 * @param format {@code Format} de la {@code Textura} generada.
+	 * @param image {@code BufferedImage} que contiene los pixels de la {@code Textura} generada.
+	 * @param flipY Booleano que indica si deben reflejarse verticalmente los pixels de la imagen.
+	 */
 	public Textura(GL gl, MinFilter minFilter, MagFilter magFilter, Format format, BufferedImage image, boolean flipY){
 		this(gl, minFilter, magFilter, format, image.getWidth(null), image.getHeight(null),
 				Util.toByteBuffer( image, format, flipY)
 		);
 	}
 
+	/**
+	 * Constructor que genera una {@code Textura} a partir de los datos indicados.
+	 * 
+	 * @param gl Contexto gráfico empleado para almacenar los pixels en memoria de vídeo.
+	 * @param minFilter {@code MinFilter} de la {@code Textura} generada.
+	 * @param magFilter {@code MagFilter} de la {@code Textura} generada.
+	 * @param format {@code Format} de la {@code Textura} generada.
+	 * @param width  Anchura de la matriz de pixels.
+	 * @param height Altura la matriz de pixels.
+	 * @param pixels {@code Buffer} que contiene los pixels de la {@code Textura} generada.
+	 */
 	public Textura(GL gl, MinFilter minFilter, MagFilter magFilter, Format format, int width, int  height, Buffer pixels){
 
 		proporciones = (float)width / height;
@@ -169,18 +268,39 @@ public class Textura{
 		wrapT = Wrap.REPEAT;
 	}
 	
+	/**
+	 * <i>Setter</i> que asigna el valor {@code Wrap} en direccion {@code S} a esta {@code Textura}.
+	 * @param wrapS El valor {@code Wrap} asignado.
+	 */
 	public void setWrap_s(Wrap wrapS) {
 		this.wrapS = wrapS;
 	}
 
+	/**
+	 * <i>Setter</i> que asigna el valor {@code Wrap} en direccion {@code T} a esta {@code Textura}.
+	 * @param wrapT El valor {@code Wrap} asignado.
+	 */
 	public void setWrap_t(Wrap wrapT) {
 		this.wrapT = wrapT;
 	}
 
+	/**
+	 * <i>Getter</i> que devuelve las proporciones de la imagen contenida en esta {@code Textura}.
+	 * @return Las proporciones de la imagen contenida.
+	 */
 	public float getProporciones(){
 		return proporciones;
 	}
 	
+	/**
+	 * Método que activa la aplicación de texturas con los valores
+	 * de esta {@code Textura}.<br/>
+	 * Este método compara la {@code Textura} anteriormente usada para,
+	 * activar o desactivar los atributos correspondientes.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+     * @param anterior {@code Textura} anteriormente usada.
+     */
 	public void activar(GL gl, Textura anterior) {
 		if(anterior == null)
 			gl.glEnable(GL.GL_TEXTURE_2D);
@@ -189,6 +309,10 @@ public class Textura{
 		gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, wrapT.value);
 	}
 	
+	/**
+	 * Método que desactiva la aplicación de textura.
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 */
 	public void desactivar(GL gl) {
 		gl.glDisable(GL.GL_TEXTURE_2D);
 	}

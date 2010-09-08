@@ -17,6 +17,10 @@ import javax.vecmath.*;
 
 import com.sun.opengl.util.BufferUtil;
 
+/**
+ * Clase que encapsula los datos necesarios en el manejo de <i>shaders</i> y proporciona
+ * los métodos para facilitar su empleo.
+ */
 public class Shader{
 	
 	private static abstract class Atributo<T>{
@@ -254,6 +258,13 @@ public class Shader{
 	
 	private transient final Map<String,Atributo<? extends Object>> uniforms;
 	
+	/**
+	 * Constructor que genera un {@code Shader} a partir de los datos indicados.
+	 * 
+	 * @param gl Contexto gráfico empleado para almacenar el <i>shader</i> en memoria de vídeo.
+	 * @param vertexFile Ruta del archivo que contiene el <i>vertex shader</i>.
+	 * @param fragmentFile Ruta del archivo que contiene el <i>fragment shader</i>.
+	 */
 	public Shader(GL gl, String vertexFile, String fragmentFile){
 		int vertexShader = 0;
 		int fragmentShader = 0;
@@ -333,21 +344,44 @@ public class Shader{
         System.out.println("GLSL Validation >> " + new String(infoBytes, 0, length - 1));
     }
 	
+    /**
+     * Método que añade y asigna un valor a un atributo uniforme.
+     * @param gl Contexto gráfico en el que se realiza a acción.
+     * @param name  {@code String} que identifica el atributo uniforme añadido.
+     * @param value Valor del atributo uniforme añadido.
+     */
     public void addUniform(GL gl, String name, Object value){
     	int id = gl.glGetUniformLocation(programObject, name);
    		uniforms.put( name, Atributo.getAtributo(id, value) );
     }
     
+    /**
+     * Método que modifica el valor de un atributo uniforme anteriormente añadido.
+     * @param name  {@code String} que identifica el atributo uniforme asignado.
+     * @param value Valor del atributo uniforme asignado.
+     */
     public void setUniform(String name, Object value){
     	Atributo<?> att = uniforms.get( name );
     	if( att != null)
     		att.setValue(value);
     }
     
+    /**
+     * Método que (traducir bind) la localización de los atributos de vértice.
+     * @param gl Contexto gráfico en el que se realiza a acción.
+     * @param index Valor de la localización donde (traducir bind).
+     * @param _name {@code String} que identifica los atributos de vértice (traducir bind).
+     */
     public void bindAttribLocation(GL gl, int index, String name){
     	gl.glBindAttribLocation(programObject, index, name);
     }
     
+	/**
+	 * Método que activa el uso de <i>shaders</i> con los valores de
+	 * este {@code Shader}.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 */
 	public void activar(GL gl) {
 		if( anterior == this )
 			return;
@@ -357,6 +391,10 @@ public class Shader{
 		anterior = this;
 	}
 	
+	/**
+	 * Método estático que desactiva el uso de <i>shaders</i>.
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 */
 	public static void desactivar(GL gl) {
 		anterior = null;
 		gl.glUseProgramObjectARB(0);

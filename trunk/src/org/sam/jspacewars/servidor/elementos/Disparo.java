@@ -12,6 +12,11 @@ public abstract class Disparo extends Elemento {
 		super(code, forma);
 	}
 
+	/**
+	 * Construtor que crea un {@code Disparo} copiando los
+	 * datos de otro {@code Disparo} que sirve como prototipo.
+	 * @param prototipo {@code Disparo} prototipo.
+	 */
 	protected Disparo(Disparo prototipo) {
 		super(prototipo);
 	}
@@ -32,23 +37,36 @@ public abstract class Disparo extends Elemento {
 		this.angulo = angulo;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void enviar(ByteBuffer buff) {
 		super.enviar(buff);
 		buff.putFloat(angulo);
 	}
 	
 	boolean destruido = false;
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void inicializar(){
 		destruido = false;
 	}
-	/* (non-Javadoc)
-	 * @see org.sam.jspacewars.servidor.elementos.Destruible#recibirImpacto(int)
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void recibirImpacto(int fuerzaDeImpacto) {
 		destruido = true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isDestruido() {
 		return destruido;

@@ -26,15 +26,59 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+/**
+ * <p>Clase que proporciona los métodos estáticos para poder cargar la geometría
+ * almacenada en un archivo <i>Wavefront .obj</i>.</p>
+ * <u>Nota:</u> La implementación de este cargador es muy básica, y almacena todas las
+ * partes y objetos contenidos en el archivo en una <b>única geometría</b>, igonorando
+ * los distintos materiales y texturas aplicadas a cada parte u objeto almacenado.
+ */
 public class ObjLoader {
 	
+	/**
+	 * Constante que indica que no se hará ninguna modificación con los datos cargados.
+	 */
 	public static final int NONE							= 0x00;
+	/**
+	 * Constante que indica que los datos cargados se almacenarán en una
+	 * geometría accesible {@code GeometriaAbs}. Por defecto se almacenan
+	 * directamente en memoria de video a través de una {@code OglList}.
+	 */
 	public static final int TO_GEOMETRY						= 0x01;
+	/**
+	 * Constante que indica que los vertices cargados serán reescalados y
+	 * trasladados. De tal forma que todos queden contenidos dentro de un
+	 * cubo de lado 1 unidad centrado en el origen de coordenadas.
+	 */
 	public static final int RESIZE							= 0x02;
+	/**
+	 * Constante que indica que todas las caras de la geometría serán
+	 * tratadas como triangulos, si aparece un cudrilatero se dividirá
+	 * en dos triangulos.
+	 */
 	public static final int TRIANGULATE						= 0x04;
+	/**
+	 * Constante que indica que se reflejarán verticalmente las
+	 * coordenadas de textura.
+	 */
 	public static final int MUST_FLIP_VERTICALLY_TEXCOORDS	= 0x08;
+	/**
+	 * Constante que indica que se prepará la geometría para poder
+	 * hacer uso del shader <i>SinglePassWireFrame</i>.
+	 */
 	public static final int WIREFRAME                       = 0x10;
+	/**
+	 * Constante que indica que se generarán tanto la tangente como
+	 * la bitangente, correspondiente a cada vertice, necesarias para
+	 * el poder realizar <i>normal mapping</i>.
+	 */
 	public static final int GENERATE_TANGENTS				= 0x20;
+	/**
+	 * Constante que indica que en vez de almacenar la geometría,
+	 * se generarán las líneas que representan: tanto la normal, 
+	 * la tangente, como la bitangente, correspondientes a cada vértice.<br/>
+	 * Útil para poder visualizar valores al realizar test.
+	 */
 	public static final int GENERATE_NTB					= 0x40;
 	
 	/**
@@ -712,9 +756,9 @@ public class ObjLoader {
 				p2.set(coordList.get(t.indexP2));
 				p3.set(coordList.get(t.indexP3));
 				
-				normal.set( VectorUtils.crossVectors( p1, p3, p2 ) );
-				normal.add( VectorUtils.crossVectors( p2, p1, p3 ) );
-				normal.add( VectorUtils.crossVectors( p3, p2, p1 ) );
+				normal.set( VectorUtils.normal( p1, p3, p2 ) );
+				normal.add( VectorUtils.normal( p2, p1, p3 ) );
+				normal.add( VectorUtils.normal( p3, p2, p1 ) );
 				normal.scale(1.0f/3);
 				
 				normList.get(t.indexN1).add( normal );
@@ -728,10 +772,10 @@ public class ObjLoader {
 				p3.set(coordList.get(q.indexP3));
 				p4.set(coordList.get(q.indexP4));
 				
-				normal.set( VectorUtils.crossVectors(p1,p4,p2) );
-				normal.add( VectorUtils.crossVectors(p2,p1,p3) );
-				normal.add( VectorUtils.crossVectors(p3,p2,p4) );
-				normal.add( VectorUtils.crossVectors(p4,p3,p1) );
+				normal.set( VectorUtils.normal(p1,p4,p2) );
+				normal.add( VectorUtils.normal(p2,p1,p3) );
+				normal.add( VectorUtils.normal(p3,p2,p4) );
+				normal.add( VectorUtils.normal(p4,p3,p1) );
 				normal.scale(1.0f/4);
 					
 				normList.get(q.indexN1).add( normal );
@@ -1186,7 +1230,8 @@ public class ObjLoader {
 	 * Método que carga un fichero <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
 	 * ahí almacenado.
 	 * @param filename Ruta y nombre del fichero a cargar.
-	 * @param flags
+	 * @param flags Entero que enmascara, una combinacion de las constantes, que indican,
+	 * las posibles modificaciones que pueden aplicarse, a los datos cargados.
 	 * @return El {@code Objeto3D} cargado.
 	 * @throws FileNotFoundException Si no se encuentra el fichero indicado.
 	 * @throws ParsingErrorException Si el fichero está malformado.
@@ -1199,7 +1244,7 @@ public class ObjLoader {
 	 * Método que carga un fichero <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
 	 * ahí almacenado.
 	 * @param filename Ruta y nombre del fichero a cargar.
-	 * @param mt
+	 * @param mt {@code Matrix4d} que modifica la geometría al ser cargada.
 	 * @return El {@code Objeto3D} cargado.
 	 * @throws FileNotFoundException Si no se encuentra el fichero indicado.
 	 * @throws ParsingErrorException Si el fichero está malformado.
@@ -1212,8 +1257,9 @@ public class ObjLoader {
 	 * Método que carga un fichero <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
 	 * ahí almacenado.
 	 * @param filename Ruta y nombre del fichero a cargar.
-	 * @param flags
-	 * @param mt
+	 * @param flags Entero que enmascara, una combinacion de las constantes, que indican,
+	 * las posibles modificaciones que pueden aplicarse, a los datos cargados.
+	 * @param mt {@code Matrix4d} que modifica la geometría al ser cargada.
 	 * @return El {@code Objeto3D} cargado.
 	 * @throws FileNotFoundException Si no se encuentra el fichero indicado.
 	 * @throws ParsingErrorException Si el fichero está malformado.
@@ -1238,7 +1284,8 @@ public class ObjLoader {
 	 * Método que carga un archivo <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
 	 * ahí almacenado.
 	 * @param url {@code URL} del archivo a cargar.
-	 * @param flags
+	 * @param flags Entero que enmascara, una combinacion de las constantes, que indican,
+	 * las posibles modificaciones que pueden aplicarse, a los datos cargados.
 	 * @return El {@code Objeto3D} cargado.
 	 * @throws IOException Si se produce un error durante la lectura.
 	 * @throws ParsingErrorException Si el fichero está malformado.
@@ -1251,7 +1298,7 @@ public class ObjLoader {
 	 * Método que carga un archivo <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
 	 * ahí almacenado.
 	 * @param url {@code URL} del archivo a cargar.
-	 * @param mt
+	 * @param mt {@code Matrix4d} que modifica la geometría al ser cargada.
 	 * @return El {@code Objeto3D} cargado.
 	 * @throws IOException Si se produce un error durante la lectura.
 	 * @throws ParsingErrorException Si el fichero está malformado.
@@ -1264,8 +1311,8 @@ public class ObjLoader {
 	 * Método que carga un archivo <i>Wavefront .obj</i> y devuelve el {@code Objeto3D}
 	 * ahí almacenado.
 	 * @param url {@code URL} del archivo a cargar.
-	 * @param flags 
-	 * @param mt
+	 * @param flags Entero que contiene una combinación de los 
+	 * @param mt {@code Matrix4d} que modifica la geometría al ser cargada.
 	 * @return El {@code Objeto3D} cargado.
 	 * @throws IOException Si se produce un error durante la lectura.
 	 * @throws ParsingErrorException Si el fichero está malformado.

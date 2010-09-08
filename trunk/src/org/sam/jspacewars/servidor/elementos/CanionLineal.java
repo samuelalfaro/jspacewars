@@ -2,16 +2,28 @@ package org.sam.jspacewars.servidor.elementos;
 
 import java.util.Collection;
 
+/**
+ * Implementación de un {@link Canion} que lanza {@link DisparoLineal disparos} con una trayectoria recta.
+ */
 public class CanionLineal extends Canion {
 	/**
-	 * Angulo de disparo del cañon
+	 * Ángulo, en radianes, del cañón.
 	 */
 	private float angulo;
 
+	/**
+	 * Constructor que crea un {@code CanionLineal} y asigna los valores correspondientes.
+	 * @param data {@link #data Datos del cañón} asignados.
+	 */
 	public CanionLineal(CanionData data) {
 		super(data);
 	}
 
+	/**
+	 * Construtor que crea un {@code CanionLineal} copiando los
+	 * datos de otro {@code CanionLineal} que sirve como prototipo.
+	 * @param prototipo {@code CanionLineal} prototipo.
+	 */
 	private CanionLineal(CanionLineal prototipo) {
 		super(prototipo);
 		this.angulo = prototipo.angulo;
@@ -25,6 +37,10 @@ public class CanionLineal extends Canion {
 		return new CanionLineal(this);
 	}
 
+	/**
+	 * <i>Setter</i> que asigna el {@link #angulo ángulo}, en grados, de este {@code CanionLineal}.
+	 * @param angulo Ángulo asignado.
+	 */
 	public void setAngulo(float angulo) {
 		this.angulo = (float) (angulo * Math.PI / 180.0 );
 	}

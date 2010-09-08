@@ -5,11 +5,26 @@ import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
+/**
+ * Clase que proporciona métodos estáticos utiles para el manejo de vectores.
+ */
 public class VectorUtils {
 	
+	/**
+	 * Método que rota un elemento sobre el eje X.
+	 * @param t     Elemento que será rotado.
+	 * @param alpha Ángulo en radianes.
+	 */
 	public static void rotateAboutX(Tuple3f t, double alpha){
 		rotateAboutX(t, Math.cos(alpha), Math.sin(alpha));
 	}
+	
+	/**
+	 * Método que rota un elemento sobre el eje X.
+	 * @param t    Elemento que será rotado.
+	 * @param cosA Coseno del ángulo.
+	 * @param sinA Seno del ángulo.
+	 */
 	public static void rotateAboutX(Tuple3f t, double cosA, double sinA){
 	    float ny = (float)(cosA * t.y - sinA * t.z);
 	    float nz = (float)(cosA * t.z + sinA * t.y);
@@ -17,9 +32,21 @@ public class VectorUtils {
 	    t.z = nz;
 	}
 
+	/**
+	 * Método que rota un elemento sobre el eje Y.
+	 * @param t     Elemento que será rotado.
+	 * @param alpha Ángulo en radianes.
+	 */
 	public static void rotateAboutY(Tuple3f t, double alpha){
 		rotateAboutY(t, Math.cos(alpha), Math.sin(alpha));
 	}
+	
+	/**
+	 * Método que rota un elemento sobre el eje Y.
+	 * @param t    Elemento que será rotado.
+	 * @param cosA Coseno del ángulo.
+	 * @param sinA Seno del ángulo.
+	 */
 	public static void rotateAboutY(Tuple3f t, double cosA, double sinA){
 	    float nx = (float)(cosA * t.x + sinA * t.z);
 	    float nz = (float)(cosA * t.z - sinA * t.x);
@@ -27,9 +54,21 @@ public class VectorUtils {
 	    t.z = nz;
 	}
 
+	/**
+	 * Método que rota un elemento sobre el eje Z.
+	 * @param t     Elemento que será rotado.
+	 * @param alpha Ángulo en radianes.
+	 */
 	public static void rotateAboutZ(Tuple3f t, double alpha){
 		rotateAboutZ(t, Math.cos(alpha), Math.sin(alpha));
 	}
+	
+	/**
+	 * Método que rota un elemento sobre el eje Z.
+	 * @param t    Elemento que será rotado.
+	 * @param cosA Coseno del ángulo.
+	 * @param sinA Seno del ángulo.
+	 */
 	public static void rotateAboutZ(Tuple3f t, double cosA, double sinA){
 	    float nx = (float)(cosA * t.x - sinA * t.y);
 	    float ny = (float)(cosA * t.y + sinA * t.x);
@@ -37,17 +76,36 @@ public class VectorUtils {
 	    t.y = ny;
 	}
 	
+	/**
+	 * Método que devuelve el producto escalar entre dos vectores.
+	 * @param v1 El primer vector.
+	 * @param v2 El segundo vector.
+	 * @return El producto escalar calculado.
+	 */
 	public static float dot(Vector3f v1, Vector3f v2){
 		return (v1.x*v2.x + v1.y*v2.y + v1.z*v2.z);
 	}
 	
 	/**
+	 * Método devuelve el producto escalar, entre el resultado de producto 
+	 * vectorial de dos vectores y un tercer vector.
+	 * @param v1 El primer vector.
+	 * @param v2 El segundo vector.
+	 * @param v3 El tercer vector.
 	 * @return dot( cross(v1, v2), v3 )
 	 */
 	public static float dotcross(Vector3f v1, Vector3f v2, Vector3f v3){
 		return ((v1.y*v2.z - v1.z*v2.y)*v3.x + (v2.x*v1.z - v2.z*v1.x)*v3.y + (v1.x*v2.y - v1.y*v2.x)*v3.z);
 	}
 	
+	/**
+	 * Método que genera un vector en base a {@code s} y a {@code t} a
+	 * partir de la representación del vector en base ortogonal.
+	 * @param v Vector en base ortogonal.
+	 * @param s Vector unitario en la base.
+	 * @param t Vector unitario en la base.
+	 * @return  Vector en base a {@code s} y {@code t}.
+	 */
 	public static Vector2f cambioDeBase( Vector3f v, Vector3f s, Vector3f t ){
 		float d = s.x * t.y - s.y * t.x;
 		if( Math.abs(d) > 0.01f )
@@ -69,6 +127,14 @@ public class VectorUtils {
 		);
 	}
 	
+	/**
+	 * Método que genera un vector en base ortogonal a partir de la representación
+	 * del vector en base a {@code s} y a {@code t}.
+	 * @param v Vector en base a {@code s} y {@code t}.
+	 * @param s Vector unitario en la base.
+	 * @param t Vector unitario en la base.
+	 * @return  Vector en base ortogonal.
+	 */
 	public static Vector3f cambioDeBase(Vector2f v, Vector3f s, Vector3f t){
 		return new Vector3f(
 				v.x * s.x + v.y * t.x,
@@ -204,6 +270,11 @@ public class VectorUtils {
 		);
 	}
 	
+	/**
+	 * Método que realiza una ortogonalización Gram-Schmidt.
+	 * @param n {@code Vector3f} respecto al que se hace la ortogonalización.
+	 * @param t {@code Vector3f} ortogonalizado.
+	 */
 	public static void orthogonalizeGramSchmidt(Vector3f n, Vector3f t){
 	    // tOrtho = normalize( t - n·dot(n, t) )
 		float d = dot( n, t );
@@ -215,6 +286,13 @@ public class VectorUtils {
 		t.normalize();
 	}
 	
+	/**
+	 * Método que devuelve la distancia euclídea entre dos puntos.
+	 * 
+	 * @param t1 Primer punto.
+	 * @param t2 Segundo punto.
+	 * @return La distancia euclídea calculada.
+	 */
 	public static float distance(Tuple3f t1, Tuple3f t2){
 		float dx = t1.x-t2.x;
 		float dy = t1.y-t2.y;
@@ -227,9 +305,14 @@ public class VectorUtils {
 	private static final Vector3f _normal = new Vector3f();
 
 	/**
+	 * Método que devuelve la normal del plano definido por tres puntos.
+	 * 
+	 * @param p1 Primer punto que defiene el plano.
+	 * @param p2 Segundo punto que defiene el plano.
+	 * @param p3 tercer punto que defiene el plano.
 	 * @return ( p1 - p2 ) x ( p3 - p1 )
 	 */
-	public static Vector3f crossVectors( Point3f p1, Point3f p2, Point3f p3 ){
+	public static Vector3f normal( Point3f p1, Point3f p2, Point3f p3 ){
 		_d1.set(p1);
 		_d1.sub(p2);
 		
