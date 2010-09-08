@@ -1,3 +1,25 @@
+/* 
+ * ServidorJuego.java
+ * 
+ * Copyright (c) 2008-2010
+ * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
+ * All rights reserved.
+ * 
+ * This file is part of jSpaceWars.
+ * 
+ * jSpaceWars is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * jSpaceWars is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with jSpaceWars. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.sam.jspacewars.servidor;
 
 import java.io.IOException;
@@ -25,6 +47,25 @@ import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 import org.sam.jspacewars.servidor.elementos.NaveUsuario;
 import org.sam.jspacewars.servidor.elementos.SingletonObjetivos;
 
+/**
+ * Clase encargada de atender a los clientes.<br/>
+ * <ul>
+ * <li>Recibe las órdenes del cliente correspondiente.</li>
+ * <li>Calcula las acciones realizadas por los distintos elementos.</li>
+ * <li>Envía los resultados al cliente correspondiente.</li>
+ * </ul>
+ * Actualmente estos cálculos son <b>asíncronos</b>, calculando las acciones
+ * por cada petición.<br/>
+ * <p>TODO Calcular las acciones de forma síncrona. Esto permitirá:<ul>
+ * <li>Enviar la misma respuesta a varios clientes a la vez, cuando sus peticiones
+ * coincidan.</li>
+ * <li>Que elementos, cuyo comportamiento es <b>díficil integrar en función del tiempo</b>,
+ * puesto que <b>dependen de más variables</b>, como los misiles, se comporten siempre
+ * igual independientemente de los <i>FPS</i>.</li>
+ * <li>Mejorar la eficacia de la detección de colisiones, sin necesidad de modificar
+ * el algoritmo, simplemente aumentando la frecuencia de los cálculos.</li> 
+ * </ul><p/>
+ */
 public class ServidorJuego {
 	
 	private static final float ratio = (30*4.0f/32) / (3.0f - 4*4.0f/32); // ratio 4/3 sin bordes GUI
@@ -38,6 +79,11 @@ public class ServidorJuego {
 	
 	private static final int TAM_DATAGRAMA = 8192;
 	
+	/**
+	 * {@link Cache Caché} empleada tanto: para obtener las instancias de los nuevos elementos,
+	 * que aparecen durante el juego, como para almacenar, para su posterior uso, las
+	 * instancias de los elementos, que desaparecen.
+	 */
 	private final transient Cache<Elemento> cache;
 
 	private final transient Collection<Elemento> navesProtagonistas;
@@ -55,10 +101,25 @@ public class ServidorJuego {
 	
 	private transient NaveUsuario nave1, nave2;
 	
+	/**
+	 * Constructor que crea un servidor para atender a un único cliente local,
+	 * y le asigna la {@linkplain #cache caché} necesaria.
+	 * @param cache Caché asignada.
+	 * @throws IOException Si se produce algún error al establecer
+	 * los canales de comunicación.
+	 */
 	public ServidorJuego(Cache<Elemento> cache) throws IOException {
 		this(cache, true, 0);
 	}
 
+	/**
+	 * Constructor que crea un servidor, con su {@linkplain #cache caché} necesaria,
+	 * preparado para atender tanto al cliente local, como al cliente de red.
+	 * @param cache Caché asignada.
+	 * @param port  Puerto por donde acepta las peticiones del cliente de red.
+	 * @throws IOException Si se produce algún error al establecer
+	 * los canales de comunicación.
+	 */
 	public ServidorJuego(Cache<Elemento> cache, int port) throws IOException {
 		this(cache, false, port);
 	}
@@ -144,12 +205,20 @@ public class ServidorJuego {
 
 	private transient SourceChannel localChannelClientIn;
 
+	/**
+	 * Método que devuelve el canal de entrada para un cliente local.
+	 * @return El canal de entrada solicitado.
+	 */
 	public SourceChannel getLocalChannelClientIn() {
 		return localChannelClientIn;
 	}
 
 	private transient SinkChannel localChannelClientOut;
 
+	/**
+	 * Método que devuelve el canal de salida para un cliente local.
+	 * @return El canal de salida solicitado.
+	 */
 	public SinkChannel getLocalChannelClientOut() {
 		return localChannelClientOut;
 	}
@@ -242,6 +311,11 @@ public class ServidorJuego {
 			elemento.enviar(buff);
 	}
 
+	/**
+	 * Método encargado de atender a los clientes de la forma descirta en
+	 * la {@link ServidorJuego documentación de la clase}.
+	 * @throws IOException Si se produce un error de comunicación.
+	 */
 	public void atenderClientes() throws IOException {
 
 		ByteBuffer buffIn = ByteBuffer.allocateDirect(TAM_DATAGRAMA);

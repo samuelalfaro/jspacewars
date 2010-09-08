@@ -1,3 +1,25 @@
+/* 
+ * Cache.java
+ * 
+ * Copyright (c) 2008-2010
+ * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
+ * All rights reserved.
+ * 
+ * This file is part of jSpaceWars.
+ * 
+ * jSpaceWars is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * jSpaceWars is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with jSpaceWars. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.sam.elementos;
 
 import java.util.Comparator;
@@ -9,8 +31,8 @@ import java.util.TreeMap;
 /**
  * Clase que implementa una caché de objetos.</br>
  * Los objetos que aquí almacenados deberán implementar el interface {@code PrototipoCacheable<T>}.
- * Esto permite, tanto inicializar de nuevo las antiguas instancias almacenadas, como generar
- * nuevas instancias a partir del prototipo almacenado, cuando no quedan más instancias para reutilizar.
+ * Esto permite: tanto reutilizar las antiguas instancias almacenadas, inicializandolas de nuevo,
+ * como generar nuevas instancias, a partir del prototipo almacenado, cuando no quedan más.
  * 
  * @param <T> Tipo genérico de datos almacenados en la caché.
  */
