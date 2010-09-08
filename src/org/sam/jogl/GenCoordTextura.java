@@ -2,14 +2,37 @@ package org.sam.jogl;
 
 import javax.media.opengl.GL;
 
+/**
+ * Clase que contiene los atributos que indican como se generarán automáticamente
+ * las coordenadas de textura.
+ */
 public class GenCoordTextura {
 	
+	/**
+	 * Enumeración que contiene los distintos modos de generación
+	 * automática, de coordenadas de textura.
+	 */
 	public enum Mode{
-		OBJECT_LINEAR	(GL.GL_OBJECT_LINEAR),
-		EYE_LINEAR    	(GL.GL_EYE_LINEAR),
-		SPHERE_MAP		(GL.GL_SPHERE_MAP),
-		NORMAL_MAP    	(GL.GL_NORMAL_MAP),
-		REFLECTION_MAP	(GL.GL_REFLECTION_MAP);
+		/**
+		 * Encapsula el valor GL_OBJECT_LINEAR.
+		 */
+		OBJECT_LINEAR	  (GL.GL_OBJECT_LINEAR),
+		/**
+		 * Encapsula el valor GL_EYE_LINEAR.
+		 */
+		EYE_LINEAR    	  (GL.GL_EYE_LINEAR),
+		/**
+		 * Encapsula el valor GL_SPHERE_MAP.
+		 */
+		SPHERE_MAP		  (GL.GL_SPHERE_MAP),
+		/**
+		 * Encapsula el valor GL_NORMAL_MAP.
+		 */
+		NORMAL_MAP    	  (GL.GL_NORMAL_MAP),
+		/**
+		 * Encapsula el valor GL_REFLECTION_MAP.
+		 */
+		REFLECTION_MAP	  (GL.GL_REFLECTION_MAP);
 
 		private final int value;
 
@@ -18,15 +41,36 @@ public class GenCoordTextura {
 		}
 	}
 
+	/**
+	 * Enumeración que contiene los distintos valoresque indican,
+	 * las dimensiones que tendrán las coordenadas de textura generadas.
+	 */
 	public enum Coordinates{
+		/**
+		 * Valor que indica que las coodenadas de textura tendrán
+		 * dos dimensiones.
+		 */
 		TEXTURE_COORDINATE_2,
+		/**
+		 * Valor que indica que las coodenadas de textura tendrán
+		 * tres dimensiones.
+		 */
     	TEXTURE_COORDINATE_3,
+		/**
+		 * Valor que indica que las coodenadas de textura tendrán
+		 * cuatro dimensiones.
+		 */
     	TEXTURE_COORDINATE_4;
 	}
 	
 	private Mode mode;
     private Coordinates coordinates;
     
+	/**
+	 * Constructor que crea el {@code GenCoordTextura} con los parámetros que recibe.
+     * @param mode  {@code Mode} de este {@code GenCoordTextura}.
+     * @param coordinates {@code Coordinates} de este {@code GenCoordTextura}.
+     */
     public GenCoordTextura(Mode mode, Coordinates coordinates){
     	this.mode = mode;
     	this.coordinates = coordinates;
@@ -109,7 +153,7 @@ public class GenCoordTextura {
 	}
 	
 	/**
-	 * Método estático que desactiva la generación automática de las coordenadas de textura.
+	 * Método que desactiva la generación automática de las coordenadas de textura.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
 	public void desactivar(GL gl){

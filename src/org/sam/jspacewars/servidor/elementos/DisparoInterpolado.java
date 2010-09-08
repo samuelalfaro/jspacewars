@@ -3,6 +3,9 @@ package org.sam.jspacewars.servidor.elementos;
 import org.sam.colisiones.Poligono;
 import org.sam.interpoladores.Trayectoria;
 
+/**
+ * Implementación de un {@link Disparo} que sigue una trayectoria predefinida.
+ */
 public class DisparoInterpolado extends Disparo {
 
 	private transient Trayectoria.Float<float[]> trayectoria;
@@ -10,10 +13,15 @@ public class DisparoInterpolado extends Disparo {
 	private transient float scaleX, scaleY;
 	private transient long time;
 	
-	DisparoInterpolado(short code,  Poligono forma) {
+	DisparoInterpolado(short code, Poligono forma) {
 		super(code, forma);
 	}
 
+	/**
+	 * Construtor que crea un {@code DisparoInterpolado} copiando los
+	 * datos de otro {@code DisparoInterpolado} que sirve como prototipo.
+	 * @param prototipo {@code DisparoInterpolado} prototipo.
+	 */
 	protected DisparoInterpolado(DisparoInterpolado prototipo) {
 		super(prototipo);
 	}

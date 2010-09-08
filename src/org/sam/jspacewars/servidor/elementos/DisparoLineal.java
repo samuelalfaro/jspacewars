@@ -2,6 +2,9 @@ package org.sam.jspacewars.servidor.elementos;
 
 import org.sam.colisiones.Poligono;
 
+/**
+ * Implementación de un {@link Disparo} que sigue una trayectoria recta.
+ */
 public class DisparoLineal extends Disparo {
 
 	private transient float incX, incY;
@@ -10,7 +13,12 @@ public class DisparoLineal extends Disparo {
 		super(code, forma);
 	}
 
-	protected DisparoLineal(Disparo prototipo) {
+	/**
+	 * Construtor que crea un {@code DisparoLineal} copiando los
+	 * datos de otro {@code DisparoLineal} que sirve como prototipo.
+	 * @param prototipo {@code DisparoLineal} prototipo.
+	 */
+	protected DisparoLineal(DisparoLineal prototipo) {
 		super(prototipo);
 	}
 
@@ -18,6 +26,12 @@ public class DisparoLineal extends Disparo {
 		return new DisparoLineal(this);
 	}
 
+	/**
+	 * @param posX
+	 * @param posY
+	 * @param angulo 
+	 * @param velocidad
+	 */
 	public void setValues(float posX, float posY, float angulo, float velocidad) {
 		super.setPosicion(posX, posY);
 		super.setAngulo(angulo);

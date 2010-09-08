@@ -6,13 +6,27 @@ import javax.vecmath.TexCoord2f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+/**
+ * Interface que proporciona los métodos, a las clases que lo implementan,
+ * para generar primitivas.<br/>
+ * De este modo, se pueden gererar estas primitivas de distintas formas,
+ * a partir de los mismos datos, simplemente usando un {@code Generator}
+ * u otro.
+ */
 public interface Generator {
 
+	/**
+	 * Implementación de un {@code Generator}, que genera primitivas
+	 * que sólo contienen sus vértices. 
+	 */
 	final class VerticesGenerator implements Generator{
 		
 		private VerticesGenerator(){
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -23,6 +37,15 @@ public interface Generator {
 			generate( gl, vert1, vert2, vert3 );
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un triángulo.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del triángulo.
+		 * @param vert2 Vertice del segundo punto del triángulo.
+		 * @param vert3 Vertice del tercer  punto del triángulo.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3
 		){
@@ -31,6 +54,9 @@ public interface Generator {
 			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
@@ -41,6 +67,16 @@ public interface Generator {
 			generate( gl, vert1, vert2, vert3, vert4 );
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un cuadrilátero.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del cuadrilatero.
+		 * @param vert2 Vertice del segundo punto del cuadrilatero.
+		 * @param vert3 Vertice del tercer  punto del cuadrilatero.
+		 * @param vert4 Vertice del cuarto punto del cuadrilatero.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4
 		){
@@ -50,13 +86,25 @@ public interface Generator {
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 		}
 	}
+	
+	/**
+	 * Instancia estática de un {@code VerticesGenerator} que evita la necesidad
+	 * de crear más instancias.
+	 */
 	final Generator Vertices = new VerticesGenerator();
 
+	/**
+	 * Implementación de un {@code Generator}, que genera primitivas
+	 * que contienen sus vértices y sus normales. 
+	 */
 	final class VerticesNormalsGenerator implements Generator{
 		
 		private VerticesNormalsGenerator(){
 		}
 	
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -70,6 +118,19 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un triángulo.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del triángulo.
+		 * @param vert2 Vertice del segundo punto del triángulo.
+		 * @param vert3 Vertice del tercer  punto del triángulo.
+		 * 
+		 * @param norm1 Normal del primer  punto del triángulo.
+		 * @param norm2 Normal del segundo punto del triángulo.
+		 * @param norm3 Normal del tercer  punto del triángulo.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
 				Vector3f   norm1, Vector3f   norm2, Vector3f   norm3
@@ -84,6 +145,9 @@ public interface Generator {
 			gl.glVertex3f( vert3.x, vert3.y, vert3.z );
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
@@ -97,6 +161,21 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un cuadrilátero.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del cuadrilatero.
+		 * @param vert2 Vertice del segundo punto del cuadrilatero.
+		 * @param vert3 Vertice del tercer  punto del cuadrilatero.
+		 * @param vert4 Vertice del cuarto punto del cuadrilatero.
+		 * 
+		 * @param norm1 Normal del primer  punto del cuadrilatero.
+		 * @param norm2 Normal del segundo punto del cuadrilatero.
+		 * @param norm3 Normal del tercer  punto del cuadrilatero.
+		 * @param norm4 Normal del cuarto punto del cuadrilatero.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
 				Vector3f   norm1, Vector3f   norm2, Vector3f   norm3, Vector3f   norm4
@@ -114,13 +193,27 @@ public interface Generator {
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 		}
 	}
+	
+	/**
+	 * Instancia estática de un {@code VerticesNormalsGenerator} que
+	 * evita la necesidad de crear más instancias.
+	 */
 	final Generator VerticesNormals = new VerticesNormalsGenerator();
 
+	/**
+	 * Implementación de un {@code Generator}, que genera siempre cuadriláteros,
+	 * en los que cada vértice recibe como coordenadas de textura, las coordenadas
+	 * de los vértices que forman la primitiva a la que pertenece. Datos
+	 * necesarios poder hacer uso del shader <i>SinglePassWireFrame</i>.
+	 */
 	final class VerticesWireFrameGenerator implements Generator{
 		
 		private VerticesWireFrameGenerator(){
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -134,6 +227,9 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
@@ -147,6 +243,21 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un cuadrilátero.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del cuadrilatero.
+		 * @param vert2 Vertice del segundo punto del cuadrilatero.
+		 * @param vert3 Vertice del tercer  punto del cuadrilatero.
+		 * @param vert4 Vertice del cuarto punto del cuadrilatero.
+		 * 
+		 * @param norm1 Normal del primer  punto del cuadrilatero.
+		 * @param norm2 Normal del segundo punto del cuadrilatero.
+		 * @param norm3 Normal del tercer  punto del cuadrilatero.
+		 * @param norm4 Normal del cuarto punto del cuadrilatero.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
 				Vector3f   norm1, Vector3f   norm2, Vector3f   norm3, Vector3f   norm4
@@ -169,13 +280,25 @@ public interface Generator {
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 		}
 	}
+	
+	/**
+	 * Instancia estática de un {@code VerticesWireFrameGenerator} 
+	 * que evita la necesidad de crear más instancias.
+	 */
 	final Generator VerticesWireFrame = new VerticesWireFrameGenerator();
 
+	/**
+	 * Implementación de un {@code Generator}, que genera primitivas
+	 * que contienen sus vértices y sus coordenadas de textura.
+	 */
 	final class VerticesTexCoordsGenerator implements Generator{
 		
 		private VerticesTexCoordsGenerator(){
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -189,6 +312,19 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un triángulo.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del triángulo.
+		 * @param vert2 Vertice del segundo punto del triángulo.
+		 * @param vert3 Vertice del tercer  punto del triángulo.
+		 * 
+		 * @param text1 Coordenadas de textura del primer  punto del triángulo.
+		 * @param text2 Coordenadas de textura del segundo punto del triángulo.
+		 * @param text3 Coordenadas de textura del tercer  punto del triángulo.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
 				TexCoord2f text1, TexCoord2f text2, TexCoord2f text3
@@ -203,6 +339,9 @@ public interface Generator {
 			gl.glVertex3f(   vert3.x, vert3.y, vert3.z );
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
@@ -216,6 +355,21 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un cuadrilátero.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del cuadrilatero.
+		 * @param vert2 Vertice del segundo punto del cuadrilatero.
+		 * @param vert3 Vertice del tercer  punto del cuadrilatero.
+		 * @param vert4 Vertice del cuarto punto del cuadrilatero.
+		 * 
+		 * @param text1 Coordenadas de textura del primer  punto del cuadrilatero.
+		 * @param text2 Coordenadas de textura del segundo punto del cuadrilatero.
+		 * @param text3 Coordenadas de textura del tercer  punto del cuadrilatero.
+		 * @param text4 Coordenadas de textura del cauarto punto del cuadrilatero.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
 				TexCoord2f text1, TexCoord2f text2, TexCoord2f text3, TexCoord2f text4
@@ -233,12 +387,26 @@ public interface Generator {
 			gl.glVertex3f(   vert4.x, vert4.y, vert4.z );
 		}
 	}
+	
+	/**
+	 * Instancia estática de un {@code VerticesTexCoordsGenerator} que evita la necesidad
+	 * de crear más instancias.
+	 */
 	final Generator VerticesTexCoords = new VerticesTexCoordsGenerator();
 
+	/**
+	 * Implementación de un {@code Generator}, que genera primitivas
+	 * que contienen tanto sus vértices, sus normales, como sus
+	 * coordenadas de textura.
+	 */
 	final class VerticesNormalsTexCoordsGenerator implements Generator{
 		
 		private VerticesNormalsTexCoordsGenerator(){
-		}	
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -253,6 +421,23 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un triángulo.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del triángulo.
+		 * @param vert2 Vertice del segundo punto del triángulo.
+		 * @param vert3 Vertice del tercer  punto del triángulo.
+		 * 
+		 * @param text1 Coordenadas de textura del primer  punto del triángulo.
+		 * @param text2 Coordenadas de textura del segundo punto del triángulo.
+		 * @param text3 Coordenadas de textura del tercer  punto del triángulo.
+		 * 
+		 * @param norm1 Normal del primer  punto del triángulo.
+		 * @param norm2 Normal del segundo punto del triángulo.
+		 * @param norm3 Normal del tercer  punto del triángulo.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
 				TexCoord2f text1, TexCoord2f text2, TexCoord2f text3,
@@ -271,6 +456,9 @@ public interface Generator {
 			gl.glVertex3f(   vert3.x, vert3.y, vert3.z );
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
@@ -285,6 +473,26 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un cuadrilátero.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del cuadrilatero.
+		 * @param vert2 Vertice del segundo punto del cuadrilatero.
+		 * @param vert3 Vertice del tercer  punto del cuadrilatero.
+		 * @param vert4 Vertice del cuarto punto del cuadrilatero.
+		 * 
+		 * @param text1 Coordenadas de textura del primer  punto del cuadrilatero.
+		 * @param text2 Coordenadas de textura del segundo punto del cuadrilatero.
+		 * @param text3 Coordenadas de textura del tercer  punto del cuadrilatero.
+		 * @param text4 Coordenadas de textura del cauarto punto del cuadrilatero.
+		 * 
+		 * @param norm1 Normal del primer  punto del cuadrilatero.
+		 * @param norm2 Normal del segundo punto del cuadrilatero.
+		 * @param norm3 Normal del tercer  punto del cuadrilatero.
+		 * @param norm4 Normal del cuarto punto del cuadrilatero.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
 				TexCoord2f text1, TexCoord2f text2, TexCoord2f text3, TexCoord2f text4,
@@ -307,12 +515,26 @@ public interface Generator {
 			gl.glVertex3f(   vert4.x, vert4.y, vert4.z );
 		}
 	}
+	
+	/**
+	 * Instancia estática de un {@code VerticesNormalsTexCoordsGenerator}
+	 * que evita la necesidad de crear más instancias.
+	 */
 	final Generator VerticesNormalsTexCoords = new VerticesNormalsTexCoordsGenerator();
 
+	/**
+	 * Implementación de un {@code Generator}, que genera primitivas
+	 * que contienen: tanto sus vértices, sus coordenadas de textura, 
+	 * sus normales, como sus tangentes.
+	 */
 	final class VerticesTangentsGenerator implements Generator{
 		
 		private VerticesTangentsGenerator(){
-		}	
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -336,6 +558,9 @@ public interface Generator {
 			gl.glVertex3f(          vert3.x, vert3.y, vert3.z );
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
@@ -364,33 +589,65 @@ public interface Generator {
 			gl.glVertex3f(          vert4.x, vert4.y, vert4.z );
 		}
 	}
+	
+	/**
+	 * Instancia estática de un {@code VerticesTangentsGenerator} que evita la necesidad
+	 * de crear más instancias.
+	 */
 	final Generator VerticesTangents = new VerticesTangentsGenerator();
 
+	/**
+	 * Implementación de un {@code Generator}, que  partir de los valores
+	 * de las primitivas, genera las líneas que representan: tanto la normal, 
+	 * la tangente, como la bitangente, correspondientes a cada vértice.<br/>
+	 * Útil para poder visualizar valores al realizar test.
+	 */
 	final class NTBGenerator implements Generator{
 	
+		/**
+		 * Escalado que se aplicará, a las líneas que representan la normal, la tangente y la bitangente.
+		 */
 		float scale;
 		
+		/**
+		 * Constructor por defecto con la escala = 1.
+		 */
 		public NTBGenerator(){
 			this(1.0f);
 		}
 		
+		/**
+		 * Constructor que asiga el valor de escalado que recibe como parámetro.
+		 * @param scale Valor de escalado asignado.
+		 */
 		public NTBGenerator(float scale) {
 			this.scale = scale;
 		}
 
+		/**
+		 * <i>Getter</i> que devuelve valor de escalado de este {@code Generator}.
+		 * @return Valor de escalado solicitado.
+		 */
 		public float getScale() {
 			return scale;
 		}
 
+		/**
+		 * <i>Setter</i> que asigna un valor de escalado a este {@code Generator}.
+		 * @param scale Valor de escalado asignado.
+		 */
 		public void setScale(float scale) {
 			this.scale = scale;
 		}
 
-		final Vector3f bita1 = new Vector3f();
-		final Vector3f bita2 = new Vector3f();
-		final Vector3f bita3 = new Vector3f();
-		final Vector3f bita4 = new Vector3f();
+		private transient final Vector3f bita1 = new Vector3f();
+		private transient final Vector3f bita2 = new Vector3f();
+		private transient final Vector3f bita3 = new Vector3f();
+		private transient final Vector3f bita4 = new Vector3f();
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
@@ -422,6 +679,27 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un triángulo.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del triángulo.
+		 * @param vert2 Vertice del segundo punto del triángulo.
+		 * @param vert3 Vertice del tercer  punto del triángulo.
+		 * 
+		 * @param norm1 Normal del primer  punto del triángulo.
+		 * @param norm2 Normal del segundo punto del triángulo.
+		 * @param norm3 Normal del tercer  punto del triángulo.
+		 * 
+		 * @param tang1 Tangente del primer  punto del triángulo.
+		 * @param tang2 Tangente del segundo punto del triángulo.
+		 * @param tang3 Tangente del tercer  punto del triángulo.
+		 * 
+		 * @param bita1 Bitangente del primer  punto del triángulo.
+		 * @param bita2 Bitangente del segundo punto del triángulo.
+		 * @param bita3 Bitangente del tercer  punto del triángulo.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3,
 				Vector3f   norm1, Vector3f   norm2, Vector3f   norm3,
@@ -462,6 +740,9 @@ public interface Generator {
 			gl.glVertex3f( vert3.x + bita3.x * scale, vert3.y + bita3.y * scale, vert3.z + bita3.z * scale);
 		}
 		
+		/**
+		 * {@inheritDoc}
+		 */
 		@Override
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
@@ -498,6 +779,31 @@ public interface Generator {
 			);
 		}
 		
+		/**
+		 * Método que genera primitivas a partir de los datos de un cuadrilátero.
+		 * 
+		 * @param gl Contexto gráfico en el que se realiza a acción.
+		 * 
+		 * @param vert1 Vertice del primer  punto del cuadrilatero.
+		 * @param vert2 Vertice del segundo punto del cuadrilatero.
+		 * @param vert3 Vertice del tercer  punto del cuadrilatero.
+		 * @param vert4 Vertice del cuarto punto del cuadrilatero.
+		 * 
+		 * @param norm1 Normal del primer  punto del cuadrilatero.
+		 * @param norm2 Normal del segundo punto del cuadrilatero.
+		 * @param norm3 Normal del tercer  punto del cuadrilatero.
+		 * @param norm4 Normal del cuarto punto del cuadrilatero.
+		 * 
+		 * @param tang1 Tangente del primer  punto del cuadrilatero.
+		 * @param tang2 Tangente del segundo punto del cuadrilatero.
+		 * @param tang3 Tangente del tercer  punto del cuadrilatero.
+		 * @param tang4 Tangente del cuarto punto del cuadrilatero.
+		 * 
+		 * @param bita1 Bitangente del primer  punto del cuadrilatero.
+		 * @param bita2 Bitangente del segundo punto del cuadrilatero.
+		 * @param bita3 Bitangente del tercer  punto del cuadrilatero.
+		 * @param bita4 Bitangente del cauarto punto del cuadrilatero.
+		 */
 		public void generate(GL gl,
 				Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
 				Vector3f   norm1, Vector3f   norm2, Vector3f   norm3, Vector3f   norm4,
@@ -548,6 +854,27 @@ public interface Generator {
 		}
 	}
 	
+	/**
+	 * Método que genera primitivas a partir de los datos de un triángulo.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * 
+	 * @param vert1 Vertice del primer  punto del triángulo.
+	 * @param vert2 Vertice del segundo punto del triángulo.
+	 * @param vert3 Vertice del tercer  punto del triángulo.
+	 * 
+	 * @param text1 Coordenadas de textura del primer  punto del triángulo.
+	 * @param text2 Coordenadas de textura del segundo punto del triángulo.
+	 * @param text3 Coordenadas de textura del tercer  punto del triángulo.
+	 * 
+	 * @param norm1 Normal del primer  punto del triángulo.
+	 * @param norm2 Normal del segundo punto del triángulo.
+	 * @param norm3 Normal del tercer  punto del triángulo.
+	 * 
+	 * @param tang1 Tangente del primer  punto del triángulo.
+	 * @param tang2 Tangente del segundo punto del triángulo.
+	 * @param tang3 Tangente del tercer  punto del triángulo.
+	 */
 	public void generate(GL gl,
 			Point3f    vert1, Point3f    vert2, Point3f    vert3,
 			TexCoord2f text1, TexCoord2f text2, TexCoord2f text3,
@@ -555,6 +882,31 @@ public interface Generator {
 			Vector4f   tang1, Vector4f   tang2, Vector4f   tang3
 	);
 	
+	/**
+	 * Método que genera primitivas a partir de los datos de un cuadrilátero.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * 
+	 * @param vert1 Vertice del primer  punto del cuadrilátero.
+	 * @param vert2 Vertice del segundo punto del cuadrilátero.
+	 * @param vert3 Vertice del tercer  punto del cuadrilátero.
+	 * @param vert4 Vertice del cuarto punto del cuadrilátero.
+	 * 
+	 * @param text1 Coordenadas de textura del primer  punto del cuadrilátero.
+	 * @param text2 Coordenadas de textura del segundo punto del cuadrilátero.
+	 * @param text3 Coordenadas de textura del tercer  punto del cuadrilátero.
+	 * @param text4 Coordenadas de textura del cauarto punto del cuadrilátero.
+	 * 
+	 * @param norm1 Normal del primer  punto del cuadrilátero.
+	 * @param norm2 Normal del segundo punto del cuadrilátero.
+	 * @param norm3 Normal del tercer  punto del cuadrilátero.
+	 * @param norm4 Normal del cuarto punto del cuadrilátero.
+	 * 
+	 * @param tang1 Tangente del primer  punto del cuadrilátero.
+	 * @param tang2 Tangente del segundo punto del cuadrilátero.
+	 * @param tang3 Tangente del tercer  punto del cuadrilátero.
+	 * @param tang4 Tangente del cuarto punto del cuadrilátero.
+	 */
 	public void generate(GL gl,
 			Point3f    vert1, Point3f    vert2, Point3f    vert3, Point3f    vert4,
 			TexCoord2f text1, TexCoord2f text2, TexCoord2f text3, TexCoord2f text4,

@@ -2,7 +2,12 @@ package org.sam.jspacewars.servidor.elementos;
 
 import org.sam.colisiones.Poligono;
 
+/**
+ * Implementación de un {@link Disparo} que sigue una trayectoria variable,
+ * en función de la posición del {@link Elemento objetivo} asignado.
+ */
 public class Misil extends Disparo {
+	
 	private transient float vTangencial;
 	// TODO ajustar valores angulo
 	private transient float vAngular = 0.000000005f;
@@ -14,6 +19,11 @@ public class Misil extends Disparo {
 		super(code, forma);
 	}
 
+	/**
+	 * Construtor que crea un {@code Misil} copiando los
+	 * datos de otro {@code Misil} que sirve como prototipo.
+	 * @param prototipo {@code Misil} prototipo.
+	 */
 	protected Misil(Misil prototipo) {
 		super(prototipo);
 	}
@@ -51,11 +61,10 @@ public class Misil extends Disparo {
 		setPosicion( x * cosAlfa - y * senAlfa + pX, x * senAlfa + y * cosAlfa + pY );
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sam.elementos.Disparo#actua(long)
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void actua(long nanos) {
 
 		float vel = vTangencial * nanos;

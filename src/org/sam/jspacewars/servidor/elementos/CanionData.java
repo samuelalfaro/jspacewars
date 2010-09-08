@@ -1,28 +1,38 @@
 package org.sam.jspacewars.servidor.elementos;
 
+/**
+ * Clase que almacena los:<ul>
+ * <li>{@link Canion#idDisparo Identificadores de disparo}.</li>
+ * <li>{@link Canion#tRecarga Tiempos de recarga}.</li>
+ * <li>{@link Canion#velocidad Velocidades de disparo}.</li>
+ * </ul>
+ * Para distintos grados de un determinado {@code Canion}.
+ */
 public class CanionData {
+	
 	/**
-	 * Referencias al código de los distintos {@code Disparo}, que puede lanzar el {@code Canion}, segun su grado.
+	 * Vector con los {@link Canion#idDisparo identificadores de disparo}
+	 * de un {@code Canion}, para los distintos grados.
 	 */
 	private final int[] vIdDisparos;
 
 	/**
-	 * Vector que contiene los tiempos de recarga, en nanosegundos, para los
-	 * distintos grados del {@code Canion}.
+	 * Vector con los {@link Canion#tRecarga tiempos de recarga}
+	 * de un {@code Canion}, para los distintos grados.
 	 */
 	private final long[] vTRecarga;
 
 	/**
-	 * Vector que contiene las velocidades del disparo, en unidades por
-	 * nanosegundo, para los distintos grados del {@code Canion}.
+	 * Vector con las {@link Canion#velocidad velocidades de disparo}
+	 * de un {@code Canion}, para los distintos grados.
 	 */
 	private final float[] vVelocidades;
 
 	/**
-	 * Constructor con los valores correspondientes.
-	 * @param vIdDisparos {@link org.sam.jspacewars.servidor.elementos.CanionData#vIdDisparos vIdDisparos} a asignar.
-	 * @param vTRecarga {@link org.sam.jspacewars.servidor.elementos.CanionData#vTRecarga vTRecarga} a asignar.
-	 * @param vVelocidades {@link org.sam.jspacewars.servidor.elementos.CanionData#vVelocidades vVelocidades} a asignar.
+	 * Constructor que crea un {@code CanionData} y asigna los valores correspondientes.
+	 * @param vIdDisparos {@link #vIdDisparos} asignado.
+	 * @param vTRecarga {@link #vTRecarga} asignado.
+	 * @param vVelocidades {@link #vVelocidades} asignado.
 	 */
 	public CanionData(int[] vIdDisparos, long[] vTRecarga, float[] vVelocidades) {
 		if( vIdDisparos  == null || vTRecarga == null || vVelocidades == null )

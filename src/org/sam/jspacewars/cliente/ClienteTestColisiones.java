@@ -11,8 +11,8 @@ import javax.media.opengl.glu.GLU;
 import org.sam.colisiones.LimiteRectangular;
 import org.sam.colisiones.Poligono;
 import org.sam.jogl.Apariencia;
+import org.sam.jogl.Hoja;
 import org.sam.jogl.Instancia3D;
-import org.sam.jogl.Nodo;
 import org.sam.jspacewars.servidor.elementos.Elemento;
 import org.sam.util.Reflexion;
 
@@ -23,7 +23,7 @@ import org.sam.util.Reflexion;
  */
 public class ClienteTestColisiones {
 	
-	static class PoligonoDibujable implements Nodo{
+	private static class PoligonoDibujable extends Hoja{
 		
 		private static Poligono getPoligono(Elemento e){
 			java.lang.reflect.Field f = Reflexion.findField(Elemento.class, "forma");
@@ -53,35 +53,17 @@ public class ClienteTestColisiones {
 			}
 		}
 		
-		final Poligono p;
+		private final Poligono p;
+		
 		PoligonoDibujable(Elemento e){
 			this.p = getPoligono(e);
 		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.Nodo#getParent()
-		 */
-		public Nodo getParent() {
-			return null;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.Nodo#setParent(org.sam.jogl.Nodo)
-		 */
-		public void setParent(Nodo parent) {
-		}
 		
-		private transient final Nodo[] nodos = new Nodo[]{}; 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.Nodo#getChilds()
+		/**
+		 * {@inheritDoc}
 		 */
-		public final Nodo[] getChilds(){
-			return nodos;
-		}
-		/* (non-Javadoc)
-		 * @see java.lang.Object#clone()
-		 */
-		public Nodo clone(){
+		@Override
+		public PoligonoDibujable clone(){
 			return this;
 		}
 		
@@ -112,7 +94,7 @@ public class ClienteTestColisiones {
 		}
 	}
 	
-	static class Renderer implements GLEventListener {
+	private static class Renderer implements GLEventListener {
 
 		private final transient GLU glu = new GLU();
 

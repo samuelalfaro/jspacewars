@@ -7,6 +7,7 @@ import javax.media.opengl.GL;
  * pueden ser dibujados, y proporciona el método para realizar dicha acción.
  */
 public interface Dibujable {
+	
 	/**
 	 * Método encargado de dibujar el objeto correspondiente.
 	 * 

@@ -12,6 +12,9 @@ import org.sam.elementos.PrototipoCacheable;
 
 public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable, Dinamico, Colisionable, Destruible {
 
+	/**
+	 * {@code Comparator} que usa sus identificadores para que comparar dos elementos.
+	 */
 	public static Comparator<Elemento> COMPARADOR = new Comparator<Elemento>() {
 		public int compare(Elemento e1, Elemento e2) {
 			int comparacion = e1.type - e2.type;
@@ -26,6 +29,9 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 			0;
 	}
 	
+	/**
+	 * {@code Comparator} que usa sus posiciones para que comparar dos elementos.
+	 */
 	public static Comparator<Elemento> COMPARADOR_POSICIONES = new Comparator<Elemento>() {
 
 		public int compare(Elemento e1, Elemento e2) {
@@ -34,23 +40,22 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		}
 	};
 
-	private transient AutoIncrementable incrementador;
-	
-	interface AutoIncrementable{
+	private interface AutoIncrementable{
 		short getNextId();
 	}
+	private transient AutoIncrementable incrementador;
 	
 	private final AutoIncrementable getAutoIncrementable(){
 		if(incrementador == null)
 			incrementador = new AutoIncrementable(){
-			private transient short id = 0;
-
-			public short getNextId() {
-				if( ++id == Short.MAX_VALUE )
-					id = 1;
-				return id;
-			}
-		};
+				private transient short id = 0;
+	
+				public short getNextId() {
+					if( ++id == Short.MAX_VALUE )
+						id = 1;
+					return id;
+				}
+			};
 		return incrementador;
 	}
 	
@@ -70,6 +75,11 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		this.posY = 0.0f;
 	}
 
+	/**
+	 * Construtor que crea un {@code Elemento} copiando los
+	 * datos de otro {@code Elemento} que sirve como prototipo.
+	 * @param prototipo {@code Elemento} prototipo.
+	 */
 	protected Elemento(Elemento prototipo) {
 		this.prototipo = prototipo;
 		this.type = prototipo.type;
@@ -105,22 +115,25 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		return this.posY;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public final Limites getLimites(){
 		return forma == null ? null : forma.getLimites();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.colisiones.Colisionable#hayColision(org.sam.colisiones.Colisionable)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	// TODO mirar
 	public final boolean hayColision(Colisionable otro){
+		// TODO mirar
 		return forma.hayColision(((Elemento)otro).forma);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.sam.colisiones.Colisionable#colisionar(org.sam.colisiones.Colisionable)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public final void colisionar(Colisionable otro) {
@@ -128,6 +141,10 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 			((Destruible)otro).recibirImpacto(1);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void enviar(ByteBuffer buff) {
 		buff.putShort(type);
 		buff.putShort(id);
@@ -135,6 +152,10 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		buff.putFloat(posY);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public abstract Elemento clone();
 	
 	@Override

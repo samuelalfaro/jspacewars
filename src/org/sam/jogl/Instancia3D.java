@@ -8,6 +8,10 @@ import javax.vecmath.Vector3f;
 
 import org.sam.elementos.*;
 
+/**
+ * Implementación de un {@code Nodo} que permite respresentar,
+ * los elementos, de una rama del grafo, como un único elemento independiente.
+ */
 public class Instancia3D extends NodoTransformador implements Modificable, Recibible, PrototipoCacheable<Instancia3D>{
 
 	private static class ModificardorChilds implements Modificador{
@@ -18,9 +22,6 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 			this.modificadores = modificadores.toArray( new Modificador[modificadores.size()] );
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.util.Modificador#modificar(float)
-		 */
 		public boolean modificar(float steep) {
 			boolean result = false;
 			for( Modificador  modificador: this.modificadores )
@@ -38,6 +39,13 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	private final transient Modificador modificador;
 	private final transient Reseteable reseteableChilds[];
 
+	/**
+	 * Constructor que crea {@code Instancia3D} con los datos correspondientes.
+	 * 
+	 * @param type Entero que sirve de indentificador tanto de esta {@code Instancia3D},
+	 * como de las generen usando esta como prototipo. 
+	 * @param child {@code Nodo} descendiente.
+	 */
 	public Instancia3D(short type, Nodo child){
 		super(child);
 
@@ -70,6 +78,13 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		this.translation = new Vector3f();
 	}
 	
+	/**
+	 * Constructor que crea una {@code Instancia3D}, a partir de 
+	 * los datos de otra {@code Instancia3D} que se emplea como
+	 * prototipo.
+	 * 
+	 * @param prototipo {@code Instancia3D} empleada como prototipo.
+	 */
 	protected Instancia3D(Instancia3D prototipo){
 		super(prototipo);
 		
@@ -103,28 +118,56 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		this.translation = new Vector3f();
 	}
 	
+	/**
+	 * <i>Getter</i> que devuelve el entero que sirve de indentificador
+	 * tanto de esta {@code Instancia3D}, como las generadas a partir 
+	 * del mismo prototipo que esta.
+	 * @return Valor solicitado.
+	 */
 	public short getType(){
 		return type;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int hashCode(){
 		return type;
 	}
 	
+	/**
+	 * <i>Setter</i> que asigna el entero que sirve de indentificador
+	 * único de esta {@code Instancia3D}.
+	 * @param id Valor asignado.
+	 */
 	public final void setId(short id){
 		this.id = id;
 	}
 	
+	/**
+	 * <i>Getter</i> que devuelve el entero que sirve de indentificador
+	 * único de esta {@code Instancia3D}.
+	 * @return Valor solicitado.
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * <i>Setter</i> que asigna el eje de rotación.
+	 * @param axis {@code Vector3f} con el eje de rotación asignado.
+	 */
 	public void setAxis(Vector3f axis){
 		this.rotation.x = axis.x;
 		this.rotation.y = axis.y;
 		this.rotation.z = axis.z;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void recibir(ByteBuffer buff){
 		translation.x = buff.getFloat();
 		translation.y = buff.getFloat();
@@ -134,27 +177,34 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		transformMatrix.setTranslation(translation);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.sam.util.Modificable#getModificador()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Modificador getModificador() {
 		return modificador;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#clone()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public Instancia3D clone(){
 		return new Instancia3D(this);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString(){
 		return new String("Instancia3D: "+hashCode()+" : " + this.id);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.util.Prototipo#reset()
+	/**
+	 * {@inheritDoc}
 	 */
+	@Override
 	public void reset() {
 		if(reseteableChilds == null)
 			return;
