@@ -29,71 +29,61 @@ package org.sam.tools.textureGenerator;
 public class Coulds {
 
 	int width;
+	int height;
+
 	/**
-	 * @param width the width to set
+	 * @param width
+	 * @param height
 	 */
-	public void setWidth(int width) {
+	public void setDimensions(int width, int height) {
 		this.width = width;
+		this.height = height;
 	}
 	
 	int octaves;
-	/**
-	 * @param octaves the octaves to set
-	 */
+
 	public void setOctaves(int octaves) {
 		this.octaves = octaves;
 	}
 
 	double frequency;
-	/**
-	 * @param frequency the frequency to set
-	 */
+
 	public void setFrequency(double frequency) {
 		this.frequency = frequency;
 	}
 
 	double harmonicScale;
-	/**
-	 * @param harmonicScale the harmonicScale to set
-	 */
+
 	public void setHarmonicScale(double harmonicScale) {
 		this.harmonicScale = harmonicScale;
 	}
 
 	double amplitude;
-	/**
-	 * @param amplitude the amplitude to set
-	 */
+
 	public void setAmplitude(double amplitude) {
 		this.amplitude = amplitude;
 	}
 
 	double persistence;
-	/**
-	 * @param persistence the persistence to set
-	 */
+
 	public void setPersistence(double persistence) {
 		this.persistence = persistence;
 	}
 
 	boolean absPartial;
-	/**
-	 * @param absPartial the absPartial to set
-	 */
+
 	public void setAbsPartial(boolean absPartial) {
 		this.absPartial = absPartial;
 	}
 
 	double z;
-	/**
-	 * @param z the z to set
-	 */
+
 	public void setZ(double z) {
 		this.z = z;
 	}
 	
 	public Coulds(){
-		width = 256;
+		width = height = 256;
 		octaves = 6;
 		frequency = 4.0;
 //		harmonicScale = Math.pow(1.0/frequency, 1.0/(octaves-1));

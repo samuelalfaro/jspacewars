@@ -2,7 +2,7 @@
  * Colisionable.java
  * 
  * Copyright (c) 2008-2010
- * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
+ * Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
  * 
  * This file is part of jSpaceWars.

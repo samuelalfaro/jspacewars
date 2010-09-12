@@ -42,14 +42,11 @@ public class GameMenu extends Container {
 			this.actions = actions;
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.fenggui.event.IButtonPressedListener#buttonPressed(org.fenggui.event.ButtonPressedEvent)
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public void buttonPressed(ButtonPressedEvent e) {
 			actions.get(((MyGameMenuButton)e.getSource()).getName() ).run();
 		}
-		
 	}
 
 	private final MyGameMenuButton player1, player2, server, client, options, quit;
@@ -73,16 +70,7 @@ public class GameMenu extends Container {
 		});
 		
 		server = MyGameMenuButton.derive( "server", listener );
-		actions.put("server", new ButtonAction() {
-			public void run() {
-			}
-		});
-		
 		client = MyGameMenuButton.derive( "client", listener );
-		actions.put("server", new ButtonAction() {
-			public void run() {
-			}
-		});
 
 		options = MyGameMenuButton.derive( "options", listener );
 		actions.put("options", new ButtonAction() {
@@ -154,11 +142,7 @@ public class GameMenu extends Container {
 		StaticLayout.center(this, this.getDisplay());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fenggui.Container#addedToWidgetTree()
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public void addedToWidgetTree() {
 		super.addedToWidgetTree();

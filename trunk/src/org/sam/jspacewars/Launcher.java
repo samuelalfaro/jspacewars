@@ -48,9 +48,9 @@ import org.sam.jspacewars.servidor.ServidorJuego;
 import org.sam.jspacewars.servidor.elementos.Elemento;
 
 /**
- * 
- * @author Samuel Alfaro
+ * Lanzador del cliente, el servidor, juego mediante líenea de comandos.
  */
+@Deprecated
 public class Launcher {
 
 	private static JFrame getFullScreenFrame(){
@@ -85,10 +85,8 @@ public class Launcher {
 	
 	private static void mostrar(JFrame frame, Component component) {
 		if( Container.class.isAssignableFrom(component.getClass()) ){
-			System.out.println("Usando componente como ContentPane");
 			frame.setContentPane((Container) component);
 		}else{
-			System.out.println("Añadiendo content pane");
 			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
 				frame.getContentPane().setLayout(new BorderLayout());
 			frame.getContentPane().removeAll();
@@ -96,7 +94,6 @@ public class Launcher {
 		}
 		frame.validate();
 		if(!frame.isVisible()){
-			System.out.println("eoo");
 			frame.setVisible(true);
 		}
 		component.requestFocus();
@@ -123,7 +120,9 @@ public class Launcher {
 			final JFrame frame = getFullScreenFrame();
 			final GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);
 			
-			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas);
+			Cliente cliente = new Cliente( dataGame, canvas );
+			cliente.setChannelIn( server.getLocalChannelClientIn() );
+			cliente.setChannelOut( server.getLocalChannelClientOut() );
 			mostrar(frame, canvas);
 			
 			cliente.start();
@@ -153,8 +152,11 @@ public class Launcher {
 			splashWindow = null;
 			System.gc();
 
-			Cliente cliente = new Cliente(server.getLocalChannelClientIn(), server.getLocalChannelClientOut(), dataGame, canvas);
+			Cliente cliente = new Cliente( dataGame, canvas );
+			cliente.setChannelIn( server.getLocalChannelClientIn() );
+			cliente.setChannelOut( server.getLocalChannelClientOut() );
 			mostrar(getFullScreenFrame(), canvas);
+			
 			cliente.start();
 			server.atenderClientes();
 		}catch( IOException e ){
@@ -180,7 +182,10 @@ public class Launcher {
 			DatagramChannel canalCliente = DatagramChannel.open();
 			canalCliente.connect(new InetSocketAddress(hostname, port));
 
-			Cliente cliente = new Cliente(canalCliente, canalCliente, dataGame, canvas);
+			Cliente cliente = new Cliente( dataGame, canvas );
+			cliente.setChannelIn( canalCliente );
+			cliente.setChannelOut( canalCliente );
+			
 			mostrar(getFullScreenFrame(), canvas);
 			cliente.start();
 			cliente.run();
@@ -194,6 +199,17 @@ public class Launcher {
 		}
 	}
 
+	/**
+	 * @param args agumentos que indican el comportamiento de este lanzador:
+	 * <ul>
+	 * <li>Si están vacios, lanza el juego para un jugador individual.</li>
+	 * <li>Si el primer argumento es: <b>server</b>, lanza un servidor que atenderá a los clientes a través
+	 * del puerto indicado como segundo argumento.</li>
+	 * <li>Si el primer argumento es: <b>client</b>, lanza un cliente, que se conecta al servidor indicado en el
+	 * segundo argumento, a través del puerto contenido en el tercer argumento.</li>
+	 * <li>En los demás casos, no hace nada</li>
+	 * </ul>
+	 */
 	public static void main(String... args) {
 		if( args.length == 0 )
 			lanzarUnJugador();

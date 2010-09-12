@@ -37,6 +37,11 @@ public abstract class Nave extends Elemento {
 		dstDisparos = null;
 	}
 
+	/**
+	 * Construtor que crea una {@code Nave} copiando los
+	 * datos de otra {@code Nave} que sirve como prototipo.
+	 * @param prototipo {@code Nave} prototipo.
+	 */
 	protected Nave(Nave prototipo) {
 		super(prototipo);
 		dstDisparos = prototipo.dstDisparos;
@@ -52,24 +57,36 @@ public abstract class Nave extends Elemento {
 
 	public abstract void iniciar();
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void enviar(ByteBuffer buff) {
 		super.enviar(buff);
 		buff.putFloat(angulo);
 	}
 	
 	int resistencia = 1000;
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void inicializar(){
 		resistencia = 1000;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.sam.jspacewars.servidor.elementos.Destruible#recibirImpacto(int)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void recibirImpacto(int fuerzaDeImpacto) {
 		resistencia -= fuerzaDeImpacto;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isDestruido() {
 		return resistencia <= 0;

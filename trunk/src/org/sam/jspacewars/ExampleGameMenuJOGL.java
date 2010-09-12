@@ -32,6 +32,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.channels.DatagramChannel;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -50,6 +52,14 @@ import com.sun.opengl.util.Animator;
 
 public class ExampleGameMenuJOGL {
 
+	private static int getPort(){
+		return 1111;
+	}
+	
+	private static String getHostName(){
+		return "localhost";
+	}
+	
 	private static JFrame getFullScreenFrame(){
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		JFrame frame = new JFrame(myDevice.getDefaultConfiguration());
@@ -81,10 +91,8 @@ public class ExampleGameMenuJOGL {
 	
 	private static void mostrar(JFrame frame, Component component) {
 		if( Container.class.isAssignableFrom(component.getClass()) ){
-			System.out.println("Usando componente como ContentPane");
 			frame.setContentPane((Container) component);
 		}else{
-			System.out.println("Añadiendo content pane");
 			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
 				frame.getContentPane().setLayout(new BorderLayout());
 			frame.getContentPane().removeAll();
@@ -92,7 +100,6 @@ public class ExampleGameMenuJOGL {
 		}
 		frame.validate();
 		if(!frame.isVisible()){
-			System.out.println("eoo");
 			frame.setVisible(true);
 		}
 		component.requestFocus();
@@ -142,7 +149,7 @@ public class ExampleGameMenuJOGL {
 
 		final JFrame frame = getFullScreenFrame();
 		
-		ButtonAction lanzarUnJugador =  new ButtonAction() {
+		ButtonAction action =  new ButtonAction() {
 			public void run() {
 				try{
 					displayGUI.hideMenu();
@@ -152,11 +159,9 @@ public class ExampleGameMenuJOGL {
 					//canvas.removeGLEventListener(displayGUI);
 						
 					clientServer.server = new ServidorJuego(cache);
-					
-					clientServer.cliente = new Cliente(
-							clientServer.server.getLocalChannelClientIn(), clientServer.server.getLocalChannelClientOut(),
-							dataGame, canvas
-					);
+					clientServer.cliente = new Cliente( dataGame, canvas );
+					clientServer.cliente.setChannelIn(clientServer.server.getLocalChannelClientIn());
+					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut());
 					//canvas.addGLEventListener(displayGUI);
 					clientServer.cliente.start();
 					
@@ -175,8 +180,62 @@ public class ExampleGameMenuJOGL {
 				}
 			}
 		};
+		actions.put("player1", action);
 		
-		actions.put("player1", lanzarUnJugador);
+		action =  new ButtonAction() {
+			public void run() {
+				try{
+					displayGUI.hideMenu();
+					animator.stop();
+					animator.remove(canvas);
+					canvas.removeGLEventListener(backgroundRenderer);
+					//canvas.removeGLEventListener(displayGUI);
+						
+					clientServer.server = new ServidorJuego(cache,getPort());
+					
+					clientServer.cliente = new Cliente( dataGame, canvas );
+					clientServer.cliente.setChannelIn(clientServer.server.getLocalChannelClientIn());
+					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut());
+					//canvas.addGLEventListener(displayGUI);
+					clientServer.cliente.start();
+					
+					new Thread(){
+						public void run(){
+							try{
+								clientServer.server.atenderClientes();
+							}catch( IOException e ){
+								e.printStackTrace();
+							}
+						}
+					}.start();
+					
+				}catch( IOException exception ){
+					exception.printStackTrace();
+				}
+			}
+		};
+		actions.put("server", action);
+		
+		action =  new ButtonAction() {
+			public void run() {
+				try{
+					displayGUI.hideMenu();
+					animator.stop();
+					animator.remove(canvas);
+					canvas.removeGLEventListener(backgroundRenderer);
+					//canvas.removeGLEventListener(displayGUI);
+					DatagramChannel canalCliente = DatagramChannel.open();
+					canalCliente.connect(new InetSocketAddress(getHostName(), getPort()));
+					clientServer.cliente = new Cliente(dataGame, canvas);
+					clientServer.cliente.setChannelIn(canalCliente);
+					clientServer.cliente.setChannelOut(canalCliente);
+					clientServer.cliente.start();
+				}catch( IOException exception ){
+					exception.printStackTrace();
+				}
+			}
+		};
+		actions.put("client", action);
 		
 		animator.add(canvas);
 		mostrar(frame, canvas);

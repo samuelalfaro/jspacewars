@@ -22,10 +22,6 @@
  */
 package org.sam.tools.textureGenerator;
 
-/**
- *
- * @author Samuel Alfaro
- */
 public class Puff extends Coulds {
 	
 	int x0 , y0;
@@ -40,8 +36,8 @@ public class Puff extends Coulds {
 	 * @inheritDoc
 	 */
 	@Override
-	public void setWidth(int width) {
-		super.setWidth(width);
+	public void setDimensions(int width, int height) {
+		super.setDimensions(width, height);
 		caluculateRadiuses();
 		calculateIncRadius();
 	}
