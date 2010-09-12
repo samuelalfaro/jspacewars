@@ -33,13 +33,13 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import javax.vecmath.Color4f;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point4f;
 import javax.vecmath.Tuple4f;
 
+import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
-
-import pruebas.jogl.generators.*;
 
 import com.sun.opengl.util.Animator;
 
@@ -63,7 +63,7 @@ public class Prueba012_SinglePassWireframe{
 
 			gl.glClearColor(0.0f,0.0f,0.0f,0.0f);
 
-			//*
+			/*
 			forma = HelixGenerator.generate( gl, HelixGenerator.WIREFRAME, 1.2f, 0.0f, 12, 1.25f, 0.05f, 36, 1.2f*2.8f, 9 );
 			//forma = SphereGenerator.generate( gl, HelixGenerator.WIREFRAME, 1.2f, 12, 36 );
 			/*/
