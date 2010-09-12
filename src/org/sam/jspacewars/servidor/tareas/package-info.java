@@ -1,5 +1,5 @@
 /* 
- * SingletonObjetivos.java
+ * package-info.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -20,32 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with jSpaceWars. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sam.jspacewars.servidor.elementos;
-
-public final class SingletonObjetivos {
-	
-	private SingletonObjetivos() {
-	}
-
-	private static NaveEnemiga objetivoProtas;
-	private static NaveUsuario objetivoEnemigos;
-
-	public static Elemento getObjetivo(Nave me) {
-		return me instanceof NaveUsuario ? objetivoProtas : objetivoEnemigos;
-	}
-	
-	@Deprecated
-	public static Elemento  getObjetivo(){
-		return objetivoProtas;
-	}
-	
-	@Deprecated
-	public static void setObjetivoUsuario(NaveEnemiga objetivo) {
-		SingletonObjetivos.objetivoProtas = objetivo;
-	}
-	
-	@Deprecated
-	public static void setObjetivoEnemigos(NaveUsuario objetivo) {
-		SingletonObjetivos.objetivoEnemigos = objetivo;
-	}
-}
+/**
+ * FIXME Escribir documentación del paquete.
+ */
+package org.sam.jspacewars.servidor.tareas;

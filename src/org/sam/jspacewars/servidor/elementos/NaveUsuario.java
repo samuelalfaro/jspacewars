@@ -50,12 +50,6 @@ public class NaveUsuario extends Nave {
 
 	private transient int aumentadoresDeNivel = 0;
 
-	/**
-	 * @param code
-	 * @param limitesDeNiveles
-	 * @param velocidadesDisponibles
-	 * @param canionesDisponibles
-	 */
 	public NaveUsuario(short code,  Poligono forma, int[][] limitesDeNiveles, float[] velocidadesDisponibles,
 			Canion[][][] canionesDisponibles) {
 		super(code, forma);
@@ -65,7 +59,12 @@ public class NaveUsuario extends Nave {
 		this.gradoNave = 1;
 		iniciar();
 	}
-
+	
+	/**
+	 * Construtor que crea una {@code NaveUsuario} copiando los
+	 * datos de otra {@code NaveUsuario} que sirve como prototipo.
+	 * @param prototipo {@code NaveUsuario} prototipo.
+	 */
 	protected NaveUsuario(NaveUsuario prototipo) {
 		super(prototipo);
 		this.limitesDeNiveles = prototipo.limitesDeNiveles;
@@ -80,6 +79,10 @@ public class NaveUsuario extends Nave {
 		return new NaveUsuario(this);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void iniciar() {
 		if( this.niveles == null ){
 			this.niveles = new int[2][5];
@@ -154,6 +157,10 @@ public class NaveUsuario extends Nave {
 		return gradoNave;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void actua(long nanos) {
 		mover(nanos);
 		if( (key_state & KeysState.DISPARO) != 0 )

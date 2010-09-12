@@ -28,10 +28,6 @@ package org.sam.jspacewars.servidor.elementos;
 import org.sam.colisiones.Poligono;
 import org.sam.jspacewars.servidor.tareas.Tarea;
 
-/**
- * @author samuel
- * 
- */
 public class NaveEnemiga extends Nave {
 
 	private Tarea tarea;
@@ -45,16 +41,16 @@ public class NaveEnemiga extends Nave {
 	}
 
 	/**
-	 * @param prototipo
+	 * Construtor que crea una {@code NaveEnemiga} copiando los
+	 * datos de otra {@code NaveEnemiga} que sirve como prototipo.
+	 * @param prototipo {@code NaveEnemiga} prototipo.
 	 */
 	protected NaveEnemiga(NaveEnemiga prototipo) {
 		super(prototipo);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sam.elementos.Nave#clone()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public NaveEnemiga clone() {
@@ -62,10 +58,9 @@ public class NaveEnemiga extends Nave {
 	}
 
 	private transient long time;
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sam.elementos.Nave#iniciar()
+	
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void iniciar() {

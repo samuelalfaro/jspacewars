@@ -35,10 +35,6 @@ import org.sam.elementos.Cache;
 import org.sam.jogl.Instancia3D;
 import org.sam.jspacewars.DataGame;
 
-/**
- * 
- * @author Samuel Alfaro
- */
 public class Cliente extends Thread {
 
 	/**
@@ -143,8 +139,8 @@ public class Cliente extends Thread {
 			System.out.println("Error: " + nElementos + "\t" + consumidor.elementos.size());
 	}
 
-	private final transient ReadableByteChannel channelIn;
-	private final transient WritableByteChannel channelOut;
+	private transient ReadableByteChannel channelIn;
+	private transient WritableByteChannel channelOut;
 	private final transient ByteBuffer buff;
 
 	private final transient Cache<Instancia3D> cache;
@@ -152,15 +148,13 @@ public class Cliente extends Thread {
 	private final transient GLCanvas canvas;
 
 	/**
-	 * @param channelIn
-	 * @param channelOut
 	 * @param dataGame
 	 * @param canvas
 	 */
-	public Cliente(ReadableByteChannel channelIn, WritableByteChannel channelOut, DataGame dataGame, GLCanvas canvas) {
+	public Cliente(DataGame dataGame, GLCanvas canvas) {
 
-		this.channelIn = channelIn;
-		this.channelOut = channelOut;
+		this.channelIn = null;
+		this.channelOut = null;
 		this.buff = ByteBuffer.allocateDirect(8192);
 
 		this.cache = dataGame.getCache();
@@ -172,12 +166,23 @@ public class Cliente extends Thread {
 		this.canvas.addGLEventListener( new Renderer(dataGame.getFondo(), data, dataGame.getGui() ));
 		this.canvas.addKeyListener(new GameKeyListener(data));	
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Thread#run()
+	
+	/**
+	 * @param channelIn valor del channelIn asignado.
 	 */
+	public void setChannelIn(ReadableByteChannel channelIn) {
+		this.channelIn = channelIn;
+	}
+
+	/**
+	 * @param channelOut valor del channelOut asignado.
+	 */
+	public void setChannelOut(WritableByteChannel channelOut) {
+		this.channelOut = channelOut;
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void run() {
 //		System.out.println("Iniciando cliente");
 		while( true ){

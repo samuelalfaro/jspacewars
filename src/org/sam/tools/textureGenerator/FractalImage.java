@@ -28,9 +28,6 @@ import java.awt.image.DataBuffer;
 
 import javax.swing.*;
 
-/**
- * @author Samuel Alfaro
- */
 public class FractalImage extends BufferedImage{
 
 	private static void normalize(double[][] v, double min, double max){
@@ -55,7 +52,7 @@ public class FractalImage extends BufferedImage{
 	 */
 	public FractalImage(int width, int height, Coulds noiseFunction, ColorRamp colorRamp, int imageType) {
 		super(width, height, imageType);
-		noiseFunction.setWidth(width);
+		noiseFunction.setDimensions(width, height);
 		
 		double values[][] = new double[height][width];
 		
@@ -100,13 +97,13 @@ public class FractalImage extends BufferedImage{
 		noiseFunction.setAmplitude(1.0);
 		noiseFunction.setPersistence(0.7);
 		noiseFunction.setFrequency(2.25);
-		noiseFunction.setHarmonicScale(2.0);
-		noiseFunction.setOctaves(10);
+		noiseFunction.setHarmonicScale(1.5);
+		noiseFunction.setOctaves(8);
 		
 		ColorRamp colorRamp = new ColorRamp.RGBColorRamp( 2.5, 0.0, 2.0, -0.5, 2.0, -1.0);
 		//ColorRamp colorRamp = ColorRamp.Predefinas.GreyScale;
 		
-		Image[] frames = new Image[1];
+		Image[] frames = new Image[8];
 		
 		for(int i = 0; i < frames.length; i ++){
 //			z = ramp( 0.65, 0.8, i, frames.length-1 );
@@ -116,7 +113,7 @@ public class FractalImage extends BufferedImage{
 //			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 4.05, 4.15, i, frames.length ) );
 //			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 9.2, 9.71, i, frames.length ) );
 //			frames[i] = new FractalImage( 256, 256, noiseFunction, ColorRamp.Predefinas.GreyScale, BufferedImage.TYPE_BYTE_GRAY );
-			frames[i] = new FractalImage( 2048, 2048, noiseFunction, colorRamp, BufferedImage.TYPE_INT_ARGB );
+			frames[i] = new FractalImage( 256, 64, noiseFunction, colorRamp, BufferedImage.TYPE_INT_ARGB );
 //			frames[i] = new FractalImage( 256, 256);
 		}
 		JFrame frame = new JFrame("FractalImage");
