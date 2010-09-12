@@ -1,6 +1,3 @@
-/**
- * 
- */
 package tips.joal;
 
 import java.io.*;

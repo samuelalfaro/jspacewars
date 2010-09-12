@@ -8,13 +8,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-
-/**
- * @author Samuel
- *
- * To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Generation - Code and Comments
- */
 public class PruebaJList{
 	
 	static public void main(String args[]){
