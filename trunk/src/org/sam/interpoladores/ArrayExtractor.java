@@ -23,10 +23,12 @@
 package org.sam.interpoladores;
 
 /**
- * Inteface que proporciona los métodos, a las clases que lo implementan, para poder encapsular
- * un vector de cualquier tipo, y poder acceder a sus valores como si fuera una matriz de {@code double}.
+ * Clase abstracta que permite encapsular un vector de cualquier tipo,
+ * y poder acceder a sus valores como si fuera una matriz de {@code double}.
  */
-interface ArrayExtractor{ 
+public abstract class ArrayExtractor{
+	
+	private ArrayExtractor(){}
 	
     /**
      * Impementación de {@code ArrayExtractor} que extrae los valores del tipo genérico {@code T} a través
@@ -34,7 +36,7 @@ interface ArrayExtractor{
      * 
      * @param <T> Tipo genérico de datos empleados.
      */
-    static final class GenericoDouble<T> implements ArrayExtractor{
+    static final class GenericoDouble<T> extends ArrayExtractor{
 		private final T v[];
 		private final int dimensions;
 		private final Conversor<? super T, double[]> extractor;
@@ -93,7 +95,7 @@ interface ArrayExtractor{
      * 
      * @param <T> Tipo genérico de datos empleados.
      */
-    static final class GenericoFloat<T> implements ArrayExtractor{
+    static final class GenericoFloat<T> extends ArrayExtractor{
     	private final T v[];
 		private final int dimensions;
 		private final Conversor<? super T, float[]> extractor;
@@ -150,7 +152,7 @@ interface ArrayExtractor{
      * Impementación de {@code ArrayExtractor} optimizada para un vector {@code <T extends Number>[]}.
      * @param <T> Tipo numérico genérico de datos empleados.
      */
-    static final class Numerico<T extends Number> implements ArrayExtractor{
+    static final class Numerico<T extends Number> extends ArrayExtractor{
 		private final T v[];
 		
 		/**
@@ -199,7 +201,7 @@ interface ArrayExtractor{
 	/**
 	 * Impementación de {@code ArrayExtractor} optimizada para un vector {@code double[]}.
 	 */
-    static final class E1D implements ArrayExtractor{
+    static final class E1D extends ArrayExtractor{
 		private final double v[];
 		
 		/**
@@ -248,7 +250,7 @@ interface ArrayExtractor{
 	/**
 	 * Impementación de {@code ArrayExtractor} optimizada para un vector {@code float[]}.
 	 */
-    static final class E1F implements ArrayExtractor{
+    static final class E1F extends ArrayExtractor{
 		private final float v[];
 		
 		/**
@@ -297,7 +299,7 @@ interface ArrayExtractor{
 	/**
 	 * Impementación de {@code ArrayExtractor} optimizada para un vector {@code int[]}.
 	 */
-    static final class E1I implements ArrayExtractor{
+    static final class E1I extends ArrayExtractor{
 		private final int v[];
 		
 		/**
@@ -346,7 +348,7 @@ interface ArrayExtractor{
 	/**
 	 * Impementación de {@code ArrayExtractor} optimizada para un vector {@code double[][]}.
 	 */
-    static final class EAD implements ArrayExtractor{
+    static final class EAD extends ArrayExtractor{
 		private final double[] v[];
 		private final int dimensions;
 		
@@ -398,7 +400,7 @@ interface ArrayExtractor{
 	/**
 	 * Impementación de {@code ArrayExtractor} optimizada para un vector {@code float[][]}.
 	 */
-    static final class EAF implements ArrayExtractor{
+    static final class EAF extends ArrayExtractor{
 		private final float[] v[];
 		private final int dimensions;
 		
@@ -451,7 +453,7 @@ interface ArrayExtractor{
 	/**
 	 * Impementación de {@code ArrayExtractor} optimizada para un vector {@code int[][]}.
 	 */
-    static final class EAI implements ArrayExtractor{
+    static final class EAI extends ArrayExtractor{
     	
 		private final int[] v[];
 		private final int dimensions;
@@ -505,12 +507,12 @@ interface ArrayExtractor{
     /**
      * @return longitud del vector encapsulado.
      */
-    public int length();
+    public abstract int length();
 	
     /**
      * @return dimensiones de los elementos que contiene el vector.
      */
-    public int dimensions();
+    public abstract int dimensions();
 	
     /**
      * Método que devuelve un valor {@code double} a partir del vector encapusulado.
@@ -520,7 +522,7 @@ interface ArrayExtractor{
      * @throws UnsupportedOperationException cuando la operación no está soportada.
      * Puesto que este método es una optimización para los valores de una única dimensión.
      */
-    public double at(int index) throws UnsupportedOperationException;
+    public abstract double at(int index) throws UnsupportedOperationException;
 	
     /**
      * Método que devuelve un valor {@code double} a partir del vector encapusulado.
@@ -529,5 +531,5 @@ interface ArrayExtractor{
      * @param dim índice dentro de las dimensiónes del elemento correspondiente.
      * @return el valor de esa posición.
      */
-    public double at(int index, int dim);
+    public abstract double at(int index, int dim);
 }

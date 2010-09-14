@@ -1,5 +1,5 @@
 /* 
- * CocientePolinomico.java
+ * FuncionRacional.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -25,19 +25,19 @@ package org.sam.interpoladores;
 /**
  * Función que representa el siguiente cociente polinómico: {@code (A·x + B)/(C·x + D)}.
  */
-public final class CocientePolinomico{
+public final class FuncionRacional{
 
-	private CocientePolinomico(){}
+	private FuncionRacional(){}
 
 	/**
-	 * Implementación con precisión Double de la función {@link CocientePolinomico}.
+	 * Implementación con precisión Double de la {@linkplain FuncionRacional función racional}.
 	 */
 	public static final class Double implements Funcion.Double {
 
 		private double A, B, C, D;
 
 		/**
-		 * Crea el cociente polinómico, con precisión {@code double}, correspondiente a: {@code (A·x + B)/(C·x + D)}.
+		 * Crea la función racional, con precisión {@code double}, correspondiente a: {@code (A·x + B)/(C·x + D)}.
          *
          * @param A pendiente del numerador.
          * @param B desplazamiento del numerador.
@@ -149,19 +149,19 @@ public final class CocientePolinomico{
 		 */
 		@Override
         public Funcion.Float toFloatFunction() {
-			return new CocientePolinomico.Float( (float)A, (float)B, (float)C, (float)D );
+			return new FuncionRacional.Float( (float)A, (float)B, (float)C, (float)D );
 		}
 	}
 
 	/**
-	 * Implementación con precisión Float de la función {@link CocientePolinomico}.
+	 * Implementación con precisión Float de la {@linkplain FuncionRacional función racional}.
 	 */
 	public static final class Float implements Funcion.Float {
 
 		private float A, B, C, D;
 
 		/**
-		 * Crea el cociente polinómico, con precisión {@code float}, correspondiente a: {@code (A·x + B)/(C·x + D)}.
+		 * Crea la función racional, con precisión {@code float}, correspondiente a: {@code (A·x + B)/(C·x + D)}.
          *
          * @param A pendiente del numerador.
          * @param B desplazamiento del numerador.

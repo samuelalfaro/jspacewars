@@ -43,7 +43,7 @@ public interface GeneradorDeFunciones {
         	public Funcion.Double generaFuncion(double a, double fa, double b, double fb){
 				double A = (fb - fa)/(b - a);
 				double B = fa - A*a;
-				return new PolinomioLineal.Double(A,B);
+				return new FuncionAfin.Double(A,B);
         	}
         	
         	/**
@@ -101,7 +101,7 @@ public interface GeneradorDeFunciones {
 					D = -b*C;
 				}
 
-				return new Exponencial.Double(A,B,C,D,gamma);
+				return new FuncionExponencial.Double(A,B,C,D,gamma);
 			}
 			
 			/**
@@ -163,7 +163,7 @@ public interface GeneradorDeFunciones {
 				A *= J;
 				C *= J;
 
-				return new CocientePolinomico.Double(A,B,C,D);
+				return new FuncionRacional.Double(A,B,C,D);
 			}
 			
 			/**
@@ -228,7 +228,7 @@ public interface GeneradorDeFunciones {
 				B = J*J*(3*A*K + B);
 				A = J*J*J*A;
 
-				return new PolinomioCubico.Double(A,B,C,D);
+				return new FuncionCubica.Double(A,B,C,D);
 			}
 			
 			/**
@@ -265,7 +265,7 @@ public interface GeneradorDeFunciones {
 			 * @return La funcion generada.
 			 */
 			public Funcion.Double generaFuncion( double f0, double t0, double f1, double t1){
-				return new PolinomioCubico.Double(
+				return new FuncionCubica.Double(
 						2*(f0 - f1) + t0 + t1,
 						3*(f1 - f0) - 2*t0 - t1,
 						t0,
@@ -303,7 +303,7 @@ public interface GeneradorDeFunciones {
 			 * @return La funcion generada.
 			 */
 			public Funcion.Double generaFuncion(double p0, double p1, double p2, double p3 ){
-				return new PolinomioCubico.Double(
+				return new FuncionCubica.Double(
 						-p0 +3*p1 -3*p2 +p3,
 						 3*(p0 -2*p1 +p2),
 						 3*(-p0 +p1),

@@ -60,7 +60,7 @@ public final class GettersFactory {
 		 */
 		public static Getter.Double<java.lang.Double> create(double keys[], java.lang.Double values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
-				return new KeySelector.Double<java.lang.Double>( keys, values);
+				return new GetterKeySelector.Double<java.lang.Double>( keys, values);
 			return new Interpolador1D(keys,values,mdi,params);
 		}
 
@@ -80,7 +80,7 @@ public final class GettersFactory {
 		 */
 		public static Getter.Double<java.lang.Double> create(int genKey, double scale, double translation, java.lang.Double values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
-				return new ArraySelector.Double<java.lang.Double>( scale, translation, values);
+				return new GetterArraySelector.Double<java.lang.Double>( scale, translation, values);
 			return new Interpolador1D(genKey,scale,translation,values,mdi,params);
 		}
 
@@ -97,7 +97,7 @@ public final class GettersFactory {
 				java.lang.Double[] valuesDouble = new java.lang.Double[values.length];
 				for(int i=0; i< values.length; i++)
 					valuesDouble[i] = values[i];
-				return new KeySelector.Double<java.lang.Double>( keys, valuesDouble);
+				return new GetterKeySelector.Double<java.lang.Double>( keys, valuesDouble);
 			}
 			return new Interpolador1D(keys,values,mdi,params);
 		}
@@ -121,7 +121,7 @@ public final class GettersFactory {
 				java.lang.Double[] valuesDouble = new java.lang.Double[values.length];
 				for(int i=0; i< values.length; i++)
 					valuesDouble[i] = values[i];
-				return new ArraySelector.Double<java.lang.Double>( scale, translation, valuesDouble);
+				return new GetterArraySelector.Double<java.lang.Double>( scale, translation, valuesDouble);
 			}
 			return new Interpolador1D(genKey,scale,translation,values,mdi,params);
 		}
@@ -177,7 +177,7 @@ public final class GettersFactory {
 		 */
 		public static <T> Getter.Double<T> create(double keys[], Conversor<double[], T> in, T values[], Conversor<? super T, double[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
-				return new KeySelector.Double<T>(keys, values);
+				return new GetterKeySelector.Double<T>(keys, values);
 			return new Interpolador.Double<T>(keys,in, values, ex, mdi,params);
 		}
 
@@ -200,7 +200,7 @@ public final class GettersFactory {
 		 */
 		public static <T> Getter.Double<T> create(int genKey, double scale, double translation, Conversor<double[], T> in, T values[], Conversor<? super T, double[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
-				return new ArraySelector.Double<T>( scale, translation, values);
+				return new GetterArraySelector.Double<T>( scale, translation, values);
 			return new Interpolador.Double<T>(genKey,scale,translation, in, values, ex, mdi,params);
 		}
 	}
@@ -221,7 +221,7 @@ public final class GettersFactory {
 		 */
 		public static Getter.Float<java.lang.Float> create(float keys[], java.lang.Float values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null)
-				return new KeySelector.Float<java.lang.Float>( keys, values);
+				return new GetterKeySelector.Float<java.lang.Float>( keys, values);
 			return new Interpolador1F(keys,values,mdi,params);
 		}
 
@@ -241,7 +241,7 @@ public final class GettersFactory {
 		 */
 		public static Getter.Float<java.lang.Float> create(int genKey, float scale, float translation, java.lang.Float values[], MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null)
-				return new ArraySelector.Float<java.lang.Float>( scale, translation, values);
+				return new GetterArraySelector.Float<java.lang.Float>( scale, translation, values);
 			return new Interpolador1F(genKey,scale,translation,values,mdi,params);
 		}
 
@@ -258,7 +258,7 @@ public final class GettersFactory {
 				java.lang.Float[] valuesFloat = new java.lang.Float[values.length];
 				for(int i=0; i< values.length; i++)
 					valuesFloat[i] = values[i];
-				return new KeySelector.Float<java.lang.Float>( keys, valuesFloat);
+				return new GetterKeySelector.Float<java.lang.Float>( keys, valuesFloat);
 			}
 			return new Interpolador1F(keys,values,mdi,params);
 		}
@@ -282,7 +282,7 @@ public final class GettersFactory {
 				java.lang.Float[] valuesFloat = new java.lang.Float[values.length];
 				for(int i=0; i< values.length; i++)
 					valuesFloat[i] = values[i];
-				return new ArraySelector.Float<java.lang.Float>( scale, translation, valuesFloat);
+				return new GetterArraySelector.Float<java.lang.Float>( scale, translation, valuesFloat);
 			}
 			return new Interpolador1F(genKey,scale,translation,values,mdi,params);
 		}
@@ -338,7 +338,7 @@ public final class GettersFactory {
 		 */
 		public static <T> Getter.Float<T> create(float keys[], Conversor<float[], T> in, T values[], Conversor<? super T, float[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
-				return new KeySelector.Float<T>(keys, values);
+				return new GetterKeySelector.Float<T>(keys, values);
 			return new Interpolador.Float<T>(keys, in, values, ex, mdi,params);
 		}
 
@@ -361,7 +361,7 @@ public final class GettersFactory {
 		 */
 		public static <T> Getter.Float<T> create(int genKey, float scale, float translation, Conversor<float[], T> in, T values[], Conversor<? super T, float[]> ex, MetodoDeInterpolacion mdi, Object... params ){
 			if (mdi == null || mdi == MetodoDeInterpolacion.Predefinido.ESCALON)
-				return new ArraySelector.Float<T>( scale, translation, values);
+				return new GetterArraySelector.Float<T>( scale, translation, values);
 			return new Interpolador.Float<T>(genKey,scale,translation, in, values, ex, mdi,params);
 		}
 	}

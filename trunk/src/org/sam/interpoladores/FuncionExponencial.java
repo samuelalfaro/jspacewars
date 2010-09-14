@@ -1,5 +1,5 @@
 /* 
- * Exponencial.java
+ * FuncionExponencial.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -25,12 +25,12 @@ package org.sam.interpoladores;
 /**
  * Función exponencial correspondiente a {@code f(x) = A·Math.pow( (C·x + D), gamma ) + B}.
  */
-public final class Exponencial{
+public final class FuncionExponencial{
 
-	private Exponencial(){}
+	private FuncionExponencial(){}
 
 	/**
-	 * Implementación con precisión Double de la función {@link Exponencial}.
+	 * Implementación con precisión Double de la {@linkplain FuncionExponencial función exponencial}.
 	 */
 	public static final class Double implements Funcion.Double {
 		private double A, B, C, D, gamma;
@@ -129,12 +129,12 @@ public final class Exponencial{
 		 */
 		@Override
         public Funcion.Float toFloatFunction() {
-			return new Exponencial.Float( (float)A, (float)B, (float)C, (float)D, (float)gamma );
+			return new FuncionExponencial.Float( (float)A, (float)B, (float)C, (float)D, (float)gamma );
 		}
 	}
 
 	/**
-	 * Implementación con precisión Float de la función {@link Exponencial}.
+	 * Implementación con precisión Float de la {@linkplain FuncionExponencial función exponencial}.
 	 */
 	public static final class Float implements Funcion.Float {
 

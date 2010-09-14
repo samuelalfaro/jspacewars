@@ -1,5 +1,5 @@
 /* 
- * ArraySelector.java
+ * GetterArraySelector.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -23,9 +23,9 @@
 package org.sam.interpoladores;
 
 /**
- * Clase contenedora con las implementaciones de un <i>ArraySelector</i>, tanto en precisión {@code double},
+ * Clase contenedora con las implementaciones de un <i>GetterArraySelector</i>, tanto en precisión {@code double},
  * {@code float}, como {@code int}.
- * <p>Se considera un <i>ArraySelector</i> a un tipo de <i>Getter</i> que contiene los valores distribuidos
+ * <p>Se considera un <i>GetterArraySelector</i> a un tipo de <i>Getter</i> que contiene los valores distribuidos
  * uniformente, por tanto no es necesario almacenar las claves.
  * En esta implemetación se almacena la escala y traslación que se aplica a la clave para obtener el índice
  * del vector dónde se encuentra el valor que será devuelto.</p>
@@ -34,16 +34,16 @@ package org.sam.interpoladores;
  * <p><u>Nota:</u> Los valores no se interpolan realmente, pasando bruscamente de un valor a otro, lo que da esta
  * forma característica de escalón.</p>
  */
-final class ArraySelector{
+final class GetterArraySelector{
 	
-	private ArraySelector(){}
+	private GetterArraySelector(){}
 	
 	private static<T> T valueAt(int index, T[] array){
 		return array[(index < 0) ? 0 : index < array.length ? index : array.length - 1 ];
 	}
 	
     /**
-     * Clase que implementa un {@code ArraySelector} con precisión {@code double}.
+     * Clase que implementa un {@code GetterArraySelector} con precisión {@code double}.
      * @param <T> Tipo genérico de datos empleados.
      */
 	final static class Double<T> implements Getter.Double<T>{
@@ -52,7 +52,7 @@ final class ArraySelector{
 		private final T values[];
 
 		/**
-		 * Constructor que crea un {@code ArraySelector} con precisión {@code double}, 
+		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code double}, 
 		 * con una escala = 1 y una traslación = 0.
 		 * @param values valores que serán devueltos.
 		 */
@@ -61,7 +61,7 @@ final class ArraySelector{
 		}
 
 		/**
-		 * Constructor que crea un {@code ArraySelector} con precisión {@code double}.
+		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code double}.
 		 * @param scale escala que se aplicará a la clave.
 		 * @param translation traslación que se aplicará a la clave.
 		 * @param values valores que serán devueltos.
@@ -82,7 +82,7 @@ final class ArraySelector{
 	}
 	
     /**
-     * Clase que implementa un {@code ArraySelector} con precisión {@code float}.
+     * Clase que implementa un {@code GetterArraySelector} con precisión {@code float}.
      * @param <T> Tipo genérico de datos empleados.
      */
 	final static class Float<T> implements Getter.Float<T>{
@@ -91,7 +91,7 @@ final class ArraySelector{
 		private final T values[];
 
 		/**
-		 * Constructor que crea un {@code ArraySelector} con precisión {@code float}, 
+		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code float}, 
 		 * con una escala = 1 y una traslación = 0.
 		 * @param values valores que serán devueltos.
 		 */
@@ -100,7 +100,7 @@ final class ArraySelector{
 		}
 
 		/**
-		 * Constructor que crea un {@code ArraySelector} con precisión {@code float}.
+		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code float}.
 		 * @param scale escala que se aplicará a la clave.
 		 * @param translation traslación que se aplicará a la clave.
 		 * @param values valores que serán devueltos.
@@ -121,7 +121,7 @@ final class ArraySelector{
 	}
 	
     /**
-     * Clase que implementa un {@code ArraySelector} con precisión {@code int}.
+     * Clase que implementa un {@code GetterArraySelector} con precisión {@code int}.
      * @param <T> Tipo genérico de datos empleados.
      */
 	final static class Integer<T> implements Getter.Integer<T>{
@@ -130,7 +130,7 @@ final class ArraySelector{
 		private final T values[];
 
 		/**
-		 * Constructor que crea un {@code ArraySelector} con precisión {@code int}, 
+		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code int}, 
 		 * con una escala = 1 y una traslación = 0.
 		 * @param values valores que serán devueltos.
 		 */
@@ -139,7 +139,7 @@ final class ArraySelector{
 		}
 
 		/**
-		 * Constructor que crea un {@code ArraySelector} con precisión {@code int}.
+		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code int}.
 		 * @param scale escala que se aplicará a la clave.
 		 * @param translation traslación que se aplicará a la clave.
 		 * @param values valores que serán devueltos.

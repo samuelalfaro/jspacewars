@@ -1,5 +1,5 @@
 /* 
- * PolinomioLineal.java
+ * FuncionAfin.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -23,14 +23,14 @@
 package org.sam.interpoladores;
 
 /**
- * Polinomio de primer grado que reprensenta la función lineal {@code f(x) = A·x + B} .
+ * Polinomio de primer grado que reprensenta la ecuación lineal {@code f(x) = A·x + B} .
  */
-public final class PolinomioLineal{
+public final class FuncionAfin{
 
-	private PolinomioLineal(){}
+	private FuncionAfin(){}
 
 	/**
-	 * Implementacion con precisión Double de la función {@link PolinomioLineal}.
+	 * Implementacion con precisión Double de la {@linkplain FuncionAfin función afín}.
 	 */
 	public static final class Double implements Funcion.Double {
 		private double A, B;
@@ -120,12 +120,12 @@ public final class PolinomioLineal{
 		 */
 		@Override
         public Funcion.Float toFloatFunction() {
-			return new PolinomioLineal.Float( (float)A, (float)B );
+			return new FuncionAfin.Float( (float)A, (float)B );
 		}
 	}
 
 	/**
-	 * Implementacion con precisión Float de la función {@link PolinomioLineal}.
+	 * Implementacion con precisión Float de la {@linkplain FuncionAfin función afín}.
 	 */
 	public static final class Float implements Funcion.Float {
 		private float A, B;

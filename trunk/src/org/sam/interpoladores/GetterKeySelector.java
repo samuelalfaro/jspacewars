@@ -1,5 +1,5 @@
 /* 
- * KeySelector.java
+ * GetterKeySelector.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -23,9 +23,9 @@
 package org.sam.interpoladores;
 
 /**
- * Clase contenedora con las implementaciones de un <i>KeySelector</i>, tanto en precisión {@code double},
+ * Clase contenedora con las implementaciones de un <i>GetterKeySelector</i>, tanto en precisión {@code double},
  * {@code float}, como {@code int}.
- * <p>Se considera un <i>KeySelector</i> a un tipo de <i>Getter</i> que contiene los valores distribuidos
+ * <p>Se considera un <i>GetterKeySelector</i> a un tipo de <i>Getter</i> que contiene los valores distribuidos
  * de forma no uniforme. Asociando cada valor a una clave, que se empleará par buscar índice
  * del vector dónde se encuentra el valor que será devuelto.</p>
  * <p>Esta implementación es usada por {@code GettersFactory} cuando se pasan las claves y
@@ -33,11 +33,11 @@ package org.sam.interpoladores;
  * <p><u>Nota:</u> Los valores no se interpolan realmente, pasando bruscamente de un valor a otro, lo que da esta
  * forma característica de escalón.</p>
  */
-final class KeySelector{
-	private KeySelector(){}
+final class GetterKeySelector{
+	private GetterKeySelector(){}
 	
     /**
-     * Clase que implementa un {@code KeySelector} con precisión {@code double}.
+     * Clase que implementa un {@code GetterKeySelector} con precisión {@code double}.
      * @param <T> Tipo genérico de datos empleados.
      */
 	final static class Double<T> implements Getter.Double<T>{
@@ -46,7 +46,7 @@ final class KeySelector{
 		private final T values[];
 
 		/**
-		 * Constructor que crea un {@code KeySelector} con precisión {@code double}.
+		 * Constructor que crea un {@code GetterKeySelector} con precisión {@code double}.
 		 * @param keys claves asociadas a los valores.
 		 * @param values valores que serán devueltos.
 		 */
@@ -71,7 +71,7 @@ final class KeySelector{
 	}
 	
     /**
-     * Clase que implementa un {@code KeySelector} con precisión {@code float}.
+     * Clase que implementa un {@code GetterKeySelector} con precisión {@code float}.
      * @param <T> Tipo genérico de datos empleados.
      */
 	final static class Float<T> implements Getter.Float<T>{
@@ -80,7 +80,7 @@ final class KeySelector{
 		private final T values[];
 
 		/**
-		 * Constructor que crea un {@code KeySelector} con precisión {@code float}.
+		 * Constructor que crea un {@code GetterKeySelector} con precisión {@code float}.
 		 * @param keys claves asociadas a los valores.
 		 * @param values valores que serán devueltos.
 		 */
@@ -105,7 +105,7 @@ final class KeySelector{
 	}
 	
     /**
-     * Clase que implementa un {@code KeySelector} con precisión {@code int}.
+     * Clase que implementa un {@code GetterKeySelector} con precisión {@code int}.
      * @param <T> Tipo genérico de datos empleados.
      */
 	final static class Integer<T> implements Getter.Integer<T>{
@@ -114,7 +114,7 @@ final class KeySelector{
 		private final T values[];
 
 		/**
-		 * Constructor que crea un {@code KeySelector} con precisión {@code int}.
+		 * Constructor que crea un {@code GetterKeySelector} con precisión {@code int}.
 		 * @param keys claves asociadas a los valores.
 		 * @param values valores que serán devueltos.
 		 */

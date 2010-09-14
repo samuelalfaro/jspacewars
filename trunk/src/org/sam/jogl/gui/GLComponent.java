@@ -22,9 +22,9 @@
  */
 package org.sam.jogl.gui;
 
-import javax.media.opengl.GL;
+import org.sam.jogl.Dibujable;
 
-public abstract class GLComponent{
+public abstract class GLComponent implements Dibujable{
 	/**
 	 * Esquinas / Corners
 	 */
@@ -40,6 +40,4 @@ public abstract class GLComponent{
 		this.x2 = x2;
 		this.y2 = y2;
 	}
-	
-	public abstract void draw(GL gl);
 }

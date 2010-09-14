@@ -23,13 +23,14 @@
 package org.sam.elementos;
 
 /**
- * Interface indica que un determinado objeto puede ser modificado
- * y proporciona el método para realizar dicha modificación.
+ * Interface indica que los objetos, de las clases que lo implementen,
+ * pueden ser modificados y proporciona el método, para poder obtener
+ * el {@link Modificador}, encargado de hacer dicha modificación.
  */
 public interface Modificable {
 	/**
 	 * Método que devuelve el {@code Modificador} que modificará este objeto.
-	 * @return el {@code Modificador} que modificará este objeto.
+	 * @return El {@code Modificador} solicitado.
 	 */
 	public Modificador getModificador();
 }
