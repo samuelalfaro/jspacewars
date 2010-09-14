@@ -34,6 +34,8 @@ public class PixmapComponent extends GLComponent{
 		this.pixmap = pixmap;
 	}
 	
+	/** {@inheritDoc} */
+	@Override
 	public void draw(GL gl){
 		pixmap.draw(gl, x1, y1, x2, y2);
 	}

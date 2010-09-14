@@ -31,10 +31,6 @@ import org.sam.jogl.*;
 import org.sam.jogl.particulas.*;
 import org.sam.util.*;
 
-/**
- * @author samuel
- *
- */
 public class CieloEstrellado implements Fondo, Modificador{
 	
 	private transient final Apariencia apFondo;
@@ -96,17 +92,15 @@ public class CieloEstrellado implements Fondo, Modificador{
 		FactoriaDeParticulas.setOptimizedFor2D(false);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.jogl.fondos.Fondo#setProporcionesPantalla(float)
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void setProporcionesPantalla(float proporcionesPantalla) {
 		this.proporcionesPantalla = proporcionesPantalla;
 		this.s2 = proporcionesPantalla / proporcionesTextura;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL)
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public void draw(GL gl) {
 		
 		gl.glMatrixMode(GL.GL_MODELVIEW);
@@ -141,16 +135,14 @@ public class CieloEstrellado implements Fondo, Modificador{
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.util.Modificable#getModificador()
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public Modificador getModificador() {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.util.Modificador#modificar(float)
-	 */
+	/** {@inheritDoc} */
+	@Override
 	public boolean modificar(float steep) {
 		s1 += 0.02f * steep;
 		if(s1 > 1.0f)

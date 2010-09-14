@@ -31,7 +31,7 @@ public final class CompositeGetter{
 	private CompositeGetter(){}
 	
     /**
-     * Clase que implementa un {@code CompositeGetter} con precisión {@code double}.
+     * Clase que implementa un {@link CompositeGetter} con precisión {@code double}.
      * @param <T> Tipo genérico de datos empleados.
      */
     public static final class Double<T> implements Trayectoria.Double<T>{
@@ -85,7 +85,7 @@ public final class CompositeGetter{
 	}
 
     /**
-     * Clase que implementa un {@code CompositeGetter} con precisión {@code float}.
+     * Clase que implementa un {@link CompositeGetter} con precisión {@code float}.
      * @param <T> Tipo genérico de datos empleados.
      */
     public static final class Float<T> implements Trayectoria.Float<T>{

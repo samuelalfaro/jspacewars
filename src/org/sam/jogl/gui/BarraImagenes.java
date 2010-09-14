@@ -54,6 +54,8 @@ public class BarraImagenes extends GLComponent{
 			valores[index] = value;
 		}
 		
+		/** {@inheritDoc} */
+		@Override
 		public void draw(GL gl){
 			int nImgs = valores.length;
 			float ancho = x2 - x1;

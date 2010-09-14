@@ -1,5 +1,5 @@
 /* 
- * PolinomioCubico.java
+ * FuncionCubica.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -25,12 +25,12 @@ package org.sam.interpoladores;
 /**
  * Polinomio cúbico correspondiente a <code>f(x) = Ax³ + Bx² + Cx + D</code>
  */
-public final class PolinomioCubico{
+public final class FuncionCubica{
 
-	private PolinomioCubico(){}
+	private FuncionCubica(){}
 
 	/**
-	 * Implementacion con precisión Double de la función {@link PolinomioCubico}.
+	 * Implementacion con precisión Double de la {@linkplain FuncionCubica función cúbica}.
 	 */
 	public static final class Double implements Funcion.Double {
 
@@ -135,12 +135,12 @@ public final class PolinomioCubico{
 		 */
 		@Override
         public Funcion.Float toFloatFunction() {
-			return new PolinomioCubico.Float((float)A,(float)B,(float)C,(float)D);
+			return new FuncionCubica.Float((float)A,(float)B,(float)C,(float)D);
 		}
 	}
 
 	/**
-	 * Implementacion con precisión Float de la función {@link PolinomioCubico}.
+	 * Implementacion con precisión Float de la la {@linkplain FuncionCubica función cúbica}.
 	 */
 	public static final class Float implements Funcion.Float {
 
