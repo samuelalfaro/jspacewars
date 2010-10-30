@@ -42,7 +42,7 @@ public class FractalImage extends BufferedImage{
 	 * @param height
 	 */
 	public FractalImage(int width, int height) {
-		this(width, height, new Coulds(), ColorRamp.Predefinas.BlackRedYellowWhite, BufferedImage.TYPE_INT_RGB);
+		this(width, height, new Coulds(), ColorRamp.Predefinidas.BlackRedYellowWhite, BufferedImage.TYPE_INT_RGB);
 	}
 	
 	/**
@@ -75,8 +75,8 @@ public class FractalImage extends BufferedImage{
 			for(int y = 0, i = 0; y < height; y++)
 				for(int x =0; x < width; x++, i++){
 					double vn = values[y][x];
-					double a  = Ramp.Predefinas.DECELERADA.compute( Math.min( 5 * vn, 1.0) );
-					double c  = Ramp.Predefinas.ACELERADA_DECELERADA.compute( vn );
+					double a  = Ramp.Predefinidas.DECELERADA.compute( Math.min( 5 * vn, 1.0) );
+					double c  = Ramp.Predefinidas.ACELERADA_DECELERADA.compute( vn );
 					
 					int pixel = ((int)Math.max(0, Math.min( a * 0xFF + 0.5, 255))<<24 & 0xFF000000) | colorRamp.computeToIntRGB(c);
 					//int pixel = 0xFF000000 | colorRamp.computeToIntRGB( Math.sin( Math.PI*( 3 * values[x][y] - 0.5 ) )/2 +0.5 );
@@ -85,7 +85,7 @@ public class FractalImage extends BufferedImage{
 		else
 			for(int y = 0, i = 0; y < height; y++)
 				for(int x =0; x < width; x++, i++){
-					db.setElem(i, colorRamp.computeToIntRGB( Ramp.Predefinas.ACELERADA_DECELERADA.compute(Math.pow( values[y][x], 0.5) ) ) );
+					db.setElem(i, colorRamp.computeToIntRGB( Ramp.Predefinidas.ACELERADA_DECELERADA.compute(Math.pow( values[y][x], 0.5) ) ) );
 					//db.setElem(i, colorRamp.computeToIntRGB(values[y][x]));
 				}
 	}
@@ -101,18 +101,18 @@ public class FractalImage extends BufferedImage{
 		noiseFunction.setOctaves(8);
 		
 		ColorRamp colorRamp = new ColorRamp.RGBColorRamp( 2.5, 0.0, 2.0, -0.5, 2.0, -1.0);
-		//ColorRamp colorRamp = ColorRamp.Predefinas.GreyScale;
+		//ColorRamp colorRamp = ColorRamp.Predefinidas.GreyScale;
 		
 		Image[] frames = new Image[8];
 		
 		for(int i = 0; i < frames.length; i ++){
 //			z = ramp( 0.65, 0.8, i, frames.length-1 );
-			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( -0.1, 1.0, i, frames.length ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 3.90, 4.025, i, frames.length ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 1.69, 2.18, i, frames.length ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 4.05, 4.15, i, frames.length ) );
-//			noiseFunction.setZ( Ramp.Predefinas.ACELERADA_DECELERADA.compute( 9.2, 9.71, i, frames.length ) );
-//			frames[i] = new FractalImage( 256, 256, noiseFunction, ColorRamp.Predefinas.GreyScale, BufferedImage.TYPE_BYTE_GRAY );
+			noiseFunction.setZ( Ramp.Predefinidas.ACELERADA_DECELERADA.compute( -0.1, 1.0, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinidas.ACELERADA_DECELERADA.compute( 3.90, 4.025, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinidas.ACELERADA_DECELERADA.compute( 1.69, 2.18, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinidas.ACELERADA_DECELERADA.compute( 4.05, 4.15, i, frames.length ) );
+//			noiseFunction.setZ( Ramp.Predefinidas.ACELERADA_DECELERADA.compute( 9.2, 9.71, i, frames.length ) );
+//			frames[i] = new FractalImage( 256, 256, noiseFunction, ColorRamp.Predefinidas.GreyScale, BufferedImage.TYPE_BYTE_GRAY );
 			frames[i] = new FractalImage( 256, 64, noiseFunction, colorRamp, BufferedImage.TYPE_INT_ARGB );
 //			frames[i] = new FractalImage( 256, 256);
 		}

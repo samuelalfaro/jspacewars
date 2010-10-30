@@ -23,7 +23,7 @@
 package org.sam.interpoladores;
 
 /**
- * Este interface representa un generador de funciones.
+ * Interface que representa un generador de funciones.
  */
 public interface GeneradorDeFunciones {
 
@@ -33,11 +33,11 @@ public interface GeneradorDeFunciones {
     public enum Predefinido implements GeneradorDeFunciones{
 	
     	/**
-		 * Crea y calcula el polinomio lineal que pasa por los puntos (a,fa) (b,fb).<br>
+		 * Crea y calcula el polinomio lineal que pasa por los puntos (a,fa) (b,fb).<br/>
          */
         LINEAL {
 			/**
-			 * Crea y calcula el polinomio lineal que pasa por los puntos (a,fa) (b,fb).<br>
+			 * Crea y calcula el polinomio lineal que pasa por los puntos (a,fa) (b,fb).<br/>
 			 * @return La función generada.
 			 */
         	public Funcion.Double generaFuncion(double a, double fa, double b, double fb){
@@ -47,7 +47,7 @@ public interface GeneradorDeFunciones {
         	}
         	
         	/**
-			 * Crea y calcula el polinomio lineal que pasa por los puntos (a,fa) (b,fb).<br>
+			 * Crea y calcula el polinomio lineal que pasa por los puntos (a,fa) (b,fb).<br/>
 			 * @param p {@inheritDoc} Siendo:<ul>
 			 * <li>p[0] = <b>a</b></li>
 			 * <li>p[1] = <b>fa</b></li>
@@ -68,12 +68,12 @@ public interface GeneradorDeFunciones {
 	
 		/**
 		 * Calcula los valores de la función exponencial que pasa por los puntos {@code (a,fa) (b,fb)},
-		 * con una distancia relativa del punto medio igual a {@code pm}.<br>
+		 * con una distancia relativa del punto medio igual a {@code pm}.<br/>
 		 * El valor de {@code pm}, corresponde a una fracción comprendida entre {@code (0 .. 1)}
-		 * e indica la distancia relativa del punto medio {@code (fa +fb)/2} respecto a los otros puntos:</br>
-		 * <i>f(a) = fa</br>
-		 * f(a + pm·(b-a)) = (fa +fb)/2</br>
-		 * f(b) = fb</i></br>
+		 * e indica la distancia relativa del punto medio {@code (fa +fb)/2} respecto a los otros puntos:<br/>
+		 * <i>f(a) = fa<br/>
+		 * f(a + pm·(b-a)) = (fa +fb)/2<br/>
+		 * f(b) = fb</i><br/>
 		 * comportandose la función como una interpolación lineal cuando este valor es {@code 0.5}.
          */
         EXPONENCIAL_PUNTO_MEDIO {
@@ -129,20 +129,20 @@ public interface GeneradorDeFunciones {
 
 		/**
 		 * Calcula los valores del cociente polinómico que pasa por los puntos {@code (a,fa) (b,fb)},
-		 * con una distancia relativa del punto medio igual a {@code pm}.<br>
+		 * con una distancia relativa del punto medio igual a {@code pm}.<br/>
 		 * El valor de {@code pm}, corresponde a una fracción comprendida entre {@code (0 .. 1)}
-		 * e indica la distancia relativa del punto medio {@code (fa +fb)/2} respecto a los otros puntos:</br>
-		 * <i>f(a) = fa</br>
-		 * f(a + pm·(b-a)) = (fa +fb)/2</br>
-		 * f(b) = fb</i></br>
+		 * e indica la distancia relativa del punto medio {@code (fa +fb)/2} respecto a los otros puntos:<br/>
+		 * <i>f(a) = fa<br/>
+		 * f(a + pm·(b-a)) = (fa +fb)/2<br/>
+		 * f(b) = fb</i><br/>
 		 * comportandose la función como una interpolación lineal cuando este valor es {@code 0.5}.
          */
-        COCIENTE_POLINOMICO_PUNTO_MEDIO {
+        RACIONAL_PUNTO_MEDIO {
 			/**
 			 * Crea y calcula el cociente polinómico que pasa por los puntos {@code (a,fa) (b,fb)},
 			 * con una distancia relativa del punto medio igual a {@code pm}.
 			 * 
-			 * @return La funcion generada.
+			 * @return La función generada.
 			 */
 			public Funcion.Double generaFuncion(double a, double fa, double b, double fb, double pm){
 				double A,B,C,D;
@@ -191,13 +191,13 @@ public interface GeneradorDeFunciones {
 
 		/**
 		 * Crea y calcula el polinomio de tercer grado que pasa por los puntos (a,fa) (b,fb) 
-		 * con las tangencias  f1a en a y  f1b en b.<br>
+		 * con las tangencias  f1a en a y  f1b en b.<br/>
          */
         HERMITE{
 			/**
 			 * Crea y calcula el polinomio de tercer grado que pasa por los puntos (a,fa) (b,fb) 
-			 * con las tangencias  f1a en a y  f1b en b.<br>
-			 * @return La funcion generada.
+			 * con las tangencias  f1a en a y  f1b en b.<br/>
+			 * @return La función generada.
 			 */
 			public Funcion.Double generaFuncion( double a, double fa, double f1a, double b, double fb, double f1b){
 				double A, B, C, D;
@@ -233,7 +233,7 @@ public interface GeneradorDeFunciones {
 			
 			/**
 			 * Crea y calcula el polinomio de tercer grado que pasa por los puntos (a,fa) (b,fb) 
-			 * con las tangencias  f1a en a y  f1b en b.<br>
+			 * con las tangencias  f1a en a y  f1b en b.<br/>
 			 * @param p {@inheritDoc} Siendo:<ul>
 			 * <li>p[0] = <b>a</b></li>
 			 * <li>p[1] = <b>fa</b></li>
@@ -261,8 +261,8 @@ public interface GeneradorDeFunciones {
         HERMITE_UNITARIO{
 			/**
 			 * Crea y calcula el polinomio de tercer grado que pasa por los puntos (0,f0) (1,f1) 
-			 * con las tangencias  t0 en 0 y  t1 en 1.<br>
-			 * @return La funcion generada.
+			 * con las tangencias  t0 en 0 y  t1 en 1.<br/>
+			 * @return La función generada.
 			 */
 			public Funcion.Double generaFuncion( double f0, double t0, double f1, double t1){
 				return new FuncionCubica.Double(
@@ -275,7 +275,7 @@ public interface GeneradorDeFunciones {
 			
 			/**
 			 * Crea y calcula el polinomio de tercer grado que pasa por los puntos (0,f0) (1,f1) 
-			 * con las tangencias  t0 en 0 y  t1 en 1.<br>
+			 * con las tangencias  t0 en 0 y  t1 en 1.<br/>
 			 * @param p {@inheritDoc} Siendo:<ul>
 			 * <li>p[0] = <b>f0</b></li>
 			 * <li>p[1] = <b>t0</b></li>
@@ -299,8 +299,8 @@ public interface GeneradorDeFunciones {
          */
         BEZIER_CUBICO{
 			/**
-			 * Crea y calcula el polinomio de tercer grado correspondiente a la curva de Bezier (p0,p1,p2,p3).<br>
-			 * @return La funcion generada.
+			 * Crea y calcula el polinomio de tercer grado correspondiente a la curva de Bézier (p0,p1,p2,p3).<br/>
+			 * @return La función generada.
 			 */
 			public Funcion.Double generaFuncion(double p0, double p1, double p2, double p3 ){
 				return new FuncionCubica.Double(
@@ -312,7 +312,7 @@ public interface GeneradorDeFunciones {
 			}
 			
 			/**
-			 * Crea y calcula el polinomio de tercer grado correspondiente a la curva de Bezier (p0,p1,p2,p3).<br>
+			 * Crea y calcula el polinomio de tercer grado correspondiente a la curva de Bezier (p0,p1,p2,p3).<br/>
 			 * @param p {@inheritDoc} Siendo:<ul>
 			 * <li>p[0] = <b>p0</b></li>
 			 * <li>p[1] = <b>p1</b></li>

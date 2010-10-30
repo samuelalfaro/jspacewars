@@ -23,9 +23,9 @@
 package org.sam.interpoladores;
 
 /**
- * Interface que representa un método de interpolación.<br/>
- * Proporciona métodos para generar las funciones de interpolación a partir de las claves ({@code keys}),
- * los valores ({@code values}) y los parámetros ({@code parametros}) necesarios.
+ * Interface que representa un <i>método de interpolación</i>.<br/>
+ * Se considera <i>método de interpolación</i>, a una clase encargada de generar, 
+ * las funciones de interpolación, a partir de los parámetros indicados.
  */
 public interface MetodoDeInterpolacion{
 
@@ -34,9 +34,9 @@ public interface MetodoDeInterpolacion{
      */
     public enum Predefinido implements MetodoDeInterpolacion {
         /**
-         * Este miembro de la enumeración, no es un método de interpolación propiamente dicho,
-         * pues no se generan funciones. Se emplea para definir una búsqueda por aproximación
-         * que devuelve el valor más cercano a partir de las claves y valores proporcionados .
+         * Este miembro, no es un método de interpolación propiamente dicho,
+         * pues no genera funciones. Se emplea para definir una búsqueda por aproximación,
+         * que devuelve el valor más cercano a partir de las claves y valores proporcionados.
          */
         ESCALON {
         	/**
@@ -55,7 +55,8 @@ public interface MetodoDeInterpolacion{
 			}
 		},
         /**
-         * Miembro que genera polinomios lineales a partir de los valores dados.
+         * Miembro que {@linkplain GeneradorDeFunciones.Predefinido#LINEAL
+         * genera funciones lineales} a partir de los valores dados.
          */
         LINEAL {
 			/**
@@ -97,7 +98,8 @@ public interface MetodoDeInterpolacion{
 			}
 		},
 		/**
-		 * Miembro que genera funciones exponenciales a partir de los valores dados.
+		 * Miembro que {@linkplain GeneradorDeFunciones.Predefinido#EXPONENCIAL_PUNTO_MEDIO
+		 * genera funciones exponenciales} a partir de los valores dados.
 		 */
 		EXPONENCIAL_PUNTO_MEDIO {
 			/**
@@ -145,9 +147,10 @@ public interface MetodoDeInterpolacion{
 			}
 		},
 		/**
-		 * Miembro que genera cocientes polinómicos a partir de los valores dados.
+		 * Miembro que {@linkplain GeneradorDeFunciones.Predefinido#RACIONAL_PUNTO_MEDIO
+		 * genera funciones racionales} a partir de los valores dados.
 		 */
-		COCIENTE_POLINOMICO_PUNTO_MEDIO {
+		RACIONAL_PUNTO_MEDIO {
 			/**
 			 * @param values {@inheritDoc}
 			 * @param parametros Contiene las distancias relativas al punto medio entre los distintos valores.<br/>
@@ -162,7 +165,7 @@ public interface MetodoDeInterpolacion{
 				ArrayExtractor puntosMedios = from(parametros);
 				for(int i=0; i< values.dimensions(); i++)
 					for(int j=0; j<len; j++)
-						funciones[i][j] = GeneradorDeFunciones.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO.generaFuncion(
+						funciones[i][j] = GeneradorDeFunciones.Predefinido.RACIONAL_PUNTO_MEDIO.generaFuncion(
 								0.0, values.at( j, i),
 								1.0, values.at( j + 1, i),
 								puntosMedios.at(j)
@@ -184,7 +187,7 @@ public interface MetodoDeInterpolacion{
 				ArrayExtractor puntosMedios = from(parametros);
 				for(int i=0; i< values.dimensions(); i++)
 					for(int j=0; j<len; j++)
-						funciones[i][j] = GeneradorDeFunciones.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO.generaFuncion(
+						funciones[i][j] = GeneradorDeFunciones.Predefinido.RACIONAL_PUNTO_MEDIO.generaFuncion(
 								keys.at(j), values.at( j, i),
 								keys.at(j + 1), values.at( j + 1, i),
 								puntosMedios.at(j)
@@ -193,7 +196,10 @@ public interface MetodoDeInterpolacion{
 			}
 		},
         /**
-         *Consulte <a href="http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Finite_difference">wikipedia</a>.
+         * Miembro que {@linkplain GeneradorDeFunciones.Predefinido#HERMITE
+         * genera funciones cúbicas} a partir de los valores dados.<br/>
+         * Puede encontrar más información consultando
+         * <a href="http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Finite_difference">Finite difference</a> [wikipedia].
          */
         FINITE_DIFFERENCE_SPLINE {
         	/**
@@ -250,7 +256,10 @@ public interface MetodoDeInterpolacion{
 			}
 		},
         /**
-         *Consulte <a href="http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Cardinal_spline">wikipedia</a>.
+         * Miembro que {@linkplain GeneradorDeFunciones.Predefinido#HERMITE_UNITARIO
+         * genera funciones cúbicas} a partir de los valores dados.<br/>
+         * Puede encontrar más información consultando
+         * <a href="http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Cardinal_spline">Cardinal Spline</a> [wikipedia].
          */
         CARDINAL_SPLINE {
 			/**
@@ -332,7 +341,7 @@ public interface MetodoDeInterpolacion{
 			}
 		},
         /**
-         * Caso especial de {@link MetodoDeInterpolacion.Predefinido#CARDINAL_SPLINE CARDINAL_SPLINE} con tensión 1.
+         * Caso especial de {@link #CARDINAL_SPLINE CARDINAL_SPLINE} con tensión 1.
          */
         COSENOIDAL {
 			/**
@@ -356,8 +365,9 @@ public interface MetodoDeInterpolacion{
 			}
 		},
         /**
-         * Caso especial de {@link MetodoDeInterpolacion.Predefinido#CARDINAL_SPLINE CARDINAL_SPLINE} con tensión 0.<br/>
-         * Puede encontrar más información consultando <a href="http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Catmull.E2.80.93Rom_spline">wikipedia</a>.
+         * Caso especial de {@link #CARDINAL_SPLINE CARDINAL_SPLINE} con tensión 0.<br/>
+         * Puede encontrar más información consultando
+         * <a href="http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Catmull.E2.80.93Rom_spline">Catmull-Rom Spline</a> [wikipedia].
          */
 		CATMULL_ROM_SPLINE {
 			/**
@@ -381,7 +391,10 @@ public interface MetodoDeInterpolacion{
 			}
 		},
         /**
-         *Consulte <a href="http://en.wikipedia.org/wiki/Bézier_curve">wikipedia</a>.
+         * Miembro que {@linkplain GeneradorDeFunciones.Predefinido#BEZIER_CUBICO
+         * genera funciones cúbicas} a partir de los valores dados.<br/>
+         * Puede encontrar más información consultando 
+         * <a href="http://en.wikipedia.org/wiki/Bézier_curve">Bézier curve</a> [wikipedia].
          */
         BEZIER {
 			/**
