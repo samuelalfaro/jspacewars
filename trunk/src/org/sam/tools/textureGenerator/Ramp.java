@@ -28,7 +28,7 @@ package org.sam.tools.textureGenerator;
  */
 public interface Ramp {
 	
-	public enum Predefinas implements Ramp{
+	public enum Predefinidas implements Ramp{
 		
 		LINEAL{
 			/**

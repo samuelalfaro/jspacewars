@@ -52,7 +52,7 @@ public final class Keys{
 	}
 
 	/**
-	 * Método que despalza un vector de claves sumandole por un valor de despalzamiento.
+	 * Método que despalza un vector de claves sumandole un valor de despalzamiento.
 	 * @param keys Vector de claves que será despalzado.
 	 * @param translation Valor de despalzamiento.
 	 */
@@ -62,24 +62,24 @@ public final class Keys{
 	}
 	
 	/**
-	 * Método que normaliza un vector de claves, despalzando y escalando sus valores de tal forma
+	 * Método que normaliza un vector de claves, despalzando y escalando sus valores, de tal forma
 	 * que el valor mínimo sea {@code 0} y el valor máximo sea {@code 1}.
 	 * @param keys Vector de claves que será normalizado.
 	 */
 	static void normalize(double[] keys){
 		double scaleKeys = 1/(keys[keys.length-1]-keys[0]);
 		for (int i = 1; i < keys.length; i++){
-			keys[i]-=keys[0];
-			keys[i]*=scaleKeys;
+			keys[i] -= keys[0];
+			keys[i] *= scaleKeys;
 		}
 	}
 
 	/**
-	 * Método que calcula mediante aproximación por subdivisión la longitud de una
-	 * curva paramétrica de varias dimensiones.
+	 * Método que calcula, mediante aproximación por subdivisión, la longitud del
+	 * tramo unitario, de una curva paramétrica de varias dimensiones.
 	 * @param f Vector que contiene las funciones para cada una de las dimensiones.
 	 * @param pasos Número de subdivisiones empleadas para calcular la longitud.
-	 * @return La longitud de la curva.
+	 * @return La longitud del tramo.
 	 */
 	static double longitudCurva(Funcion.Double f[], int pasos){
 		double ant[] = new double[f.length];
@@ -101,7 +101,7 @@ public final class Keys{
 	}
 	
 	/**
-	 * Método que genera un vector de claves distribuidas homogeneamente entre los valores {@code 0} y {@code 1}.
+	 * Método que genera un vector de claves, distribuidas homogeneamente entre los valores {@code 0} y {@code 1}.
 	 * @param tam Tamaño del vector a generar.
 	 * @return El vector de claves geneado.
 	 */

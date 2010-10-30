@@ -26,11 +26,11 @@ package org.sam.interpoladores;
  * Clase contenedora con las implementaciones de un <i>Interpolador</i> genérico, tanto en precisión {@code double},
  * como {@code float}.
  * <p>Un <i>Interpolador</i> almacena las funciones generadas a través del {@code MetodoDeInterpolacion}.
- * Este {@code MetodoDeInterpolacion} obtiene los valores numéricos a través de un {@code Conversor<T, número[]>},
+ * Este {@code MetodoDeInterpolacion} obtiene los valores numéricos a través de un {@code Conversor<T, TipoNumérico[]>},
  * que se encarga de extrerlos del tipo genérico {@code T}.<br/>
- * A partir de estas funciones, se obtienen los datos interpolados en fución de la clave {@code key}
- * del método <i>T get(key)</i> y estos valores se emplean para devolver el dato del tipo genérico {@code T} a través
- * del {@code Conversor<número[], T>}.</p>
+ * Al invocar al método <i>T get(key)</i>, se usan estas funciones, para obtener los datos interpolados
+ * correspondientes a la clave {@code key}, y estos valores se emplean para devolver el dato del tipo
+ * genérico {@code T} a través del {@code Conversor<TipoNumérico[], T>}.</p>
  */
 final class Interpolador{
 

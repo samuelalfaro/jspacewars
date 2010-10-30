@@ -34,11 +34,11 @@ public class TestRamps {
 	public static void main(String[] args) {
 		for (int i = 0; i <= 20; i++) {
 			System.out.printf("%2d\t%5.3f %5.3f %5.3f %5.3f %5.3f\n", i,
-					Ramp.Predefinas.LINEAL.compute(0, 1, i, 20),
-					Ramp.Predefinas.ACELERADA.compute(0, 1, i, 20),
-					Ramp.Predefinas.DECELERADA.compute(0, 1, i, 20),
-					Ramp.Predefinas.ACELERADA_DECELERADA.compute(0, 1, i, 20),
-					Ramp.Predefinas.DECELERADA_ACELERADA.compute(0, 1, i, 20)
+					Ramp.Predefinidas.LINEAL.compute(0, 1, i, 20),
+					Ramp.Predefinidas.ACELERADA.compute(0, 1, i, 20),
+					Ramp.Predefinidas.DECELERADA.compute(0, 1, i, 20),
+					Ramp.Predefinidas.ACELERADA_DECELERADA.compute(0, 1, i, 20),
+					Ramp.Predefinidas.DECELERADA_ACELERADA.compute(0, 1, i, 20)
 			);
 		}
 	}

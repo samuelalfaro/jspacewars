@@ -27,7 +27,7 @@ import java.awt.Color;
 /**
  * 
  */
-interface ColorRamp{
+public interface ColorRamp{
 	
 	/**
 	 *
@@ -75,7 +75,7 @@ interface ColorRamp{
 	/**
 	 * 
 	 */
-	public enum Predefinas implements ColorRamp{
+	public enum Predefinidas implements ColorRamp{
 		/**
 		 * 
 		 */
@@ -143,9 +143,10 @@ interface ColorRamp{
 		 */
 		BlackBlueCyanWhite    (new RGBColorRamp( 3, -2, 3, -1, 3,  0 ));
 		
-		final ColorRamp coloRamp;
-		Predefinas(ColorRamp encapsulada){
-			this.coloRamp = encapsulada;
+		final ColorRamp colorRamp;
+		
+		Predefinidas(ColorRamp encapsulada){
+			this.colorRamp = encapsulada;
 		}
 		
 		/**
@@ -153,7 +154,7 @@ interface ColorRamp{
 		 */
 		@Override
 		public final Color compute(double c){
-			return coloRamp.compute(c);
+			return colorRamp.compute(c);
 		}
 		
 		/**
@@ -161,7 +162,7 @@ interface ColorRamp{
 		 */
 		@Override
 		public final int computeToIntRGB(double c){
-			return coloRamp.computeToIntRGB(c);
+			return colorRamp.computeToIntRGB(c);
 		}
 	}
 	

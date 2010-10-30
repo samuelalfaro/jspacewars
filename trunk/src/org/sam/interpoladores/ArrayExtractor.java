@@ -31,8 +31,8 @@ public abstract class ArrayExtractor{
 	private ArrayExtractor(){}
 	
     /**
-     * Impementación de {@code ArrayExtractor} que extrae los valores del tipo genérico {@code T} a través
-     * de un {@code Conversor<? super T, double[]>}.
+     * Impementación de {@code ArrayExtractor} que extrae los valores del tipo genérico {@code T}
+     * en forma de un vector {@code double[]}.
      * 
      * @param <T> Tipo genérico de datos empleados.
      */
@@ -90,8 +90,8 @@ public abstract class ArrayExtractor{
 	}
 
     /**
-     * Impementación de {@code ArrayExtractor} que extrae los valores del tipo genérico {@code T} a través
-     * de un {@code Conversor<? super T, float[]>}.
+     * Impementación de {@code ArrayExtractor} que extrae los valores del tipo genérico {@code T}
+     * en forma de un vector {@code float[]}.
      * 
      * @param <T> Tipo genérico de datos empleados.
      */
