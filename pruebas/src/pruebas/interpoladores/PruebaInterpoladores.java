@@ -74,7 +74,7 @@ public class PruebaInterpoladores{
 
 			i1 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.ESCALON);
 			i2 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.LINEAL);
-			i3 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO, pMedios);
+			i3 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.RACIONAL_PUNTO_MEDIO, pMedios);
 			i4 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.EXPONENCIAL_PUNTO_MEDIO, pMedios);
 			i5 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.COSENOIDAL);
 			i6 = GettersFactory.Double.create(keys,dvalues,MetodoDeInterpolacion.Predefinido.CARDINAL_SPLINE, 0.5f);
@@ -115,7 +115,7 @@ public class PruebaInterpoladores{
 				g.drawLine(x,-v10,x,-v11);
 				g.setColor(Color.GREEN); // Lineal
 				g.drawLine(x,-v20,x,-v21);
-				g.setColor(Color.RED); // COCIENTE_POLINOMICO_PUNTO_MEDIO
+				g.setColor(Color.RED); // RACIONAL_PUNTO_MEDIO
 				g.drawLine(x,-v30,x,-v31);
 				g.setColor(Color.MAGENTA.darker().darker()); // EXPONENCIAL_PUNTO_MEDIO
 				g.drawLine(x,-v40,x,-v41);

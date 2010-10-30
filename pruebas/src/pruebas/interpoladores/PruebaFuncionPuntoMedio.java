@@ -43,18 +43,18 @@ public class PruebaFuncionPuntoMedio {
 
 		// rellenamos con valores especificos del punto medio
 		private void rellenar() {
-			funciones[0][0] = GeneradorDeFunciones.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO
+			funciones[0][0] = GeneradorDeFunciones.Predefinido.RACIONAL_PUNTO_MEDIO
 				.generaFuncion(0.75, 50, 0.15, getHeight() - 50, 0.0001);
 			funciones[1][0] = GeneradorDeFunciones.Predefinido.EXPONENCIAL_PUNTO_MEDIO
 				.generaFuncion(0.75, 50, 0.15, getHeight() - 50, 0.0001);
 
 			for (int i = 1; i < N_FUNCIONES - 1; i++) {
-				funciones[0][i] = GeneradorDeFunciones.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO
+				funciones[0][i] = GeneradorDeFunciones.Predefinido.RACIONAL_PUNTO_MEDIO
 					.generaFuncion(0.75, 50, 0.15, getHeight() - 50, ((double) i) / (N_FUNCIONES - 1));
 				funciones[1][i] = GeneradorDeFunciones.Predefinido.EXPONENCIAL_PUNTO_MEDIO
 					.generaFuncion(0.75, 50, 0.15, getHeight() - 50, ((double) i) / (N_FUNCIONES - 1));
 			}
-			funciones[0][N_FUNCIONES - 1] = GeneradorDeFunciones.Predefinido.COCIENTE_POLINOMICO_PUNTO_MEDIO
+			funciones[0][N_FUNCIONES - 1] = GeneradorDeFunciones.Predefinido.RACIONAL_PUNTO_MEDIO
 				.generaFuncion(0.75, 50, 0.15, getHeight() - 50, 0.9999);
 			funciones[1][N_FUNCIONES - 1] = GeneradorDeFunciones.Predefinido.EXPONENCIAL_PUNTO_MEDIO
 				.generaFuncion(0.75, 50, 0.15, getHeight() - 50, 0.9999);
@@ -92,7 +92,7 @@ public class PruebaFuncionPuntoMedio {
 
 		resultados = new Resultados();
 
-		JFrame frame = new JFrame("Prueba Funciones punto medio: Exponencial y Cociente de Polinomios");
+		JFrame frame = new JFrame("Prueba Funciones punto medio: FuncionExponencial y Cociente de Polinomios");
 		frame.setSize(600, 600);
 		frame.setDefaultCloseOperation(3);
 
