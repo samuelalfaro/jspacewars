@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 /**
  * 
@@ -47,8 +46,9 @@ public class SVGProperties{
 			in = new FileInputStream("SVGTemplates.properties");
 			TEMPLATES.load(in);
 			in.close();
-			for(Entry<Object,Object> entry:TEMPLATES.entrySet())
-				System.out.println( entry.getKey() + ": " + entry.getValue() );
+//			test
+//			for( java.util.Map.Entry<Object,Object> entry: TEMPLATES.entrySet() )
+//				System.out.println( entry.getKey() + ": " + entry.getValue() );
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

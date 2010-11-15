@@ -1,5 +1,5 @@
 /* 
- * ClassesUMLGenerator.java
+ * ClassToUML_SVG.java
  * 
  * Copyright (c) 2010 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -30,11 +30,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
-public class ClassesUMLGenerator {
+public class ClassToUML_SVG {
 	
 	private static class StringPrintStream extends PrintStream {
 		StringPrintStream(){
@@ -107,76 +104,6 @@ public class ClassesUMLGenerator {
 		
 	}
 	*/
-	
-	private static Class<?> getPrimaryComponentType(Class<?> clazz){
-		if( clazz.isArray() )
-			return getPrimaryComponentType(clazz.getComponentType());
-		return clazz;
-	}
-	
-	public static String toString(Type[] params){
-		String stringParams = "";
-		for(int i = 0; i < params.length; ){
-			stringParams += toString(params[i]);
-			if(++i < params.length)
-				stringParams += ", ";
-		}
-		return stringParams;
-	}
-
-	public static String toString(TypeVariable<?>[] typeParameters){
-		String stringParams = "";
-		for(int i = 0; i < typeParameters.length; ){
-			stringParams += toString(typeParameters[i]);
-			if(++i < typeParameters.length)
-				stringParams += ", ";
-		}
-		return stringParams;
-	}
-	
-	public static String toString(Type type){
-		if(type instanceof Class<?>)
-			return toString((Class<?>)type);
-		if(type instanceof ParameterizedType)
-			return toString((ParameterizedType)type);
-		return type.toString();
-	}
-
-	public static String toString(Class<?> clazz){
-		Package pack = clazz.isArray() ? 
-				getPrimaryComponentType(clazz).getPackage():
-				clazz.getPackage();
-		if(pack == null)
-			return clazz.getCanonicalName();
-		return  clazz.getCanonicalName().substring(pack.getName().length() + 1);
-	}
-	
-	public static String toString(ParameterizedType type){
-		return toString((Class<?>)type.getRawType()) + 
-				"<" + toString(type.getActualTypeArguments()) + ">";
-	}
-	
-	public static String toString(Field field){
-		return String.format("%s: %s", field.getName(), toString(field.getGenericType()) );
-	}
-
-	public static String toString(String classSimpleName, Constructor<?> constructor){
-		return String.format( "%1$s(%2$s%3$s%2$s)", 
-				classSimpleName,
-				constructor.getGenericParameterTypes().length > 0 ? " ":"",
-				toString(constructor.getGenericParameterTypes())
-		);
-	}
-
-	public static String toString(Method method) {
-		String returnType = toString( method.getGenericReturnType() );
-		return String.format( "%1$s(%2$s%3$s%2$s)%4$s", 
-				method.getName(),
-				method.getGenericParameterTypes().length > 0 ? " ":"",
-				toString( method.getGenericParameterTypes() ),
-				!returnType.equals("void") ? ": " + returnType :""
-		);
-	}
 	
 	private final static float iconWidth = SVGProperties.getProperty("iconWidth",20.0f);
 	private final static float monospaceCharWidth = SVGProperties.getProperty("monospaceCharWidth",7.25f);
@@ -256,8 +183,8 @@ public class ClassesUMLGenerator {
 	
 	private static String getTextTag(int x, int y, String text, String classAtt, String idAtt){
 		return String.format(textTemplate, x, y, text,
-				classAtt != null ? String.format( attTemplate, "class", classAtt) : "",
-				idAtt != null ? String.format( attTemplate, "id", idAtt) : ""
+				classAtt != null ? String.format( attTemplate, "class", classAtt ) : "",
+				idAtt != null ? String.format( attTemplate, "id", idAtt ) : ""
 		);
 	}
 	
@@ -288,15 +215,15 @@ public class ClassesUMLGenerator {
 		else if(clazz.isEnum())
 			out.println("<<Enum>>");
 		if(clazz.getTypeParameters().length > 0)
-			out.println(toString(clazz) + "<" + toString(clazz.getTypeParameters()) + ">");
+			out.println(ClassToUML.toString(clazz) + "<" + ClassToUML.toString(clazz.getTypeParameters()) + ">");
 		else
-			out.println(toString(clazz));
+			out.println(ClassToUML.toString(clazz));
 
 		return new Dimension();
 	}
 	
 	private static int draw(int pos, Field field, PrintStream out){
-		String stringField = toString(field);
+		String stringField = ClassToUML.toString(field);
 		int modifiers = field.getModifiers();
 		out.println( getBulletField(
 				0,
@@ -325,7 +252,7 @@ public class ClassesUMLGenerator {
 	}
 	
 	private static int draw(int pos, String classSimpleName, Constructor<?> constructor, PrintStream out){
-		String stringConstructor = toString(classSimpleName, constructor);
+		String stringConstructor = ClassToUML.toString(classSimpleName, constructor);
 		out.println(getBulletConstructor(
 				0,
 				(int)(pos * monospaceCharHeight+ 0.5f),
@@ -342,7 +269,7 @@ public class ClassesUMLGenerator {
 	}
 	
 	private static int draw(int pos, Method method, PrintStream out){
-		String stringMethod = toString(method);
+		String stringMethod = ClassToUML.toString(method);
 		int modifiers = method.getModifiers();
 		out.println( getBulletMethod(
 				0,
@@ -413,15 +340,15 @@ public class ClassesUMLGenerator {
 	 */
 	public static void main(String... args) {
 //		System.out.println();
-//		drawUML(ClassesUMLGenerator.MiInterface.class);
+//		drawUML(ClassToUML_SVG.MiInterface.class, System.out);
 //		System.out.println();
-//		drawUML(ClassesUMLGenerator.OtroInterface.class);
+//		drawUML(ClassToUML_SVG.OtroInterface.class, System.out);
 //		System.out.println();
-//		drawUML(ClassesUMLGenerator.Prueba.class);
+//		drawUML(ClassToUML_SVG.Prueba.class, System.out);
 		
 //		System.out.println();
 		drawUML(ListClassFromAPackage.class, System.out);
-//		System.out.println();
-//		drawUML(Map.class);
+		System.out.println();
+		drawUML(java.util.Map.class, System.out);
 	}
 }
