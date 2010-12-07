@@ -16,16 +16,13 @@ void main()
 {	// Light direction is always (0.0, 0.0, 1.0), i.e. looking out of the camera.
 	// This means that diffuse shading depends only on the z-coordinate of the transformed
 	// normal in eye-space.
-	//
-	const vec3 normal = normalize(gl_NormalMatrix*gl_Normal);
-
 	// Compute diffuse and ambient only, no specular.
 	// Vertices of the same triangle have the same normal, 
 	// hence lighting is done per triangle. Lighting and material 
 	// properties are passed through built-in uniforms.
 	//
 	gl_FrontColor = 
-		max(normal.z, 0.0)*(gl_FrontMaterial.diffuse*gl_LightSource[0].diffuse) + 
+		max(normalize(gl_NormalMatrix*gl_Normal).z, 0.0)*(gl_FrontMaterial.diffuse*gl_LightSource[0].diffuse) + 
 		gl_FrontMaterial.ambient*gl_LightSource[0].ambient;
 
 	// Stored in the (multi-)texture coordinates for each vertex are the 
