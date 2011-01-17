@@ -41,8 +41,6 @@ import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
 
-import pruebas.jogl.generators.SphereGenerator;
-
 import com.sun.opengl.util.Animator;
 
 public class Prueba013_NormalMap{
@@ -53,7 +51,7 @@ public class Prueba013_NormalMap{
 		private OrbitBehavior orbitBehavior;
 
 		private Apariencia apFondo;
-		private Objeto3D forma, ntb;
+		private Objeto3D forma, formaOffset, ntb;
 		private boolean showNTB = true;
 		
 		private transient float proporcionesFondo, proporcionesPantalla;
@@ -76,7 +74,7 @@ public class Prueba013_NormalMap{
 			apFondo.setAtributosTextura(new AtributosTextura());
 			apFondo.getAtributosTextura().setMode(AtributosTextura.Mode.REPLACE);
 
-			//*
+			/*
 //			forma = HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
 //			if(showNTB)
 //				ntb = HelixGenerator.generateNTB  (gl, 1.2f, 3.0f, 6, 0.25f);
@@ -85,22 +83,24 @@ public class Prueba013_NormalMap{
 			if(showNTB)
 				ntb = SphereGenerator.generateNTB  (gl, 9.0f, 0.25f);
 			/*/
-			Matrix4d mtd = new Matrix4d();
+			javax.vecmath.Matrix4d mtd = new javax.vecmath.Matrix4d();
 			mtd.rotY(Math.PI/2);
 			mtd.setScale(18.0);
 			try {
 				String path = "resources/obj3d/nave04/forma.obj";
-				forma = ObjLoader.load(
+				forma = org.sam.jogl.ObjLoader.load(
 						path,
-						ObjLoader.RESIZE|ObjLoader.GENERATE_TANGENTS,
+						org.sam.jogl.ObjLoader.RESIZE|org.sam.jogl.ObjLoader.GENERATE_TANGENTS,
 						mtd
 				);
-				if(showNTB)
-					ntb = ObjLoader.load(
+				if(showNTB){
+					ntb = org.sam.jogl.ObjLoader.load(
 							path,
-							ObjLoader.RESIZE|ObjLoader.GENERATE_TANGENTS|ObjLoader.GENERATE_NTB,
+							org.sam.jogl.ObjLoader.RESIZE|org.sam.jogl.ObjLoader.GENERATE_TANGENTS|org.sam.jogl.ObjLoader.GENERATE_NTB,
 							mtd
 					);
+					formaOffset = new Objeto3D(forma.getGeometria(), new Apariencia());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -180,11 +180,17 @@ public class Prueba013_NormalMap{
 			orbitBehavior.setLookAt(glu);
 			
 			if( ntb != null ){
+				forma.draw(gl);
+				
+				gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+				gl.glColorMask(false, false, false, false);
 				gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
 				gl.glPolygonOffset( 10.f, 10.f);
-				forma.draw(gl);
-				gl.glDisable( GL.GL_POLYGON_OFFSET_FILL );
+				formaOffset.draw(gl);
 				gl.glPolygonOffset( 0.f, 0.f);
+				gl.glDisable( GL.GL_POLYGON_OFFSET_FILL );
+				gl.glColorMask(true, true, true, true);
+				
 				ntb.draw(gl);
 			}else{
 				forma.draw(gl);
