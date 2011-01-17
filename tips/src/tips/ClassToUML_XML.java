@@ -43,24 +43,33 @@ public class ClassToUML_XML {
 		tabs = tabs.substring(1);
 	}
 	
-	private static void printHierarchy(Class<?> clazz, PrintStream out){
+	private static Deque<Type> getHierarchy(Class<?> clazz){
 		Deque<Type> hierarchy = new ArrayDeque<Type>();
 		Type superClass = clazz.getGenericSuperclass();
 		while( superClass != null && !superClass.equals(Object.class) ){
-			hierarchy.push(superClass);
-			if( superClass instanceof Class<?> )
+			if( superClass instanceof Class<?> ){
+				hierarchy.push(superClass);
 				superClass = ((Class<?>)superClass).getGenericSuperclass();
-			else if ( superClass instanceof ParameterizedType)
-				superClass = ((Class<?>)((ParameterizedType)superClass).getRawType()).getGenericSuperclass();
+			}else if ( superClass instanceof ParameterizedType){
+				Type rawType = ((ParameterizedType)superClass).getRawType();
+				if( !rawType.equals(Enum.class) )
+					hierarchy.push(superClass);
+				superClass = ((Class<?>)rawType).getGenericSuperclass();
+			}
 			else
 				superClass = null;
 		}
+		return hierarchy;
+	}
+	
+	private static void printHierarchy(Class<?> clazz, PrintStream out){
+		Deque<Type> hierarchy = getHierarchy(clazz);
 		if( hierarchy.size() > 0){
 			out.println( tabs + "<Hierarchy>");
 			addTab();
 			do{
-				superClass = hierarchy.poll();
-				out.format("%s<Class><\\![CDATA[%s]]></Class>\n",tabs, ClassToUML.toString(superClass));
+				Type superClass = hierarchy.poll();
+				out.format("%s<Class><![CDATA[%s]]></Class>\n",tabs, ClassToUML.toString(superClass));
 			}while( hierarchy.size() > 0);
 			removeTab();
 			out.println( tabs + "</Hierarchy>");
@@ -79,7 +88,7 @@ public class ClassToUML_XML {
 			addTab();
 			do{
 				enclosingClass = enclosingClasses.poll();
-				out.format("%s<Class><\\![CDATA[%s]]></Class>\n",tabs, ClassToUML.toString(enclosingClass));
+				out.format("%s<Class><![CDATA[%s]]></Class>\n",tabs, ClassToUML.toString(enclosingClass));
 			}while( enclosingClasses.size() > 0 );
 			removeTab();
 			out.println(tabs + "</EnclosingClasses>");
@@ -87,18 +96,32 @@ public class ClassToUML_XML {
 	}
 
 	private static void printImplementedInterfaces(Class<?> clazz, PrintStream out){
-		Type[] interfaces = clazz.getGenericInterfaces();
-		if(interfaces.length > 0){
+		Deque<Type> interfaces = new ArrayDeque<Type>();
+		for(Type parent: getHierarchy(clazz)){
+			Class<?> superClass = null;
+			if( parent instanceof Class<?> )
+				superClass = (Class<?>)parent;
+			else if ( parent instanceof ParameterizedType)
+				superClass = (Class<?>)((ParameterizedType)parent).getRawType();
+			for(Type implementedInterface: ((Class<?>) superClass).getGenericInterfaces())
+				if( !interfaces.contains(implementedInterface))
+					interfaces.add(implementedInterface);
+		}
+		for(Type implementedInterface: clazz.getGenericInterfaces())
+			if( !interfaces.contains(implementedInterface))
+				interfaces.add(implementedInterface);
+		if(interfaces.size() > 0){
 			out.println(tabs + "<Interfaces>");
 			addTab();
 			for(Type implementedInterface : interfaces)
-				out.format("%s<Interface><\\![CDATA[%s]]></Interface>\n",tabs, ClassToUML.toString(implementedInterface));
+				out.format("%s<Interface><![CDATA[%s]]></Interface>\n",tabs, ClassToUML.toString(implementedInterface));
 			removeTab();
 			out.println(tabs + "</Interfaces>");
 		}
 	}
 
 	private static void printHeader(Class<?> clazz, PrintStream out){
+		// TODO hacer
 		if( clazz.isInterface() )
 			out.println("<<Interface>>");
 		else if( clazz.isEnum() )
@@ -159,7 +182,7 @@ public class ClassToUML_XML {
 	
 	private static void print(Field field, PrintStream out){
 		int modifiers = field.getModifiers();
-		out.format("%s<Field visibility=\"%c\"%s><\\![CDATA[%s]]></Field>\n",
+		out.format("%s<Field visibility=\"%c\"%s><![CDATA[%s]]></Field>\n",
 				tabs,
 				ClassToUML.getVisibility(modifiers),
 				Modifier.isStatic(modifiers) ? " isStatic=\"true\"" : "",
@@ -181,7 +204,7 @@ public class ClassToUML_XML {
 	
 	private static void print(String classSimpleName, Constructor<?> constructor, PrintStream out){
 		int modifiers = constructor.getModifiers();
-		out.format("%s<Constructor visibility=\"%c\"><\\![CDATA[%s]]></Constructor>\n",
+		out.format("%s<Constructor visibility=\"%c\"><![CDATA[%s]]></Constructor>\n",
 				tabs,
 				ClassToUML.getVisibility(modifiers),
 				ClassToUML.toString(classSimpleName, constructor)		
@@ -190,7 +213,7 @@ public class ClassToUML_XML {
 	
 	private static void print(Method method, PrintStream out){
 		int modifiers = method.getModifiers();
-		out.format("%s<Method visibility=\"%c\"%s%s><\\![CDATA[%s]]></Method>\n",
+		out.format("%s<Method visibility=\"%c\"%s%s><![CDATA[%s]]></Method>\n",
 				tabs,
 				ClassToUML.getVisibility(modifiers),
 				Modifier.isStatic(modifiers) ? " isStatic=\"true\"" : "",
@@ -264,9 +287,12 @@ public class ClassToUML_XML {
 	
 	/**
 	 * @param args
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String... args) {
-		printUML( org.sam.interpoladores.GeneradorDeFunciones.Predefinido.class, System.out );
+	public static void main(String... args) throws ClassNotFoundException {
+//		printUML( org.sam.interpoladores.GeneradorDeFunciones.Predefinido.class, System.out );
 		printUML( org.sam.tools.textureGenerator.ColorRamp.Predefinidas.class, System.out );
+//		printUML( Class.forName("org.sam.jogl.particulas.Estrellas"), System.out );
+//		printUML( javax.swing.JButton.class, System.out );
 	}
 }

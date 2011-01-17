@@ -147,8 +147,8 @@ public class ListClassFromAPackage {
 	
 	private static void print(Class<?> clazz){
 		System.out.println(getTabs(clazz) + getHierarchicalComposeName(clazz));
-//		for(Class<?> subclazz : clazz.getDeclaredClasses())
-//			print(subclazz);
+		for(Class<?> subclazz : clazz.getDeclaredClasses())
+			print(subclazz);
 	}
 	
 	/**

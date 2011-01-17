@@ -41,7 +41,7 @@ public class ClassToUML_SVG {
 			try {
 				return ((ByteArrayOutputStream)out).toString("UTF8");
 			} catch (UnsupportedEncodingException ignorada) {
-				return "";
+				return ((ByteArrayOutputStream)out).toString();
 			}
 		}
 	}
@@ -210,6 +210,7 @@ public class ClassToUML_SVG {
 	}
 
 	private static Dimension drawHeader(Class<?> clazz, PrintStream out){
+		// TODO adaptar SVG
 		if(clazz.isInterface())
 			out.println("<<Interface>>");
 		else if(clazz.isEnum())
@@ -307,8 +308,10 @@ public class ClassToUML_SVG {
 	private static Dimension draw(Class<?> clazz, PrintStream out){
 		StringPrintStream sps = new StringPrintStream();
 		Dimension dHeader  = drawHeader(clazz, sps);
+		// TODO hacer grupos
 		sps.println("\n\t Aquí creamos un grupo desplazado: " + dHeader.height );
 		Dimension dFields  = drawFields(clazz, sps);
+		// TODO hacer grupos
 		sps.println("\n\t Aquí creamos un grupo desplazado: " + (dHeader.height + dFields.height) );
 		Dimension dMethods = drawMethods(clazz, sps);
 		out.print(sps.getString());
@@ -339,14 +342,6 @@ public class ClassToUML_SVG {
 	 * @param args
 	 */
 	public static void main(String... args) {
-//		System.out.println();
-//		drawUML(ClassToUML_SVG.MiInterface.class, System.out);
-//		System.out.println();
-//		drawUML(ClassToUML_SVG.OtroInterface.class, System.out);
-//		System.out.println();
-//		drawUML(ClassToUML_SVG.Prueba.class, System.out);
-		
-//		System.out.println();
 		drawUML(ListClassFromAPackage.class, System.out);
 		System.out.println();
 		drawUML(java.util.Map.class, System.out);

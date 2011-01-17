@@ -30,9 +30,8 @@ public class PruebaFullScreen {
 	}
 	
 	private static String DisplayModeToString(DisplayMode mode){
-		return String.format("%d x %d [%s bits] [%s Hz]",
-				mode.getWidth(),
-				mode.getHeight(),
+		return String.format("%10s [%s bits] [%s Hz]",
+				String.format("%d x %d", mode.getWidth(), mode.getHeight() ),
 				mode.getBitDepth() == DisplayMode.BIT_DEPTH_MULTI ?
 						"BIT_DEPTH_MULTI" : Integer.toString( mode.getBitDepth() ),
 				mode.getRefreshRate() == DisplayMode.REFRESH_RATE_UNKNOWN ?
@@ -65,7 +64,7 @@ public class PruebaFullScreen {
 					System.out.println( DisplayModeToString(mode) );
 				
 				DisplayMode newDisplayMode = 
-					new DisplayMode( 640, 400, currentDisplayMode.getBitDepth(), currentDisplayMode.getRefreshRate() );
+					new DisplayMode( 640, 480, currentDisplayMode.getBitDepth(), currentDisplayMode.getRefreshRate() );
 				try{
 					myDevice.setDisplayMode(newDisplayMode);
 					frame.setSize(newDisplayMode.getWidth(),newDisplayMode.getHeight());
