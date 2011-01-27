@@ -21,93 +21,412 @@
  */
 package org.sam.odf_doclet;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.Queue;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.ImageTranscoder;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 
 public class ClassToUML {
 	
-	private static Class<?> getPrimaryComponentType(Class<?> clazz){
-		if( clazz.isArray() )
-			return getPrimaryComponentType(clazz.getComponentType());
-		return clazz;
+	private static String tabs = "";
+	
+	private static void addTab(){
+		tabs = tabs.concat("\t");
 	}
 	
-	public static String toString(Type[] params){
-		String stringParams = "";
-		for(int i = 0; i < params.length; ){
-			stringParams += toString(params[i]);
-			if(++i < params.length)
-				stringParams += ", ";
+	private static void removeTab(){
+		tabs = tabs.substring(1);
+	}
+	
+	private static Deque<Type> getHierarchy(Class<?> clazz){
+		Deque<Type> hierarchy = new ArrayDeque<Type>();
+		Type superClass = clazz.getGenericSuperclass();
+		while( superClass != null && !superClass.equals(Object.class) ){
+			if( superClass instanceof Class<?> ){
+				hierarchy.push(superClass);
+				superClass = ((Class<?>)superClass).getGenericSuperclass();
+			}else if ( superClass instanceof ParameterizedType){
+				Type rawType = ((ParameterizedType)superClass).getRawType();
+				if( !rawType.equals(Enum.class) )
+					hierarchy.push(superClass);
+				superClass = ((Class<?>)rawType).getGenericSuperclass();
+			}
+			else
+				superClass = null;
 		}
-		return stringParams;
+		return hierarchy;
 	}
-
-	public static String toString(TypeVariable<?>[] typeParameters){
-		String stringParams = "";
-		for(int i = 0; i < typeParameters.length; ){
-			stringParams += toString(typeParameters[i]);
-			if(++i < typeParameters.length)
-				stringParams += ", ";
+	
+	private static void printHierarchy(Class<?> clazz, PrintStream out){
+		Deque<Type> hierarchy = getHierarchy(clazz);
+		if( hierarchy.size() > 0){
+			out.println( tabs + "<Hierarchy>");
+			addTab();
+			do{
+				Type superClassType = hierarchy.poll();
+				Class<?> superClass = (Class<?>)(superClassType instanceof ParameterizedType ? 
+						((ParameterizedType)superClassType).getRawType():
+						superClassType);
+						
+				out.format("%s<Class%s><![CDATA[%s]]></Class>\n",
+						tabs,
+						Modifier.isAbstract(superClass.getModifiers()) ? " isAbstract=\"true\"" : "",
+						ClassToUMLAdapter.toString(superClassType)
+				);
+			}while( hierarchy.size() > 0);
+			removeTab();
+			out.println( tabs + "</Hierarchy>");
 		}
-		return stringParams;
-	}
-	
-	public static String toString(Type type){
-		if(type instanceof Class<?>)
-			return toString((Class<?>)type);
-		if(type instanceof ParameterizedType)
-			return toString((ParameterizedType)type);
-		return type.toString();
 	}
 
-	public static String toString(Class<?> clazz){
-		Package pack = clazz.isArray() ? 
-				getPrimaryComponentType(clazz).getPackage():
-				clazz.getPackage();
-		if(pack == null)
-			return clazz.getCanonicalName();
-		return  clazz.getCanonicalName().substring(pack.getName().length() + 1);
-	}
-	
-	public static String toString(ParameterizedType type){
-		return toString((Class<?>)type.getRawType()) + 
-				"<" + toString(type.getActualTypeArguments()) + ">";
-	}
-	
-	public static String toString(Field field){
-		return String.format("%s: %s", field.getName(), toString(field.getGenericType()) );
+	private static void printEnclosingClasses(Class<?> clazz, PrintStream out){
+		Deque<Class<?>> enclosingClasses = new ArrayDeque<Class<?>>();
+		Class<?> enclosingClass = clazz.getEnclosingClass();
+		while( enclosingClass != null ){
+			enclosingClasses.push(enclosingClass);
+			enclosingClass = enclosingClass.getEnclosingClass();
+		}
+		if( enclosingClasses.size() > 0 ){
+			out.println(tabs + "<EnclosingClasses>");
+			addTab();
+			do{
+				enclosingClass = enclosingClasses.poll();
+				
+				if(enclosingClass.isEnum())
+					out.format("%s<Enum><![CDATA[%s]]></Enum>\n",tabs, ClassToUMLAdapter.toString(enclosingClass));
+				else if (enclosingClass.isInterface())
+					out.format("%s<Interface><![CDATA[%s]]></Interface>\n",tabs, ClassToUMLAdapter.toString(enclosingClass));
+				else
+					out.format("%s<Class%s><![CDATA[%s]]></Class>\n",
+							tabs,
+							Modifier.isAbstract(enclosingClass.getModifiers()) ? " isAbstract=\"true\"" : "",
+							ClassToUMLAdapter.toString(enclosingClass)
+					);
+				
+			}while( enclosingClasses.size() > 0 );
+			removeTab();
+			out.println(tabs + "</EnclosingClasses>");
+		}
 	}
 
-	public static String toString(String classSimpleName, Constructor<?> constructor){
-		return String.format( "%1$s(%2$s%3$s%2$s)", 
-				classSimpleName,
-				constructor.getGenericParameterTypes().length > 0 ? " ":"",
-				toString(constructor.getGenericParameterTypes())
+	private static void printImplementedInterfaces(Class<?> clazz, PrintStream out){
+		Deque<Type> interfaces = new ArrayDeque<Type>();
+		for(Type parent: getHierarchy(clazz)){
+			Class<?> superClass = null;
+			if( parent instanceof Class<?> )
+				superClass = (Class<?>)parent;
+			else if ( parent instanceof ParameterizedType)
+				superClass = (Class<?>)((ParameterizedType)parent).getRawType();
+			for(Type implementedInterface: ((Class<?>) superClass).getGenericInterfaces())
+				if( !interfaces.contains(implementedInterface))
+					interfaces.add(implementedInterface);
+		}
+		for(Type implementedInterface: clazz.getGenericInterfaces())
+			if( !interfaces.contains(implementedInterface))
+				interfaces.add(implementedInterface);
+		if(interfaces.size() > 0){
+			out.println(tabs + "<Interfaces>");
+			addTab();
+			for(Type implementedInterface : interfaces)
+				out.format("%s<Interface><![CDATA[%s]]></Interface>\n",tabs, ClassToUMLAdapter.toString(implementedInterface));
+			removeTab();
+			out.println(tabs + "</Interfaces>");
+		}
+	}
+
+	/*
+	private static void printEnumConstant(Object constant, Class<?> enumClass, PrintStream out){
+		System.err.println(constant);
+		if( constant.getClass().equals(enumClass) )
+			out.format("%s<Constant name=\"%s\"/>\n",tabs,constant.toString());
+		else{
+			out.format("%s<Constant name=\"%s\">\n",tabs,constant.toString());
+			addTab();
+				printEnumMethods( constant.getClass(), out );
+			removeTab();
+			out.println(tabs + "</Constant>");
+		}
+	}*/
+	
+	private static void printFields(Collection<Field> fields, PrintStream out){
+		if( fields.size() > 0){
+			out.println(tabs + "<Fields>");
+			addTab();
+			for(Field field: fields)
+				print( field, out );
+			removeTab();
+			out.println(tabs + "</Fields>");
+		}
+	}
+	
+	private static void print(Field field, PrintStream out){
+		int modifiers = field.getModifiers();
+		out.format("%s<Field visibility=\"%c\"%s><![CDATA[%s]]></Field>\n",
+				tabs,
+				ClassToUMLAdapter.getVisibility(modifiers),
+				Modifier.isStatic(modifiers) ? " isStatic=\"true\"" : "",
+				ClassToUMLAdapter.toString(field)		
 		);
 	}
-
-	public static String toString(Method method) {
-		String returnType = toString( method.getGenericReturnType() );
-		return String.format( "%1$s(%2$s%3$s%2$s)%4$s", 
-				method.getName(),
-				method.getGenericParameterTypes().length > 0 ? " ":"",
-				toString( method.getGenericParameterTypes() ),
-				!returnType.equals("void") ? ": " + returnType :""
+	
+	private static void printConstructors(Collection<Constructor<?>> constructors, String classSimpleName, PrintStream out){
+		if( constructors.size() > 0){
+			out.println(tabs + "<Constructors>");
+			addTab();
+			for(Constructor<?> constructor: constructors)
+				print( constructor, classSimpleName, out );
+			removeTab();
+			out.println(tabs + "</Constructors>");
+		}
+	}
+	
+	private static void print(Constructor<?> constructor, String classSimpleName, PrintStream out){
+		int modifiers = constructor.getModifiers();
+		out.format("%s<Constructor visibility=\"%c\"><![CDATA[%s]]></Constructor>\n",
+				tabs,
+				ClassToUMLAdapter.getVisibility(modifiers),
+				ClassToUMLAdapter.toString(classSimpleName, constructor)		
 		);
 	}
 	
-	public static char getVisibility(int att){
-		if( Modifier.isPublic(att) )
-			return '+';
-		if( Modifier.isProtected(att) )
-			return '~';
-		if( Modifier.isPrivate(att) )
-			return '-';
-		return '#';
+	private static void printMethods(Collection<Method> methods, PrintStream out){
+		if( methods.size() > 0){
+			out.println(tabs + "<Methods>");
+			addTab();
+			for(Method method: methods)
+				print( method, out );
+			removeTab();
+			out.println(tabs + "</Methods>");
+		}
+	}
+	
+	private static void print(Method method, PrintStream out){
+		int modifiers = method.getModifiers();
+		out.format("%s<Method visibility=\"%c\"%s%s><![CDATA[%s]]></Method>\n",
+				tabs,
+				ClassToUMLAdapter.getVisibility(modifiers),
+				Modifier.isStatic(modifiers) ? " isStatic=\"true\"" : "",
+				Modifier.isAbstract(modifiers) ? " isAbstract=\"true\"" : "",
+				ClassToUMLAdapter.toString(method)		
+		);
+	}
+	
+	private static void printInterface(Class<?> clazz, PrintStream out){
+		out.format("%s<Interface name=\"%s\">\n",
+				tabs,
+				ClassToUMLAdapter.toString(clazz)
+		);
+		addTab();
+		if( clazz.getTypeParameters().length > 0 )
+			out.format("%s<Parameters><![CDATA[%s]]></Parameters>\n",
+					tabs,
+					ClassToUMLAdapter.toString(clazz.getTypeParameters())
+			);
+
+		printEnclosingClasses(clazz, out);
+		printImplementedInterfaces(clazz, out);
+		
+		printFields( Arrays.asList(clazz.getDeclaredFields()), out );
+		
+		Queue<Method> methods = new ArrayDeque<Method>();
+		for(Method method: clazz.getDeclaredMethods()){
+			if(!method.isSynthetic() )
+				methods.offer( method );
+		}
+		printMethods(methods, out);
+		removeTab();
+		out.println(tabs + "</Interface>");
+	}
+	
+	private static void printEnum(Class<?> clazz, PrintStream out){
+		out.format("%s<Enum name=\"%s\">\n",
+				tabs,
+				ClassToUMLAdapter.toString(clazz)
+		);
+		addTab();
+		
+		printEnclosingClasses(clazz, out);
+		printImplementedInterfaces(clazz, out);
+		
+		for(Object constant: clazz.getEnumConstants())
+			out.format("%s<Constant name=\"%s\"/>\n",tabs,constant.toString());
+		
+		Queue<Field> fields = new ArrayDeque<Field>();
+		for(Field field: clazz.getDeclaredFields()){
+			if(!field.isSynthetic() && !field.isEnumConstant())
+				fields.offer( field );
+		}
+		printFields(fields, out);
+		
+		Queue<Method> methods = new ArrayDeque<Method>();
+		for(Method method: clazz.getDeclaredMethods()){
+			String methodString = ClassToUMLAdapter.toString(method);
+			if(!method.isSynthetic() && !methodString.startsWith("values():") &&  !methodString.startsWith("valueOf( String ):") )
+				methods.offer( method );
+		}
+		printMethods(methods, out);
+		removeTab();
+		out.println(tabs + "</Enum>");
+	}
+	
+	private static void printClass(Class<?> clazz, PrintStream out){
+		out.format("%s<Class name=\"%s\"%s>\n",
+				tabs,
+				ClassToUMLAdapter.toString(clazz),
+				Modifier.isAbstract(clazz.getModifiers()) ? " isAbstract=\"true\"" : ""
+		);
+		addTab();
+		if( clazz.getTypeParameters().length > 0 )
+			out.format("%s<Parameters><![CDATA[%s]]></Parameters>\n",
+					tabs,
+					ClassToUMLAdapter.toString(clazz.getTypeParameters())
+			);
+	
+		printHierarchy(clazz, out);
+		printEnclosingClasses(clazz, out);
+		printImplementedInterfaces(clazz, out);
+		
+		printFields( Arrays.asList(clazz.getDeclaredFields()), out );
+		
+		printConstructors( Arrays.asList(clazz.getDeclaredConstructors()), clazz.getSimpleName(), out );
+		
+		Queue<Method> methods = new ArrayDeque<Method>();
+		for(Method method: clazz.getDeclaredMethods()){
+			if(!method.isSynthetic() )
+				methods.offer( method );
+		}
+		printMethods(methods, out);
+		removeTab();
+		out.println(tabs + "</Class>");
+	}
+	
+	private static void print(Class<?> clazz, PrintStream out){
+		if( clazz.isInterface() )
+			printInterface(clazz, out);
+		else if( clazz.isEnum() )
+			printEnum(clazz, out);
+		else
+			printClass(clazz, out);
+	}
+	
+	public static void toXML(Class<?> clazz, OutputStream out) {
+		if (out instanceof PrintStream)
+			print(clazz, (PrintStream) out);
+		else
+			try {
+				print(clazz, new PrintStream(out, false, "UTF-8"));
+			} catch (UnsupportedEncodingException ignorada) {
+			}
+	}
+	
+	private static Transformer toSVGSingleton = null;
+
+	private static final Transformer toSVGTransformer() {
+		if (toSVGSingleton == null)
+			try {
+				toSVGSingleton = TransformerFactory.newInstance().newTransformer(
+						new StreamSource(new FileInputStream("resources/toSVG.xsl"))
+				);
+				toSVGSingleton.setParameter("scale", 2.0);
+//				toSVGSingleton.setParameter("background", "#00FF00");
+			} catch (TransformerConfigurationException ignorada) {
+				ignorada.printStackTrace();
+			} catch (FileNotFoundException ignorada) {
+				ignorada.printStackTrace();
+			} catch (TransformerFactoryConfigurationError ignorada) {
+				ignorada.printStackTrace();
+			}
+		return toSVGSingleton;
+	}
+	
+	public static void toSVG(final Class<?> clazz, OutputStream out) throws TransformerException{
+
+		final PipedInputStream pipeIn = new PipedInputStream();
+
+		new Thread() {
+			public void run() {
+				try {
+					PipedOutputStream pipeOut = new PipedOutputStream(pipeIn);
+					toXML(clazz, pipeOut);
+					pipeOut.flush();
+					pipeOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		toSVGTransformer().transform( new StreamSource(pipeIn), new StreamResult(out) );
+	}
+	
+	public static void toPNG(final Class<?> clazz, OutputStream out) throws TranscoderException, IOException{
+
+		final PipedInputStream pipeIn = new PipedInputStream();
+		
+		new Thread() {
+			public void run() {
+				try {
+					PipedOutputStream pipeOut = new PipedOutputStream(pipeIn);
+					toSVG( clazz, pipeOut);
+					pipeOut.flush();
+					pipeOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (TransformerException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		ImageTranscoder t = new PNGTranscoder();
+        
+		TranscoderInput input = new TranscoderInput(pipeIn);
+        input.setURI( new File("output").toURI().toString() );
+        TranscoderOutput output = new TranscoderOutput(out);
+        
+        t.transcode( input, output );
+        out.flush();
+        out.close();
+	}
+	
+	/**
+	 * @param args
+	 * @throws ClassNotFoundException 
+	 * @throws TranscoderException 
+	 * @throws IOException 
+	 */
+	public static void main(String... args) throws ClassNotFoundException, TranscoderException, IOException {
+		toPNG( javax.swing.JButton.class, new FileOutputStream("output/out.png") );
 	}
 }

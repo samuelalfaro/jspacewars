@@ -218,15 +218,15 @@ public class ClassToUML_SVG {
 		else if(clazz.isEnum())
 			out.println("<<Enum>>");
 		if(clazz.getTypeParameters().length > 0)
-			out.println(ClassToUML.toString(clazz) + "<" + ClassToUML.toString(clazz.getTypeParameters()) + ">");
+			out.println(ClassToUMLAdapter.toString(clazz) + "<" + ClassToUMLAdapter.toString(clazz.getTypeParameters()) + ">");
 		else
-			out.println(ClassToUML.toString(clazz));
+			out.println(ClassToUMLAdapter.toString(clazz));
 
 		return new Dimension();
 	}
 	
 	private static int draw(int pos, Field field, PrintStream out){
-		String stringField = ClassToUML.toString(field);
+		String stringField = ClassToUMLAdapter.toString(field);
 		int modifiers = field.getModifiers();
 		out.println( getBulletField(
 				0,
@@ -255,7 +255,7 @@ public class ClassToUML_SVG {
 	}
 	
 	private static int draw(int pos, String classSimpleName, Constructor<?> constructor, PrintStream out){
-		String stringConstructor = ClassToUML.toString(classSimpleName, constructor);
+		String stringConstructor = ClassToUMLAdapter.toString(classSimpleName, constructor);
 		out.println(getBulletConstructor(
 				0,
 				(int)(pos * monospaceCharHeight+ 0.5f),
@@ -272,7 +272,7 @@ public class ClassToUML_SVG {
 	}
 	
 	private static int draw(int pos, Method method, PrintStream out){
-		String stringMethod = ClassToUML.toString(method);
+		String stringMethod = ClassToUMLAdapter.toString(method);
 		int modifiers = method.getModifiers();
 		out.println( getBulletMethod(
 				0,

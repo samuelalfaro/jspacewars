@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<xsl:param name="scale">1.0</xsl:param>
+	<xsl:param name="background">none</xsl:param>
 	<xsl:output method="xml" indent="no"/>
 	<xsl:preserve-space elements="*"/>
 
@@ -235,6 +236,7 @@
 			<defs>
 				<style type="text/css"><![CDATA[
 					text{
+						text-rendering:optimizeLegibility;
 						font-size:12px;
 						font-style:normal;
 						font-weight:normal;
@@ -315,14 +317,15 @@
 			</defs>
 
 			<!-- Fondo -->
-			<xsl:element name="rect" xml:space="default">
-				<xsl:attribute name="x">0</xsl:attribute>
-				<xsl:attribute name="y">0</xsl:attribute>
-				<xsl:attribute name="width"><xsl:value-of select="$widthArea"/></xsl:attribute>
-				<xsl:attribute name="height"><xsl:value-of select="$heightArea"/></xsl:attribute>
-				<xsl:attribute name="style"><![CDATA[fill:#E0E0E0; stroke:none]]></xsl:attribute>
-			</xsl:element>
-
+			<xsl:if test="$background !='none'">
+				<xsl:element name="rect" xml:space="default">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y">0</xsl:attribute>
+					<xsl:attribute name="width"><xsl:value-of select="$widthArea"/></xsl:attribute>
+					<xsl:attribute name="height"><xsl:value-of select="$heightArea"/></xsl:attribute>
+					<xsl:attribute name="style"><xsl:value-of select="concat('fill:', $background, '; stroke:none')"/></xsl:attribute>
+				</xsl:element>
+			</xsl:if>
 
 			<xsl:if test="Hierarchy">
 				<xsl:call-template name="drawHierarchy">
