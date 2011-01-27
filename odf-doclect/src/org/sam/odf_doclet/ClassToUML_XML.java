@@ -21,7 +21,14 @@
  */
 package org.sam.odf_doclet;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
@@ -35,6 +42,20 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Queue;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.batik.transcoder.image.ImageTranscoder;
+import org.apache.batik.transcoder.image.PNGTranscoder;
 
 public class ClassToUML_XML {
 	
@@ -329,14 +350,81 @@ public class ClassToUML_XML {
 			}
 	}
 	
+	private static Transformer toSVGSingleton = null;
+
+	private static final Transformer toSVGTransformer() {
+		if (toSVGSingleton == null)
+			try {
+				toSVGSingleton = TransformerFactory.newInstance().newTransformer(
+						new StreamSource(new FileInputStream("resources/toSVG.xsl"))
+				);
+			} catch (TransformerConfigurationException ignorada) {
+				ignorada.printStackTrace();
+			} catch (FileNotFoundException ignorada) {
+				ignorada.printStackTrace();
+			} catch (TransformerFactoryConfigurationError ignorada) {
+				ignorada.printStackTrace();
+			}
+		return toSVGSingleton;
+	}
+	
+	public static void toSVG(final Class<?> clazz, OutputStream out) throws TransformerException{
+
+		final PipedInputStream pipeIn = new PipedInputStream();
+
+		new Thread() {
+			public void run() {
+				try {
+					PipedOutputStream pipeOut = new PipedOutputStream(pipeIn);
+					toXML(clazz, pipeOut);
+					pipeOut.flush();
+					pipeOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		toSVGTransformer().transform( new StreamSource(pipeIn), new StreamResult(out) );
+	}
+	
+	public static void toPNG(final Class<?> clazz, OutputStream out) throws TranscoderException, IOException{
+
+		final PipedInputStream pipeIn = new PipedInputStream();
+		new Thread() {
+			public void run() {
+				try {
+					PipedOutputStream pipeOut = new PipedOutputStream(pipeIn);
+					toSVG( clazz, pipeOut);
+					pipeOut.flush();
+					pipeOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (TransformerException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+
+		ImageTranscoder t = new PNGTranscoder();
+        
+		TranscoderInput input = new TranscoderInput(pipeIn);
+        input.setURI( new File("output").toURI().toString() );
+        TranscoderOutput output = new TranscoderOutput(out);
+        
+        t.transcode( input, output );
+        // Flush and close the stream.
+        out.flush();
+        out.close();
+	}
+	
 	/**
 	 * @param args
 	 * @throws ClassNotFoundException 
+	 * @throws TranscoderException 
+	 * @throws IOException 
 	 */
-	public static void main(String... args) throws ClassNotFoundException {
-//		toXML( org.sam.interpoladores.GeneradorDeFunciones.Predefinido.class, System.out );
-//		toXML( org.sam.tools.textureGenerator.ColorRamp.Predefinidas.class, System.out );
-		toXML( Class.forName("org.sam.jogl.particulas.Estrellas"), System.out );
-		toXML( java.util.concurrent.ArrayBlockingQueue.class, System.out );
+	public static void main(String... args) throws ClassNotFoundException, TranscoderException, IOException {
+		toPNG( javax.swing.JButton.class, new FileOutputStream("output/out.png") );
 	}
 }
