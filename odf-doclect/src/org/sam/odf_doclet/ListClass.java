@@ -34,6 +34,7 @@ import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
+@SuppressWarnings("unused")
 public class ListClass {
 	
 	private static final Comparator<PackageDoc> COMPARADOR_DE_PACKAGES = new Comparator<PackageDoc>() {
@@ -51,29 +52,30 @@ public class ListClass {
 	};
 	
 	private static final Comparator<ClassDoc> COMPARADOR_DE_CLASES = new Comparator<ClassDoc>() {
+		
+		private String getHierarchicalName(ClassDoc classDoc){
+			String name = classDoc.simpleTypeName();
+			ClassDoc containingClass = classDoc.containingClass();
+			while(containingClass != null){
+				if(containingClass.containingClass() != null)
+					name = containingClass.simpleTypeName() + "." + classDoc.simpleTypeName();
+				else
+					name = getHierarchicalName(containingClass) + "." + name;
+				containingClass = containingClass.containingClass();
+			}
+			ClassDoc superClassDoc = classDoc.superclass();
+			if( superClassDoc != null && 
+					classDoc.containingPackage().name().equals(superClassDoc.containingPackage().name())){
+				name = getHierarchicalName(superClassDoc) + "/" + name;
+			}
+			return name;
+		}
+		
 		/** {@inheritDoc} */
 		public int compare(ClassDoc e1, ClassDoc e2) {
 			return getHierarchicalName(e1).compareTo(getHierarchicalName(e2));
 		}
 	};
-	
-	private static String getHierarchicalName(ClassDoc classDoc){
-		String name = classDoc.simpleTypeName();
-		ClassDoc containingClass = classDoc.containingClass();
-		while(containingClass != null){
-			if(containingClass.containingClass() != null)
-				name = containingClass.simpleTypeName() + "." + classDoc.simpleTypeName();
-			else
-				name = getHierarchicalName(containingClass) + "." + name;
-			containingClass = containingClass.containingClass();
-		}
-		ClassDoc superClassDoc = classDoc.superclass();
-		if( superClassDoc != null && 
-				classDoc.containingPackage().name().equals(superClassDoc.containingPackage().name())){
-			name = getHierarchicalName(superClassDoc) + "/" + name;
-		}
-		return name;
-	}
 	
 	private static void printCollection(Collection<ClassDoc> collection, String title){
 		if(collection.size() > 0){

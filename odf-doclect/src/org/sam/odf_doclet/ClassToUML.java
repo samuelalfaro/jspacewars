@@ -192,7 +192,7 @@ public class ClassToUML {
 	
 	private static void print(Field field, PrintStream out){
 		int modifiers = field.getModifiers();
-		out.format("%s<Field visibility=\"%c\"%s><![CDATA[%s]]></Field>\n",
+		out.format("%1$s<Field visibility=\"%2$c\"%3$s>\n%1$s\t<Signature><![CDATA[%4$s]]></Signature>\n%1$s</Field>\n",
 				tabs,
 				ClassToUMLAdapter.getVisibility(modifiers),
 				Modifier.isStatic(modifiers) ? " isStatic=\"true\"" : "",
@@ -213,10 +213,10 @@ public class ClassToUML {
 	
 	private static void print(Constructor<?> constructor, String classSimpleName, PrintStream out){
 		int modifiers = constructor.getModifiers();
-		out.format("%s<Constructor visibility=\"%c\"><![CDATA[%s]]></Constructor>\n",
+		out.format("%1$s<Constructor visibility=\"%2$c\">\n%1$s\t<Signature><![CDATA[%3$s]]></Signature>\n%1$s</Constructor>\n",
 				tabs,
 				ClassToUMLAdapter.getVisibility(modifiers),
-				ClassToUMLAdapter.toString(classSimpleName, constructor)		
+				ClassToUMLAdapter.toString(classSimpleName, constructor)	
 		);
 	}
 	
@@ -233,7 +233,7 @@ public class ClassToUML {
 	
 	private static void print(Method method, PrintStream out){
 		int modifiers = method.getModifiers();
-		out.format("%s<Method visibility=\"%c\"%s%s><![CDATA[%s]]></Method>\n",
+		out.format("%1$s<Method visibility=\"%2$c\"%3$s%4$s>\n%1$s\t<Signature><![CDATA[%5$s]]></Signature>\n%1$s</Method>\n",
 				tabs,
 				ClassToUMLAdapter.getVisibility(modifiers),
 				Modifier.isStatic(modifiers) ? " isStatic=\"true\"" : "",
@@ -243,13 +243,13 @@ public class ClassToUML {
 	}
 	
 	private static void printInterface(Class<?> clazz, PrintStream out){
-		out.format("%s<Interface name=\"%s\">\n",
+		out.format("%1$s<Interface>\n%1$s\t<Signature><![CDATA[%2$s]]></Signature>\n",
 				tabs,
 				ClassToUMLAdapter.toString(clazz)
 		);
 		addTab();
 		if( clazz.getTypeParameters().length > 0 )
-			out.format("%s<Parameters><![CDATA[%s]]></Parameters>\n",
+			out.format("%1$s<Parameters>\n%1$s\t<Signature><![CDATA[%2$s]]></Signature>\n%1$s</Parameters>\n",
 					tabs,
 					ClassToUMLAdapter.toString(clazz.getTypeParameters())
 			);
@@ -270,7 +270,7 @@ public class ClassToUML {
 	}
 	
 	private static void printEnum(Class<?> clazz, PrintStream out){
-		out.format("%s<Enum name=\"%s\">\n",
+		out.format("%1$s<Enum>\n%1$s\t<Signature><![CDATA[%2$s]]></Signature>\n",
 				tabs,
 				ClassToUMLAdapter.toString(clazz)
 		);
@@ -301,14 +301,15 @@ public class ClassToUML {
 	}
 	
 	private static void printClass(Class<?> clazz, PrintStream out){
-		out.format("%s<Class name=\"%s\"%s>\n",
+		out.format("%1$s<Class%2$s>\n%1$s\t<Signature><![CDATA[%3$s]]></Signature>\n",
 				tabs,
-				ClassToUMLAdapter.toString(clazz),
-				Modifier.isAbstract(clazz.getModifiers()) ? " isAbstract=\"true\"" : ""
+				Modifier.isAbstract(clazz.getModifiers()) ? " isAbstract=\"true\"" : "",
+				ClassToUMLAdapter.toString(clazz)
+				
 		);
 		addTab();
 		if( clazz.getTypeParameters().length > 0 )
-			out.format("%s<Parameters><![CDATA[%s]]></Parameters>\n",
+			out.format("%1$s<Parameters>\n%1$s\t<Signature><![CDATA[%2$s]]></Signature>\n%1$s</Parameters>\n",
 					tabs,
 					ClassToUMLAdapter.toString(clazz.getTypeParameters())
 			);
@@ -427,6 +428,7 @@ public class ClassToUML {
 	 * @throws IOException 
 	 */
 	public static void main(String... args) throws ClassNotFoundException, TranscoderException, IOException {
-		toPNG( javax.swing.JButton.class, new FileOutputStream("output/out.png") );
+//		toXML( java.util.concurrent.ConcurrentHashMap.class, System.out);
+		toPNG( java.util.concurrent.ConcurrentHashMap.class, new FileOutputStream("output/out.png") );
 	}
 }

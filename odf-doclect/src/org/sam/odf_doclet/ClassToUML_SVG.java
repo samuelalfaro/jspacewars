@@ -190,12 +190,18 @@ public class ClassToUML_SVG {
 		);
 	}
 	
+	/**
+	 * @param out  
+	 */
 	private static Dimension drawSuperClasses(Class<?> clazz, PrintStream out){
 		clazz.getClasses();
 		return null;
 		//TODO hacer
 	}
 
+	/**
+	 * @param out  
+	 */
 	private static Dimension drawEnclosingClasses(Class<?> clazz, PrintStream out){
 		Class<?> enclosingClass = clazz.getEnclosingClass();
 		while(enclosingClass != null){
@@ -205,6 +211,9 @@ public class ClassToUML_SVG {
 		//TODO hacer
 	}
 
+	/**
+	 * @param out  
+	 */
 	private static Dimension drawImplementedInterfaces(Class<?> clazz, PrintStream out){
 		clazz.getClasses();
 		return null;

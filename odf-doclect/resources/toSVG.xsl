@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE xsl:stylesheet [<!ENTITY style SYSTEM 'shared/svg_styles.css'>]>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<xsl:param name="scale">1.0</xsl:param>
 	<xsl:param name="background">none</xsl:param>
@@ -65,6 +66,7 @@
 
 	<xsl:template name="GenerateSVG">
 		<xsl:param name="xOffsetEnclosingClasses"/>
+		<xsl:variable name="stylesheet"><![CDATA[<?xml-stylesheet type="text/css" href="shared/svg_styles.css"?>]]></xsl:variable>
 		<xsl:variable name="xOffsetHierarchy">
 			<xsl:choose>
 				<xsl:when test="Hierarchy">
@@ -101,22 +103,22 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:variable name="widthName" select="string-length(@name) * 8 + 20"/>
+		<xsl:variable name="widthName" select="string-length(/Signature) * 8 + 20"/>
 		<xsl:variable name="numElements" select="count(Constant) + count(Fields/Field) + count(Constructors/Constructor) + count(Methods/Method)"/>
 		<xsl:variable name="widthElements">
 			<xsl:choose>
 				<xsl:when test="$numElements &gt; 0">
 					<xsl:for-each select="Fields/Field|Constructors/Constructor|Methods/Method">
-						<xsl:sort select="string-length(.)" order="descending" data-type="number"/>
+						<xsl:sort select="string-length(./Signature)" order="descending" data-type="number"/>
 						<xsl:if test="position() = 1">
-							<xsl:number value="string-length(.) * 7 + 40"/>
+							<xsl:number value="string-length(./Signature) * 7 + 40"/>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>0</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="widthParameters" select="string-length(Parameters) * 8 +20"/>
+		<xsl:variable name="widthParameters" select="string-length(Parameters/Signature) * 8 +20"/>
 		<xsl:variable name="widthBox">
 			<xsl:choose>
 				<xsl:when test="$widthName &gt; $widthElements and $widthName &gt; $widthParameters and $widthName &gt; 140">
@@ -228,84 +230,13 @@
 		</xsl:variable>
 		<xsl:variable name="heightArea" select="10 + $yOffset + $prefixYOffset + $heightMax + 20"/>
 
+		<xsl:processing-instruction name="xml-stylesheet">type="text/css" href="shared/svg_styles.css"</xsl:processing-instruction>
 		<xsl:element name="svg" xml:space="default">
 			<xsl:attribute name="width"><xsl:number value="$widthArea * $scale"/></xsl:attribute>
 			<xsl:attribute name="height"><xsl:number value="$heightArea * $scale"/></xsl:attribute>
 			<xsl:attribute name="viewBox"><xsl:value-of select="concat('0 0 ', $widthArea, ' ', $heightArea)"/></xsl:attribute>
 			<xsl:attribute name="version">1.1</xsl:attribute>
 			<defs>
-				<style type="text/css"><![CDATA[
-					text{
-						text-rendering:optimizeLegibility;
-						font-size:12px;
-						font-style:normal;
-						font-weight:normal;
-						text-anchor:start;
-						fill:#000000;
-						fill-opacity:1;
-						font-family:DejaVu Sans Mono
-					}
-					text.static{
-						text-decoration:underline;
-					}
-					text.abstract{
-						font-style:oblique;
-					}
-					text.centrado{
-						text-anchor:middle;
-					}
-					text#textoTitulo, text.abstract#textoTitulo{
-						font-size:14px;
-						font-weight:bold;
-						text-anchor:middle;
-					}
-					line, path.default,
-					rect.estilo1#titulo, rect.estilo1#parameters, rect.estilo1#contenido,
-					rect.estilo2#titulo, rect.estilo2#parameters, rect.estilo2#contenido,
-					rect.estilo3#titulo, rect.estilo3#contenido{
-						stroke:#000000;
-						stroke-width:1;
-						stroke-linecap:butt;
-						stroke-linejoin:miter;
-						stroke-miterlimit:4;
-						stroke-opacity:1;
-						stroke-dasharray:none;
-						stroke-dashoffset:0;
-						marker:none;
-						visibility:visible;
-						display:inline;
-						overflow:visible;
-						enable-background:accumulate;
-						fill:#E0E0E0;
-						fill-opacity:1;
-						fill-rule:nonzero;
-					}
-
-					rect.estilo1#titulo, rect.estilo1#parameters{
-						fill:url(shared/defs.svg#gradientInicialFinalV1);
-					}
-					rect.estilo1#parameters{
-						stroke-dasharray: 4, 4;
-					}
-					rect.estilo1#contenido{
-						fill:url(shared/defs.svg#gradientInicialFinalH1);
-					}
-					rect.estilo2#titulo, rect.estilo2#parameters, path#CirculoInteface{
-						fill:url(shared/defs.svg#gradientInicialFinalV2);
-					}
-					rect.estilo2#parameters{
-						stroke-dasharray: 4, 4;
-					}
-					rect.estilo2#contenido{
-						fill:url(shared/defs.svg#gradientInicialFinalH2);
-					}
-					rect.estilo3#titulo{
-						fill:url(shared/defs.svg#gradientInicialFinalV3);
-					}
-					rect.estilo3#contenido{
-						fill:url(shared/defs.svg#gradientInicialFinalH3);
-					}
-				]]></style>
 				<path id="CirculoInteface" class="default" d="M -10,0 A 10,10 0 0,1 10,0 A 10,10 0 0,1 -10,0 z"/>
 				<path id="TrianguloJeraquia" class="default" d="M -10,10 0,-10 10,10 Z"/>
 				<g id="CirculoContenedor">
@@ -395,7 +326,7 @@
 							<xsl:when test="name(.)='Enum'"><![CDATA[<< enumeration >>]]></xsl:when>
 						</xsl:choose>
 					</xsl:with-param>
-					<xsl:with-param name="title" select="@name"/>
+					<xsl:with-param name="title" select="Signature/text()"/>
 					<xsl:with-param name="isAbstract" select="@isAbstract"/>
 				</xsl:call-template>
 
@@ -726,7 +657,7 @@
 			<xsl:attribute name="x"><xsl:value-of select="$center"/></xsl:attribute>
 			<xsl:attribute name="y">-2</xsl:attribute>
 			<xsl:attribute name="id">textoTitulo</xsl:attribute>
-			<xsl:value-of select="text()"/>
+			<xsl:value-of select="Signature/text()"/>
 		</xsl:element>
 	</xsl:template>
 
@@ -746,13 +677,13 @@
 		<xsl:element name="use" xml:space="default">
 			<xsl:attribute name="x">0</xsl:attribute>
 			<xsl:attribute name="y"><xsl:number value="position()*20"/></xsl:attribute>
-			<xsl:attribute name="xlink:href">shared/bullets.svg#StaticPublicField</xsl:attribute>
+			<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
 		</xsl:element>
 		<xsl:element name="text" xml:space="default">
 			<xsl:attribute name="class">static</xsl:attribute>
 			<xsl:attribute name="x">23</xsl:attribute>
 			<xsl:attribute name="y"><xsl:number value="position()*20 +13"/></xsl:attribute>
-			<xsl:value-of select="@name"/>
+			<xsl:value-of select="Signature/text()"/>
 		</xsl:element>
 	</xsl:template>
 
@@ -772,40 +703,40 @@
 				<xsl:when test="@visibility='+'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticPublicField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#PublicField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#PublicField</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="@visibility='~'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticPackageField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageField</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#PackageField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#PackageField</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="@visibility='#'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticProtectedField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedField</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#ProtectedField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedField</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="@visibility='-'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticPrivateField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateField</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#PrivateField</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#PrivateField</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -822,7 +753,7 @@
 			</xsl:choose>
 			<xsl:attribute name="x">23</xsl:attribute>
 			<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
-			<xsl:value-of select="text()"/>
+			<xsl:value-of select="Signature/text()"/>
 		</xsl:element>
 	</xsl:template>
 
@@ -842,16 +773,16 @@
 			<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:attribute>
 			<xsl:choose>
 				<xsl:when test="@visibility='+'">
-					<xsl:attribute name="xlink:href">shared/bullets.svg#PublicConstructor</xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#PublicConstructor</xsl:attribute>
 				</xsl:when>
 				<xsl:when test="@visibility='~'">
-					<xsl:attribute name="xlink:href">shared/bullets.svg#PackageConstructor</xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#PackageConstructor</xsl:attribute>
 				</xsl:when>
 				<xsl:when test="@visibility='#'">
-					<xsl:attribute name="xlink:href">shared/bullets.svg#ProtectedConstructor</xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedConstructor</xsl:attribute>
 				</xsl:when>
 				<xsl:when test="@visibility='-'">
-					<xsl:attribute name="xlink:href">shared/bullets.svg#PrivateConstructor</xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#PrivateConstructor</xsl:attribute>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:element>
@@ -866,7 +797,7 @@
 			</xsl:choose>
 			<xsl:attribute name="x">23</xsl:attribute>
 			<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
-			<xsl:value-of select="text()"/>
+			<xsl:value-of select="Signature/text()"/>
 		</xsl:element>
 	</xsl:template>
 
@@ -888,49 +819,49 @@
 				<xsl:when test="@visibility='+'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticPublicMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicMethod</xsl:attribute>
 						</xsl:when>
 						<xsl:when test="@isAbstract='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#AbstractPublicMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPublicMethod</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#PublicMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#PublicMethod</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="@visibility='~'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticPackageMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageMethod</xsl:attribute>
 						</xsl:when>
 						<xsl:when test="@isAbstract='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#AbstractPackageMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPackageMethod</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#PackageMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#PackageMethod</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="@visibility='#'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticProtectedMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedMethod</xsl:attribute>
 						</xsl:when>
 						<xsl:when test="@isAbstract='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#AbstractProtectedMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#AbstractProtectedMethod</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#ProtectedMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedMethod</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="@visibility='-'">
 					<xsl:choose>
 						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/bullets.svg#StaticPrivateMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateMethod</xsl:attribute>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/bullets.svg#PrivateMethod</xsl:attribute>
+							<xsl:attribute name="xlink:href">shared/defs.svg#PrivateMethod</xsl:attribute>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -947,7 +878,7 @@
 			</xsl:choose>
 			<xsl:attribute name="x">23</xsl:attribute>
 			<xsl:attribute name="y"><xsl:number value="position() *20 + $yOffset +13"/></xsl:attribute>
-			<xsl:value-of select="text()"/>
+			<xsl:value-of select="Signature/text()"/>
 		</xsl:element>
 	</xsl:template>
 

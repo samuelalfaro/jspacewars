@@ -44,6 +44,7 @@ import javax.xml.transform.stream.StreamSource;
  * 
  */
 public class ODT_Generator {
+	
 	public static File generarODT(
 			InputStream sourceContent, InputStream sourceStylesheet,
 			File platillaODT, String images[], InputStream manifestStylesheet
