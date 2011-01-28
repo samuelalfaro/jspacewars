@@ -23,6 +23,7 @@ package org.sam.odf_doclet;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -62,6 +63,8 @@ public class ClassToUMLAdapter {
 			return toString((Class<?>)type);
 		if(type instanceof ParameterizedType)
 			return toString((ParameterizedType)type);
+		if(type instanceof GenericArrayType)
+			return toString(((GenericArrayType)type).getGenericComponentType())+"[]";
 		return type.toString();
 	}
 

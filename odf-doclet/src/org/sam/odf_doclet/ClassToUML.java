@@ -357,7 +357,7 @@ public class ClassToUML {
 		if (toSVGSingleton == null)
 			try {
 				toSVGSingleton = TransformerFactory.newInstance().newTransformer(
-						new StreamSource(new FileInputStream("resources/toSVG.xsl"))
+						new StreamSource(new FileInputStream("resources/shared/toSVG.xsl"))
 				);
 				toSVGSingleton.setParameter("scale", 2.0);
 //				toSVGSingleton.setParameter("background", "#00FF00");
@@ -413,7 +413,7 @@ public class ClassToUML {
 		ImageTranscoder t = new PNGTranscoder();
         
 		TranscoderInput input = new TranscoderInput(pipeIn);
-        input.setURI( new File("output").toURI().toString() );
+        input.setURI( new File("resources").toURI().toString() );
         TranscoderOutput output = new TranscoderOutput(out);
         
         t.transcode( input, output );
@@ -429,6 +429,7 @@ public class ClassToUML {
 	 */
 	public static void main(String... args) throws ClassNotFoundException, TranscoderException, IOException {
 //		toXML( java.util.concurrent.ConcurrentHashMap.class, System.out);
-		toPNG( java.util.concurrent.ConcurrentHashMap.class, new FileOutputStream("output/out.png") );
+//		toPNG( java.util.concurrent.ConcurrentHashMap.class, new FileOutputStream("output/out.png") );
+		toPNG( pruebas.ClaseDePrueba.class, new FileOutputStream("output/out.png") );
 	}
 }

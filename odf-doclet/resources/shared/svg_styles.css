@@ -1,12 +1,12 @@
 text{
-	text-rendering:optimizeLegibility;
+	text-rendering:optimizeLegibility;/*geometricPrecision;*/
 	font-size:12px;
 	font-style:normal;
 	font-weight:normal;
 	text-anchor:start;
 	fill:#000000;
 	fill-opacity:1;
-	font-family:DejaVu Sans Mono
+	font-family:DejaVu Sans
 }
 text.static{
 	text-decoration:underline;

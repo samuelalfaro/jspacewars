@@ -55,7 +55,7 @@ public class ClaseDePrueba<E> {
 	/** Documentación de a2 */
 	int[][] a2;
 	/** Documentación de a3 */
-	protected Map<Integer,Collection<E>> a3;
+	protected Map<Integer,Collection<E>>[][] a3;
 	/** Documentación de a4 */
 	public InerClass a4;
 	
