@@ -47,7 +47,7 @@ public class PruebaPipes2 {
 			}
 		}
 		
-		public synchronized boolean conectarTubos( PipedOutputStream pipeOut){
+		public synchronized boolean conectarTubos( PipedOutputStream pipeOut ){
 			try {
 				pipeIn = new PipedInputStream(pipeOut);
 			} catch (IOException connectionFailed) {
