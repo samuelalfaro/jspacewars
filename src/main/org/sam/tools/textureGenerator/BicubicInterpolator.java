@@ -35,7 +35,7 @@ public class BicubicInterpolator {
 		{ 0  ,  1  ,  0  , 0  }
 	};
 
-	double 
+	private double 
 		c00 ,c01, c02, c03,
 		c10, c11, c12, c13,
 		c20, c21, c22, c23,

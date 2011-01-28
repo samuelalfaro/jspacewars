@@ -33,9 +33,6 @@ public interface ColorRamp{
 	 *
 	 */
 	static abstract class AbstractColorRamp implements ColorRamp{
-		/**
-		 * @inheritDoc
-		 */
 		@Override
 		public final Color compute(double c){
 			return new Color(computeToIntRGB(c));
@@ -51,6 +48,14 @@ public interface ColorRamp{
 		private final double mG, nG;
 		private final double mB, nB;
 		
+		/**
+		 * @param mR
+		 * @param nR
+		 * @param mG
+		 * @param nG
+		 * @param mB
+		 * @param nB
+		 */
 		public RGBColorRamp( double mR, double nR, double mG, double nG, double mB, double nB){
 			this.mR = mR * 0x100;
 			this.nR = nR * 0x100 + 0.5;
@@ -60,9 +65,7 @@ public interface ColorRamp{
 			this.nB = nB * 0x100 + 0.5;
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public int computeToIntRGB(double c) {
 			int r = Math.min(Math.max(0x00, (int)( mR * c + nR )), 0xFF);
@@ -80,9 +83,6 @@ public interface ColorRamp{
 		 * 
 		 */
 		GreyScale( new AbstractColorRamp(){
-			/**
-			 * @inheritDoc
-			 */
 			@Override
 			public int computeToIntRGB(double c){
 				int v = Math.min(Math.max(0x00, (int)( c * 0x100 + 0.5 )), 0xFF);
@@ -93,9 +93,6 @@ public interface ColorRamp{
 		 * 
 		 */
 		Multicolor( new AbstractColorRamp(){
-			/**
-			 * @inheritDoc
-			 */
 			@Override
 			public int computeToIntRGB(double c){
 				int r = (int)( c < 0.5 ? 512 * c : 512 * (1.0 - c))
@@ -143,23 +140,19 @@ public interface ColorRamp{
 		 */
 		BlackBlueCyanWhite    (new RGBColorRamp( 3, -2, 3, -1, 3,  0 ));
 		
-		final ColorRamp colorRamp;
+		private final ColorRamp colorRamp;
 		
-		Predefinidas(ColorRamp encapsulada){
+		private Predefinidas(ColorRamp encapsulada){
 			this.colorRamp = encapsulada;
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public final Color compute(double c){
 			return colorRamp.compute(c);
 		}
 		
-		/**
-		 * @inheritDoc
-		 */
+		/** {@inheritDoc} */
 		@Override
 		public final int computeToIntRGB(double c){
 			return colorRamp.computeToIntRGB(c);
@@ -171,6 +164,7 @@ public interface ColorRamp{
 	 * @return
 	 */
 	public Color compute(double c);
+
 	/**
 	 * @param c
 	 * @return
