@@ -92,7 +92,7 @@ public class PruebaTareas {
 
 	private static class TareasParalelasConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return TareasParalelas.class == clazz;
 		}
@@ -108,7 +108,7 @@ public class PruebaTareas {
 	
 	private static class SecuenciaConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Secuencia.class == clazz;
 		}
@@ -124,7 +124,7 @@ public class PruebaTareas {
 	
 	private static class EsperarConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Esperar.class == clazz;
 		}
@@ -154,7 +154,7 @@ public class PruebaTareas {
 	
 	private static class MoverConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Mover.class == clazz;
 		}
@@ -171,7 +171,7 @@ public class PruebaTareas {
 	
 	private static class SetAnguloCanionConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return SetAnguloCanion.class == clazz;
 		}
@@ -186,7 +186,7 @@ public class PruebaTareas {
 	
 	private static class OrientarCanionConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return OrientarCanion.class == clazz;
 		}
@@ -203,7 +203,7 @@ public class PruebaTareas {
 	
 	private static class DispararConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Disparar.class == clazz;
 		}

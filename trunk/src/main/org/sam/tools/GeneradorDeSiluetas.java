@@ -381,8 +381,7 @@ public class GeneradorDeSiluetas {
 		private static final String Punto2F = "Punto2F";
 		private static final String x = "x";
 		private static final String y = "y";
-		
-		private static final String unchecked = "unchecked";
+
 	}
 	
 	private static float[] getArray(Poligono p, String name){
@@ -400,7 +399,7 @@ public class GeneradorDeSiluetas {
 	}
 	
 	private static class PoligonoConverter implements Converter {
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Poligono.class == clazz;
 		}

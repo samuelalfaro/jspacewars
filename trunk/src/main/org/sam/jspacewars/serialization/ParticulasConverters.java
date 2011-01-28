@@ -86,8 +86,6 @@ public class ParticulasConverters{
 		private static final String VelocidadGiro = "VelocidadGiro";
 
 		private static final String Apariencia = "Apariencia";
-		
-		private static final String unchecked = "unchecked";
 	}
 	
 	private static class EmisorConverter implements Converter{
@@ -95,7 +93,7 @@ public class ParticulasConverters{
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Emisor.class.isAssignableFrom(clazz);
 		}
@@ -146,7 +144,7 @@ public class ParticulasConverters{
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Particulas.class.isAssignableFrom(clazz);
 		}
