@@ -31,9 +31,6 @@ public interface Ramp {
 	public enum Predefinidas implements Ramp{
 		
 		LINEAL{
-			/**
-			 * @inheritDoc
-			 */
 			@Override
 			public double compute(double alpha){
 				return alpha;
@@ -41,9 +38,6 @@ public interface Ramp {
 		},
 		
 		ACELERADA{
-			/**
-			 * @inheritDoc
-			 */
 			@Override
 			public double compute(double alpha){
 				return 1.0 + Math.sin( Math.PI/2 * ( alpha - 1.0) );
@@ -51,9 +45,6 @@ public interface Ramp {
 		},
 		
 		DECELERADA{
-			/**
-			 * @inheritDoc
-			 */
 			@Override
 			public double compute(double alpha){
 				return Math.sin( Math.PI/2 * alpha );
@@ -61,9 +52,6 @@ public interface Ramp {
 		},
 		
 		ACELERADA_DECELERADA{
-			/**
-			 * @inheritDoc
-			 */
 			@Override
 			public double compute(double alpha){
 				return Math.sin( Math.PI * ( alpha - 0.5) )/2.0 + 0.5;
@@ -71,24 +59,33 @@ public interface Ramp {
 		},
 		
 		DECELERADA_ACELERADA{
-			/**
-			 * @inheritDoc
-			 */
 			@Override
 			public double compute(double alpha){
 				return Math.tan( Math.PI/2 * ( alpha - 0.5))/2.0 + 0.5;
 			}
 		};
 
-		public double compute(int i, int frames) {
+		/* (non-Javadoc)
+		 * @see org.sam.tools.textureGenerator.Ramp#compute(int, int)
+		 */
+		@Override
+		public final double compute(int i, int frames) {
 			return compute(  frames < 2 ? 0 : (double)i/(frames-1) );
 		}
 		
-		public double compute(double min, double max, double alpha){
+		/* (non-Javadoc)
+		 * @see org.sam.tools.textureGenerator.Ramp#compute(double, double, double)
+		 */
+		@Override
+		public final double compute(double min, double max, double alpha){
 			return ( max - min ) * compute( alpha ) + min;
 		}
 		
-		public double compute(double min, double max, int i, int frames){
+		/* (non-Javadoc)
+		 * @see org.sam.tools.textureGenerator.Ramp#compute(double, double, int, int)
+		 */
+		@Override
+		public final double compute(double min, double max, int i, int frames){
 			return ( max - min ) * compute( frames < 2 ? 0 : (double)i/(frames-1) ) + min;
 		}
 	}
