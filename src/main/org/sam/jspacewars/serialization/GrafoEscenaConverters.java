@@ -199,8 +199,6 @@ public class GrafoEscenaConverters {
 		private static final String fragment = "fragment";
 		private static final String Uniform = "Uniform";
 		private static final String name = "name";
-		
-		private static final String unchecked = "unchecked";
 	}
 
 	private static Nodo forName( String name, HierarchicalStreamReader reader, UnmarshallingContext context ){
@@ -234,7 +232,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Instancia3D.class.isAssignableFrom(clazz);
 		}
@@ -296,7 +294,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Grupo.class.isAssignableFrom(clazz);
 		}
@@ -328,7 +326,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return NodoCompartido.class.isAssignableFrom(clazz);
 		}
@@ -359,7 +357,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return NodoTransformador.class.equals(clazz);
 		}
@@ -411,7 +409,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class type) {
 			return type.equals(ObjLoaderData.class);
 		}
@@ -488,7 +486,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class type) {
 			return type.equals(TexturedQuadData.class);
 		}
@@ -532,7 +530,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Objeto3D.class.isAssignableFrom(clazz);
 		}
@@ -576,7 +574,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Apariencia.class.isAssignableFrom(clazz);
 		}
@@ -681,7 +679,7 @@ public class GrafoEscenaConverters {
 	
 	private static class MaterialConverter implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Material.class.isAssignableFrom(clazz);
 		}
@@ -794,7 +792,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return AtributosTransparencia.class.isAssignableFrom(clazz);
 		}
@@ -848,7 +846,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return UnidadTextura.class.isAssignableFrom(clazz);
 		}
@@ -903,7 +901,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Textura.class.isAssignableFrom(clazz);
 		}
@@ -955,7 +953,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return AtributosTextura.class.isAssignableFrom(clazz);
 		}
@@ -1127,7 +1125,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return GenCoordTextura.class.isAssignableFrom(clazz);
 		}
@@ -1169,7 +1167,7 @@ public class GrafoEscenaConverters {
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Shader.class.isAssignableFrom(clazz);
 		}

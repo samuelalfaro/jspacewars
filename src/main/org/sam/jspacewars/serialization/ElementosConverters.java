@@ -53,7 +53,7 @@ public class ElementosConverters {
 
 	private static class PoligonoConverter implements Converter {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Poligono.class == clazz;
 		}

@@ -91,13 +91,12 @@ public class InterpoladoresConverters {
 		private static final String MetodoDeInterpolacion = "MetodoDeInterpolacion";
 		private static final String predefinido = "predefinido";
 		private static final String Params = "Params";
-		
-		private static final String unchecked = "unchecked";
+
 	}
 
 	private static class Punto2D implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Punto2D.class == clazz;
 		}
@@ -114,7 +113,7 @@ public class InterpoladoresConverters {
 
 	private static class Punto2F implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Punto2F.class == clazz;
 		}
@@ -131,7 +130,7 @@ public class InterpoladoresConverters {
 
 	private static class Punto2I implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Punto2I.class == clazz;
 		}
@@ -148,7 +147,7 @@ public class InterpoladoresConverters {
 
 	private static class Punto3D implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Punto3D.class == clazz;
 		}
@@ -166,7 +165,7 @@ public class InterpoladoresConverters {
 
 	private static class Punto3F implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Punto3F.class == clazz;
 		}
@@ -185,7 +184,7 @@ public class InterpoladoresConverters {
 
 	private static class Punto3I implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Punto3I.class == clazz;
 		}
@@ -203,7 +202,7 @@ public class InterpoladoresConverters {
 	
 	private static class Color3F implements Converter {
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Color3F.class == clazz;
 		}
@@ -341,7 +340,7 @@ public class InterpoladoresConverters {
 			private Object mdiParams[];
 		}
 		
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("unchecked")
 		private static <T> Getter.Double<?> create(DoubleParams params){
 			if(params.keys != null){
 				if(params.values instanceof Double[])
@@ -361,7 +360,7 @@ public class InterpoladoresConverters {
 			return GettersFactory.Double.create(params.keysGen, params.keysScale, params.keysTranslation, (Conversor<double[], T>)params.introductor, (T[])params.values, (Conversor<? super T, double[]>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 		}
 		
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Getter.Double.class.isAssignableFrom(clazz)
 					|| DoubleParams.class == clazz;
@@ -488,7 +487,7 @@ public class InterpoladoresConverters {
 			private Object mdiParams[];
 		}
 
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("unchecked")
 		private static <T> Getter.Float<?> create(FloatParams params){
 			if(params.keys != null){
 				if(params.values instanceof Float[])
@@ -509,7 +508,7 @@ public class InterpoladoresConverters {
 			return GettersFactory.Float.create(params.keysGen, params.keysScale, params.keysTranslation, (Conversor<float[], T>) params.introductor, (T[])params.values, (Conversor<? super T, float[]>)params.extractor, params.metodoDeInterpolacion, params.mdiParams );
 		}
 		
-		@SuppressWarnings(S.unchecked)
+		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Getter.Float.class.isAssignableFrom(clazz)
 					|| FloatParams.class == clazz;
@@ -658,7 +657,6 @@ public class InterpoladoresConverters {
      * 
      * @param args
      */
-    @SuppressWarnings(S.unchecked)
     // TODO Borrar es para pruebas
 	public static void main(String... args){
 		XStream xStream = new XStream(new DomDriver());
@@ -672,6 +670,7 @@ public class InterpoladoresConverters {
 		params.mdiParams = new Object[]{5.0};
 		System.out.println(xStream.toXML(params));
 
+		@SuppressWarnings("unchecked")
 		Getter.Double<Double> interpolador = (Getter.Double<Double>)xStream.fromXML(
 				"<Getter.Double>"+
 				"  <Keys keyGen=\"PROPORCIONALES\" scale=\"1.0\" translation=\"0.0\"/>"+

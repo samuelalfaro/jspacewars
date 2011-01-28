@@ -32,7 +32,7 @@ public class Ignorado implements Converter {
 	
 //	private static String tabs ="";
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public boolean canConvert(Class clazz) {
 		return Ignorado.class == clazz;
 	}
