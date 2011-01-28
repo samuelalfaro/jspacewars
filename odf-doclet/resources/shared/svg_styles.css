@@ -1,0 +1,70 @@
+text{
+	text-rendering:optimizeLegibility;
+	font-size:12px;
+	font-style:normal;
+	font-weight:normal;
+	text-anchor:start;
+	fill:#000000;
+	fill-opacity:1;
+	font-family:DejaVu Sans Mono
+}
+text.static{
+	text-decoration:underline;
+}
+text.abstract{
+	font-style:oblique;
+}
+text.centrado{
+	text-anchor:middle;
+}
+text#textoTitulo, text.abstract#textoTitulo{
+	font-size:14px;
+	font-weight:bold;
+	text-anchor:middle;
+}
+line, path.default,
+rect.estilo1#titulo, rect.estilo1#parameters, rect.estilo1#contenido,
+rect.estilo2#titulo, rect.estilo2#parameters, rect.estilo2#contenido,
+rect.estilo3#titulo, rect.estilo3#contenido{
+	stroke:#000000;
+	stroke-width:1;
+	stroke-linecap:butt;
+	stroke-linejoin:miter;
+	stroke-miterlimit:4;
+	stroke-opacity:1;
+	stroke-dasharray:none;
+	stroke-dashoffset:0;
+	marker:none;
+	visibility:visible;
+	display:inline;
+	overflow:visible;
+	enable-background:accumulate;
+	fill:#E0E0E0;
+	fill-opacity:1;
+	fill-rule:nonzero;
+}
+
+rect.estilo1#titulo, rect.estilo1#parameters{
+	fill:url(defs.svg#gradientInicialFinalV1);
+}
+rect.estilo1#parameters{
+	stroke-dasharray: 4, 4;
+}
+rect.estilo1#contenido{
+	fill:url(defs.svg#gradientInicialFinalH1);
+}
+rect.estilo2#titulo, rect.estilo2#parameters, path#CirculoInteface{
+	fill:url(defs.svg#gradientInicialFinalV2);
+}
+rect.estilo2#parameters{
+	stroke-dasharray: 4, 4;
+}
+rect.estilo2#contenido{
+	fill:url(defs.svg#gradientInicialFinalH2);
+}
+rect.estilo3#titulo{
+	fill:url(defs.svg#gradientInicialFinalV3);
+}
+rect.estilo3#contenido{
+	fill:url(defs.svg#gradientInicialFinalH3);
+}

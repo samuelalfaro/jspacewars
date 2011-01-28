@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:cc="http://creativecommons.org/ns#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:svg="http://www.w3.org/2000/svg"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="240"
+	height="360"
+	version="1.1">
+	<defs>
+		<linearGradient id="AbstractPublicGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#C0FFC0; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#A0FFA0; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#40A040; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="PublicGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#60FF20; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#00FF00; stop-opacity:1"/>
+			<stop offset="0.8" style="stop-color:#008000; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#004000; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="AbstractPackageGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#C0C0FF; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#A0A0FF; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#4040A0; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="PackageGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#40FFFF; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#0080FF; stop-opacity:1"/>
+			<stop offset="0.8" style="stop-color:#0000FF; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#000080; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="AbstractProtectedGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#FFFFC0; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#FFFFA0; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#C0A040; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="ProtectedGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#FFFF40; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#FFFF00; stop-opacity:1"/>
+			<stop offset="0.8" style="stop-color:#FF8000; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#C06000; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="PrivateGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#FF4040; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#FF0000; stop-opacity:1"/>
+			<stop offset="0.8" style="stop-color:#C00000; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#800000; stop-opacity:1"/>
+		</linearGradient>
+		
+		<filter id="SpecShadow" filterUnits="userSpaceOnUse" x="-27" y="-27" width="54" height="54">
+			<feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+			<feSpecularLighting in="blur" result="specOut"
+				surfaceScale="1"
+				specularConstant=".75" 
+				specularExponent="64" lighting-color="#bbffbb">
+				<fePointLight x="-100" y="-150" z="300"/>
+			</feSpecularLighting>
+			<feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
+			<feComposite in="SourceGraphic" in2="specOut" result="litPaint"
+				operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+			<feOffset in="blur" dx="2" dy="2" result="offsetBlur"/>
+			<feMerge>
+				<feMergeNode in="offsetBlur"/>
+				<feMergeNode in="litPaint"/>
+			</feMerge>
+		</filter>
+		
+		<path id="Circulo" d="M -14,0 A 14,14 0 0,1 14,0 A 14,14 0 0,1 -14,0 z"/>
+		<path id="CirculoHueco" d="M -22,0 A 22,22 0 0,1 22,0 A 22,22 0 0,1 -22,0 z M -18,0 A 18,18 0 0,0 18,0 A 18,18 0 0,0 -18,0 z" style="fill-rule:evenodd"/>
+		<path id="Cuadrado" d="M -14,-14 -14,14 14,14 14,-14 Z"/>
+		<path id="CuadradoHueco" d="M -22,-22 -22,22 22,22 22,-22 Z M -18,-18 18,-18 18,18 -18,18 Z" style="fill-rule:evenodd"/>
+		<path id="Rombo" d="M -18,0 0,18 18,0 0,-18 Z"/>
+		<path id="Cruz" d="M -10,-4 -10,4 -4,4 -4,10 4,10 4,4 10,4 10,-4 4,-4 4,-10 -4,-10 -4,-4 Z" style="fill:#FFFFFF;fill-opacity:1;stroke:#008000;stroke-width:2"/>
+		<path id="Almohadilla" d="M -6,-10 -6,-6 -10,-6 -10,-2 -6,-2 -6,2 -10,2 -10,6 -6,6 -6,10 -2,10 -2,6 2,6 2,10 6,10 6,6 10,6 10,2 6,2 6,-2 10,-2 10,-6 6,-6 6,-10 2,-10 2,-6 -2,-6 -2,-10 Z M -2,-2 2,-2 2,2 -2,2 Z" style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#804000;stroke-width:1"/>
+		<path id="Virgulilla" d="M -5,-6 c 1.8209194,0.062589 3.5239816,0.9318078 5,2 0.61463376,0.4448095 1.2037773,0.9282642 1.8567827,1.3145466 C 2.5097881,-2.2991711 3.2413623,-2.0099514 4,-2 4.9700523,-1.9872754 5.9343686,-2.4615539 6.5164501,-3.2376625 7.0985315,-4.0137711 7.2838303,-5.0723127 7,-6 c 1.4084361,0.429421 2.6497881,1.3847909 3.425501,2.6363357 0.775713,1.2515447 1.079007,2.78832666 0.836939,4.24073761 C 11.020371,2.3294843 10.235055,3.6848311 9.0953665,4.6171422 7.9556777,5.5494534 6.4715761,6.050581 5,6 3.1790806,5.9374114 1.4760184,5.0681922 0,4 -0.61463376,3.5551905 -1.2037773,3.0717358 -1.8567827,2.6854534 -2.5097881,2.2991711 -3.2413623,2.0099514 -4,2 -4.9700523,1.9872754 -5.9343686,2.4615539 -6.5164501,3.2376625 -7.0985315,4.0137711 -7.2838303,5.0723127 -7,6 -8.4084361,5.570579 -9.6497881,4.6152091 -10.425501,3.3636643 -11.201214,2.1121196 -11.504508,0.57533764 -11.26244,-0.87707331 -11.020371,-2.3294843 -10.235055,-3.6848311 -9.0953665,-4.6171422 -7.9556777,-5.5494534 -6.4715761,-6.050581 -5,-6" style="fill:#FFFFFF;fill-opacity:1;stroke:#000080;stroke-width:2"/>
+		<path id="Raya" d="M -10,-4 -10,4 10,4 10,-4 Z" style="fill:#FFFFFF;fill-opacity:1;stroke:#800000;stroke-width:2"/>
+		
+		<g id="PublicField">
+			<use xlink:href="#Circulo" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Cruz"/>
+		</g>
+		<g id="StaticPublicField">
+			<use xlink:href="#CirculoHueco" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#PublicField"/>
+		</g>
+		<g id="PackageField">
+			<use xlink:href="#Circulo" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Virgulilla"/>
+		</g>
+		<g id="StaticPackageField">
+			<use xlink:href="#CirculoHueco" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#PackageField"/>
+		</g>
+		<g id="ProtectedField">
+			<use xlink:href="#Circulo" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Almohadilla"/>
+		</g>
+		<g id="StaticProtectedField">
+			<use xlink:href="#CirculoHueco" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#ProtectedField"/>
+		</g>
+		<g id="PrivateField">
+			<use xlink:href="#Circulo" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Raya"/>
+		</g>
+		<g id="StaticPrivateField">
+			<use xlink:href="#CirculoHueco" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#PrivateField"/>
+		</g>
+		
+		<g id="PublicConstructor">
+			<use xlink:href="#Rombo" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Cruz"/>
+		</g>
+		<g id="PackageConstructor">
+			<use xlink:href="#Rombo" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Virgulilla"/>
+		</g>
+		<g id="ProtectedConstructor">
+			<use xlink:href="#Rombo" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Almohadilla"/>
+		</g>
+		<g id="PrivateConstructor">
+			<use xlink:href="#Rombo" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Raya"/>
+		</g>
+		
+		<g id="AbstractPublicMethod" transform="skewX(-15)">
+			<use xlink:href="#Cuadrado" style="fill:url(#AbstractPublicGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Cruz"/>
+		</g>
+		<g id="PublicMethod">
+			<use xlink:href="#Cuadrado" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Cruz"/>
+		</g>
+		<g id="StaticPublicMethod">
+			<use xlink:href="#CuadradoHueco" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#PublicMethod"/>
+		</g>
+		<g id="AbstractPackageMethod" transform="skewX(-15)">
+			<use xlink:href="#Cuadrado" style="fill:url(#AbstractPackageGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Virgulilla"/>
+		</g>
+		<g id="PackageMethod">
+			<use xlink:href="#Cuadrado" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Virgulilla"/>
+		</g>
+		<g id="StaticPackageMethod">
+			<use xlink:href="#CuadradoHueco" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#PackageMethod"/>
+		</g>
+		
+		<g id="AbstractProtectedMethod" transform="skewX(-15)">
+			<use xlink:href="#Cuadrado" style="fill:url(#AbstractProtectedGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Almohadilla"/>
+		</g>
+		<g id="ProtectedMethod">
+			<use xlink:href="#Cuadrado" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Almohadilla"/>
+		</g>
+		<g id="StaticProtectedMethod">
+			<use xlink:href="#CuadradoHueco" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#ProtectedMethod"/>
+		</g>
+		
+		<g id="PrivateMethod">
+			<use xlink:href="#Cuadrado" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#Raya"/>
+		</g>
+		<g id="StaticPrivateMethod">
+			<use xlink:href="#CuadradoHueco" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
+			<use xlink:href="#PrivateMethod"/>
+		</g>
+	</defs>
+	
+	<use x="30"  y="30"   xlink:href="#StaticPublicField"/>
+	<use x="90"  y="30"   xlink:href="#StaticPackageField"/>
+	<use x="150" y="30"   xlink:href="#StaticProtectedField"/>
+	<use x="210" y="30"   xlink:href="#StaticPrivateField"/>
+	
+	<use x="30"  y="90"  xlink:href="#PublicField"/>
+	<use x="90"  y="90"  xlink:href="#PackageField"/>
+	<use x="150" y="90"  xlink:href="#ProtectedField"/>
+	<use x="210" y="90"  xlink:href="#PrivateField"/>
+	
+	<use x="30"  y="150" xlink:href="#PublicConstructor"/>
+	<use x="90"  y="150" xlink:href="#PackageConstructor"/>
+	<use x="150" y="150" xlink:href="#ProtectedConstructor"/>
+	<use x="210" y="150" xlink:href="#PrivateConstructor"/>
+	
+	<use x="30"  y="210"  xlink:href="#StaticPublicMethod"/>
+	<use x="90"  y="210"  xlink:href="#StaticPackageMethod"/>
+	<use x="150" y="210"  xlink:href="#StaticProtectedMethod"/>
+	<use x="210" y="210"  xlink:href="#StaticPrivateMethod"/>
+	
+	<use x="30"  y="270"  xlink:href="#PublicMethod"/>
+	<use x="90"  y="270"  xlink:href="#PackageMethod"/>
+	<use x="150" y="270"  xlink:href="#ProtectedMethod"/>
+	<use x="210" y="270"  xlink:href="#PrivateMethod"/>
+	
+	<use x="30"  y="330" xlink:href="#AbstractPublicMethod"/>
+	<use x="90"  y="330" xlink:href="#AbstractPackageMethod"/>
+	<use x="150" y="330" xlink:href="#AbstractProtectedMethod"/>
+</svg>
