@@ -3,6 +3,8 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<xsl:param name="scale">1.0</xsl:param>
 	<xsl:param name="background">none</xsl:param>
+	<xsl:param name="widthChar1">6.5</xsl:param>
+	<xsl:param name="widthChar2">8.5</xsl:param>
 	<xsl:output method="xml" indent="no"/>
 	<xsl:preserve-space elements="*"/>
 
@@ -21,7 +23,7 @@
 				<xsl:choose>
 					<xsl:when test="$count &lt; count(EnclosingClasses/*)">
 						<xsl:variable name="nodeName" select="name(EnclosingClasses/*[$count+1])"/>
-						<xsl:variable name="widthBox1" select="string-length(EnclosingClasses/*[$count+1]/text())*8+20"/>
+						<xsl:variable name="widthBox1" select="string-length(EnclosingClasses/*[$count+1]/text())*$widthChar2+20"/>
 						<xsl:variable name="widthBox">
 							<xsl:choose>
 								<xsl:when test="$nodeName='Class'">
@@ -84,7 +86,7 @@
 					<xsl:for-each select="Hierarchy/Class">
 						<xsl:sort select="string-length(.)" order="descending" data-type="number"/>
 						<xsl:if test="position() = 1">
-							<xsl:number value="string-length(.) * 8 + 20"/>
+							<xsl:number value="string-length(.) * $widthChar2 + 20"/>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
@@ -103,22 +105,22 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:variable name="widthName" select="string-length(/Signature) * 8 + 20"/>
+		<xsl:variable name="widthName" select="string-length(./Signature) * $widthChar2 + 20"/>
 		<xsl:variable name="numElements" select="count(Constant) + count(Fields/Field) + count(Constructors/Constructor) + count(Methods/Method)"/>
 		<xsl:variable name="widthElements">
 			<xsl:choose>
 				<xsl:when test="$numElements &gt; 0">
-					<xsl:for-each select="Fields/Field|Constructors/Constructor|Methods/Method">
+					<xsl:for-each select="Constant|Fields/Field|Constructors/Constructor|Methods/Method">
 						<xsl:sort select="string-length(./Signature)" order="descending" data-type="number"/>
 						<xsl:if test="position() = 1">
-							<xsl:number value="string-length(./Signature) * 7 + 40"/>
+							<xsl:number value="string-length(./Signature) * $widthChar1 + 40"/>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>0</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="widthParameters" select="string-length(Parameters/Signature) * 8 +20"/>
+		<xsl:variable name="widthParameters" select="string-length(Parameters/Signature) * $widthChar2 +20"/>
 		<xsl:variable name="widthBox">
 			<xsl:choose>
 				<xsl:when test="$widthName &gt; $widthElements and $widthName &gt; $widthParameters and $widthName &gt; 140">
@@ -139,7 +141,7 @@
 					<xsl:for-each select="Interfaces/Interface">
 						<xsl:sort select="string-length(.)" order="descending" data-type="number"/>
 						<xsl:if test="position() = 1">
-							<xsl:number value="string-length(.) * 7 + 60"/>
+							<xsl:number value="string-length(.) * $widthChar1 + 60"/>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
@@ -503,7 +505,7 @@
 		<xsl:param name="childYOffset"/>
 		<xsl:if test="$count &lt; count(EnclosingClasses/*)">
 			<xsl:variable name="nodeName" select="name(EnclosingClasses/*[$count+1])"/>
-			<xsl:variable name="widthBox1" select="string-length(EnclosingClasses/*[$count+1]/text())*8+20"/>
+			<xsl:variable name="widthBox1" select="string-length(EnclosingClasses/*[$count+1]/text())*$widthChar2+20"/>
 			<xsl:variable name="widthBox">
 				<xsl:choose>
 					<xsl:when test="$nodeName='Class'">

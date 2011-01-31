@@ -165,19 +165,13 @@ public class ClassToUML {
 		}
 	}
 
-	/*
-	private static void printEnumConstant(Object constant, Class<?> enumClass, PrintStream out){
-		System.err.println(constant);
-		if( constant.getClass().equals(enumClass) )
-			out.format("%s<Constant name=\"%s\"/>\n",tabs,constant.toString());
-		else{
-			out.format("%s<Constant name=\"%s\">\n",tabs,constant.toString());
-			addTab();
-				printEnumMethods( constant.getClass(), out );
-			removeTab();
-			out.println(tabs + "</Constant>");
-		}
-	}*/
+
+	private static void printEnumConstant(Object constant, PrintStream out){
+		out.format("%1$s<Constant>\n%1$s\t<Signature><![CDATA[%2$s]]></Signature>\n%1$s</Constant>\n",
+				tabs,
+				constant.toString()	
+		);
+	}
 	
 	private static void printFields(Collection<Field> fields, PrintStream out){
 		if( fields.size() > 0){
@@ -257,7 +251,12 @@ public class ClassToUML {
 		printEnclosingClasses(clazz, out);
 		printImplementedInterfaces(clazz, out);
 		
-		printFields( Arrays.asList(clazz.getDeclaredFields()), out );
+		Queue<Field> fields = new ArrayDeque<Field>();
+		for(Field field: clazz.getDeclaredFields()){
+			if( !field.isSynthetic() )
+				fields.offer( field );
+		}
+		printFields(fields, out);
 		
 		Queue<Method> methods = new ArrayDeque<Method>();
 		for(Method method: clazz.getDeclaredMethods()){
@@ -280,7 +279,7 @@ public class ClassToUML {
 		printImplementedInterfaces(clazz, out);
 		
 		for(Object constant: clazz.getEnumConstants())
-			out.format("%s<Constant name=\"%s\"/>\n",tabs,constant.toString());
+			printEnumConstant(constant, out);
 		
 		Queue<Field> fields = new ArrayDeque<Field>();
 		for(Field field: clazz.getDeclaredFields()){
@@ -318,9 +317,19 @@ public class ClassToUML {
 		printEnclosingClasses(clazz, out);
 		printImplementedInterfaces(clazz, out);
 		
-		printFields( Arrays.asList(clazz.getDeclaredFields()), out );
+		Queue<Field> fields = new ArrayDeque<Field>();
+		for(Field field: clazz.getDeclaredFields()){
+			if( !field.isSynthetic() )
+				fields.offer( field );
+		}
+		printFields(fields, out);
 		
-		printConstructors( Arrays.asList(clazz.getDeclaredConstructors()), clazz.getSimpleName(), out );
+		Queue<Constructor<?>> constructors = new ArrayDeque<Constructor<?>>();
+		for(Constructor<?> constructor: clazz.getDeclaredConstructors()){
+			if( !constructor.isSynthetic() )
+				constructors.add( constructor );
+		}
+		printConstructors( constructors, clazz.getSimpleName(), out );
 		
 		Queue<Method> methods = new ArrayDeque<Method>();
 		for(Method method: clazz.getDeclaredMethods()){
@@ -360,7 +369,9 @@ public class ClassToUML {
 						new StreamSource(new FileInputStream("resources/shared/toSVG.xsl"))
 				);
 				toSVGSingleton.setParameter("scale", 2.0);
-//				toSVGSingleton.setParameter("background", "#00FF00");
+				toSVGSingleton.setParameter("background", "#FFFFFF");
+				toSVGSingleton.setParameter("widthChar1", 6.6);
+				toSVGSingleton.setParameter("widthChar2", 9.0);
 			} catch (TransformerConfigurationException ignorada) {
 				ignorada.printStackTrace();
 			} catch (FileNotFoundException ignorada) {
@@ -371,14 +382,13 @@ public class ClassToUML {
 		return toSVGSingleton;
 	}
 	
-	public static void toSVG(final Class<?> clazz, OutputStream out) throws TransformerException{
+	public static void toSVG(final Class<?> clazz, OutputStream out) throws TransformerException, IOException{
 
-		final PipedInputStream pipeIn = new PipedInputStream();
+		final PipedOutputStream pipeOut = new PipedOutputStream();
 
-		new Thread() {
+		Thread thread = new Thread() {
 			public void run() {
 				try {
-					PipedOutputStream pipeOut = new PipedOutputStream(pipeIn);
 					toXML(clazz, pipeOut);
 					pipeOut.flush();
 					pipeOut.close();
@@ -386,19 +396,30 @@ public class ClassToUML {
 					e.printStackTrace();
 				}
 			}
-		}.start();
-
+		};
+		
+		PipedInputStream pipeIn = new PipedInputStream();
+		pipeIn.connect(pipeOut);
+		
+		thread.start();
 		toSVGTransformer().transform( new StreamSource(pipeIn), new StreamResult(out) );
+		
+        try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        out.flush();
+        out.close();
 	}
 	
 	public static void toPNG(final Class<?> clazz, OutputStream out) throws TranscoderException, IOException{
 
-		final PipedInputStream pipeIn = new PipedInputStream();
+		final PipedOutputStream pipeOut = new PipedOutputStream();
 		
-		new Thread() {
+		Thread thread = new Thread() {
 			public void run() {
 				try {
-					PipedOutputStream pipeOut = new PipedOutputStream(pipeIn);
 					toSVG( clazz, pipeOut);
 					pipeOut.flush();
 					pipeOut.close();
@@ -408,7 +429,9 @@ public class ClassToUML {
 					e.printStackTrace();
 				}
 			}
-		}.start();
+		};
+		PipedInputStream pipeIn = new PipedInputStream();
+		pipeIn.connect(pipeOut);
 
 		ImageTranscoder t = new PNGTranscoder();
         
@@ -416,7 +439,13 @@ public class ClassToUML {
         input.setURI( new File("resources").toURI().toString() );
         TranscoderOutput output = new TranscoderOutput(out);
         
+        thread.start();
         t.transcode( input, output );
+        try {
+			thread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         out.flush();
         out.close();
 	}
@@ -428,8 +457,11 @@ public class ClassToUML {
 	 * @throws IOException 
 	 */
 	public static void main(String... args) throws ClassNotFoundException, TranscoderException, IOException {
-//		toXML( java.util.concurrent.ConcurrentHashMap.class, System.out);
+//		Class<?> clazz = Class.forName("org.sam.util.Lista.Iterador");
+		Class<?> clazz = org.sam.jogl.GenCoordTextura.Coordinates.class;
+		toXML( clazz, System.out);
+		toPNG( clazz, new FileOutputStream("output/out.png") );
 //		toPNG( java.util.concurrent.ConcurrentHashMap.class, new FileOutputStream("output/out.png") );
-		toPNG( pruebas.ClaseDePrueba.class, new FileOutputStream("output/out.png") );
+//		toPNG( pruebas.ClaseDePrueba.class, new FileOutputStream("output/out.png") );
 	}
 }
