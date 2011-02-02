@@ -56,6 +56,7 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.sam.odf_doclet.bindings.ClassBinding;
 
 public class ClassToUML {
 	
@@ -165,8 +166,18 @@ public class ClassToUML {
 		}
 	}
 
-
-	private static void printEnumConstant(Object constant, PrintStream out){
+	private static void printConstants(Collection<?> constants, PrintStream out){
+		if( constants.size() > 0){
+			out.println(tabs + "<Constants>");
+			addTab();
+				for(Object constant: constants)
+					printConstant( constant, out );
+			removeTab();
+			out.println(tabs + "</Constants>");
+		}
+	}
+	
+	private static void printConstant(Object constant, PrintStream out){
 		out.format("%1$s<Constant>\n%1$s\t<Signature><![CDATA[%2$s]]></Signature>\n%1$s</Constant>\n",
 				tabs,
 				constant.toString()	
@@ -194,23 +205,23 @@ public class ClassToUML {
 		);
 	}
 	
-	private static void printConstructors(Collection<Constructor<?>> constructors, String classSimpleName, PrintStream out){
+	private static void printConstructors(Collection<Constructor<?>> constructors, PrintStream out){
 		if( constructors.size() > 0){
 			out.println(tabs + "<Constructors>");
 			addTab();
 			for(Constructor<?> constructor: constructors)
-				print( constructor, classSimpleName, out );
+				print( constructor, out );
 			removeTab();
 			out.println(tabs + "</Constructors>");
 		}
 	}
 	
-	private static void print(Constructor<?> constructor, String classSimpleName, PrintStream out){
+	private static void print(Constructor<?> constructor, PrintStream out){
 		int modifiers = constructor.getModifiers();
 		out.format("%1$s<Constructor visibility=\"%2$c\">\n%1$s\t<Signature><![CDATA[%3$s]]></Signature>\n%1$s</Constructor>\n",
 				tabs,
 				ClassToUMLAdapter.getVisibility(modifiers),
-				ClassToUMLAdapter.toString(classSimpleName, constructor)	
+				ClassToUMLAdapter.toString(constructor)	
 		);
 	}
 	
@@ -278,8 +289,7 @@ public class ClassToUML {
 		printEnclosingClasses(clazz, out);
 		printImplementedInterfaces(clazz, out);
 		
-		for(Object constant: clazz.getEnumConstants())
-			printEnumConstant(constant, out);
+		printConstants(Arrays.asList(clazz.getEnumConstants()), out);
 		
 		Queue<Field> fields = new ArrayDeque<Field>();
 		for(Field field: clazz.getDeclaredFields()){
@@ -329,7 +339,7 @@ public class ClassToUML {
 			if( !constructor.isSynthetic() )
 				constructors.add( constructor );
 		}
-		printConstructors( constructors, clazz.getSimpleName(), out );
+		printConstructors( constructors, out );
 		
 		Queue<Method> methods = new ArrayDeque<Method>();
 		for(Method method: clazz.getDeclaredMethods()){
@@ -457,8 +467,10 @@ public class ClassToUML {
 	 * @throws IOException 
 	 */
 	public static void main(String... args) throws ClassNotFoundException, TranscoderException, IOException {
-//		Class<?> clazz = Class.forName("org.sam.util.Lista.Iterador");
+//		Class<?> clazz = java.util.concurrent.ConcurrentHashMap.class;
 		Class<?> clazz = org.sam.jogl.GenCoordTextura.Coordinates.class;
+//		Class<?> clazz = pruebas.ClaseDePrueba.DiasDeLaSemana.class;
+		ClassBinding.from(clazz).toXML(System.out);
 		toXML( clazz, System.out);
 		toPNG( clazz, new FileOutputStream("output/out.png") );
 //		toPNG( java.util.concurrent.ConcurrentHashMap.class, new FileOutputStream("output/out.png") );

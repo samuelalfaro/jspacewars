@@ -28,7 +28,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 
 public class ClassToUMLAdapter {
 	
@@ -38,24 +37,18 @@ public class ClassToUMLAdapter {
 		return clazz;
 	}
 	
-	public static String toString(Type[] params){
+	public static String toString(Type[] params, int offset){
 		String stringParams = "";
-		for(int i = 0; i < params.length; ){
+		for(int i = offset; i < params.length; ){
 			stringParams += toString(params[i]);
 			if(++i < params.length)
 				stringParams += ", ";
 		}
 		return stringParams;
 	}
-
-	public static String toString(TypeVariable<?>[] typeParameters){
-		String stringParams = "";
-		for(int i = 0; i < typeParameters.length; ){
-			stringParams += toString(typeParameters[i]);
-			if(++i < typeParameters.length)
-				stringParams += ", ";
-		}
-		return stringParams;
+	
+	public static String toString(Type[] params){
+		return toString( params, 0 );
 	}
 	
 	public static String toString(Type type){
@@ -86,11 +79,11 @@ public class ClassToUMLAdapter {
 		return String.format("%s: %s", field.getName(), toString(field.getGenericType()) );
 	}
 
-	public static String toString(String classSimpleName, Constructor<?> constructor){
+	public static String toString(Constructor<?> constructor){
 		return String.format( "%1$s(%2$s%3$s%2$s)", 
-				classSimpleName,
+				constructor.getDeclaringClass().getSimpleName(),
 				constructor.getGenericParameterTypes().length > 0 ? " ":"",
-				toString(constructor.getGenericParameterTypes())
+				toString(constructor.getGenericParameterTypes() , constructor.getDeclaringClass().isEnum() ? 2: 0 )
 		);
 	}
 
@@ -108,9 +101,9 @@ public class ClassToUMLAdapter {
 		if( Modifier.isPublic(att) )
 			return '+';
 		if( Modifier.isProtected(att) )
-			return '~';
+			return '#';
 		if( Modifier.isPrivate(att) )
 			return '-';
-		return '#';
+		return '~';
 	}
 }

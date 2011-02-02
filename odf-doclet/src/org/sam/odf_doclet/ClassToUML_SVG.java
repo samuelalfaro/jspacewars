@@ -264,7 +264,7 @@ public class ClassToUML_SVG {
 	}
 	
 	private static int draw(int pos, String classSimpleName, Constructor<?> constructor, PrintStream out){
-		String stringConstructor = ClassToUMLAdapter.toString(classSimpleName, constructor);
+		String stringConstructor = ClassToUMLAdapter.toString(constructor);
 		out.println(getBulletConstructor(
 				0,
 				(int)(pos * monospaceCharHeight+ 0.5f),

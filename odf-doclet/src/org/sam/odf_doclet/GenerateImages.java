@@ -12,9 +12,6 @@ import java.util.TreeSet;
 
 import org.apache.batik.transcoder.TranscoderException;
 
-/**
- * Clase que muestra todas las clases accesibles de un paquete.<br/>
- */
 public class GenerateImages {
 	
 	private static final Comparator<File> COMPARADOR_DE_FICHEROS = new Comparator<File>() {

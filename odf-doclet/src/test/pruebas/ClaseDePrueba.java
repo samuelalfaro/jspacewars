@@ -40,12 +40,24 @@ public class ClaseDePrueba<E> {
 	 *  Documentacion de la enumeración DiasDeLaSemana.
 	 */
 	public static enum DiasDeLaSemana{
-		LUNES,MARTES,MIERCOLES,JUEVES,VIERNES,SABADO,DOMINGO;
+		Monday("you can fall apart"),
+		Tuesday("break my heart"),
+		Wednesday("break my heart"),
+		Thursday("doesn't even start"),
+		Friday("I'm in love"),
+		Saturday("wait"),
+		Sunday("always comes too late");
 
+		private final String accion;
+		
+		DiasDeLaSemana(String accion){
+			this.accion = accion;
+		}
 		/**
-		 * Documentación del método {@code kk}.
+		 * Documentación del método {@code accion}.
 		 */
-		public void kk(){
+		public final String getAccion(){
+			return accion;
 		}
 	}
 	
