@@ -1,5 +1,5 @@
 /* 
- * TestCompareEnums.java
+ * TestCompareVisibility.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -21,7 +21,7 @@
  */
 package org.sam.odf_doclet.bindings;
 
-public class TestCompareEnums {
+public class TestCompareVisibility {
 
 	private static <T> void printComparation(Comparable<T> c1, T c2){
 		if( c1.compareTo(c2) > 0)
@@ -32,7 +32,7 @@ public class TestCompareEnums {
 			System.out.println(c1 +" es menor que "+c2);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String... args) {
 
 		Visibility v1 = Visibility.PUBLIC;
 		Visibility v2 = Visibility.PROTECTED;

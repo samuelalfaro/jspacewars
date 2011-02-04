@@ -25,9 +25,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 
 public class ClassToUMLAdapter {
 	
@@ -58,7 +59,10 @@ public class ClassToUMLAdapter {
 			return toString((ParameterizedType)type);
 		if(type instanceof GenericArrayType)
 			return toString(((GenericArrayType)type).getGenericComponentType())+"[]";
-		return type.toString();
+		if(type instanceof WildcardType)
+			return toString((WildcardType)type);
+		//"*TypeVariable*: {"+type.getName()+"}";
+		return ((TypeVariable<?>)type).getName();
 	}
 
 	public static String toString(Class<?> clazz){
@@ -73,6 +77,35 @@ public class ClassToUMLAdapter {
 	public static String toString(ParameterizedType type){
 		return toString((Class<?>)type.getRawType()) + 
 				"<" + toString(type.getActualTypeArguments()) + ">";
+	}
+	
+	public static String toString(WildcardType type){
+		StringBuffer buff = new StringBuffer("?");
+		Type[] bounds = type.getUpperBounds();
+		if( bounds != null && bounds.length > 0){
+			if( !( bounds[0] instanceof Class<?>  && ((Class<?>)bounds[0]).equals(Object.class) ) ){
+				int i = 0;
+				buff.append(" extends ");
+				while(true){
+					buff.append(toString(bounds[i]));
+					if( ++i ==  bounds.length)
+						return buff.toString();
+					buff.append(", ");
+				}
+			}
+		}
+		bounds = type.getLowerBounds();
+		if( bounds != null && bounds.length > 0){
+			int i = 0;
+			buff.append(" super ");
+			while(true){
+				buff.append(toString(bounds[i]));
+				if( ++i ==  bounds.length)
+					return buff.toString();
+				buff.append(", ");
+			}
+		}
+		return buff.toString();
 	}
 	
 	public static String toString(Field field){
@@ -95,15 +128,5 @@ public class ClassToUMLAdapter {
 				toString( method.getGenericParameterTypes() ),
 				!returnType.equals("void") ? ": " + returnType :""
 		);
-	}
-	
-	public static char getVisibility(int att){
-		if( Modifier.isPublic(att) )
-			return '+';
-		if( Modifier.isProtected(att) )
-			return '#';
-		if( Modifier.isPrivate(att) )
-			return '-';
-		return '~';
 	}
 }

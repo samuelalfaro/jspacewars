@@ -21,7 +21,9 @@
  */
 package org.sam.odf_doclet.bindings;
 
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,6 +37,76 @@ import java.util.Deque;
 import org.sam.odf_doclet.ClassToUMLAdapter;
 
 import com.sun.javadoc.ClassDoc;
+
+final class ClassPair {
+	
+	static Class<?> find(Class<?> containingClazz, String qualifiedName) throws ClassNotFoundException{
+		Class<?> declaredClasses[] = containingClazz.getDeclaredClasses();
+		if(declaredClasses.length > 0)
+			for(Class<?> clazz: declaredClasses){
+				if( qualifiedName.equals(clazz.getCanonicalName()))
+					return clazz;
+				if( qualifiedName.startsWith(clazz.getCanonicalName()+".") )
+					return find(clazz, qualifiedName);
+			}
+		throw new ClassNotFoundException( qualifiedName+": not found in " +containingClazz.getCanonicalName() );
+	}
+	
+	static ClassPair from(ClassDoc classDoc) throws ClassNotFoundException{
+		if( classDoc.containingClass() == null)
+			return new ClassPair(
+					Class.forName( classDoc.qualifiedName(), false, ClassBinding.getClassLoader() ),
+					classDoc
+			);
+		
+		ClassDoc containingClass = classDoc;
+		while(containingClass.containingClass() != null){
+			containingClass = containingClass.containingClass();
+		}
+		
+		return new ClassPair(
+				find(
+						Class.forName( 
+								containingClass.qualifiedName(), 
+								false, 
+								ClassBinding.getClassLoader()
+						), 
+						classDoc.qualifiedName() 
+				),
+				classDoc
+		);
+	}
+	
+	static ClassPair from( Class<?> clazz, ClassDoc classDoc ) throws ClassNotFoundException {
+		if( classDoc.qualifiedName().equals(clazz.getCanonicalName()))
+			return new ClassPair( clazz, classDoc );
+		return new ClassPair( find(clazz, classDoc.qualifiedName()), classDoc );
+	}
+	
+	static ClassPair from(Class<?> clazz) {
+		return new ClassPair( clazz, null );
+	}
+	
+	final Class<?> clazz;
+	final ClassDoc classDoc;
+
+	private ClassPair(Class<?> clazz, ClassDoc classDoc) {
+		this.clazz = clazz;
+		this.classDoc = classDoc;
+	}
+	
+	boolean isInterface(){
+		if(clazz != null)
+			return clazz.isInterface();
+		return classDoc.isInterface();
+	}
+	
+	boolean  isEnum(){
+		if(clazz != null)
+			return clazz.isEnum();
+		return classDoc.isEnum();
+	}
+}
 
 /**
  * 
@@ -422,6 +494,18 @@ class MethodBinding extends DocumentedElement{
  */
 public abstract class ClassBinding extends DocumentedElement{
 	
+	private static ClassLoader classLoader;
+	
+	public static final void setClassLoader(ClassLoader classLoader){
+		ClassBinding.classLoader = classLoader;
+	}
+	
+	static final ClassLoader getClassLoader(){
+		if( classLoader == null)
+			classLoader = Thread.currentThread().getContextClassLoader();
+		return classLoader;
+	}
+	
 	static Collection<Type> getHierarchy(Class<?> clazz){
 		Deque<Type> hierarchy = new ArrayDeque<Type>();
 		Type superClass = clazz.getGenericSuperclass();
@@ -441,9 +525,9 @@ public abstract class ClassBinding extends DocumentedElement{
 		return hierarchy;
 	}
 	
-	static Collection<SimpleBinding> getEnclosingClasses(Class<?> clazz){
+	static Collection<SimpleBinding> getEnclosingClasses(ClassPair classPair){
 		Deque<SimpleBinding> enclosingClasses = new ArrayDeque<SimpleBinding>();
-		Class<?> enclosingClass = clazz.getEnclosingClass();
+		Class<?> enclosingClass = classPair.clazz.getEnclosingClass();
 		while( enclosingClass != null ){
 			enclosingClasses.offerFirst( SimpleBinding.from(enclosingClass) );
 			enclosingClass = enclosingClass.getEnclosingClass();
@@ -451,9 +535,9 @@ public abstract class ClassBinding extends DocumentedElement{
 		return enclosingClasses;
 	}
 	
-	static Collection<SimpleInterfaceBinding> getImplementedInterfaces(Class<?> clazz){
+	static Collection<SimpleInterfaceBinding> getImplementedInterfaces(ClassPair classPair){
 		Deque<SimpleInterfaceBinding> interfaces = new ArrayDeque<SimpleInterfaceBinding>();
-		for(Type parent: getHierarchy(clazz)){
+		for(Type parent: getHierarchy(classPair.clazz)){
 			Class<?> superClass = null;
 			if( parent instanceof Class<?> )
 				superClass = (Class<?>)parent;
@@ -464,56 +548,60 @@ public abstract class ClassBinding extends DocumentedElement{
 				if( !interfaces.contains(implementedInterface))
 					interfaces.offerLast( new SimpleInterfaceBinding(implementedInterface) );
 		}
-		for(Type implementedInterface: clazz.getGenericInterfaces())
+		for(Type implementedInterface: classPair.clazz.getGenericInterfaces())
 			if( !interfaces.contains(implementedInterface))
 				interfaces.offerLast( new SimpleInterfaceBinding(implementedInterface) );
 		return interfaces;
 	}
 	
-	static Collection<FieldBinding> getFields(Class<?> clazz){
+	static Collection<FieldBinding> getFields(ClassPair classPair){
 		Deque<FieldBinding> fields = new ArrayDeque<FieldBinding>();
-		for(Field field: clazz.getDeclaredFields()){
+		for(Field field: classPair.clazz.getDeclaredFields()){
 			if( !field.isSynthetic() && !field.isEnumConstant() )
 				fields.offer( new FieldBinding(field) );
 		}
 		return fields;
 	}
 	
-	static Collection<ConstructorBinding> getConstructors(Class<?> clazz){
+	static Collection<ConstructorBinding> getConstructors(ClassPair classPair){
 		Deque<ConstructorBinding> constructors = new ArrayDeque<ConstructorBinding>();
-		for(Constructor<?> constructor: clazz.getDeclaredConstructors()){
+		for(Constructor<?> constructor: classPair.clazz.getDeclaredConstructors()){
 			if( !constructor.isSynthetic() )
 				constructors.add( new ConstructorBinding( constructor ) );
 		}
 		return constructors;
 	}
 	
-	static Collection<MethodBinding> getMethods(Class<?> clazz){
+	static Collection<MethodBinding> getMethods(ClassPair classPair){
 		Deque<MethodBinding> methods = new ArrayDeque<MethodBinding>();
-		if(clazz.isEnum())
-			for(Method method: clazz.getDeclaredMethods()){
+		if(classPair.clazz.isEnum())
+			for(Method method: classPair.clazz.getDeclaredMethods()){
 				String methodString = ClassToUMLAdapter.toString(method);
 				if(!method.isSynthetic() && !methodString.startsWith("values():") &&  !methodString.startsWith("valueOf( String ):") )
 					methods.offer( new MethodBinding(method) );
 			}
 		else
-			for(Method method: clazz.getDeclaredMethods()){
+			for(Method method: classPair.clazz.getDeclaredMethods()){
 				if(!method.isSynthetic() )
 					methods.offer( new MethodBinding(method) );
 			}
 		return methods;
 	}
 	
-	public final static ClassBinding from(Class<?> clazz){
-		if(clazz.isInterface())
-			return new InterfaceBinding( clazz );
-		if(clazz.isEnum())
-			return new EnumBinding( clazz );
-		return new ConcreteClassBinding( clazz );
+	private final static ClassBinding from(ClassPair classPair){
+		if(classPair.isInterface())
+			return new InterfaceBinding( classPair );
+		if(classPair.isEnum())
+			return new EnumBinding( classPair );
+		return new ConcreteClassBinding( classPair );
 	}
 	
-	public final static ClassBinding from(ClassDoc clazz){
-		return null;
+	public final static ClassBinding from(Class<?> clazz){
+		return from( ClassPair.from(clazz) );
+	}
+	
+	public final static ClassBinding from(ClassDoc classDoc) throws ClassNotFoundException{
+		return from( ClassPair.from(classDoc) );
 	}
 	
 	Collection<SimpleBinding> enclosingClasses;
@@ -526,13 +614,22 @@ public abstract class ClassBinding extends DocumentedElement{
 		super(signature, documentation);
 	}
 
+	public final void toXML(OutputStream out) {
+		if (out instanceof PrintStream)
+			toXML((PrintStream) out);
+		else
+			try {
+				toXML(new PrintStream(out, false, "UTF-8"));
+			} catch (UnsupportedEncodingException ignorada) {
+			}
+	}
 }
 
 class ConcreteClassBinding extends ClassBinding{
 	
-	static Collection<SimpleClassBinding> getHierarchyBinding(Class<?> clazz){
+	static Collection<SimpleClassBinding> getHierarchyBinding(ClassPair classPair){
 		Deque<SimpleClassBinding> hierarchy = new ArrayDeque<SimpleClassBinding>();
-		for(Type type: getHierarchy(clazz))
+		for(Type type: getHierarchy(classPair.clazz))
 			hierarchy.offer( new SimpleClassBinding(type) );
 
 		return hierarchy;
@@ -544,20 +641,20 @@ class ConcreteClassBinding extends ClassBinding{
 	Collection<SimpleClassBinding> hierarchy;
 	Collection<ConstructorBinding> constructors;
 	
-	ConcreteClassBinding(Class<?> clazz){
-		super( ClassToUMLAdapter.toString(clazz), null);
-		this.isAbstract = Modifier.isAbstract( clazz.getModifiers() );
-		this.parameters = clazz.getTypeParameters().length > 0 ? 
-				new ParametersBinding( ClassToUMLAdapter.toString(clazz.getTypeParameters()) ):
+	ConcreteClassBinding(ClassPair classPair){
+		super( ClassToUMLAdapter.toString(classPair.clazz), null);
+		this.isAbstract = Modifier.isAbstract( classPair.clazz.getModifiers() );
+		this.parameters = classPair.clazz.getTypeParameters().length > 0 ? 
+				new ParametersBinding( ClassToUMLAdapter.toString(classPair.clazz.getTypeParameters()) ):
 				null;
 		
-		this.hierarchy = getHierarchyBinding(clazz);
-		this.enclosingClasses = getEnclosingClasses(clazz);
-		this.interfaces = getImplementedInterfaces(clazz);
+		this.hierarchy = getHierarchyBinding(classPair);
+		this.enclosingClasses = getEnclosingClasses(classPair);
+		this.interfaces = getImplementedInterfaces(classPair);
 		
-		this.fields = getFields(clazz);
-		this.constructors = getConstructors(clazz);
-		this.methods = getMethods(clazz);
+		this.fields = getFields(classPair);
+		this.constructors = getConstructors(classPair);
+		this.methods = getMethods(classPair);
 	}
 	
 	/* (non-Javadoc)
@@ -586,9 +683,9 @@ class ConcreteClassBinding extends ClassBinding{
 
 class EnumBinding extends ClassBinding{
 	
-	static Collection<ConstantBinding> getConstants(Class<?> clazz){
+	static Collection<ConstantBinding> getConstants(ClassPair classPair){
 		Deque<ConstantBinding> constants = new ArrayDeque<ConstantBinding>();
-		for(Object constant: clazz.getEnumConstants()){
+		for(Object constant: classPair.clazz.getEnumConstants()){
 			constants.offerLast( new ConstantBinding(constant.toString(), null) );
 		}
 		return constants;
@@ -597,16 +694,16 @@ class EnumBinding extends ClassBinding{
 	Collection<ConstantBinding> constants;
 	Collection<ConstructorBinding> constructors;
 	
-	EnumBinding(Class<?> clazz){
-		super( ClassToUMLAdapter.toString(clazz), null);
+	EnumBinding(ClassPair classPair){
+		super( ClassToUMLAdapter.toString(classPair.clazz), null);
 		
-		this.enclosingClasses = getEnclosingClasses(clazz);
-		this.interfaces = getImplementedInterfaces(clazz);
+		this.enclosingClasses = getEnclosingClasses(classPair);
+		this.interfaces = getImplementedInterfaces(classPair);
 		
-		this.constants = getConstants(clazz);
-		this.fields = getFields(clazz);
-		this.constructors = getConstructors(clazz);
-		this.methods = getMethods(clazz);
+		this.constants = getConstants(classPair);
+		this.fields = getFields(classPair);
+		this.constructors = getConstructors(classPair);
+		this.methods = getMethods(classPair);
 	}
 
 	/* (non-Javadoc)
@@ -635,17 +732,17 @@ class InterfaceBinding extends ClassBinding{
 
 	ParametersBinding parameters;
 	
-	InterfaceBinding(Class<?> clazz){
-		super( ClassToUMLAdapter.toString(clazz), null);
-		this.parameters = clazz.getTypeParameters().length > 0 ? 
-				new ParametersBinding( ClassToUMLAdapter.toString(clazz.getTypeParameters()) ):
+	InterfaceBinding(ClassPair classPair){
+		super( ClassToUMLAdapter.toString(classPair.clazz), null);
+		this.parameters = classPair.clazz.getTypeParameters().length > 0 ? 
+				new ParametersBinding( ClassToUMLAdapter.toString(classPair.clazz.getTypeParameters()) ):
 				null;
 		
-		this.enclosingClasses = getEnclosingClasses(clazz);
-		this.interfaces = getImplementedInterfaces(clazz);
+		this.enclosingClasses = getEnclosingClasses(classPair);
+		this.interfaces = getImplementedInterfaces(classPair);
 		
-		this.fields = getFields(clazz);
-		this.methods = getMethods(clazz);
+		this.fields = getFields(classPair);
+		this.methods = getMethods(classPair);
 	}
 
 	/* (non-Javadoc)

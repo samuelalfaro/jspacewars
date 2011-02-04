@@ -31,9 +31,20 @@ import java.util.Map;
 public class ClaseDePrueba<E> {
 	
 	/**
+	 *  Documentacion de la clase InerClassAbs.
+	 */
+	private static abstract class InerClassAbs{
+		/**
+		 *  Documentacion de la clase InerInerClass.
+		 */
+		private static class InerInerClass {
+		}
+	}
+	
+	/**
 	 *  Documentacion de la clase InerClass.
 	 */
-	private static class InerClass{
+	private static class InerClass extends InerClassAbs{
 	}
 	
 	/**
@@ -61,15 +72,27 @@ public class ClaseDePrueba<E> {
 		}
 	}
 	
+	/**
+	 * Documentación de la enumeración {@code ColorPrimario}.
+	 */
+	public static enum ColorPrimario{
+		/** {@code ColorPrimario} que representa el color: ROJO*/
+		ROJO, 
+		/** {@code ColorPrimario} que representa el color: VERDE*/
+		VERDE,
+		/** {@code ColorPrimario} que representa el color: AZUL*/
+		AZUL;
+	}
+	
 	/** Documentación de a1 */
 	@SuppressWarnings("unused")
 	private int a1;
 	/** Documentación de a2 */
 	int[][] a2;
 	/** Documentación de a3 */
-	protected Map<Integer,Collection<E>>[][] a3;
+	protected Map< Collection<? extends E>, Collection<? super E> >[] a3;
 	/** Documentación de a4 */
-	public InerClass a4;
+	public InerClass a4[];
 	
 	/**
 	 * Documentación del constructor.
@@ -91,17 +114,28 @@ public class ClaseDePrueba<E> {
 	 * <ul><li>{@code true} si se cumple la condición.</li>
 	 * <li>{@code false} en caso contrario.</li></ul>
 	 */
-	public boolean metodo1(int a1, float a2, Collection<Integer> a3){
+	public boolean metodo1(int a1, float a2, Collection<?> a3){
 		return false;
 	}
 	
 	/**
 	 * Documentación del método {@code metodo2}.
 	 * @param a primer argumento.
-	 * @return valor devuelto.
 	 * @throws IllegalArgumentException causa de la excepción.
 	 */
-	public Map<Integer,String> metodo2(int a) throws IllegalArgumentException{
+	void metodo2(InerClassAbs.InerInerClass a) throws IllegalArgumentException{
+	}
+	
+	/**
+	 * Documentación del método {@code metodo3}.
+	 * @param <T> Documentación del parámetro del método.
+	 * @param a1 primer argumento.
+	 * @param a2 segundo argumento.
+	 * @param a3 tercer argumento.
+	 * @return valor devuelto.
+	 */
+	@SuppressWarnings("unused")
+	private <T> E metodo3(T a1, Map<? super Number, ? extends InerClass> a2, T... a3){
 		return null;
 	}
 }

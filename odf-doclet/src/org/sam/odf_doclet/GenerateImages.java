@@ -77,7 +77,7 @@ public class GenerateImages {
 		return absolutePath.substring(rootPath.length()+1).replace('/', '.');
 	}
 	
-	private static void getInterfacesAndClasses(File pack, String packageName,
+	private static void getInterfacesAndClasses(ClassLoader loader, File pack, String packageName,
 			Collection<Class<?>> interfacesSet, Collection<Class<?>> classesSet){
 		interfacesSet.clear();
 		classesSet.clear();
@@ -91,7 +91,7 @@ public class GenerateImages {
 							fileName.substring(0, fileName.length() - ".class".length())
 					);
 					try {
-						Class<?> clazz = Class.forName(className, false, GenerateImages.class.getClassLoader()); 
+						Class<?> clazz = Class.forName( className, false, loader );
 						if( clazz.isInterface() )
 							interfacesSet.add(clazz);
 						else
@@ -110,17 +110,24 @@ public class GenerateImages {
 	 * @throws TranscoderException 
 	 */
 	public static void main(String[] args) throws IOException, TranscoderException{
-	
+		
 		File root = new File("/media/DATA/Samuel/Proyectos/jspacewars/bin");
 		String rootPath = root.getCanonicalPath();
-		
+
+		ClassLoader classLoader = ClassLoaderTools.getLoader(
+				"/media/DATA/Samuel/Proyectos/jspacewars/",
+				"lib/ext/vecmath.jar:lib/gluegen-rt.jar:lib/jogl.jar:" +
+				"lib/FengGUI.jar:lib/xstream-1.3.jar:lib/ibxm-alpha51.jar:" +
+				"lib/jogg-0.0.7.jar:lib/jorbis-0.0.15.jar:bin"
+		);
+	
 		SortedSet<Class<?>> packageInterfacesSet = new TreeSet<Class<?>>(COMPARADOR_DE_INTERFACES);
 		packageClassesCollection = new LinkedList<Class<?>>();
 		SortedSet<Class<?>> listadoDeClasesOrdenado = new TreeSet<Class<?>>(COMPARADOR_DE_CLASES);
 		
 		for(File pack: getPackages(root)){
 			String packageName = getPackageName(pack, rootPath);
-			getInterfacesAndClasses(pack, packageName, packageInterfacesSet, packageClassesCollection);
+			getInterfacesAndClasses(classLoader, pack, packageName, packageInterfacesSet, packageClassesCollection);
 
 			if( packageInterfacesSet.size() > 0 || packageClassesCollection.size() > 0 ){
 				System.out.format("package: %s\n", packageName.length() > 0 ? packageName : "(default  package)" );

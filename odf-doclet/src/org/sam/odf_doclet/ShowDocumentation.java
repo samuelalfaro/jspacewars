@@ -21,83 +21,127 @@
  */
 package org.sam.odf_doclet;
 
+import java.io.PrintStream;
+
+import org.sam.odf_doclet.bindings.ClassBinding;
+
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.ConstructorDoc;
+import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.ParamTag;
-import com.sun.javadoc.Parameter;
 import com.sun.javadoc.RootDoc;
 import com.sun.javadoc.SeeTag;
+import com.sun.javadoc.SourcePosition;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.ThrowsTag;
 
 public class ShowDocumentation {
 	
-	public static boolean start(RootDoc root) {
-		ClassDoc[] classes = root.classes();
-		for(ClassDoc classDoc: classes){
-			System.err.println("\n"+classDoc.name());
-			System.err.println("\t"+classDoc.commentText());
-			System.err.println("\nFields:");
-			for(FieldDoc fieldDoc: classDoc.fields()){
-				System.err.println("\t"+fieldDoc.name()+": "+fieldDoc.type().typeName()+fieldDoc.type().dimension());
-				System.err.println("\t\t"+fieldDoc.commentText());
-			}
-			System.err.println("\nConstructors:");
-			for(ConstructorDoc constructorDoc: classDoc.constructors()){
-				if( constructorDoc.position() != null && constructorDoc.position().line() != classDoc.position().line() ){
-					System.err.println("\t"+constructorDoc.commentText());
-					System.err.print( "\t\t["+constructorDoc.position().line()+"] "+constructorDoc.name() +"(");
-					
-					for(Parameter parameter:constructorDoc.parameters()){
-						System.err.print(parameter.name()+": "+parameter.type().typeName()+parameter.type().dimension()+", ");
-					}
-					System.err.println(")");
-					for(ParamTag tag: constructorDoc.paramTags()){
-						System.err.println( "\t\t\t"+tag.parameterName()+"\t"+tag.parameterComment());
-					}
-					for(SeeTag tag: constructorDoc.seeTags()){
-						System.err.println( "\t\t\t"+tag.referencedMember());
-					}
-				}
-			}
-			System.err.println("\nMethods:");
-			for(MethodDoc methodDoc: classDoc.methods()){
-				if( methodDoc.position() != null && methodDoc.position().line() != classDoc.position().line() ){
-					System.err.println("\t"+methodDoc.commentText());
-					System.err.print( "\t\t["+methodDoc.position().line()+"] "+methodDoc.name() +"(");
-					
-					for(Parameter parameter: methodDoc.parameters()){
-						System.err.print(parameter.name()+": "+parameter.type().typeName()+parameter.type().dimension()+", ");
-					}
-					if (methodDoc.returnType().typeName().equals("void"))
-						System.err.println(")");
-					else
-						System.err.println("):" + methodDoc.returnType().typeName() + methodDoc.returnType().dimension());
+	private static final boolean equals(SourcePosition o1, SourcePosition o2) {
+		if(o1 == null)
+			return o2 == null;
+		return o1.line() == o2.line() && o1.column() == o2.column();
+	}
+	
+	private static void print(ClassDoc classDoc, PrintStream out){
+		out.println("\n"+classDoc.name());
+		out.println("\t"+classDoc.commentText());
+		out.println("\nFields:");
+		for(FieldDoc fieldDoc: classDoc.fields()){
 
-					for (ParamTag tag : methodDoc.paramTags()) {
-						System.err.println("\t\t\t" + tag.parameterName() + "\t" + tag.parameterComment());
-					}
-					
-					Tag[] returnTags = methodDoc.tags("@return");
-					if (returnTags != null && returnTags.length > 0) {
-						StringBuilder builder = new StringBuilder();
-						for (Tag returnTag : returnTags) {
-							String returnTagText = returnTag.text();
-							if (returnTagText != null) {
-								builder.append(returnTagText);
-								builder.append("\n");
-							}
-						}
-						System.err.println( "\t\t\treturn\t"+ builder.substring(0, builder.length() - 1) );
-			        }
-					for(ThrowsTag tag: methodDoc.throwsTags()){
-						System.err.println( "\t\t\t"+tag.exceptionName()+"\t"+tag.exceptionComment());
-					}
+			out.println("\t"+ClassDocToUMLAdapter.toString( fieldDoc ) );
+			out.println("\t\t"+fieldDoc.commentText());
+		}
+		out.println("\nConstructors:");
+		for(ConstructorDoc constructorDoc: classDoc.constructors()){
+			if( !equals( constructorDoc.position(), classDoc.position() ) ){
+				out.println("\t["+constructorDoc.position().line()+"] "+ClassDocToUMLAdapter.toString( constructorDoc ) );
+				out.println("\t\t"+constructorDoc.commentText());
+				for(ParamTag tag: constructorDoc.paramTags()){
+					out.println( "\t\t\t"+tag.parameterName()+"\t"+tag.parameterComment());
+				}
+				for(SeeTag tag: constructorDoc.seeTags()){
+					out.println( "\t\t\t"+tag.referencedMember());
 				}
 			}
 		}
+		out.println("\nMethods:");
+		for(MethodDoc methodDoc: classDoc.methods()){
+			if( !equals( methodDoc.position(), classDoc.position() ) ){
+				out.println("\t["+methodDoc.position().line()+"] "+ClassDocToUMLAdapter.toString( methodDoc ) );
+				out.println("\t"+methodDoc.commentText());
+
+				for (ParamTag tag : methodDoc.typeParamTags()) {
+					out.println("\t\t\t" + tag.parameterName() + "\t" + tag.parameterComment());
+				}
+
+				for (ParamTag tag : methodDoc.paramTags()) {
+					out.println("\t\t\t" + tag.parameterName() + "\t" + tag.parameterComment());
+				}
+
+				Tag[] returnTags = methodDoc.tags("@return");
+				if (returnTags != null && returnTags.length > 0) {
+					StringBuilder builder = new StringBuilder();
+					for (Tag returnTag : returnTags) {
+						String returnTagText = returnTag.text();
+						if (returnTagText != null) {
+							builder.append(returnTagText);
+							builder.append("\n");
+						}
+					}
+					out.println( "\t\t\treturn\t"+ builder.substring(0, builder.length() - 1) );
+				}
+				for(ThrowsTag tag: methodDoc.throwsTags()){
+					out.println( "\t\t\t"+tag.exceptionName()+"\t"+tag.exceptionComment());
+				}
+			}
+		}
+	}
+	
+	public static boolean start(RootDoc root) throws ClassNotFoundException {
+
+		ClassDoc[] classes = root.classes();
+
+		for(ClassDoc classDoc: classes){
+			ClassBinding.from(classDoc).toXML(System.out);
+			print( classDoc, System.out );
+		}
+		return true;
+	}
+	
+	public static int optionLength(String option) {
+		if (option.equalsIgnoreCase("-projectRootpath")) 
+			return 2;
+		if (option.equalsIgnoreCase("-projectClasspath"))
+			return 2;
+		return 0;
+	}
+
+	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
+		
+		String projectRootpath  = ""; boolean foundProjectRootpath = false;
+		String projectClasspath = ""; boolean foundProjectClasspath = false;
+		
+		for(String[] option: options){
+			if(option[0].equalsIgnoreCase("-projectRootpath")){
+				if(foundProjectRootpath){
+					reporter.printError("Only one -projectRootpath option allowed.");
+					return false;
+				}
+				foundProjectRootpath = true;
+				projectRootpath = option[1];
+			}else if(option[0].equalsIgnoreCase("-projectClasspath")){
+				if(foundProjectClasspath){
+					reporter.printError("Only one -projectClasspath option allowed.");
+					return false;
+				}
+				foundProjectClasspath = true;
+				projectClasspath = option[1];
+			}
+		}
+		ClassBinding.setClassLoader(ClassLoaderTools.getLoader( projectRootpath, projectClasspath ) );
 		return true;
 	}
 }
