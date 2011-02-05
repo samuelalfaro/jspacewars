@@ -45,13 +45,13 @@ public class Cache<T extends PrototipoCacheable<T>>{
 		}
 	}
 
-	private static class Nodo<T>{
-		PrototipoCacheable<T> prototipo;
-		Queue<T> instancias;
+	private static class Nodo<S>{
+		PrototipoCacheable<S> prototipo;
+		Queue<S> instancias;
 		
-		Nodo(PrototipoCacheable<T> prototipo){
+		Nodo(PrototipoCacheable<S> prototipo){
 			this.prototipo = prototipo;
-			this.instancias = new LinkedList<T>();
+			this.instancias = new LinkedList<S>();
 		}
 	}
 	
