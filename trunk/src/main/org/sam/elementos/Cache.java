@@ -45,7 +45,7 @@ public class Cache<T extends PrototipoCacheable<T>>{
 		}
 	}
 
-	private class Nodo{
+	private static class Nodo<T>{
 		PrototipoCacheable<T> prototipo;
 		Queue<T> instancias;
 		
@@ -58,7 +58,7 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	private int elementos;
 	private int tam;
 	private int tamMax;
-	private Map <Integer,Nodo> prototipos;
+	private Map <Integer,Nodo<T>> prototipos;
 	//private int dCreados, dRecuperados; //Borrar comentarios para testear.
 	
 	private static Comparator<Integer> COMPARADOR = new Comparator<Integer>(){
@@ -72,7 +72,7 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * @param tam valor de la capacidad deseada de la {@code Cache}.
 	 */
 	public Cache(int tam){
-		this.prototipos = new TreeMap<Integer,Nodo>(COMPARADOR);
+		this.prototipos = new TreeMap<Integer,Nodo<T>>(COMPARADOR);
 		this.elementos = 0;
 		this.tam = tam;
 		this.tamMax = (tam*125)/100;
@@ -85,7 +85,7 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * @param prototipo registrado.
 	 */
 	public void addPrototipo(PrototipoCacheable<T> prototipo){
-		prototipos.put(prototipo.hashCode(),new Nodo(prototipo));
+		prototipos.put(prototipo.hashCode(),new Nodo<T>(prototipo));
 	}
 	
 	/**
@@ -98,7 +98,7 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * Si la {@code Cache} no contine ningún prototipo con el código solicitado.
 	 */
 	public T newObject(int tipo) throws PrototipoDesconocidoException{
-		Nodo nodo = prototipos.get(tipo);
+		Nodo<T> nodo = prototipos.get(tipo);
 		if( nodo == null)
 			throw new PrototipoDesconocidoException("\nNo existe ningún prototipo con el identificador: "+tipo);
 		T newObject;
@@ -125,14 +125,14 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * Si la {@code Cache} no contine ningún prototipo con el código solicitado.
 	 */
 	public void cached(T elemento) throws PrototipoDesconocidoException{
-		Nodo nodo = prototipos.get(elemento.hashCode());
+		Nodo<T> nodo = prototipos.get(elemento.hashCode());
 		if( nodo == null)
 			throw new PrototipoDesconocidoException("Prototipo "+elemento.hashCode()+" desconcido");
 		nodo.instancias.offer(elemento);
 		elementos++;
 		if (elementos > tamMax)
 			while( elementos > tam ){
-				for(Nodo n: prototipos.values()){
+				for(Nodo<T> n: prototipos.values()){
 					if(n.instancias.size()>0){
 						n.instancias.poll();
 						elementos --;
