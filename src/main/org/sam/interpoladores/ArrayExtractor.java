@@ -28,7 +28,10 @@ package org.sam.interpoladores;
  */
 public abstract class ArrayExtractor{
 	
-	private ArrayExtractor(){}
+	/**
+	 * Constructor cuyo único fin es rebajar la visibilidad del constructor por defecto.
+	 */
+	ArrayExtractor(){}
 	
     /**
      * Impementación de {@code ArrayExtractor} que extrae los valores del tipo genérico {@code T}
@@ -62,8 +65,8 @@ public abstract class ArrayExtractor{
 			return v.length;
 		}
 
-    	/**
-    	 * {@inheritDoc}
+    	/* (non-Javadoc)
+    	 * @see org.sam.interpoladores.ArrayExtractor#dimensions()
     	 */
     	@Override
         public int dimensions() {

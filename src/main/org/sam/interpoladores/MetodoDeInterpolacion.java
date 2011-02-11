@@ -456,7 +456,13 @@ public interface MetodoDeInterpolacion{
 			}
 		};
 		
-		private static ArrayExtractor from(Object... parametros){
+		/**
+		 * Método que devuelve el {@code ArrayExtractor} conveniente para poder tratar
+		 * los valores pasados como parámetros.
+		 * @param parametros Valores que serán interpolados.
+		 * @return  El {@code ArrayExtractor} generado.
+		 */
+		static ArrayExtractor from(Object... parametros){
 			if( parametros[0].getClass().isArray() ){
 				if( parametros[0] instanceof float[] )
 					return new ArrayExtractor.E1F((float[])parametros[0]);
