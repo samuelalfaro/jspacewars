@@ -26,10 +26,7 @@ import com.sun.javadoc.ConstructorDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
-import com.sun.javadoc.ParameterizedType;
 import com.sun.javadoc.Type;
-import com.sun.javadoc.TypeVariable;
-import com.sun.javadoc.WildcardType;
 
 public class ClassDocToUMLAdapter {
 	
@@ -54,29 +51,15 @@ public class ClassDocToUMLAdapter {
 	}
 	
 	public static String toString(Type type){
-		String name = type.qualifiedTypeName();
-		ClassDoc clazz = type.asClassDoc();
-		if(clazz != null){
-			int packageLength = clazz.containingPackage().name().length();
-			if( packageLength > 0 )
-				name = name.substring(packageLength + 1);
-		}
-		ParameterizedType parameterizedType = type.asParameterizedType();
-		if(parameterizedType != null){
-			System.err.print("**ParameterizedType: " + type);
-			for(Type p:parameterizedType.typeArguments())
-				System.err.print(toString(p) + ", ");
-			System.err.println();
-		}		
-		TypeVariable typeVariable = type.asTypeVariable();
-		if(typeVariable != null){
-			System.err.println("**TypeVariable: " + type);
-		}
-		WildcardType wildcardType = type.asWildcardType();
-		if(wildcardType != null){
-			System.err.println("**WildcardType: " + type);
-		}
-		return name + type.dimension();
+//		String name = type.qualifiedTypeName();
+//		ClassDoc clazz = type.asClassDoc();
+//		if(clazz != null){
+//			int packageLength = clazz.containingPackage().name().length();
+//			if( packageLength > 0 )
+//				name = name.substring(packageLength + 1);
+//		}
+//		return name + type.dimension();
+		return type.qualifiedTypeName() + type.dimension();
 	}
 
 //	public static String toString(ClassDoc clazz){
@@ -100,8 +83,12 @@ public class ClassDocToUMLAdapter {
 	}
 
 	public static String toString(ConstructorDoc constructor){
+		String name = constructor.name();
+		while(name.indexOf('.') >= 0)
+			name = name.substring(name.indexOf('.')+1);
+		
 		return String.format( "%1$s(%2$s%3$s%2$s)", 
-				constructor.name(),
+				name,
 				constructor.parameters().length > 0 ? " ":"",
 				toString(constructor.parameters() )
 		);

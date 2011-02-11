@@ -45,6 +45,7 @@ public class ShowDocumentation {
 		return o1.line() == o2.line() && o1.column() == o2.column();
 	}
 	
+	@SuppressWarnings("unused")
 	private static void print(ClassDoc classDoc, PrintStream out){
 		out.println("\n"+classDoc.name());
 		out.println("\t"+classDoc.commentText());
@@ -104,10 +105,8 @@ public class ShowDocumentation {
 
 		ClassDoc[] classes = root.classes();
 
-		for(ClassDoc classDoc: classes){
+		for(ClassDoc classDoc: classes)
 			ClassBinding.from(classDoc).toXML(System.out);
-			print( classDoc, System.out );
-		}
 		return true;
 	}
 	

@@ -52,8 +52,9 @@ public class ClassToUML {
 	private static final Transformer toSVGTransformer() {
 		if (toSVGSingleton == null)
 			try {
+				File template = new File("resources/shared/toSVG.xsl");
 				toSVGSingleton = TransformerFactory.newInstance().newTransformer(
-						new StreamSource(new FileInputStream("resources/shared/toSVG.xsl"))
+						new StreamSource(new FileInputStream(template), template.toString() )
 				);
 				toSVGSingleton.setParameter("scale", 2.0);
 				toSVGSingleton.setParameter("background", "#FFFFFF");
@@ -121,6 +122,7 @@ public class ClassToUML {
 		pipeIn.connect(pipeOut);
 
 		ImageTranscoder t = new PNGTranscoder();
+		t.addTranscodingHint(PNGTranscoder.KEY_INDEXED, new Integer(256));
         
 		TranscoderInput input = new TranscoderInput(pipeIn);
         input.setURI( new File("resources").toURI().toString() );

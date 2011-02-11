@@ -21,12 +21,20 @@
  */
 package pruebas;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
 /**
+ * Clase para tocar las narices y confundirla con java.lang.Float.
+ */
+class Float{
+	
+}
+
+/**
  * Documentacion de la clase ClaseDePrueba.
- * @param <E> Documentacion del parámetro.
+ * @param <E> Documentacion del parámetro {@code E}.
  */
 public class ClaseDePrueba<E> {
 	
@@ -38,34 +46,74 @@ public class ClaseDePrueba<E> {
 		 *  Documentacion de la clase InerInerClass.
 		 */
 		private static class InerInerClass {
+			
 		}
 	}
 	
 	/**
 	 *  Documentacion de la clase InerClass.
 	 */
-	private static class InerClass extends InerClassAbs{
+	@SuppressWarnings({"unused","synthetic-access"})
+	private class InerClass extends InerClassAbs{
+		
+		/**
+		 * Documentación del constructor {@code InerClass(ClaseDePrueba<?> a1, boolean a2)}.
+		 * @param <T> Genérico {@code T}.
+		 * @param a1 primer argumento.
+		 * @param a2 segundo argumento.
+		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla
+		 */
+		<T> InerClass(ClaseDePrueba<T> a1, boolean a2) throws IllegalArgumentException{
+		}
+		
+		/**
+		 * Documentacion del constructor {@code InerClass()}.
+		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla
+		 * @throws IOException exepción IO bla bla bla
+		 */
+		InerClass() throws IllegalArgumentException, IOException{
+			this(null,false);
+		}
+		
+		/**
+		 * Método que fuerza el acceso sintético.
+		 */
+		public void metodo1(){
+			System.out.println(a1);
+		}
 	}
 	
 	/**
 	 *  Documentacion de la enumeración DiasDeLaSemana.
 	 */
 	public static enum DiasDeLaSemana{
+		/** Lunes */
 		Monday("you can fall apart"),
+		/** Martes */
 		Tuesday("break my heart"),
+		/** Miércoles */
 		Wednesday("break my heart"),
+		/** Jueves */
 		Thursday("doesn't even start"),
+		/** Viernes */
 		Friday("I'm in love"),
+		/** Sábado */
 		Saturday("wait"),
+		/** Domingo */
 		Sunday("always comes too late");
 
 		private final String accion;
 		
+		/**
+		 * Documentación del constructor.
+		 * @param accion documentación del parámetro.
+		 */
 		DiasDeLaSemana(String accion){
 			this.accion = accion;
 		}
 		/**
 		 * Documentación del método {@code accion}.
+		 * @return valor devuelto:
 		 */
 		public final String getAccion(){
 			return accion;
@@ -85,7 +133,6 @@ public class ClaseDePrueba<E> {
 	}
 	
 	/** Documentación de a1 */
-	@SuppressWarnings("unused")
 	private int a1;
 	/** Documentación de a2 */
 	int[][] a2;
@@ -113,6 +160,9 @@ public class ClaseDePrueba<E> {
 	 * @return
 	 * <ul><li>{@code true} si se cumple la condición.</li>
 	 * <li>{@code false} en caso contrario.</li></ul>
+	 * @return
+	 * <ul><li>{@code true} si se cumple la condición.</li>
+	 * <li>{@code false} en caso contrario.</li></ul>
 	 */
 	public boolean metodo1(int a1, float a2, Collection<?> a3){
 		return false;
@@ -128,14 +178,29 @@ public class ClaseDePrueba<E> {
 	
 	/**
 	 * Documentación del método {@code metodo3}.
-	 * @param <T> Documentación del parámetro del método.
-	 * @param a1 primer argumento.
-	 * @param a2 segundo argumento.
 	 * @param a3 tercer argumento.
+	 * @param <T> Documentación del parámetro genérico T del método.
 	 * @return valor devuelto.
+	 * @param <U> Documentación del parámetro genérico U del método.
 	 */
 	@SuppressWarnings("unused")
-	private <T> E metodo3(T a1, Map<? super Number, ? extends InerClass> a2, T... a3){
+	private <T extends Number, U> E metodo3(T a1, Map<? super Number, ? extends InerClass> a2, U... a3){
 		return null;
+	}
+	
+	/**
+	 * Método con argumento de la clase java.lang.Float.
+	 * @param f1 documentación del argumento.
+	 */
+	void metodo4(java.lang.Float f1) {
+		
+	}
+	
+	/**
+	 * Método con argumento de la clase pruebas.Float.
+	 * @param f2 documentación del argumento.
+	 */
+	void metodo4(Float f2) {
+		
 	}
 }

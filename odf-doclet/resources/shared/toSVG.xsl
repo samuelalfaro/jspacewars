@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE xsl:stylesheet [<!ENTITY style SYSTEM 'shared/svg_styles.css'>]>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<xsl:import href="compact.xsl"/>
 	<xsl:param name="scale">1.0</xsl:param>
 	<xsl:param name="background">none</xsl:param>
 	<xsl:param name="widthChar1">6.5</xsl:param>
 	<xsl:param name="widthChar2">8.5</xsl:param>
 	<xsl:output method="xml" indent="no"/>
-	<xsl:preserve-space elements="*"/>
+	<xsl:strip-space elements="*"/>
 
 	<xsl:template match="Class|Interface|Enum">
-		<xsl:call-template name="calculate_xOffsetEnclosingClassesR">
-			<xsl:with-param name="count"  select="0"/>
-			<xsl:with-param name="xOffsetEnclosingClasses" select="0"/>
-		</xsl:call-template>
+		<xsl:variable name="compactData">
+			<xsl:call-template name="compact"/>
+		</xsl:variable>
+		<!--<xsl:copy-of select="exslt:node-set($compactData)"/>-->
+		<xsl:apply-templates select="exslt:node-set($compactData)" mode="toSVG"/>
 	</xsl:template>
 
 	<xsl:template name="calculate_xOffsetEnclosingClassesR">
@@ -52,22 +53,21 @@
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:call-template name="GenerateSVG">
-							<xsl:with-param name="xOffsetEnclosingClasses" select="$xOffsetEnclosingClasses + count(EnclosingClasses/*) * 40"/>
-						</xsl:call-template>
+						<xsl:number value="$xOffsetEnclosingClasses + count(EnclosingClasses/*) * 40"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="GenerateSVG">
-					<xsl:with-param name="xOffsetEnclosingClasses" select="0"/>
-				</xsl:call-template>
-			</xsl:otherwise>
+			<xsl:otherwise><xsl:number value="0"/></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="GenerateSVG">
-		<xsl:param name="xOffsetEnclosingClasses"/>
+	<xsl:template match="Class|Interface|Enum" mode="toSVG">
+		<xsl:variable name="xOffsetEnclosingClasses">
+			<xsl:call-template name="calculate_xOffsetEnclosingClassesR">
+				<xsl:with-param name="count"  select="0"/>
+				<xsl:with-param name="xOffsetEnclosingClasses" select="0"/>
+			</xsl:call-template>
+		</xsl:variable>
 		<xsl:variable name="stylesheet"><![CDATA[<?xml-stylesheet type="text/css" href="shared/svg_styles.css"?>]]></xsl:variable>
 		<xsl:variable name="xOffsetHierarchy">
 			<xsl:choose>
@@ -105,22 +105,22 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:variable name="widthName" select="string-length(./Signature) * $widthChar2 + 20"/>
+		<xsl:variable name="widthName" select="string-length(@name) * $widthChar2 + 20"/>
 		<xsl:variable name="numElements" select="count(Constants/Constant) + count(Fields/Field) + count(Constructors/Constructor) + count(Methods/Method)"/>
 		<xsl:variable name="widthElements">
 			<xsl:choose>
 				<xsl:when test="$numElements &gt; 0">
 					<xsl:for-each select="Constants/Constant|Fields/Field|Constructors/Constructor|Methods/Method">
-						<xsl:sort select="string-length(./Signature)" order="descending" data-type="number"/>
+						<xsl:sort select="string-length(./text())" order="descending" data-type="number"/>
 						<xsl:if test="position() = 1">
-							<xsl:number value="string-length(./Signature) * $widthChar1 + 40"/>
+							<xsl:number value="string-length(./text()) * $widthChar1 + 40"/>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:otherwise>0</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:variable name="widthParameters" select="string-length(Parameters/Signature) * $widthChar2 +20"/>
+		<xsl:variable name="widthParameters" select="string-length(Parameters) * $widthChar2 +20"/>
 		<xsl:variable name="widthBox">
 			<xsl:choose>
 				<xsl:when test="$widthName &gt; $widthElements and $widthName &gt; $widthParameters and $widthName &gt; 140">
@@ -284,7 +284,7 @@
 			<xsl:element name="g" xml:space="default">
 				<xsl:attribute name="transform">translate(<xsl:number value="10 + $xOffset"/>, <xsl:number value="$yOffset"/>)</xsl:attribute>              
 
-				<xsl:call-template name="drawInterfaceLines">
+				<xsl:call-template name="drawInterfaces">
 					<xsl:with-param name="xOffset" select="$widthBox"/>
 				</xsl:call-template>
 
@@ -328,22 +328,18 @@
 							<xsl:when test="name(.)='Enum'"><![CDATA[<< enumeration >>]]></xsl:when>
 						</xsl:choose>
 					</xsl:with-param>
-					<xsl:with-param name="title" select="Signature/text()"/>
+					<xsl:with-param name="title" select="@name"/>
 					<xsl:with-param name="isAbstract" select="@isAbstract"/>
 				</xsl:call-template>
 
 				<xsl:element name="g" xml:space="default">
 					<xsl:attribute name="transform"><xsl:value-of select="concat('translate(7, ', 10 + $prefixYOffset, ')')"/></xsl:attribute>
 					<xsl:if test="name(.)='Enum'">
-						<xsl:apply-templates select="Constants/Constant"/>
+						<xsl:apply-templates select="Constants"/>
 					</xsl:if>
 					<xsl:apply-templates select="Fields|Constructors|Methods"/>
 				</xsl:element>
-
-				<xsl:call-template name="drawInterfaces">
-					<xsl:with-param name="xOffset" select="$widthBox + 40"/>
-				</xsl:call-template>
-				
+		
 			</xsl:element>
 		</xsl:element>
 	</xsl:template>
@@ -585,7 +581,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="drawInterfaceLines">
+	<xsl:template name="drawInterfaces">
 		<xsl:param name="xOffset"/>
 		<xsl:variable name="yOffset">
 			<xsl:choose>
@@ -627,26 +623,14 @@
 					</xsl:element>
 				</xsl:otherwise>
 			</xsl:choose>
-		</xsl:for-each>
-	</xsl:template>
-
-	<xsl:template name="drawInterfaces">
-		<xsl:param name="xOffset"/>
-		<xsl:variable name="yOffset">
-			<xsl:choose>
-				<xsl:when test="name(.)='Class'">14</xsl:when>
-				<xsl:otherwise>34</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:for-each select="Interfaces/Interface">
 			<xsl:element name="use" xml:space="default">
-				<xsl:attribute name="x"><xsl:number value="$xOffset"/></xsl:attribute>
+				<xsl:attribute name="x"><xsl:number value="$xOffset + 40"/></xsl:attribute>
 				<xsl:attribute name="y"><xsl:number value="( position() -1 )*30 + $yOffset"/></xsl:attribute>
 				<xsl:attribute name="xlink:href">#CirculoInteface</xsl:attribute>
 				<xsl:attribute name="filter">url(shared/defs.svg#SpecShadow2)</xsl:attribute>
 			</xsl:element>
 			<xsl:element name="text" xml:space="default">
-				<xsl:attribute name="x"><xsl:number value="$xOffset + 15"/></xsl:attribute>
+				<xsl:attribute name="x"><xsl:number value="$xOffset + 55"/></xsl:attribute>
 				<xsl:attribute name="y"><xsl:number value="( position() -1 )*30 + $yOffset + 4"/></xsl:attribute>
 				<xsl:value-of select="text()"/>
 			</xsl:element>
@@ -659,229 +643,217 @@
 			<xsl:attribute name="x"><xsl:value-of select="$center"/></xsl:attribute>
 			<xsl:attribute name="y">-2</xsl:attribute>
 			<xsl:attribute name="id">textoTitulo</xsl:attribute>
-			<xsl:value-of select="Signature/text()"/>
+			<xsl:value-of select="text()"/>
 		</xsl:element>
+	</xsl:template>
+	
+	<xsl:template match="Constants">
+		<xsl:for-each select="Constant">
+			<xsl:element name="use" xml:space="default">
+				<xsl:attribute name="x">0</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value="position()*20"/></xsl:attribute>
+				<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
+			</xsl:element>
+			<xsl:element name="text" xml:space="default">
+				<xsl:attribute name="class">static</xsl:attribute>
+				<xsl:attribute name="x">23</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value="position()*20 +13"/></xsl:attribute>
+				<xsl:value-of select="text()"/>
+			</xsl:element>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="Fields">
-		<xsl:apply-templates select="Field"/>
+		<xsl:for-each select="Field">
+			<xsl:variable name="yOffset">
+				<xsl:choose>
+					<xsl:when test="name(../..)='Enum'">
+						<xsl:number value="( count(../../Constants/Constant) )*20 + 10"/>
+					</xsl:when>
+					<xsl:otherwise>0</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:element name="use" xml:space="default">
+				<xsl:attribute name="x">0</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="@visibility='+'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#PublicField</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:when test="@visibility='#'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedField</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedField</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:when test="@visibility='~'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageField</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#PackageField</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:when test="@visibility='-'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateField</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#PrivateField</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:element>
+			<xsl:element name="text" xml:space="default">
+				<xsl:choose>
+					<xsl:when test="@isStatic='true'">
+					  <xsl:attribute name="class">static</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="@isAbstract='true'">
+					  <xsl:attribute name="class">abstract</xsl:attribute>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:attribute name="x">23</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
+				<xsl:value-of select="text()"/>
+			</xsl:element>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="Constructors">
-		<xsl:apply-templates select="Constructor"/>
+		<xsl:for-each select="Constructor">
+			<xsl:variable name="yOffset">
+				<xsl:choose>
+					<xsl:when test="name(../..)='Enum'">
+						<xsl:number value="( count(../../Constants/Constant) + count(../../Fields/Field) )*20 + 20"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:number value="( count(../../Fields/Field) )*20 + 10"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:element name="use" xml:space="default">
+				<xsl:attribute name="x">0</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="@visibility='+'">
+						<xsl:attribute name="xlink:href">shared/defs.svg#PublicConstructor</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="@visibility='#'">
+						<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedConstructor</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="@visibility='~'">
+						<xsl:attribute name="xlink:href">shared/defs.svg#PackageConstructor</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="@visibility='-'">
+						<xsl:attribute name="xlink:href">shared/defs.svg#PrivateConstructor</xsl:attribute>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:element>
+			<xsl:element name="text" xml:space="default">
+				<xsl:attribute name="x">23</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
+				<xsl:value-of select="text()"/>
+			</xsl:element>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="Methods">
-		<xsl:apply-templates select="Method"/>
-	</xsl:template>
-
-	<xsl:template match="Constants/Constant">
-		<xsl:element name="use" xml:space="default">
-			<xsl:attribute name="x">0</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value="position()*20"/></xsl:attribute>
-			<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
-		</xsl:element>
-		<xsl:element name="text" xml:space="default">
-			<xsl:attribute name="class">static</xsl:attribute>
-			<xsl:attribute name="x">23</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value="position()*20 +13"/></xsl:attribute>
-			<xsl:value-of select="Signature/text()"/>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="Field">
-		<xsl:variable name="yOffset">
-			<xsl:choose>
-				<xsl:when test="name(../..)='Enum'">
-					<xsl:number value="( count(../../Constants/Constant) )*20 + 10"/>
-				</xsl:when>
-				<xsl:otherwise>0</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:element name="use" xml:space="default">
-			<xsl:attribute name="x">0</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="@visibility='+'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#PublicField</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="@visibility='#'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedField</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedField</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="@visibility='~'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageField</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#PackageField</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="@visibility='-'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateField</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#PrivateField</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:element>
-		<xsl:element name="text" xml:space="default">
-			<xsl:choose>
-				<xsl:when test="@isStatic='true'">
-				  <xsl:attribute name="class">static</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="@isAbstract='true'">
-				  <xsl:attribute name="class">abstract</xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:attribute name="x">23</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
-			<xsl:value-of select="Signature/text()"/>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="Constructor">
-		<xsl:variable name="yOffset">
-			<xsl:choose>
-				<xsl:when test="name(../..)='Enum'">
-					<xsl:number value="( count(../../Constants/Constant) + count(../../Fields/Field) )*20 + 20"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:number value="( count(../../Fields/Field) )*20 + 10"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:element name="use" xml:space="default">
-			<xsl:attribute name="x">0</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="@visibility='+'">
-					<xsl:attribute name="xlink:href">shared/defs.svg#PublicConstructor</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="@visibility='#'">
-					<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedConstructor</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="@visibility='~'">
-					<xsl:attribute name="xlink:href">shared/defs.svg#PackageConstructor</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="@visibility='-'">
-					<xsl:attribute name="xlink:href">shared/defs.svg#PrivateConstructor</xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:element>
-		<xsl:element name="text" xml:space="default">
-			<xsl:choose>
-				<xsl:when test="@isStatic='true'">
-				  <xsl:attribute name="class">static</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="@isAbstract='true'">
-				  <xsl:attribute name="class">abstract</xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:attribute name="x">23</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
-			<xsl:value-of select="Signature/text()"/>
-		</xsl:element>
-	</xsl:template>
-
-	<xsl:template match="Method">
-		<xsl:variable name="yOffset">
-			<xsl:choose>
-				<xsl:when test="name(../..)='Enum'">
-					<xsl:number value="( count(../../Constants/Constant) + count(../../Fields/Field) + count(../../Constructors/Constructor) )*20 + 20"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:number value="( count(../../Fields/Field) + count(../../Constructors/Constructor) )*20 + 10"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:element name="use" xml:space="default">
-			<xsl:attribute name="x">0</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:attribute>
-			<xsl:choose>
-				<xsl:when test="@visibility='+'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicMethod</xsl:attribute>
-						</xsl:when>
-						<xsl:when test="@isAbstract='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPublicMethod</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#PublicMethod</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="@visibility='#'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedMethod</xsl:attribute>
-						</xsl:when>
-						<xsl:when test="@isAbstract='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#AbstractProtectedMethod</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedMethod</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="@visibility='~'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageMethod</xsl:attribute>
-						</xsl:when>
-						<xsl:when test="@isAbstract='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPackageMethod</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#PackageMethod</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="@visibility='-'">
-					<xsl:choose>
-						<xsl:when test="@isStatic='true'">
-							<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateMethod</xsl:attribute>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:attribute name="xlink:href">shared/defs.svg#PrivateMethod</xsl:attribute>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:element>
-		<xsl:element name="text" xml:space="default">
-			<xsl:choose>
-				<xsl:when test="@isStatic='true'">
-				  <xsl:attribute name="class">static</xsl:attribute>
-				</xsl:when>
-				<xsl:when test="@isAbstract='true'">
-				  <xsl:attribute name="class">abstract</xsl:attribute>
-				</xsl:when>
-			</xsl:choose>
-			<xsl:attribute name="x">23</xsl:attribute>
-			<xsl:attribute name="y"><xsl:number value="position() *20 + $yOffset +13"/></xsl:attribute>
-			<xsl:value-of select="Signature/text()"/>
-		</xsl:element>
+		<xsl:for-each select="Method">
+			<xsl:variable name="yOffset">
+				<xsl:choose>
+					<xsl:when test="name(../..)='Enum'">
+						<xsl:number value="( count(../../Constants/Constant) + count(../../Fields/Field) + count(../../Constructors/Constructor) )*20 + 20"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:number value="( count(../../Fields/Field) + count(../../Constructors/Constructor) )*20 + 10"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			<xsl:element name="use" xml:space="default">
+				<xsl:attribute name="x">0</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:attribute>
+				<xsl:choose>
+					<xsl:when test="@visibility='+'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicMethod</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="@isAbstract='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPublicMethod</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#PublicMethod</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:when test="@visibility='#'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedMethod</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="@isAbstract='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#AbstractProtectedMethod</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedMethod</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:when test="@visibility='~'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageMethod</xsl:attribute>
+							</xsl:when>
+							<xsl:when test="@isAbstract='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPackageMethod</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#PackageMethod</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:when test="@visibility='-'">
+						<xsl:choose>
+							<xsl:when test="@isStatic='true'">
+								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateMethod</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="xlink:href">shared/defs.svg#PrivateMethod</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:element>
+			<xsl:element name="text" xml:space="default">
+				<xsl:choose>
+					<xsl:when test="@isStatic='true'">
+					  <xsl:attribute name="class">static</xsl:attribute>
+					</xsl:when>
+					<xsl:when test="@isAbstract='true'">
+					  <xsl:attribute name="class">abstract</xsl:attribute>
+					</xsl:when>
+				</xsl:choose>
+				<xsl:attribute name="x">23</xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value="position() *20 + $yOffset +13"/></xsl:attribute>
+				<xsl:value-of select="text()"/>
+			</xsl:element>
+		</xsl:for-each>
 	</xsl:template>
 
 </xsl:stylesheet>

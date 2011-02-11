@@ -22,7 +22,6 @@
 package org.sam.odf_doclet;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -38,18 +37,43 @@ public class ClassToUMLAdapter {
 		return clazz;
 	}
 	
-	public static String toString(Type[] params, int offset){
-		String stringParams = "";
+	public static String toString(Type[] params, int offset, boolean showGenericType){
+		StringBuffer buff = new StringBuffer();
 		for(int i = offset; i < params.length; ){
-			stringParams += toString(params[i]);
+			buff.append( showGenericType ? toString(params[i]) : toStringNoGerenic(params[i]) );
 			if(++i < params.length)
-				stringParams += ", ";
+				buff.append(", ");
 		}
-		return stringParams;
+		return buff.toString();
 	}
 	
 	public static String toString(Type[] params){
-		return toString( params, 0 );
+		return toString( params, 0, true );
+	}
+	
+	public static String toString(TypeVariable<?>[] params){
+		StringBuffer buff = new StringBuffer();
+		for(int i = 0; i < params.length; ){
+			buff.append( toString(params[i] ) );
+			if(++i < params.length)
+				buff.append(", ");
+		}
+		return buff.toString();
+	}
+	
+	private static String toStringNoGerenic(Type type){
+		if(type instanceof Class<?>)
+			return ((Class<?>)type).getCanonicalName();
+		if(type instanceof ParameterizedType)
+			return ((Class<?>)((ParameterizedType)type).getRawType()).getCanonicalName();
+		if(type instanceof GenericArrayType)
+			return toStringNoGerenic(((GenericArrayType)type).getGenericComponentType())+"[]";
+		if(type instanceof TypeVariable)
+			return toStringNoGerenic(((TypeVariable<?>)type).getBounds()[0]);
+		//Como no se trata ParameterizedType => no hay WildcardType
+		//TypeVariable se trata como Object
+		assert(type instanceof WildcardType);
+			return null;
 	}
 	
 	public static String toString(Type type){
@@ -61,8 +85,16 @@ public class ClassToUMLAdapter {
 			return toString(((GenericArrayType)type).getGenericComponentType())+"[]";
 		if(type instanceof WildcardType)
 			return toString((WildcardType)type);
-		//"*TypeVariable*: {"+type.getName()+"}";
-		return ((TypeVariable<?>)type).getName();
+		// Cuando no se especifique explicitamente toString(? typeVariable)):
+		// TypeVariable<?> tv = < T extends A & B & C >
+		// Type ty = tv
+		// toString(tv) --> T extends A & B & C
+		// toString(ty) --> T
+		if(type instanceof TypeVariable)
+			return ((TypeVariable<?>)type).getName();
+
+		assert(false):"Implementación desconcida";
+		return type.toString();
 	}
 
 	public static String toString(Class<?> clazz){
@@ -79,19 +111,35 @@ public class ClassToUMLAdapter {
 				"<" + toString(type.getActualTypeArguments()) + ">";
 	}
 	
+	public static String toString(TypeVariable<?> type){
+		StringBuffer buff = new StringBuffer(type.getName());
+		Type[] bounds = type.getBounds();
+		if( bounds != null && bounds.length > 0 &&
+				!( bounds[0] instanceof Class<?>  && ((Class<?>)bounds[0]).equals(Object.class) ) ){
+			buff.append(" extends ");
+			int i = 0;
+			while(true){
+				buff.append(toString(bounds[i]));
+				if( ++i ==  bounds.length)
+					return buff.toString();
+				buff.append(" & ");
+			}
+		}
+		return buff.toString();
+	}
+	
 	public static String toString(WildcardType type){
 		StringBuffer buff = new StringBuffer("?");
 		Type[] bounds = type.getUpperBounds();
-		if( bounds != null && bounds.length > 0){
-			if( !( bounds[0] instanceof Class<?>  && ((Class<?>)bounds[0]).equals(Object.class) ) ){
-				int i = 0;
-				buff.append(" extends ");
-				while(true){
-					buff.append(toString(bounds[i]));
-					if( ++i ==  bounds.length)
-						return buff.toString();
-					buff.append(", ");
-				}
+		if( bounds != null && bounds.length > 0 &&
+				!( bounds[0] instanceof Class<?>  && ((Class<?>)bounds[0]).equals(Object.class) ) ){
+			buff.append(" extends ");
+			int i = 0;
+			while(true){
+				buff.append(toString(bounds[i]));
+				if( ++i ==  bounds.length)
+					return buff.toString();
+				buff.append(", ");
 			}
 		}
 		bounds = type.getLowerBounds();
@@ -108,25 +156,31 @@ public class ClassToUMLAdapter {
 		return buff.toString();
 	}
 	
-	public static String toString(Field field){
-		return String.format("%s: %s", field.getName(), toString(field.getGenericType()) );
-	}
-
-	public static String toString(Constructor<?> constructor){
+	public static String toString(Constructor<?> constructor, boolean hideSyntheticAccesor, boolean showGenericType){
+		int offset = constructor.getDeclaringClass().isEnum() ? 2 : hideSyntheticAccesor ? 1: 0;
 		return String.format( "%1$s(%2$s%3$s%2$s)", 
 				constructor.getDeclaringClass().getSimpleName(),
-				constructor.getGenericParameterTypes().length > 0 ? " ":"",
-				toString(constructor.getGenericParameterTypes() , constructor.getDeclaringClass().isEnum() ? 2: 0 )
+				constructor.getGenericParameterTypes().length > offset ? " ":"",
+				toString(constructor.getGenericParameterTypes(), offset, showGenericType )
 		);
 	}
-
-	public static String toString(Method method) {
-		String returnType = toString( method.getGenericReturnType() );
+	
+	public static String toString(Constructor<?> constructor){
+		return toString(constructor, false, true );
+	}
+	
+	public static String toString(Method method, boolean showGenericType){
+		Type   returnType = method.getGenericReturnType();
+		String returnTypeStr =  showGenericType ? toString(returnType) : toStringNoGerenic(returnType);
 		return String.format( "%1$s(%2$s%3$s%2$s)%4$s", 
 				method.getName(),
 				method.getGenericParameterTypes().length > 0 ? " ":"",
-				toString( method.getGenericParameterTypes() ),
-				!returnType.equals("void") ? ": " + returnType :""
+				toString( method.getGenericParameterTypes(), 0, showGenericType ),
+				!returnTypeStr.equals("void") ? ": " + returnTypeStr :""
 		);
+	}
+	
+	public static String toString(Method method) {
+		return toString(method, true);
 	}
 }
