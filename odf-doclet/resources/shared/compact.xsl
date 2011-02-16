@@ -52,6 +52,15 @@
 					<xsl:if test="@isStatic">
 						<xsl:attribute name="isStatic"><xsl:value-of select="@isStatic"/></xsl:attribute>
 					</xsl:if>
+					<xsl:if test="@isTransient">
+						<xsl:attribute name="isTransient"><xsl:value-of select="@isTransient"/></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="@isVolatile">
+						<xsl:attribute name="isVolatile"><xsl:value-of select="@isVolatile"/></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="@isFinal">
+						<xsl:attribute name="isFinal"><xsl:value-of select="@isFinal"/></xsl:attribute>
+					</xsl:if>
 					<xsl:value-of select="concat(@name, ': ', Type/text())"/>
 				</xsl:element>
 			</xsl:for-each>
@@ -122,6 +131,18 @@
 					</xsl:if>
 					<xsl:if test="@isAbstract">
 						<xsl:attribute name="isAbstract"><xsl:value-of select="@isAbstract"/></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="@isNative">
+						<xsl:attribute name="isNative"><xsl:value-of select="@isNative"/></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="@isStrictfp">
+						<xsl:attribute name="isStrictfp"><xsl:value-of select="@isStrictfp"/></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="@isFinal">
+						<xsl:attribute name="isFinal"><xsl:value-of select="@isFinal"/></xsl:attribute>
+					</xsl:if>
+					<xsl:if test="@isSynchronized">
+						<xsl:attribute name="isSynchronized"><xsl:value-of select="@isSynchronized"/></xsl:attribute>
 					</xsl:if>
 					<xsl:value-of select="concat(@name, '(', $paramsSeparator)"/>
 					<xsl:apply-templates select="Parameters" mode="compact"/>

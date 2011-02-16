@@ -144,7 +144,11 @@ public class CubeGenerator {
 	};
 	
 	private static class NTBGenerator implements Generator{
-		float scale = 1.0f;
+		float scale;
+		
+		NTBGenerator(){
+			scale = 1.0f;
+		}
 		
 		@Override
 		public int getMode() {

@@ -21,8 +21,6 @@
  */
 package org.sam.odf_doclet.bindings;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -58,6 +56,33 @@ import com.sun.javadoc.SeeTag;
 import com.sun.javadoc.SourcePosition;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.ThrowsTag;
+
+class AssertHelper{
+	
+	private AssertHelper(){}
+	
+	static <S, T extends ProgramElementDoc> String mostrar(String titulo, Map<String, Pair<S,T>> map){
+		StringBuffer buff = new StringBuffer(titulo);
+		for(Map.Entry< String, Pair<S, T>> entry: map.entrySet()){
+			buff.append("\n[");
+			buff.append(entry.getValue().d2.position().line());
+			buff.append(":");
+			buff.append(entry.getValue().d2.position().column());
+			buff.append("] ");
+			buff.append(entry.getKey());
+		}
+		return buff.toString();
+	}
+	
+	static String mostrar(String titulo, Collection<String> collection){
+		StringBuffer buff = new StringBuffer(titulo);
+		for(String entry: collection){
+			buff.append('\n');
+			buff.append(entry);
+		}
+		return buff.toString();
+	}
+}
 
 /**
  * @param <T> sdfasd
@@ -99,33 +124,34 @@ final class Pair<T,U>{
 	}
 }
 
+interface XMLSerializable{
+	void toXML(XMLPrinter out);
+}
+
 /**
  * 
  */
 final class XMLPrinter{
 	
+	/*
 	private static class StringPrintStream extends PrintStream{
 		StringPrintStream(){
-			super( new ByteArrayOutputStream() );
+			super( new java.io.ByteArrayOutputStream() );
 		}
 		
-		public String toString(String enconding) throws IOException{
+		public String toString(String enconding) throws java.io.IOException{
 			out.flush();
-			return ((ByteArrayOutputStream)out).toString(enconding);
+			return ((java.io.ByteArrayOutputStream)out).toString(enconding);
 		}
 		
 		public String toString(){
 			try {
 				return toString("UTF8");
-			} catch (IOException e) {
-				return ((ByteArrayOutputStream)out).toString();
+			} catch (java.io.IOException e) {
+				return ((java.io.ByteArrayOutputStream)out).toString();
 			}
 		}
-	}
-	
-	private String tabs = "";
-	private final Deque<String> nodeStack;
-	private final PrintStream out;
+	}//*/
 	
 	private static final PrintStream toPrintStream(OutputStream out){
 		if (out instanceof PrintStream)
@@ -138,10 +164,19 @@ final class XMLPrinter{
 		}
 	}
 	
+	private int previousNodeDepth;
+	private String tabs = "";
+	private final Deque<String> nodeStack;
+	private final StringBuffer attributes;
+	private final PrintStream out;
+	
 	XMLPrinter(	OutputStream out ) {
-		this.out = toPrintStream(out);
+		this.previousNodeDepth = 0;
 		this.tabs = "";
 		this.nodeStack = new ArrayDeque<String>();
+		this.attributes = new StringBuffer(512);
+		this.attributes.setLength(0);
+		this.out = toPrintStream(out);
 	}
 	
 	final private void addTab(){
@@ -152,47 +187,97 @@ final class XMLPrinter{
 		tabs = tabs.substring(1);
 	}
 	
+	final private boolean flushPreviousNode(){
+		if( nodeStack.size() == previousNodeDepth )
+			return false;
+		if( attributes.length() > 0 ){
+			out.append(attributes.toString());
+			attributes.setLength(0);
+		}
+		return true;
+	}
+	
 	final public void openNode(String nodeName) {
-		out.format("%s<%s>\n", tabs, nodeName);
+		if(flushPreviousNode())
+			out.append(">\n");
+		out.append(tabs).append('<').append(nodeName);
 		nodeStack.push(nodeName);
 		addTab();
 	}
 	
-	final public void openNode(String nodeName, String attributes) {
-		out.format("%s<%s%s>\n", tabs, nodeName, attributes == null ? "": attributes);
-		nodeStack.push(nodeName);
-		addTab();
+	final public void addAttribute(String name, String value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	final public void addAttribute(String name, boolean value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	final public void addAttribute(String name, char value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	final public void addAttribute(String name, int value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	final public void addAttribute(String name, long value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	final public void addAttribute(String name, float value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	final public void addAttribute(String name, double value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	final public void addAttribute(String name, Object value) {
+		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
+	}
+	
+	private transient boolean hasContent = false;
+	
+	final public void print(String content) {
+		hasContent = content != null && content.length() > 0;
+		if( hasContent ){
+			flushPreviousNode();
+			out.append('>').append("<![CDATA[").append(content).append("]]>");
+		}
+	}
+	
+	final public void print(String nodeName, String content) {
+		if( content != null && content.length() > 0 ){
+			openNode(nodeName);
+				print(content);
+			closeNode();
+		}
+	}
+	
+	final public <T extends XMLSerializable> void print(String nodeName, Collection<T> collection){
+		if( collection != null && collection.size() > 0 ){
+			openNode( nodeName );
+			for(T element: collection)
+				element.toXML(this);
+			closeNode();
+		}
 	}
 	
 	final public void closeNode() {
 		removeTab();
-		out.format("%s</%s>\n", tabs, nodeStack.pop());
-	}
-	
-	final public void emptyNode(String nodeName, String attributes) {
-		out.format("%s<%s%s/>\n", tabs, nodeName, attributes );
-	}
-	
-	final public void print(String nodeName, String attributes, String content) {
-		if( content == null || content.length() == 0 ){
-			if(attributes != null && attributes.length() > 0)
-				emptyNode(nodeName, attributes);
+		if( nodeStack.size() != previousNodeDepth ){
+			if(hasContent){
+				out.append("</").append(nodeStack.pop()).append(">\n");
+				hasContent = false;
+			}else{
+				flushPreviousNode();
+				out.append("/>\n");
+				nodeStack.pop();
+			}
 		}else
-			out.format("%1$s<%2$s%3$s><![CDATA[%4$s]]></%2$s>\n", 
-					tabs,
-					nodeName,
-					attributes == null ? "": attributes,
-					content
-			);
-	}
-	
-	final public void print(String nodeName, String content) {
-		if( content != null && content.length() > 0 )
-			out.format("%1$s<%2$s><![CDATA[%3$s]]></%2$s>\n", 
-					tabs,
-					nodeName,
-					content
-			);
+			out.append(tabs).append("</").append(nodeStack.pop()).append(">\n");
+		previousNodeDepth = nodeStack.size();
 	}
 }
 
@@ -230,28 +315,7 @@ enum Visibility{
 /**
  * 
  */
-abstract class Element {
-	
-	final static <T extends Element> void print(String name, String attributes, Collection<T> collection, XMLPrinter out){
-		if( collection == null || collection.size() == 0 ){
-			if(attributes != null && attributes.length() > 0)
-				out.emptyNode( name, attributes );
-		}else{
-			out.openNode( name, attributes );
-			for(T element: collection)
-				element.toXML(out);
-			out.closeNode();
-		}
-	}
-	
-	final static <T extends Element> void print(String nodeName, Collection<T> collection, XMLPrinter out){
-		if( collection != null && collection.size() > 0 ){
-			out.openNode( nodeName );
-			for(T element: collection)
-				element.toXML(out);
-			out.closeNode();
-		}
-	}
+abstract class Element implements XMLSerializable {
 	
 	final String name;
 	
@@ -280,14 +344,35 @@ abstract class Element {
 	public int hashCode() {
 		return name == null ? 0 : name.hashCode();
 	}
+}
+
+class Link implements XMLSerializable {
 	
-	abstract void toXML(XMLPrinter out);
+	final String link;
+	
+	Link(String link){
+		this.link = link;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+	 */
+	@Override
+	public void toXML(XMLPrinter out) {
+		// TODO Auto-generated method stub
+	}
 }
 
 /**
  * 
  */
 abstract class DocumentedElement extends Element {
+	
+	static final Comparator<String> STRING_COMPARATOR = new Comparator<String>(){
+		public int compare(String o1, String o2) {
+			return o1.compareTo(o2);
+		}
+	};
 	
 	final String documentation;
 	
@@ -296,8 +381,30 @@ abstract class DocumentedElement extends Element {
 		this.documentation = documentation;
 	}
 	
-	protected final void printDocumentation(XMLPrinter out){
-		out.print("Documentation", documentation);
+	DocumentedElement(String name){
+		this(name, null);
+	}
+}
+
+abstract class DocumentedElementLinks extends  DocumentedElement {
+	
+	static final Comparator<String> STRING_COMPARATOR = new Comparator<String>(){
+		public int compare(String o1, String o2) {
+			return o1.compareTo(o2);
+		}
+	};
+	
+	final String documentation;
+	final Collection<Link> links;
+	
+	DocumentedElementLinks(String name, String documentation, SeeTag[] tags){
+		super(name);
+		this.documentation = documentation;
+		this.links = null; // TODO extraer links
+	}
+	
+	DocumentedElementLinks(String name){
+		this(name, null, null);
 	}
 }
 
@@ -316,10 +423,10 @@ abstract class SimpleClassBinding extends Element {
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 		 */
 		@Override
-		void toXML(XMLPrinter out) {
+		public void toXML(XMLPrinter out) {
 			out.print("Interface", this.name);
 		}
 	}
@@ -334,10 +441,10 @@ abstract class SimpleClassBinding extends Element {
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 		 */
 		@Override
-		void toXML(XMLPrinter out) {
+		public void toXML(XMLPrinter out) {
 			out.print("Enum", this.name);
 		}
 	}
@@ -357,11 +464,15 @@ abstract class SimpleClassBinding extends Element {
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 		 */
 		@Override
-		void toXML(XMLPrinter out) {
-			out.print("Class", isAbstract ? " isAbstract=\"true\"" : "", this.name);
+		public void toXML(XMLPrinter out) {
+			out.openNode("Class");
+				if(isAbstract)
+					out.addAttribute("isAbstract", isAbstract);
+				out.print(this.name);
+			out.closeNode();
 		}
 	}
 	
@@ -392,24 +503,49 @@ abstract class SimpleClassBinding extends Element {
 /**
  * 
  */
-class ConstantBinding extends DocumentedElement{
+class ConstantBinding extends DocumentedElementLinks{
 
-	ConstantBinding(String signature, String documentation) {
-		super(signature, documentation);
+	ConstantBinding(String name) {
+		super(name);
+	}
+
+	ConstantBinding(String name, String documentation, SeeTag[] tags) {
+		super(name, documentation, tags);
 	}
 
 	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 	 */
 	@Override
-	void toXML(XMLPrinter out) {
-		if( documentation == null || documentation.length() == 0)
-			out.emptyNode("Constant", String.format(" name=\"%s\"", name));
-		else{
-			out.openNode("Constant", String.format(" name=\"%s\"", name));
-				printDocumentation(out);
-			out.closeNode();
-		}
+	public void toXML(XMLPrinter out) {
+		out.openNode("Constant");
+			out.addAttribute("name", name);
+			out.print("Documentation", documentation);
+		out.closeNode();
+	}
+}
+
+class ExceptionBinding extends DocumentedElement{
+	
+	ExceptionBinding(Type type){
+		super( ClassToUMLAdapter.toString(type) );
+	}
+	
+	ExceptionBinding(Type type, ThrowsTag tag){
+		super(	ClassToUMLAdapter.toString(type),
+				tag != null ? tag.exceptionComment(): null
+		);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+	 */
+	@Override
+	public void toXML(XMLPrinter out) {
+		out.openNode("Exception");
+			out.print("Type", name);
+			out.print("Documentation", documentation);
+		out.closeNode();
 	}
 }
 
@@ -420,7 +556,12 @@ class ParameterBinding extends DocumentedElement{
 	
 	final String type;
 	
-	ParameterBinding(String name, String type, String documentation){
+	private ParameterBinding(String name, String type){
+		super( name );
+		this.type = type;
+	}
+	
+	private ParameterBinding( String name, String type, String documentation ){
 		super( name, documentation );
 		this.type = type;
 	}
@@ -433,7 +574,7 @@ class ParameterBinding extends DocumentedElement{
 	}
 	
 	ParameterBinding(TypeVariable<?> type){
-		this( null, ClassToUMLAdapter.toString(type), null);
+		this( null, ClassToUMLAdapter.toString(type) );
 	}
 	
 	ParameterBinding(Type type, ParamTag tag){
@@ -463,21 +604,23 @@ class ParameterBinding extends DocumentedElement{
 	}
 	
 	ParameterBinding(Type type){
-		this( null, ClassToUMLAdapter.toString(type), null);
+		this( null, ClassToUMLAdapter.toString(type) );
 	}
 	
 	final void toXML(String nodeName, XMLPrinter out) {
-		out.openNode(nodeName, name != null ? String.format(" name=\"%s\"", name):"" );
+		out.openNode(nodeName);
+			if(name!=null)
+				out.addAttribute("name", name);
 			out.print("Type", type);
-			printDocumentation(out);
+			out.print("Documentation", documentation);
 		out.closeNode();
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 	 */
 	@Override
-	void toXML(XMLPrinter out) {
+	public void toXML(XMLPrinter out) {
 		toXML("Parameter", out);
 	}
 }
@@ -485,7 +628,7 @@ class ParameterBinding extends DocumentedElement{
 /**
  * 
  */
-class FieldBinding extends DocumentedElement{
+class FieldBinding extends DocumentedElementLinks{
 
 	final Visibility visibility;
 	final boolean isStatic;
@@ -493,7 +636,8 @@ class FieldBinding extends DocumentedElement{
 	
 	FieldBinding(Pair<Field,FieldDoc> field){
 		super( 	field.d1.getName(),
-				field.d2 != null ? field.d2.commentText(): null
+				field.d2 != null ? field.d2.commentText(): null,
+				field.d2 != null ? field.d2.seeTags(): null
 		);
 		int modifiers = field.d1.getModifiers();
 		this.visibility = Visibility.fromModifiers(modifiers);
@@ -502,38 +646,30 @@ class FieldBinding extends DocumentedElement{
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 	 */
 	@Override
-	void toXML(XMLPrinter out) {
-		out.openNode(
-				"Field",
-				String.format(
-						" name=\"%s\" visibility=\"%c\"%s",
-						name,
-						visibility.toChar(),
-						isStatic ? " isStatic=\"true\"" : ""
-				)
-		);
-		out.print("Type", type);
-		printDocumentation(out);
+	public void toXML(XMLPrinter out) {
+		out.openNode("Field");
+			out.addAttribute("name", name);
+			out.addAttribute("visibility", visibility.toChar());
+			if(isStatic)
+				out.addAttribute("isStatic", true);
+			out.print("Type", type);
+			out.print("Documentation", documentation);
 		out.closeNode();
 	}
 }
 
-abstract class CommandBinding extends DocumentedElement{
+abstract class CommandBinding extends DocumentedElementLinks{
 
-	final Visibility visibility;
-	final Collection<ParameterBinding> typeParams;
-	final Collection<ParameterBinding> params;
-	
 	private final static  String getName(Member d){
 		return d instanceof Constructor<?> ?
 				((Constructor<?>)d).getDeclaringClass().getSimpleName():
 				d.getName();
 	}
 	
-	private final static ParamTag getTag(ParamTag[] tags, int index){
+	private final static <T extends Tag> T getTag(T[] tags, int index){
 		try{
 			return tags[index];
 		}catch(ArrayIndexOutOfBoundsException e){
@@ -541,7 +677,7 @@ abstract class CommandBinding extends DocumentedElement{
 		}
 	}
 	
-	static Collection<ParameterBinding> getParams(Pair<?, ? extends ExecutableMemberDoc> command){
+	private static Collection<ParameterBinding> getParams(Pair<?, ? extends ExecutableMemberDoc> command){
 		
 		Type[] types = null;
 		if(command.d1 instanceof Constructor<?>)
@@ -566,24 +702,62 @@ abstract class CommandBinding extends DocumentedElement{
 		}
 		return parameters;
 	}
+	
+	private static Collection<ExceptionBinding> getExceptions(Pair<?, ? extends ExecutableMemberDoc> command){
+		
+		Class<?> clazz = null;
+		
+		Type[] types = null;
+		if(command.d1 instanceof Constructor<?>){
+			clazz = ((Constructor<?>)command.d1).getDeclaringClass();
+			types = ((Constructor<?>)command.d1).getGenericExceptionTypes();
+		} else if (command.d1 instanceof Method) {
+			clazz = ((Method)command.d1).getDeclaringClass();
+			types =	((Method)command.d1).getGenericExceptionTypes();
+		}
+		
+		if(types == null || types.length == 0)
+			return null;
+		
+		Collection<ExceptionBinding> exceptions= new ArrayDeque<ExceptionBinding>();
+		
+		if(command.d2 == null)
+			for(Type type: types)
+				exceptions.add( new ExceptionBinding( type ) );
+		else {
+			Map<String, ThrowsTag> map = new TreeMap<String, ThrowsTag>(STRING_COMPARATOR);
+			for(ThrowsTag e: command.d2.throwsTags())
+				map.put( e.exceptionType().typeName(), e );
+			for(Type type: types)
+				exceptions.add( new ExceptionBinding( type, map.remove(ClassToUMLAdapter.toString(type)) ) );
+			assert( map.size() == 0 ): "!!!Error en "+ clazz.toString() + ":\n\t" +
+				getName((Member)command.d1)+
+				AssertHelper.mostrar("Documentacion sobrante :", map.keySet());	
+		}
+		return exceptions;
+	}
+	
+	final Visibility visibility;
+	final Collection<ParameterBinding> typeParams;
+	final Collection<ParameterBinding> params;
+	final Collection<ExceptionBinding> exceptions;
 
 	<T extends AccessibleObject & Member & GenericDeclaration>
 	CommandBinding(Pair<? extends T, ? extends ExecutableMemberDoc> command){
 		super( 	getName(command.d1), 
-				command.d2 != null ? command.d2.commentText(): null
+				command.d2 != null ? command.d2.commentText(): null,
+				command.d2 != null ? command.d2.seeTags(): null
 		);
 		this.visibility = Visibility.fromModifiers( command.d1.getModifiers() );
 		
 		typeParams = ClassBinding.getTypeParams(command);
 		params = getParams(command);
+		exceptions = getExceptions(command);
 		
 		// TODO seguir
-//		for(ThrowsTag tag: command.d2.throwsTags()){
-//			System.out.println( "\t\t\t"+tag.exceptionName()+"\t"+tag.exceptionComment());
-//		}
-//		for(SeeTag tag: command.d2.seeTags()){
-//			System.out.println( "\t\t\t"+tag.referencedMember());
-//		}
+		for(SeeTag tag: command.d2.seeTags()){
+			System.out.println( "\t\t\t"+tag.referencedMember());
+		}
 	}
 }
 
@@ -597,14 +771,17 @@ class ConstructorBinding extends CommandBinding{
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 	 */
 	@Override
-	void toXML(XMLPrinter out) {
-		out.openNode("Constructor", String.format(" name=\"%s\" visibility=\"%c\"", name, visibility.toChar()));
-			printDocumentation(out);
-			print("TypeParameters", typeParams, out );
-			print("Parameters", params, out );
+	public void toXML(XMLPrinter out) {
+		out.openNode("Constructor");
+			out.addAttribute("name", name);
+			out.addAttribute("visibility", visibility.toChar());
+			out.print("Documentation", documentation);
+			out.print("TypeParameters", typeParams );
+			out.print("Parameters", params );
+			out.print("Exceptions", exceptions );
 		out.closeNode();
 	}
 }
@@ -636,22 +813,23 @@ class MethodBinding extends CommandBinding{
 	}
 	
 	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 	 */
 	@Override
-	void toXML(XMLPrinter out) {
-		out.openNode(
-				"Method",
-				String.format(" name=\"%s\" visibility=\"%c\"%s",
-					name,
-					visibility.toChar(),
-					isStatic ? " isStatic=\"true\"" : isAbstract ? " isAbstract=\"true\"" : "")
-			);
-			printDocumentation(out);
-			print("TypeParameters", typeParams, out );
-			print("Parameters", params, out );
+	public void toXML(XMLPrinter out) {
+		out.openNode("Method");
+			out.addAttribute("name", name);
+			out.addAttribute("visibility", visibility.toChar());
+			if(isStatic)
+				out.addAttribute("isStatic", isStatic);
+			else if(isAbstract)
+				out.addAttribute("isAbstract", isAbstract);
+			out.print("Documentation", documentation);
+			out.print("TypeParameters", typeParams );
+			out.print("Parameters", params );
 			if(returnElement != null)
 				returnElement.toXML("ReturnType", out);
+			out.print("Exceptions", exceptions );
 		out.closeNode();
 	}
 }
@@ -659,14 +837,17 @@ class MethodBinding extends CommandBinding{
 /**
  * 
  */
-public abstract class ClassBinding extends DocumentedElement{
+public abstract class ClassBinding extends DocumentedElementLinks{
 	
 	static class InterfaceBinding extends ClassBinding{
 	
 		final Collection<ParameterBinding> parameters;
 		
 		InterfaceBinding(Pair<Class<?>, ClassDoc> clazz){
-			super( ClassToUMLAdapter.toString(clazz.d1), clazz.d2 != null ? clazz.d2.commentText(): null );
+			super(	ClassToUMLAdapter.toString(clazz.d1), 
+					clazz.d2 != null ? clazz.d2.commentText(): null,
+					clazz.d2 != null ? clazz.d2.seeTags(): null
+			);
 			this.parameters = getTypeParams(clazz);
 			
 			this.enclosingClasses = getEnclosingClasses(clazz.d1);
@@ -677,17 +858,18 @@ public abstract class ClassBinding extends DocumentedElement{
 		}
 	
 		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 		 */
 		@Override
-		void toXML(XMLPrinter out) {
-			out.openNode( "Interface", String.format(" name=\"%s\"", name) );
-				printDocumentation(out);
-				print( "TypeParameters", parameters, out );
-				print( "EnclosingClasses", enclosingClasses, out );
-				print( "Interfaces", interfaces, out );
-				print( "Fields", fields, out );
-				print( "Methods", methods, out );
+		public void toXML(XMLPrinter out) {
+			out.openNode( "Interface" );
+				out.addAttribute( "name", name );
+				out.print( "Documentation", documentation );
+				out.print( "TypeParameters", parameters );
+				out.print( "EnclosingClasses", enclosingClasses );
+				out.print( "Interfaces", interfaces );
+				out.print( "Fields", fields );
+				out.print( "Methods", methods );
 			out.closeNode();
 		}
 	}
@@ -698,7 +880,7 @@ public abstract class ClassBinding extends DocumentedElement{
 			Deque<ConstantBinding> constants = new ArrayDeque<ConstantBinding>();
 			if(clazz.d2 == null) {
 				for(Object constant: clazz.d1.getEnumConstants())
-					constants.offerLast( new ConstantBinding(constant.toString(), null) );
+					constants.offerLast( new ConstantBinding(constant.toString() ) );
 			} else {
 				Map<String, FieldDoc> map = new TreeMap<String, FieldDoc>(STRING_COMPARATOR);
 				for(FieldDoc field: clazz.d2.fields())
@@ -706,7 +888,7 @@ public abstract class ClassBinding extends DocumentedElement{
 				for(Object constant: clazz.d1.getEnumConstants()){
 					FieldDoc field = map.remove(constant.toString());
 					if( field != null )
-						constants.offerLast( new ConstantBinding(constant.toString(), field.commentText()) );
+						constants.offerLast( new ConstantBinding(constant.toString(), field.commentText(), field.seeTags()) );
 					assert( field != null ): "!!!Documentacion no encontrada para: " + constant.toString();
 				}
 			}
@@ -717,7 +899,10 @@ public abstract class ClassBinding extends DocumentedElement{
 		Collection<ConstructorBinding> constructors;
 		
 		EnumBinding(Pair<Class<?>, ClassDoc> clazz){
-			super( ClassToUMLAdapter.toString(clazz.d1), clazz.d2 != null ? clazz.d2.commentText(): null );
+			super(	ClassToUMLAdapter.toString(clazz.d1), 
+					clazz.d2 != null ? clazz.d2.commentText(): null,
+					clazz.d2 != null ? clazz.d2.seeTags(): null
+			);
 			
 			this.enclosingClasses = getEnclosingClasses(clazz.d1);
 			this.interfaces = getImplementedInterfaces(clazz.d1);
@@ -729,19 +914,20 @@ public abstract class ClassBinding extends DocumentedElement{
 		}
 	
 		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 		 */
 		@Override
-		void toXML(XMLPrinter out) {
-			out.openNode( "Enum", String.format(" name=\"%s\"", name) );
-				printDocumentation(out);
+		public void toXML(XMLPrinter out) {
+			out.openNode( "Enum" );
+				out.addAttribute( "name", name );
+				out.print("Documentation", documentation);
 	
-				print( "EnclosingClasses", enclosingClasses, out );
-				print( "Interfaces", interfaces, out );
-				print( "Constants", constants, out );
-				print( "Fields", fields, out );
-				print( "Constructors", constructors, out );
-				print( "Methods", methods, out );
+				out.print( "EnclosingClasses", enclosingClasses );
+				out.print( "Interfaces", interfaces );
+				out.print( "Constants", constants );
+				out.print( "Fields", fields );
+				out.print( "Constructors", constructors );
+				out.print( "Methods", methods );
 			
 			out.closeNode();
 		}
@@ -764,7 +950,10 @@ public abstract class ClassBinding extends DocumentedElement{
 		final Collection<ConstructorBinding> constructors;
 		
 		ConcreteClassBinding(Pair<Class<?>, ClassDoc> clazz){
-			super( ClassToUMLAdapter.toString(clazz.d1), clazz.d2 != null ? clazz.d2.commentText(): null );
+			super(	ClassToUMLAdapter.toString(clazz.d1), 
+					clazz.d2 != null ? clazz.d2.commentText(): null,
+					clazz.d2 != null ? clazz.d2.seeTags(): null
+			);
 			this.isAbstract = Modifier.isAbstract( clazz.d1.getModifiers() );
 			this.parameters = getTypeParams(clazz);
 			
@@ -778,19 +967,22 @@ public abstract class ClassBinding extends DocumentedElement{
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.Element#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
+		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
 		 */
 		@Override
-		void toXML(XMLPrinter out) {
-			out.openNode( "Class", String.format(" name=\"%s\"%s", name,isAbstract ? " isAbstract=\"true\"" : "") );
-				printDocumentation(out);
-				print( "TypeParameters", parameters, out );
-				print( "Hierarchy", hierarchy, out );
-				print( "EnclosingClasses", enclosingClasses, out );
-				print( "Interfaces", interfaces, out );
-				print( "Fields", fields, out );
-				print( "Constructors", constructors, out );
-				print( "Methods", methods, out );
+		public void toXML(XMLPrinter out) {
+			out.openNode( "Class" );
+				out.addAttribute( "name", name );
+				if(isAbstract)
+					out.addAttribute( "isAbstract", isAbstract );
+				out.print("Documentation", documentation);
+				out.print( "TypeParameters", parameters);
+				out.print( "Hierarchy", hierarchy );
+				out.print( "EnclosingClasses", enclosingClasses );
+				out.print( "Interfaces", interfaces );
+				out.print( "Fields", fields );
+				out.print( "Constructors", constructors );
+				out.print( "Methods", methods );
 			out.closeNode();
 		}
 	}
@@ -938,35 +1130,10 @@ public abstract class ClassBinding extends DocumentedElement{
 	
 	private static final DocFilter<ProgramElementDoc> docsFilter = new DocFilter<ProgramElementDoc>();
 	
-	static final Comparator<String> STRING_COMPARATOR = new Comparator<String>(){
-		public int compare(String o1, String o2) {
-			return o1.compareTo(o2);
-		}
-	};
-	
-	private static <T extends Pair<?, ? extends ProgramElementDoc>> String mostrar(String titulo, Map<String, T> map){
-		StringBuffer buff = new StringBuffer(titulo);
-		for(Map.Entry< String,T > entry: map.entrySet()){
-			buff.append("\n[");
-			buff.append(entry.getValue().d2.position().line());
-			buff.append(":");
-			buff.append(entry.getValue().d2.position().column());
-			buff.append("] ");
-			buff.append(entry.getKey());
-		}
-		return buff.toString();
-	}
-	
-	private static String mostrar(String titulo, Collection<String> collection){
-		StringBuffer buff = new StringBuffer(titulo);
-		for(String entry: collection){
-			buff.append('\n');
-			buff.append(entry);
-		}
-		return buff.toString();
-	}
+
 	
 	static Collection<FieldBinding> getFields(Pair<Class<?>, ClassDoc> clazz){
+		//TODO Ordenar
 		Deque<FieldBinding> fields = new ArrayDeque<FieldBinding>();
 		if(clazz.d2 == null) {
 			for(Field field: clazz.d1.getDeclaredFields())
@@ -1002,6 +1169,7 @@ public abstract class ClassBinding extends DocumentedElement{
 	};
 	
 	static Collection<ConstructorBinding> getConstructors(Pair<Class<?>, ClassDoc> clazz){
+		//TODO Ordenar
 		Deque<ConstructorBinding> constructors = new ArrayDeque<ConstructorBinding>();
 		if(clazz.d2 == null) {
 			for(Constructor<?> constructor: clazz.d1.getDeclaredConstructors())
@@ -1032,8 +1200,8 @@ public abstract class ClassBinding extends DocumentedElement{
 				}
 			}
 			assert( map.size() == 0 ): "!!!Error en "+clazz.d2.name() + ":\n" + 
-					mostrar("Elementos indocumentados:",undocumented) + "\n" +
-					mostrar("Documentacion sobrante :", map);
+				AssertHelper.mostrar("Elementos indocumentados:",undocumented) + "\n" +
+				AssertHelper.mostrar("Documentacion sobrante :", map);
 		}
 		return constructors;
 	}
@@ -1069,6 +1237,7 @@ public abstract class ClassBinding extends DocumentedElement{
 	};
 	
 	static Collection<MethodBinding> getMethods(final Pair<Class<?>, ClassDoc> clazz){
+		//TODO Ordenar
 		final Filter<Method> filter = clazz.d1.isEnum() ? EnumMethodsFilter : MethodsFilter;
 	
 		Deque<MethodBinding> methods = new ArrayDeque<MethodBinding>();
@@ -1107,8 +1276,8 @@ public abstract class ClassBinding extends DocumentedElement{
 			}
 			assert( map.size() == 0 ):
 				"!!!Error en " + clazz.d2.name() + ":\n" +
-				mostrar("Elementos indocumentados:",undocumented) + "\n" +
-				mostrar("Documentacion sobrante :", map);
+				AssertHelper.mostrar("Elementos indocumentados:",undocumented) + "\n" +
+				AssertHelper.mostrar("Documentacion sobrante :", map);
 		}
 		return methods;
 	}
@@ -1139,8 +1308,8 @@ public abstract class ClassBinding extends DocumentedElement{
 	Collection<FieldBinding> fields;
 	Collection<MethodBinding> methods;
 	
-	ClassBinding(String signature, String documentation) {
-		super(signature, documentation);
+	ClassBinding(String signature, String documentation, SeeTag[] tags) {
+		super(signature, documentation, tags);
 	}
 	
 	public final void toXML(OutputStream out) {

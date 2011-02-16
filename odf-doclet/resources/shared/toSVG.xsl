@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<xsl:import href="compact.xsl"/>
 	<xsl:param name="scale">1.0</xsl:param>
 	<xsl:param name="background">none</xsl:param>
@@ -7,6 +7,11 @@
 	<xsl:param name="widthChar2">8.5</xsl:param>
 	<xsl:output method="xml" indent="no"/>
 	<xsl:strip-space elements="*"/>
+
+	<xsl:template match="/">
+		<xsl:processing-instruction name="xml-stylesheet">type="text/css" href="shared/svg_styles.css"</xsl:processing-instruction>
+		<xsl:apply-templates select="Class|Interface|Enum"/>
+	</xsl:template>
 
 	<xsl:template match="Class|Interface|Enum">
 		<xsl:variable name="compactData">
@@ -68,7 +73,6 @@
 				<xsl:with-param name="xOffsetEnclosingClasses" select="0"/>
 			</xsl:call-template>
 		</xsl:variable>
-		<xsl:variable name="stylesheet"><![CDATA[<?xml-stylesheet type="text/css" href="shared/svg_styles.css"?>]]></xsl:variable>
 		<xsl:variable name="xOffsetHierarchy">
 			<xsl:choose>
 				<xsl:when test="Hierarchy">
@@ -232,8 +236,7 @@
 		</xsl:variable>
 		<xsl:variable name="heightArea" select="10 + $yOffset + $prefixYOffset + $heightMax + 20"/>
 
-		<xsl:processing-instruction name="xml-stylesheet">type="text/css" href="shared/svg_styles.css"</xsl:processing-instruction>
-		<xsl:element name="svg" xml:space="default">
+		<svg>
 			<xsl:attribute name="width"><xsl:number value="$widthArea * $scale"/></xsl:attribute>
 			<xsl:attribute name="height"><xsl:number value="$heightArea * $scale"/></xsl:attribute>
 			<xsl:attribute name="viewBox"><xsl:value-of select="concat('0 0 ', $widthArea, ' ', $heightArea)"/></xsl:attribute>
@@ -341,7 +344,7 @@
 				</xsl:element>
 		
 			</xsl:element>
-		</xsl:element>
+		</svg>
 	</xsl:template>
 
 	<xsl:template name="drawBox">
@@ -652,7 +655,7 @@
 			<xsl:element name="use" xml:space="default">
 				<xsl:attribute name="x">0</xsl:attribute>
 				<xsl:attribute name="y"><xsl:number value="position()*20"/></xsl:attribute>
-				<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
+				<xsl:attribute name="xlink:href">shared/defs.svg#EnumConstant</xsl:attribute>
 			</xsl:element>
 			<xsl:element name="text" xml:space="default">
 				<xsl:attribute name="class">static</xsl:attribute>
@@ -673,7 +676,7 @@
 					<xsl:otherwise>0</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:element name="use" xml:space="default">
+			<xsl:element name="use">
 				<xsl:attribute name="x">0</xsl:attribute>
 				<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
 				<xsl:choose>
@@ -719,7 +722,28 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:element>
-			<xsl:element name="text" xml:space="default">
+			<xsl:if test="@isTransient='true'">
+				<xsl:element name="use">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#Transient</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
+			<xsl:if test="@isVolatile='true'">
+				<xsl:element name="use">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#Volatile</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
+			<xsl:if test="@isFinal='true'">
+				<xsl:element name="use">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#Final</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
+			<xsl:element name="text">
 				<xsl:choose>
 					<xsl:when test="@isStatic='true'">
 					  <xsl:attribute name="class">static</xsl:attribute>
@@ -840,6 +864,34 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:element>
+			<xsl:if test="@isNative='true'">
+				<xsl:element name="use">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#Native</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
+			<xsl:if test="@isStrictfp='true'">
+				<xsl:element name="use">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#Strictfp</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
+			<xsl:if test="@isFinal='true'">
+				<xsl:element name="use">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#Final</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
+			<xsl:if test="@isSynchronized='true'">
+				<xsl:element name="use">
+					<xsl:attribute name="x">0</xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="xlink:href">shared/defs.svg#Synchronized</xsl:attribute>
+				</xsl:element>
+			</xsl:if>
 			<xsl:element name="text" xml:space="default">
 				<xsl:choose>
 					<xsl:when test="@isStatic='true'">

@@ -21,85 +21,13 @@
  */
 package org.sam.odf_doclet;
 
-import java.io.PrintStream;
-
 import org.sam.odf_doclet.bindings.ClassBinding;
 
 import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.ConstructorDoc;
 import com.sun.javadoc.DocErrorReporter;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.ParamTag;
 import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.SeeTag;
-import com.sun.javadoc.SourcePosition;
-import com.sun.javadoc.Tag;
-import com.sun.javadoc.ThrowsTag;
 
 public class ShowDocumentation {
-	
-	private static final boolean equals(SourcePosition o1, SourcePosition o2) {
-		if(o1 == null)
-			return o2 == null;
-		return o1.line() == o2.line() && o1.column() == o2.column();
-	}
-	
-	@SuppressWarnings("unused")
-	private static void print(ClassDoc classDoc, PrintStream out){
-		out.println("\n"+classDoc.name());
-		out.println("\t"+classDoc.commentText());
-		out.println("\nFields:");
-		for(FieldDoc fieldDoc: classDoc.fields()){
-
-			out.println("\t"+ClassDocToUMLAdapter.toString( fieldDoc ) );
-			out.println("\t\t"+fieldDoc.commentText());
-		}
-		out.println("\nConstructors:");
-		for(ConstructorDoc constructorDoc: classDoc.constructors()){
-			if( !equals( constructorDoc.position(), classDoc.position() ) ){
-				out.println("\t["+constructorDoc.position().line()+"] "+ClassDocToUMLAdapter.toString( constructorDoc ) );
-				out.println("\t\t"+constructorDoc.commentText());
-				for(ParamTag tag: constructorDoc.paramTags()){
-					out.println( "\t\t\t"+tag.parameterName()+"\t"+tag.parameterComment());
-				}
-				for(SeeTag tag: constructorDoc.seeTags()){
-					out.println( "\t\t\t"+tag.referencedMember());
-				}
-			}
-		}
-		out.println("\nMethods:");
-		for(MethodDoc methodDoc: classDoc.methods()){
-			if( !equals( methodDoc.position(), classDoc.position() ) ){
-				out.println("\t["+methodDoc.position().line()+"] "+ClassDocToUMLAdapter.toString( methodDoc ) );
-				out.println("\t"+methodDoc.commentText());
-
-				for (ParamTag tag : methodDoc.typeParamTags()) {
-					out.println("\t\t\t" + tag.parameterName() + "\t" + tag.parameterComment());
-				}
-
-				for (ParamTag tag : methodDoc.paramTags()) {
-					out.println("\t\t\t" + tag.parameterName() + "\t" + tag.parameterComment());
-				}
-
-				Tag[] returnTags = methodDoc.tags("@return");
-				if (returnTags != null && returnTags.length > 0) {
-					StringBuilder builder = new StringBuilder();
-					for (Tag returnTag : returnTags) {
-						String returnTagText = returnTag.text();
-						if (returnTagText != null) {
-							builder.append(returnTagText);
-							builder.append("\n");
-						}
-					}
-					out.println( "\t\t\treturn\t"+ builder.substring(0, builder.length() - 1) );
-				}
-				for(ThrowsTag tag: methodDoc.throwsTags()){
-					out.println( "\t\t\t"+tag.exceptionName()+"\t"+tag.exceptionComment());
-				}
-			}
-		}
-	}
 	
 	public static boolean start(RootDoc root) throws ClassNotFoundException {
 

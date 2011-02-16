@@ -52,6 +52,8 @@ public class ElementosConverters {
 	}
 
 	private static class PoligonoConverter implements Converter {
+		
+		PoligonoConverter(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {

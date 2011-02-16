@@ -68,8 +68,8 @@ public class ClaseDePrueba<E> {
 		
 		/**
 		 * Documentacion del constructor {@code InerClass()}.
-		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla
 		 * @throws IOException exepción IO bla bla bla
+		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla
 		 */
 		InerClass() throws IllegalArgumentException, IOException{
 			this(null,false);
@@ -87,7 +87,9 @@ public class ClaseDePrueba<E> {
 	 *  Documentacion de la enumeración DiasDeLaSemana.
 	 */
 	public static enum DiasDeLaSemana{
-		/** Lunes */
+		/** Lunes
+		 * @see bla bla bla bla
+		 */
 		Monday("you can fall apart"),
 		/** Martes */
 		Tuesday("break my heart"),

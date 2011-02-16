@@ -162,7 +162,7 @@ public class ClassToUML {
 		Class<?> clazz = pruebas.ClaseDePrueba.class;
 		//*/
 		ClassBinding.from(clazz).toXML(System.out);
-		toPNG( clazz, new FileOutputStream("output/out.png") );
+//		toPNG( clazz, new FileOutputStream("output/out.png") );
 //		toPNG( java.util.concurrent.ConcurrentHashMap.class, new FileOutputStream("output/out.png") );
 //		toPNG( pruebas.ClaseDePrueba.class, new FileOutputStream("output/out.png") );
 	}

@@ -35,12 +35,6 @@ import javax.swing.text.JTextComponent;
  */
 public class Consola {
 
-	private static final IllegalArgumentException 
-		textAreaNull =
-		new IllegalArgumentException(
-			"\nError creando log:" +
-			"\n[ El componente que contendrá la consola no puede ser nulo ]");
-		
 	/**
 	 * Clase derivada de OutputStream que sobreescribe los métodos: <ul>
 	 * <li>{@code public void write(int b)}
@@ -54,9 +48,12 @@ public class Consola {
 		private final int excesoMax;
 		private final OutputStream mirror;
 
-		private OutputDocumentStream(JTextComponent tc, AttributeSet at, int tamIdeal, OutputStream  mirror) {
+		OutputDocumentStream(JTextComponent tc, AttributeSet at, int tamIdeal, OutputStream  mirror) {
 			if (tc == null)
-				throw textAreaNull;
+				throw new IllegalArgumentException(
+					"\nError creando log:" +
+					"\n[ El componente que contendrá la consola no puede ser nulo ]"
+				);
 			this.textComponent = tc;
 			this.attributeSet = at;
 			this.tamIdeal = tamIdeal;
