@@ -48,6 +48,20 @@ public class ClaseDePrueba<E> {
 		private static class InerInerClass {
 			
 		}
+		
+		/**
+		 * Método abstrastracto metodo1.
+		 * @param a parametro.
+		 */
+		abstract void metodo1(int a);
+		
+		/**
+		 * @param <T>
+		 * @param t1
+		 * @param t2
+		 * @return bla bla bla bla
+		 */
+		abstract <T> T metodo2(T t1, T t2);
 	}
 	
 	/**
@@ -75,10 +89,27 @@ public class ClaseDePrueba<E> {
 			this(null,false);
 		}
 		
+
+		/* (non-Javadoc)
+		 * @see pruebas.ClaseDePrueba.InerClassAbs#metodo1(int)
+		 */
+		@Override
+		void metodo1(int a){
+			System.out.println(a);
+		}
+		
+		/* (non-Javadoc)
+		 * @see pruebas.ClaseDePrueba.InerClassAbs#metodo2(java.lang.Object, java.lang.Object)
+		 */
+		@Override
+		<T> T metodo2(T t1, T t2) {
+			return null;
+		}
+		
 		/**
 		 * Método que fuerza el acceso sintético.
 		 */
-		public void metodo1(){
+		public void metodo3(){
 			System.out.println(a1);
 		}
 	}

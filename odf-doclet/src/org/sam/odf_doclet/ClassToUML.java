@@ -1,17 +1,17 @@
 /* 
- * ClassToUML_Old.java
+ * ClassToUML.java
  * 
  * Copyright (c) 2010 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
  * 
- * This file is part of tips.
+ * This file is part of odf-doclet.
  * 
- * tips is free software: you can redistribute it and/or modify
+ * odf-doclet is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * tips is distributed in the hope that it will be useful,
+ * odf-doclet is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -24,7 +24,6 @@ package org.sam.odf_doclet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
@@ -45,6 +44,7 @@ import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.sam.odf_doclet.bindings.ClassBinding;
 
+@Deprecated
 public class ClassToUML {
 	
 	private static Transformer toSVGSingleton = null;
@@ -108,7 +108,7 @@ public class ClassToUML {
 		Thread thread = new Thread() {
 			public void run() {
 				try {
-					toSVG( clazz, pipeOut);
+					toSVG( clazz, pipeOut );
 					pipeOut.flush();
 					pipeOut.close();
 				} catch (IOException e) {
@@ -122,7 +122,7 @@ public class ClassToUML {
 		pipeIn.connect(pipeOut);
 
 		ImageTranscoder t = new PNGTranscoder();
-		t.addTranscodingHint(PNGTranscoder.KEY_INDEXED, new Integer(256));
+		t.addTranscodingHint(PNGTranscoder.KEY_INDEXED, new Integer(8));
         
 		TranscoderInput input = new TranscoderInput(pipeIn);
         input.setURI( new File("resources").toURI().toString() );

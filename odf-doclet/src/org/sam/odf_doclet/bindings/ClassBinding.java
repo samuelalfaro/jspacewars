@@ -22,8 +22,6 @@
 package org.sam.odf_doclet.bindings;
 
 import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -41,8 +39,7 @@ import java.util.Deque;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.sam.odf_doclet.ClassDocToUMLAdapter;
-import org.sam.odf_doclet.ClassToUMLAdapter;
+import org.sam.odf_doclet.Adapter;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.ConstructorDoc;
@@ -85,13 +82,6 @@ class AssertHelper{
 }
 
 /**
- * @param <T> sdfasd
- */
-interface Filter<T>{
-	boolean validate(T t);
-}
-
-/**
  * @param <T>
  */
 class DocFilter<T extends ProgramElementDoc> implements Filter<T>{
@@ -106,178 +96,6 @@ class DocFilter<T extends ProgramElementDoc> implements Filter<T>{
 		// Comparamos la posicion pues el metodo isSynthetic() devuevle siempre ¿ false ?
 		SourcePosition docPosition = doc.position();
 		return docPosition != null && ( docPosition.line() != classPosition.line() || docPosition.column() != classPosition.column());
-	}
-}
-
-/**
- * @param <T> dsf
- * @param <U> asdf
- */
-final class Pair<T,U>{
-	
-	T d1;
-	U d2;
-	
-	protected Pair(T d1, U d2) {
-		this.d1 = d1;
-		this.d2 = d2;
-	}
-}
-
-interface XMLSerializable{
-	void toXML(XMLPrinter out);
-}
-
-/**
- * 
- */
-final class XMLPrinter{
-	
-	/*
-	private static class StringPrintStream extends PrintStream{
-		StringPrintStream(){
-			super( new java.io.ByteArrayOutputStream() );
-		}
-		
-		public String toString(String enconding) throws java.io.IOException{
-			out.flush();
-			return ((java.io.ByteArrayOutputStream)out).toString(enconding);
-		}
-		
-		public String toString(){
-			try {
-				return toString("UTF8");
-			} catch (java.io.IOException e) {
-				return ((java.io.ByteArrayOutputStream)out).toString();
-			}
-		}
-	}//*/
-	
-	private static final PrintStream toPrintStream(OutputStream out){
-		if (out instanceof PrintStream)
-			return (PrintStream)out;
-		try {
-			return new PrintStream(out, false, "UTF-8");
-		} catch (UnsupportedEncodingException ignorada) {
-			assert(false): ignorada.toString();
-			return null;
-		}
-	}
-	
-	private int previousNodeDepth;
-	private String tabs = "";
-	private final Deque<String> nodeStack;
-	private final StringBuffer attributes;
-	private final PrintStream out;
-	
-	XMLPrinter(	OutputStream out ) {
-		this.previousNodeDepth = 0;
-		this.tabs = "";
-		this.nodeStack = new ArrayDeque<String>();
-		this.attributes = new StringBuffer(512);
-		this.attributes.setLength(0);
-		this.out = toPrintStream(out);
-	}
-	
-	final private void addTab(){
-		tabs = tabs.concat("\t");
-	}
-	
-	final private void removeTab(){
-		tabs = tabs.substring(1);
-	}
-	
-	final private boolean flushPreviousNode(){
-		if( nodeStack.size() == previousNodeDepth )
-			return false;
-		if( attributes.length() > 0 ){
-			out.append(attributes.toString());
-			attributes.setLength(0);
-		}
-		return true;
-	}
-	
-	final public void openNode(String nodeName) {
-		if(flushPreviousNode())
-			out.append(">\n");
-		out.append(tabs).append('<').append(nodeName);
-		nodeStack.push(nodeName);
-		addTab();
-	}
-	
-	final public void addAttribute(String name, String value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	final public void addAttribute(String name, boolean value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	final public void addAttribute(String name, char value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	final public void addAttribute(String name, int value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	final public void addAttribute(String name, long value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	final public void addAttribute(String name, float value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	final public void addAttribute(String name, double value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	final public void addAttribute(String name, Object value) {
-		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
-	}
-	
-	private transient boolean hasContent = false;
-	
-	final public void print(String content) {
-		hasContent = content != null && content.length() > 0;
-		if( hasContent ){
-			flushPreviousNode();
-			out.append('>').append("<![CDATA[").append(content).append("]]>");
-		}
-	}
-	
-	final public void print(String nodeName, String content) {
-		if( content != null && content.length() > 0 ){
-			openNode(nodeName);
-				print(content);
-			closeNode();
-		}
-	}
-	
-	final public <T extends XMLSerializable> void print(String nodeName, Collection<T> collection){
-		if( collection != null && collection.size() > 0 ){
-			openNode( nodeName );
-			for(T element: collection)
-				element.toXML(this);
-			closeNode();
-		}
-	}
-	
-	final public void closeNode() {
-		removeTab();
-		if( nodeStack.size() != previousNodeDepth ){
-			if(hasContent){
-				out.append("</").append(nodeStack.pop()).append(">\n");
-				hasContent = false;
-			}else{
-				flushPreviousNode();
-				out.append("/>\n");
-				nodeStack.pop();
-			}
-		}else
-			out.append(tabs).append("</").append(nodeStack.pop()).append(">\n");
-		previousNodeDepth = nodeStack.size();
 	}
 }
 
@@ -359,7 +177,7 @@ class Link implements XMLSerializable {
 	 */
 	@Override
 	public void toXML(XMLPrinter out) {
-		// TODO Auto-generated method stub
+		out.print("Link", link);
 	}
 }
 
@@ -394,17 +212,29 @@ abstract class DocumentedElementLinks extends  DocumentedElement {
 		}
 	};
 	
+	private static final Collection<Link> getLinks(Doc doc){
+		if(doc == null)
+			return null;
+		SeeTag[] tags = doc.seeTags();
+		if(tags == null || tags.length == 0)
+			return null;
+		Collection<Link> links = new ArrayDeque<Link>(tags.length);
+		for(SeeTag tag:tags)
+			links.add(new Link(tag.text()));
+		return links;
+	}
+	
 	final String documentation;
 	final Collection<Link> links;
 	
-	DocumentedElementLinks(String name, String documentation, SeeTag[] tags){
+	<T extends Doc > DocumentedElementLinks(String name, T doc){
 		super(name);
-		this.documentation = documentation;
-		this.links = null; // TODO extraer links
+		this.documentation = doc != null ? doc.commentText(): null;
+		this.links = getLinks(doc);
 	}
 	
 	DocumentedElementLinks(String name){
-		this(name, null, null);
+		this(name, null);
 	}
 }
 
@@ -419,7 +249,7 @@ abstract class SimpleClassBinding extends Element {
 	static class SimpleInterfaceBinding extends SimpleClassBinding{
 		
 		SimpleInterfaceBinding(Type type){
-			super( ClassToUMLAdapter.toString(type) );
+			super( Adapter.toString(type) );
 		}
 		
 		/* (non-Javadoc)
@@ -437,7 +267,7 @@ abstract class SimpleClassBinding extends Element {
 	static class SimpleEnumBinding extends SimpleClassBinding{
 		
 		SimpleEnumBinding(Type type){
-			super( ClassToUMLAdapter.toString(type) );
+			super( Adapter.toString(type) );
 		}
 		
 		/* (non-Javadoc)
@@ -454,7 +284,7 @@ abstract class SimpleClassBinding extends Element {
 		final boolean isAbstract;
 		
 		SimpleConcreteClassBinding(Type type){
-			super( ClassToUMLAdapter.toString(type) );
+			super( Adapter.toString(type) );
 			if(type instanceof Class<?>)
 				this.isAbstract = Modifier.isAbstract( ((Class<?>)type).getModifiers() );
 			else if(type instanceof ParameterizedType)
@@ -509,8 +339,8 @@ class ConstantBinding extends DocumentedElementLinks{
 		super(name);
 	}
 
-	ConstantBinding(String name, String documentation, SeeTag[] tags) {
-		super(name, documentation, tags);
+	ConstantBinding(String name, FieldDoc doc) {
+		super( name, doc );
 	}
 
 	/* (non-Javadoc)
@@ -521,6 +351,7 @@ class ConstantBinding extends DocumentedElementLinks{
 		out.openNode("Constant");
 			out.addAttribute("name", name);
 			out.print("Documentation", documentation);
+			out.print("Links", links);
 		out.closeNode();
 	}
 }
@@ -528,11 +359,11 @@ class ConstantBinding extends DocumentedElementLinks{
 class ExceptionBinding extends DocumentedElement{
 	
 	ExceptionBinding(Type type){
-		super( ClassToUMLAdapter.toString(type) );
+		super( Adapter.toString(type) );
 	}
 	
 	ExceptionBinding(Type type, ThrowsTag tag){
-		super(	ClassToUMLAdapter.toString(type),
+		super(	Adapter.toString(type),
 				tag != null ? tag.exceptionComment(): null
 		);
 	}
@@ -568,18 +399,18 @@ class ParameterBinding extends DocumentedElement{
 	
 	ParameterBinding(TypeVariable<?> type, ParamTag tag){
 		this(	null,
-				ClassToUMLAdapter.toString(type),
+				Adapter.toString(type),
 				tag != null ? tag.parameterComment(): null
 		);
 	}
 	
 	ParameterBinding(TypeVariable<?> type){
-		this( null, ClassToUMLAdapter.toString(type) );
+		this( null, Adapter.toString(type) );
 	}
 	
 	ParameterBinding(Type type, ParamTag tag){
 		this(	tag != null ? tag.parameterName(): null,
-				ClassToUMLAdapter.toString(type),
+				Adapter.toString(type),
 				tag != null ? tag.parameterComment(): null
 		);
 	}
@@ -600,11 +431,11 @@ class ParameterBinding extends DocumentedElement{
 	}
 	
 	ParameterBinding(Type type, Tag[] tags){
-		this( null, ClassToUMLAdapter.toString(type), concatComments(tags) );
+		this( null, Adapter.toString(type), concatComments(tags) );
 	}
 	
 	ParameterBinding(Type type){
-		this( null, ClassToUMLAdapter.toString(type) );
+		this( null, Adapter.toString(type) );
 	}
 	
 	final void toXML(String nodeName, XMLPrinter out) {
@@ -631,18 +462,14 @@ class ParameterBinding extends DocumentedElement{
 class FieldBinding extends DocumentedElementLinks{
 
 	final Visibility visibility;
-	final boolean isStatic;
+	final int modifiers;
 	final String type;
 	
 	FieldBinding(Pair<Field,FieldDoc> field){
-		super( 	field.d1.getName(),
-				field.d2 != null ? field.d2.commentText(): null,
-				field.d2 != null ? field.d2.seeTags(): null
-		);
-		int modifiers = field.d1.getModifiers();
+		super( 	field.d1.getName(), field.d2 );
+		this.modifiers = field.d1.getModifiers();
 		this.visibility = Visibility.fromModifiers(modifiers);
-		this.isStatic   = Modifier.isStatic(modifiers);
-		this.type = ClassToUMLAdapter.toString(field.d1.getGenericType());
+		this.type = Adapter.toString(field.d1.getGenericType());
 	}
 	
 	/* (non-Javadoc)
@@ -653,17 +480,24 @@ class FieldBinding extends DocumentedElementLinks{
 		out.openNode("Field");
 			out.addAttribute("name", name);
 			out.addAttribute("visibility", visibility.toChar());
-			if(isStatic)
+			if(Modifier.isStatic(modifiers))
 				out.addAttribute("isStatic", true);
+			if(Modifier.isTransient(modifiers))
+				out.addAttribute("isTransient", true);
+			if(Modifier.isVolatile(modifiers))
+				out.addAttribute("isVolatile", true);
+			if(Modifier.isFinal(modifiers))
+				out.addAttribute("isFinal", true);
 			out.print("Type", type);
 			out.print("Documentation", documentation);
+			out.print("Links", links);
 		out.closeNode();
 	}
 }
 
 abstract class CommandBinding extends DocumentedElementLinks{
 
-	private final static  String getName(Member d){
+	private final static String getName(Member d){
 		return d instanceof Constructor<?> ?
 				((Constructor<?>)d).getDeclaringClass().getSimpleName():
 				d.getName();
@@ -729,7 +563,7 @@ abstract class CommandBinding extends DocumentedElementLinks{
 			for(ThrowsTag e: command.d2.throwsTags())
 				map.put( e.exceptionType().typeName(), e );
 			for(Type type: types)
-				exceptions.add( new ExceptionBinding( type, map.remove(ClassToUMLAdapter.toString(type)) ) );
+				exceptions.add( new ExceptionBinding( type, map.remove(Adapter.toString(type)) ) );
 			assert( map.size() == 0 ): "!!!Error en "+ clazz.toString() + ":\n\t" +
 				getName((Member)command.d1)+
 				AssertHelper.mostrar("Documentacion sobrante :", map.keySet());	
@@ -744,20 +578,12 @@ abstract class CommandBinding extends DocumentedElementLinks{
 
 	<T extends AccessibleObject & Member & GenericDeclaration>
 	CommandBinding(Pair<? extends T, ? extends ExecutableMemberDoc> command){
-		super( 	getName(command.d1), 
-				command.d2 != null ? command.d2.commentText(): null,
-				command.d2 != null ? command.d2.seeTags(): null
-		);
+		super( getName(command.d1), command.d2 );
 		this.visibility = Visibility.fromModifiers( command.d1.getModifiers() );
 		
 		typeParams = ClassBinding.getTypeParams(command);
 		params = getParams(command);
 		exceptions = getExceptions(command);
-		
-		// TODO seguir
-		for(SeeTag tag: command.d2.seeTags()){
-			System.out.println( "\t\t\t"+tag.referencedMember());
-		}
 	}
 }
 
@@ -782,6 +608,7 @@ class ConstructorBinding extends CommandBinding{
 			out.print("TypeParameters", typeParams );
 			out.print("Parameters", params );
 			out.print("Exceptions", exceptions );
+			out.print("Links", links);
 		out.closeNode();
 	}
 }
@@ -791,17 +618,23 @@ class ConstructorBinding extends CommandBinding{
  */
 class MethodBinding extends CommandBinding{
 
-	final boolean isStatic;
-	final boolean isAbstract;
+	final int modifiers;
 
 	final ParameterBinding  returnElement;
 	
+	static Pair<Method,MethodDoc> checkOverride(Pair<Method,MethodDoc> method){
+		MethodDoc doc = method.d2;
+		if( doc == null)
+			return method;
+		if( doc.overriddenMethod() != null && doc.getRawCommentText().length() == 0)
+			doc.setRawCommentText("@see " + doc.overriddenClass().qualifiedTypeName() +"#"+Adapter.toString(doc));
+		return method;
+	}
+	
 	MethodBinding(Pair<Method,MethodDoc> method){
-		super( method );
+		super( checkOverride(method) );
 
-		int modifiers = method.d1.getModifiers();
-		this.isStatic   = Modifier.isStatic(modifiers);
-		this.isAbstract = Modifier.isAbstract(modifiers);
+		this.modifiers = method.d1.getModifiers();
 
 		if(method.d2 == null){
 			returnElement = method.d1.getReturnType().equals(java.lang.Void.TYPE)? null:
@@ -820,16 +653,25 @@ class MethodBinding extends CommandBinding{
 		out.openNode("Method");
 			out.addAttribute("name", name);
 			out.addAttribute("visibility", visibility.toChar());
-			if(isStatic)
-				out.addAttribute("isStatic", isStatic);
-			else if(isAbstract)
-				out.addAttribute("isAbstract", isAbstract);
+			if(Modifier.isStatic(modifiers))
+				out.addAttribute("isStatic", true);
+			if(Modifier.isAbstract(modifiers))
+				out.addAttribute("isAbstract", true);
+			if(Modifier.isNative(modifiers))
+				out.addAttribute("isNative", true);
+			if(Modifier.isStrict(modifiers))
+				out.addAttribute("isStrictfp", true);
+			if(Modifier.isFinal(modifiers))
+				out.addAttribute("isFinal", true);
+			if(Modifier.isSynchronized(modifiers))
+				out.addAttribute("isSynchronized", true);
 			out.print("Documentation", documentation);
 			out.print("TypeParameters", typeParams );
 			out.print("Parameters", params );
 			if(returnElement != null)
 				returnElement.toXML("ReturnType", out);
 			out.print("Exceptions", exceptions );
+			out.print("Links", links);
 		out.closeNode();
 	}
 }
@@ -844,10 +686,7 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		final Collection<ParameterBinding> parameters;
 		
 		InterfaceBinding(Pair<Class<?>, ClassDoc> clazz){
-			super(	ClassToUMLAdapter.toString(clazz.d1), 
-					clazz.d2 != null ? clazz.d2.commentText(): null,
-					clazz.d2 != null ? clazz.d2.seeTags(): null
-			);
+			super( clazz );
 			this.parameters = getTypeParams(clazz);
 			
 			this.enclosingClasses = getEnclosingClasses(clazz.d1);
@@ -866,6 +705,8 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 				out.addAttribute( "name", name );
 				out.print( "Documentation", documentation );
 				out.print( "TypeParameters", parameters );
+				out.print( "Links", links);
+				
 				out.print( "EnclosingClasses", enclosingClasses );
 				out.print( "Interfaces", interfaces );
 				out.print( "Fields", fields );
@@ -888,7 +729,7 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 				for(Object constant: clazz.d1.getEnumConstants()){
 					FieldDoc field = map.remove(constant.toString());
 					if( field != null )
-						constants.offerLast( new ConstantBinding(constant.toString(), field.commentText(), field.seeTags()) );
+						constants.offerLast( new ConstantBinding(constant.toString(), field ) );
 					assert( field != null ): "!!!Documentacion no encontrada para: " + constant.toString();
 				}
 			}
@@ -899,11 +740,8 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		Collection<ConstructorBinding> constructors;
 		
 		EnumBinding(Pair<Class<?>, ClassDoc> clazz){
-			super(	ClassToUMLAdapter.toString(clazz.d1), 
-					clazz.d2 != null ? clazz.d2.commentText(): null,
-					clazz.d2 != null ? clazz.d2.seeTags(): null
-			);
-			
+			super( clazz );
+	
 			this.enclosingClasses = getEnclosingClasses(clazz.d1);
 			this.interfaces = getImplementedInterfaces(clazz.d1);
 			
@@ -920,7 +758,8 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		public void toXML(XMLPrinter out) {
 			out.openNode( "Enum" );
 				out.addAttribute( "name", name );
-				out.print("Documentation", documentation);
+				out.print( "Documentation", documentation);
+				out.print( "Links", links);
 	
 				out.print( "EnclosingClasses", enclosingClasses );
 				out.print( "Interfaces", interfaces );
@@ -950,10 +789,8 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		final Collection<ConstructorBinding> constructors;
 		
 		ConcreteClassBinding(Pair<Class<?>, ClassDoc> clazz){
-			super(	ClassToUMLAdapter.toString(clazz.d1), 
-					clazz.d2 != null ? clazz.d2.commentText(): null,
-					clazz.d2 != null ? clazz.d2.seeTags(): null
-			);
+			super( clazz );
+
 			this.isAbstract = Modifier.isAbstract( clazz.d1.getModifiers() );
 			this.parameters = getTypeParams(clazz);
 			
@@ -975,8 +812,10 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 				out.addAttribute( "name", name );
 				if(isAbstract)
 					out.addAttribute( "isAbstract", isAbstract );
-				out.print("Documentation", documentation);
+				out.print( "Documentation", documentation);
 				out.print( "TypeParameters", parameters);
+				out.print( "Links", links);
+				
 				out.print( "Hierarchy", hierarchy );
 				out.print( "EnclosingClasses", enclosingClasses );
 				out.print( "Interfaces", interfaces );
@@ -1182,21 +1021,21 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 			for(ConstructorDoc constructor: clazz.d2.constructors()){
 				if( docsFilter.validate(constructor) )
 					map.put( 
-							ClassDocToUMLAdapter.toString( constructor ),
+							Adapter.toString( constructor ),
 							new Pair<Constructor<?>,ConstructorDoc>(null, constructor)
 					);
 			}
 			Collection<String> undocumented = new ArrayDeque<String>();
 			for(Constructor<?> constructor: clazz.d1.getDeclaredConstructors()){
 				if( ConstructorsFilter.validate(constructor) ){
-					Pair<Constructor<?>,ConstructorDoc> pair = map.remove( ClassToUMLAdapter.toString( constructor, false, false ) );
+					Pair<Constructor<?>,ConstructorDoc> pair = map.remove( Adapter.toString( constructor ) );
 					if( pair == null )
-						pair = map.remove( ClassToUMLAdapter.toString( constructor, true, false ) );
+						pair = map.remove( Adapter.toString( constructor, true ) );
 					if( pair != null ){
 						pair.d1 = constructor;
 						constructors.offer( new ConstructorBinding( pair ) );
 					} else 
-						undocumented.add(ClassToUMLAdapter.toString( constructor, true, false ));
+						undocumented.add( Adapter.toString( constructor ) );
 				}
 			}
 			assert( map.size() == 0 ): "!!!Error en "+clazz.d2.name() + ":\n" + 
@@ -1216,10 +1055,10 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 	private static final Filter<Method> EnumMethodsFilter = new Filter<Method>(){
 		@Override
 		public boolean validate(Method method) {
-			String methodString = ClassToUMLAdapter.toString(method);
+			String methodString = method.toString();
 			return	!method.isSynthetic()
-					&& !methodString.startsWith("valueOf( String ):")
-					&& !methodString.startsWith("values():");
+					&& !methodString.startsWith("valueOf(java.lang.String)")
+					&& !methodString.startsWith("values()");
 		
 		}
 	};
@@ -1228,9 +1067,9 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		@Override
 		public boolean validate(MethodDoc method) {
 			if( super.validate(method) ){
-				String methodString = ClassDocToUMLAdapter.toString( method );
-				return	!methodString.startsWith("valueOf( java.lang.String ):")
-						&& !methodString.startsWith("values():");
+				String methodString = Adapter.toString( method );
+				return	!methodString.startsWith("valueOf(java.lang.String)")
+						&& !methodString.startsWith("values()");
 			}
 			return false;
 		}
@@ -1259,19 +1098,19 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 			for(MethodDoc method: clazz.d2.methods()){
 				if( filterDoc.validate(method) )
 					map.put( 
-							ClassDocToUMLAdapter.toString( method ),
+							Adapter.toString( method ),
 							new Pair<Method, MethodDoc>(null, method)
 					);
 			}
 			Collection<String> undocumented = new ArrayDeque<String>();
 			for(Method method: clazz.d1.getDeclaredMethods()){
 				if( filter.validate(method) ){
-					Pair<Method, MethodDoc> pair = map.remove( ClassToUMLAdapter.toString( method, false ) );
+					Pair<Method, MethodDoc> pair = map.remove( Adapter.toString( method ) );
 					if( pair != null ) {
 						pair.d1 = method;
 						methods.offer( new MethodBinding( pair ) );
 					} else 
-						undocumented.add( ClassToUMLAdapter.toString( method, false ) );
+						undocumented.add( Adapter.toString( method ) );
 				}
 			}
 			assert( map.size() == 0 ):
@@ -1308,8 +1147,8 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 	Collection<FieldBinding> fields;
 	Collection<MethodBinding> methods;
 	
-	ClassBinding(String signature, String documentation, SeeTag[] tags) {
-		super(signature, documentation, tags);
+	ClassBinding(Pair<Class<?>, ClassDoc> clazz) {
+		super(Adapter.toString(clazz.d1), clazz.d2);
 	}
 	
 	public final void toXML(OutputStream out) {

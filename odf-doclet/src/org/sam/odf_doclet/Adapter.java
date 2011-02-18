@@ -1,5 +1,5 @@
 /* 
- * ClassToUMLAdapter.java
+ * Adapter.java
  * 
  * Copyright (c) 2010 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -29,26 +29,18 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 
-public class ClassToUMLAdapter {
+import com.sun.javadoc.ConstructorDoc;
+import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.Parameter;
+
+public final class Adapter {
+	
+	private Adapter(){}
 	
 	private static Class<?> getPrimaryComponentType(Class<?> clazz){
 		if( clazz.isArray() )
 			return getPrimaryComponentType(clazz.getComponentType());
 		return clazz;
-	}
-	
-	public static String toString(Type[] params, int offset, boolean showGenericType){
-		StringBuffer buff = new StringBuffer();
-		for(int i = offset; i < params.length; ){
-			buff.append( showGenericType ? toString(params[i]) : toStringNoGerenic(params[i]) );
-			if(++i < params.length)
-				buff.append(", ");
-		}
-		return buff.toString();
-	}
-	
-	public static String toString(Type[] params){
-		return toString( params, 0, true );
 	}
 	
 	public static String toString(TypeVariable<?>[] params){
@@ -61,19 +53,31 @@ public class ClassToUMLAdapter {
 		return buff.toString();
 	}
 	
-	private static String toStringNoGerenic(Type type){
-		if(type instanceof Class<?>)
-			return ((Class<?>)type).getCanonicalName();
-		if(type instanceof ParameterizedType)
-			return ((Class<?>)((ParameterizedType)type).getRawType()).getCanonicalName();
-		if(type instanceof GenericArrayType)
-			return toStringNoGerenic(((GenericArrayType)type).getGenericComponentType())+"[]";
-		if(type instanceof TypeVariable)
-			return toStringNoGerenic(((TypeVariable<?>)type).getBounds()[0]);
-		//Como no se trata ParameterizedType => no hay WildcardType
-		//TypeVariable se trata como Object
-		assert(type instanceof WildcardType);
-			return null;
+	public static String toString(TypeVariable<?> type){
+		StringBuffer buff = new StringBuffer(type.getName());
+		Type[] bounds = type.getBounds();
+		if( bounds != null && bounds.length > 0 &&
+				!( bounds[0] instanceof Class<?>  && ((Class<?>)bounds[0]).equals(Object.class) ) ){
+			buff.append(" extends ");
+			int i = 0;
+			while(true){
+				buff.append(toString(bounds[i]));
+				if( ++i ==  bounds.length)
+					return buff.toString();
+				buff.append(" & ");
+			}
+		}
+		return buff.toString();
+	}
+	
+	public static String toString(Type[] params){
+		StringBuffer buff = new StringBuffer();
+		for(int i = 0; i < params.length; ){
+			buff.append( toString(params[i]) );
+			if(++i < params.length)
+				buff.append(", ");
+		}
+		return buff.toString();
 	}
 	
 	public static String toString(Type type){
@@ -111,23 +115,6 @@ public class ClassToUMLAdapter {
 				"<" + toString(type.getActualTypeArguments()) + ">";
 	}
 	
-	public static String toString(TypeVariable<?> type){
-		StringBuffer buff = new StringBuffer(type.getName());
-		Type[] bounds = type.getBounds();
-		if( bounds != null && bounds.length > 0 &&
-				!( bounds[0] instanceof Class<?>  && ((Class<?>)bounds[0]).equals(Object.class) ) ){
-			buff.append(" extends ");
-			int i = 0;
-			while(true){
-				buff.append(toString(bounds[i]));
-				if( ++i ==  bounds.length)
-					return buff.toString();
-				buff.append(" & ");
-			}
-		}
-		return buff.toString();
-	}
-	
 	public static String toString(WildcardType type){
 		StringBuffer buff = new StringBuffer("?");
 		Type[] bounds = type.getUpperBounds();
@@ -156,31 +143,53 @@ public class ClassToUMLAdapter {
 		return buff.toString();
 	}
 	
-	public static String toString(Constructor<?> constructor, boolean hideSyntheticAccesor, boolean showGenericType){
-		int offset = constructor.getDeclaringClass().isEnum() ? 2 : hideSyntheticAccesor ? 1: 0;
-		return String.format( "%1$s(%2$s%3$s%2$s)", 
+	private static String toString(String name, Class<?>[] params, int offset){
+		StringBuffer buff = new StringBuffer(name);
+		buff.append('(');
+		for(int i = offset; i < params.length; ){
+			buff.append( params[i].getCanonicalName() );
+			if(++i < params.length)
+				buff.append(", ");
+		}
+		buff.append(')');
+		return buff.toString();
+	}
+	
+	private static String toString(String name, Parameter[] params){
+		StringBuffer buff = new StringBuffer(name);
+		buff.append('(');
+		for(int i = 0; i < params.length; ){
+			com.sun.javadoc.Type t = params[i].type();
+			buff.append(t.qualifiedTypeName());
+			buff.append(t.dimension());
+			if(++i < params.length)
+				buff.append(", ");
+		}
+		buff.append(')');
+		return buff.toString();
+	}
+	
+	public static String toString(Constructor<?> constructor) {
+		return toString( constructor.getDeclaringClass().getSimpleName(), constructor.getParameterTypes(), 0 );
+	}
+	
+	public static String toString( Constructor<?> constructor, boolean hideSyntheticAccesor ){
+		return toString(
 				constructor.getDeclaringClass().getSimpleName(),
-				constructor.getGenericParameterTypes().length > offset ? " ":"",
-				toString(constructor.getGenericParameterTypes(), offset, showGenericType )
+				constructor.getParameterTypes(),
+				hideSyntheticAccesor ? constructor.getDeclaringClass().isEnum() ? 2 : 1: 0
 		);
 	}
 	
-	public static String toString(Constructor<?> constructor){
-		return toString(constructor, false, true );
+	public static String toString(ConstructorDoc constructor){
+		return toString(constructor.containingClass().simpleTypeName(),constructor.parameters());
 	}
 	
-	public static String toString(Method method, boolean showGenericType){
-		Type   returnType = method.getGenericReturnType();
-		String returnTypeStr =  showGenericType ? toString(returnType) : toStringNoGerenic(returnType);
-		return String.format( "%1$s(%2$s%3$s%2$s)%4$s", 
-				method.getName(),
-				method.getGenericParameterTypes().length > 0 ? " ":"",
-				toString( method.getGenericParameterTypes(), 0, showGenericType ),
-				!returnTypeStr.equals("void") ? ": " + returnTypeStr :""
-		);
+	public static String toString(Method method){
+		return toString( method.getName(), method.getParameterTypes(), 0);
 	}
 	
-	public static String toString(Method method) {
-		return toString(method, true);
+	public static String toString(MethodDoc method){
+		return toString(method.name(),method.parameters());
 	}
 }

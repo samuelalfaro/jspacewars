@@ -29,15 +29,6 @@ import com.sun.javadoc.RootDoc;
 
 public class ShowDocumentation {
 	
-	public static boolean start(RootDoc root) throws ClassNotFoundException {
-
-		ClassDoc[] classes = root.classes();
-
-		for(ClassDoc classDoc: classes)
-			ClassBinding.from(classDoc).toXML(System.out);
-		return true;
-	}
-	
 	public static int optionLength(String option) {
 		if (option.equalsIgnoreCase("-projectRootpath")) 
 			return 2;
@@ -69,6 +60,15 @@ public class ShowDocumentation {
 			}
 		}
 		ClassBinding.setClassLoader(ClassLoaderTools.getLoader( projectRootpath, projectClasspath ) );
+		return true;
+	}
+	
+	public static boolean start(RootDoc root) throws ClassNotFoundException {
+
+		ClassDoc[] classes = root.classes();
+
+		for(ClassDoc classDoc: classes)
+			ClassBinding.from(classDoc).toXML(System.out);
 		return true;
 	}
 }

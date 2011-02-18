@@ -11,11 +11,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.batik.transcoder.TranscoderException;
+import org.sam.odf_doclet.pipeline.PipeLine;
 
 public class GenerateImages {
 	
 	private static final Comparator<File> COMPARADOR_DE_FICHEROS = new Comparator<File>() {
-		/** {@inheritDoc} */
 		public int compare(File f1, File f2) {
 			try {
 				return f1.getCanonicalPath().compareTo(f2.getCanonicalPath());
@@ -26,14 +26,12 @@ public class GenerateImages {
 	};
 	
 	private static final Comparator<Class<?>> COMPARADOR_DE_INTERFACES = new Comparator<Class<?>>() {
-		/** {@inheritDoc} */
 		public int compare(Class<?> e1, Class<?> e2) {
 			return e1.getSimpleName().compareTo(e2.getSimpleName());
 		}
 	};
 	
 	private static final Comparator<Class<?>> COMPARADOR_DE_CLASES = new Comparator<Class<?>>() {
-		/** {@inheritDoc} */
 		public int compare(Class<?> e1, Class<?> e2) {
 			return getHierarchicalName(e1).compareTo(getHierarchicalName(e2));
 		}
@@ -133,18 +131,28 @@ public class GenerateImages {
 				System.out.format("package: %s\n", packageName.length() > 0 ? packageName : "(default  package)" );
 				for(Class<?> clazz:packageInterfacesSet){
 					System.out.println("\t"+clazz.getCanonicalName());
-					ClassToUML.toPNG( clazz, new FileOutputStream("output/"+clazz.getCanonicalName()+".png") );
-					for(Class<?> subclazz : clazz.getDeclaredClasses())
-						ClassToUML.toPNG( subclazz, new FileOutputStream("output/"+subclazz.getCanonicalName()+".png") );
+					PipeLine.setClass(clazz);
+					PipeLine.toPNG(new FileOutputStream("output/"+clazz.getCanonicalName()+".png"));
+//					ClassToUML.toPNG( clazz, new FileOutputStream("output/"+clazz.getCanonicalName()+".png") );
+					for(Class<?> subclazz : clazz.getDeclaredClasses()){
+						PipeLine.setClass(subclazz);
+						PipeLine.toPNG(new FileOutputStream("output/"+subclazz.getCanonicalName()+".png"));	
+					}
+//						ClassToUML.toPNG( subclazz, new FileOutputStream("output/"+subclazz.getCanonicalName()+".png") );
 				}if(packageClassesCollection.size() > 0){
 					listadoDeClasesOrdenado.clear();
 					for(Class<?> clazz:packageClassesCollection)
 						listadoDeClasesOrdenado.add(clazz);
 					for(Class<?> clazz:listadoDeClasesOrdenado){
 						System.out.println("\t"+clazz.getCanonicalName());
-						ClassToUML.toPNG( clazz, new FileOutputStream("output/"+clazz.getCanonicalName()+".png") );
-						for(Class<?> subclazz : clazz.getDeclaredClasses())
-							ClassToUML.toPNG( subclazz, new FileOutputStream("output/"+subclazz.getCanonicalName()+".png") );
+						PipeLine.setClass(clazz);
+						PipeLine.toPNG(new FileOutputStream("output/"+clazz.getCanonicalName()+".png"));
+//						ClassToUML.toPNG( clazz, new FileOutputStream("output/"+clazz.getCanonicalName()+".png") );
+						for(Class<?> subclazz : clazz.getDeclaredClasses()){
+//							ClassToUML.toPNG( subclazz, new FileOutputStream("output/"+subclazz.getCanonicalName()+".png") );
+							PipeLine.setClass(subclazz);
+							PipeLine.toPNG(new FileOutputStream("output/"+subclazz.getCanonicalName()+".png"));
+						}
 					}
 				}
 			}
