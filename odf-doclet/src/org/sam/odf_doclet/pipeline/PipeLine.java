@@ -59,7 +59,7 @@ class ToXML implements Filterable{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.sam.pipeline.Filterable#process(java.io.OutputStream)
+	 * @see org.sam.pipeline.Filter#process(java.io.InputStream, java.io.OutputStream)
 	 */
 	@Override
 	public void process(OutputStream out) throws IOException {

@@ -216,24 +216,26 @@ public class ClaseDePrueba<E> {
 	 * @return valor devuelto.
 	 * @param <U> Documentación del parámetro genérico U del método.
 	 */
-	@SuppressWarnings("unused")
-	private <T extends Number, U> E metodo3(T a1, Map<? super Number, ? extends InerClass> a2, U... a3){
-		return null;
-	}
+
+	private native <T extends Number & Cloneable, U> E metodo3(T a1, Map<? super Number, ? extends InerClass> a2, U... a3);
 	
 	/**
 	 * Método con argumento de la clase java.lang.Float.
 	 * @param f1 documentación del argumento.
 	 */
-	void metodo4(java.lang.Float f1) {
-		
+	strictfp void metodo4(java.lang.Float f1) {
 	}
 	
 	/**
 	 * Método con argumento de la clase pruebas.Float.
 	 * @param f2 documentación del argumento.
 	 */
-	void metodo4(Float f2) {
-		
+	protected final void metodo4(Float f2) {
+	}
+	
+	/**
+	 * @param f2
+	 */
+	public synchronized void metodo5(Float f2){
 	}
 }

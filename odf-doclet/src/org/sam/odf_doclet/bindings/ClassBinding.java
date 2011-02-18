@@ -40,6 +40,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.sam.odf_doclet.Adapter;
+import org.sam.xml.XMLPrinter;
+import org.sam.xml.XMLSerializable;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.ConstructorDoc;
@@ -1152,7 +1154,7 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 	}
 	
 	public final void toXML(OutputStream out) {
-		toXML( new XMLPrinter(out) );
+		toXML( new XMLPrinter(out, true) );
 	}
 }
 

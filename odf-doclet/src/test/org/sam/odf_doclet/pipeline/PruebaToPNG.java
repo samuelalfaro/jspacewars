@@ -1,5 +1,5 @@
 /* 
- * XMLSerializable.java
+ * PruebaToPNG.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -19,8 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with odf-doclet.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sam.odf_doclet.bindings;
+package org.sam.odf_doclet.pipeline;
 
-interface XMLSerializable{
-	void toXML(XMLPrinter out);
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import org.sam.odf_doclet.pipeline.PipeLine;
+
+import pruebas.ClaseDePrueba;
+
+/**
+ * 
+ */
+public class PruebaToPNG {
+
+	/**
+	 * @param args
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public static void main(String[] args) throws FileNotFoundException, IOException {
+		Class<?> clazz = ClaseDePrueba.class;
+		System.out.print("Generando gráfico de "+clazz.getSimpleName()+" ...");
+		PipeLine.setClass(clazz);
+		PipeLine.toXML(System.out);
+		PipeLine.toPNG(new FileOutputStream("output/out.png"));
+		System.out.println("\tok");
+	}
 }
