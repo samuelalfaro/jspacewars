@@ -97,15 +97,18 @@ public final class XMLPrinter{
 		}
 	}
 	
-	private int previousNodeDepth;
-	private final TabsManager tabs;
-	private final String eol;
+	private final PrintStream out;
 	private final Deque<String> nodeStack;
 	private final StringBuffer attributes;
-	private final PrintStream out;
+	private final TabsManager tabs;
+	private final String eol;
+	private int previousNodeDepth;
 	
-	public XMLPrinter(	OutputStream out, boolean tabulate ) {
-		this.previousNodeDepth = 0;
+	public XMLPrinter( OutputStream out, boolean tabulate ) {
+		this.out = toPrintStream(out);
+		this.nodeStack = new ArrayDeque<String>();
+		this.attributes = new StringBuffer(512);
+		this.attributes.setLength(0);
 		if(tabulate){
 			this.tabs = new TabsManager.Tabulate();
 			this.eol = System.getProperty("line.separator");
@@ -113,10 +116,7 @@ public final class XMLPrinter{
 			this.tabs = new TabsManager.Default();
 			this.eol = "";
 		}
-		this.nodeStack = new ArrayDeque<String>();
-		this.attributes = new StringBuffer(512);
-		this.attributes.setLength(0);
-		this.out = toPrintStream(out);
+		this.previousNodeDepth = 0;
 	}
 	
 	public XMLPrinter(	OutputStream out ) {

@@ -22,7 +22,7 @@ text#textoTitulo, text.abstract#textoTitulo{
 	font-weight:bold;
 	text-anchor:middle;
 }
-line, path.default,
+line, polyline, path.default,
 rect.estilo1#titulo, rect.estilo1#parameters, rect.estilo1#contenido,
 rect.estilo2#titulo, rect.estilo2#parameters, rect.estilo2#contenido,
 rect.estilo3#titulo, rect.estilo3#contenido{
@@ -39,6 +39,10 @@ rect.estilo3#titulo, rect.estilo3#contenido{
 	display:inline;
 	overflow:visible;
 	enable-background:accumulate;
+	fill:none
+}
+
+path.default{
 	fill:#E0E0E0;
 	fill-opacity:1;
 	fill-rule:nonzero;

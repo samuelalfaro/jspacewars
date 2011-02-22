@@ -445,17 +445,12 @@
 						</xsl:element>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:element name="line" xml:space="default">
-							<xsl:attribute name="x1"><xsl:number value="$x"/></xsl:attribute>
-							<xsl:attribute name="y1"><xsl:number value="$y"/></xsl:attribute>
-							<xsl:attribute name="x2"><xsl:number value="$x"/></xsl:attribute>
-							<xsl:attribute name="y2"><xsl:number value="$y +10"/></xsl:attribute>
-						</xsl:element>
-						<xsl:element name="line" xml:space="default">
-							<xsl:attribute name="x1"><xsl:number value="$x"/></xsl:attribute>
-							<xsl:attribute name="y1"><xsl:number value="$y +10"/></xsl:attribute>
-							<xsl:attribute name="x2"><xsl:number value="$x +20"/></xsl:attribute>
-							<xsl:attribute name="y2"><xsl:number value="$y +10"/></xsl:attribute>
+						<xsl:element name="polyline" xml:space="default">
+							<xsl:attribute name="points"><xsl:value-of select="concat(
+								$x, ',', $y, ' ',
+								$x, ',', $y + 10, ' ',
+								$x +20, ',', $y + 10)"/>
+							</xsl:attribute>
 						</xsl:element>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -612,17 +607,12 @@
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:element name="line" xml:space="default">
-						<xsl:attribute name="x1"><xsl:number value="$xOffset + 15"/></xsl:attribute>
-						<xsl:attribute name="y1"><xsl:number value="$y - 10"/></xsl:attribute>
-						<xsl:attribute name="x2"><xsl:number value="$xOffset + 25"/></xsl:attribute>
-						<xsl:attribute name="y2"><xsl:number value="$y"/></xsl:attribute>
-					</xsl:element>
-					<xsl:element name="line" xml:space="default">
-						<xsl:attribute name="x1"><xsl:number value="$xOffset + 25"/></xsl:attribute>
-						<xsl:attribute name="y1"><xsl:number value="$y"/></xsl:attribute>
-						<xsl:attribute name="x2"><xsl:number value="$xOffset + 31"/></xsl:attribute>
-						<xsl:attribute name="y2"><xsl:number value="$y"/></xsl:attribute>
+					<xsl:element name="polyline" xml:space="default">
+						<xsl:attribute name="points"><xsl:value-of select="concat(
+							$xOffset + 15, ',', $y - 10, ' ',
+							$xOffset + 25, ',', $y, ' ',
+							$xOffset + 31, ',', $y)"/>
+						</xsl:attribute>
 					</xsl:element>
 				</xsl:otherwise>
 			</xsl:choose>
