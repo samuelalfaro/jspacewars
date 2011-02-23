@@ -36,6 +36,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -46,6 +47,7 @@ import org.sam.pipeline.Filter;
 import org.sam.pipeline.FilterAbs;
 import org.sam.pipeline.FilterException;
 import org.sam.pipeline.Filterable;
+import org.sam.xml.XMLPrinter;
 
 class ToXML implements Filterable{
 
@@ -63,7 +65,7 @@ class ToXML implements Filterable{
 	 */
 	@Override
 	public void process(OutputStream out) throws IOException {
-		clazz.toXML(out);
+		clazz.toXML( new XMLPrinter(out, false) );
 	}
 }
 
@@ -101,6 +103,7 @@ class ToPNG extends FilterAbs{
 	
 	ToPNG(){
 		transcoder = new PNGTranscoder();
+		transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_EXECUTE_ONLOAD, Boolean.TRUE);	
 	}
 	
 	/* (non-Javadoc)

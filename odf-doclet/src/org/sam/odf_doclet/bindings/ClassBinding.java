@@ -21,7 +21,6 @@
  */
 package org.sam.odf_doclet.bindings;
 
-import java.io.OutputStream;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -1057,7 +1056,7 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 	private static final Filter<Method> EnumMethodsFilter = new Filter<Method>(){
 		@Override
 		public boolean validate(Method method) {
-			String methodString = method.toString();
+			String methodString = Adapter.toString( method );
 			return	!method.isSynthetic()
 					&& !methodString.startsWith("valueOf(java.lang.String)")
 					&& !methodString.startsWith("values()");
@@ -1151,10 +1150,6 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 	
 	ClassBinding(Pair<Class<?>, ClassDoc> clazz) {
 		super(Adapter.toString(clazz.d1), clazz.d2);
-	}
-	
-	public final void toXML(OutputStream out) {
-		toXML( new XMLPrinter(out, true) );
 	}
 }
 

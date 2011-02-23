@@ -22,6 +22,7 @@
 package org.sam.odf_doclet;
 
 import org.sam.odf_doclet.bindings.ClassBinding;
+import org.sam.xml.XMLPrinter;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
@@ -66,9 +67,11 @@ public class ShowDocumentation {
 	public static boolean start(RootDoc root) throws ClassNotFoundException {
 
 		ClassDoc[] classes = root.classes();
+		
+		XMLPrinter printer = new XMLPrinter(System.out, true);
 
 		for(ClassDoc classDoc: classes)
-			ClassBinding.from(classDoc).toXML(System.out);
+			ClassBinding.from(classDoc).toXML(printer);
 		return true;
 	}
 }

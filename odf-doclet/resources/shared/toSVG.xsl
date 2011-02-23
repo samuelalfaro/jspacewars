@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exslt="http://exslt.org/common" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<xsl:import href="compact.xsl"/>
+	
 	<xsl:param name="scale">1.0</xsl:param>
 	<xsl:param name="background">none</xsl:param>
 	<xsl:param name="widthChar1">6.5</xsl:param>
@@ -241,16 +242,6 @@
 			<xsl:attribute name="height"><xsl:number value="$heightArea * $scale"/></xsl:attribute>
 			<xsl:attribute name="viewBox"><xsl:value-of select="concat('0 0 ', $widthArea, ' ', $heightArea)"/></xsl:attribute>
 			<xsl:attribute name="version">1.1</xsl:attribute>
-			<defs>
-				<path id="CirculoInteface" class="default" d="M -10,0 A 10,10 0 0,1 10,0 A 10,10 0 0,1 -10,0 z"/>
-				<path id="TrianguloJeraquia" class="default" d="M -10,10 0,-10 10,10 Z"/>
-				<g id="CirculoContenedor">
-					<path class="default" d="M -10,0 A 10,10 0 0,1 10,0 A 10,10 0 0,1 -10,0 z"/>
-					<line x1="-10" y1="0" x2="10" y2="0"/>
-					<line x1="0" y1="-10" x2="0" y2="10"/>
-				</g>
-				<path id="CirculoInteface" d="M -10,0 A 10,10 0 0,1 10,0 A 10,10 0 0,1 -10,0 z"/>
-			</defs>
 
 			<!-- Fondo -->
 			<xsl:if test="$background !='none'">
@@ -310,8 +301,7 @@
 				<xsl:if test="Parameters">
 					<g filter="url(shared/defs.svg#SpecShadow2)" >
 						<xsl:element name="rect" xml:space="default">
-							<xsl:attribute name="class"><xsl:value-of select="$estilo"/></xsl:attribute>
-							<xsl:attribute name="id">parameters</xsl:attribute>
+							<xsl:attribute name="class">parameters-<xsl:value-of select="$estilo"/></xsl:attribute>
 							<xsl:attribute name="x"><xsl:number value="20 + $widthBox - $widthParameters"/></xsl:attribute>
 							<xsl:attribute name="y">-20</xsl:attribute>
 							<xsl:attribute name="width"><xsl:number value="$widthParameters"/></xsl:attribute>
@@ -354,32 +344,30 @@
 		<xsl:param name="yLine1"/>
 		<xsl:param name="yLine2"/>
 		<xsl:param name="estilo"/>
-		<xsl:element name="rect" xml:space="default">
-			<xsl:attribute name="class"><xsl:value-of select="$estilo"/></xsl:attribute>
-			<xsl:attribute name="id">contenido</xsl:attribute>
+		<xsl:element name="rect">
+			<xsl:attribute name="class">contenido-<xsl:value-of select="$estilo"/></xsl:attribute>
 			<xsl:attribute name="x">0</xsl:attribute>
 			<xsl:attribute name="y"><xsl:number value="$heightTitle"/></xsl:attribute>
 			<xsl:attribute name="width"><xsl:number value="$width"/></xsl:attribute>
 			<xsl:attribute name="height"><xsl:number value="$height"/></xsl:attribute>
 			<xsl:attribute name="rx">2</xsl:attribute>
 		</xsl:element>
-		<xsl:element name="rect" xml:space="default">
-			<xsl:attribute name="class"><xsl:value-of select="$estilo"/></xsl:attribute>
-			<xsl:attribute name="id">titulo</xsl:attribute>
+		<xsl:element name="rect">
+			<xsl:attribute name="class">titulo-<xsl:value-of select="$estilo"/></xsl:attribute>
 			<xsl:attribute name="x">0</xsl:attribute>
 			<xsl:attribute name="y">0</xsl:attribute>
 			<xsl:attribute name="width"><xsl:number value="$width"/></xsl:attribute>
 			<xsl:attribute name="height"><xsl:number value="$heightTitle + 6"/></xsl:attribute>
 			<xsl:attribute name="rx">2</xsl:attribute>
 		</xsl:element>
-		<xsl:element name="line" xml:space="default">
+		<xsl:element name="line">
 			<xsl:attribute name="x1">0</xsl:attribute>
 			<xsl:attribute name="y1"><xsl:number value="$yLine1"/></xsl:attribute>
 			<xsl:attribute name="x2"><xsl:number value="$width"/></xsl:attribute>
 			<xsl:attribute name="y2"><xsl:number value="$yLine1"/></xsl:attribute>
 		</xsl:element>
 		<xsl:if test="$yLine2 &gt; 0">
-			<xsl:element name="line" xml:space="default">
+			<xsl:element name="line">
 				<xsl:attribute name="x1">0</xsl:attribute>
 				<xsl:attribute name="y1"><xsl:number value="$yLine2"/></xsl:attribute>
 				<xsl:attribute name="x2"><xsl:number value="$width"/></xsl:attribute>
@@ -395,17 +383,14 @@
 		<xsl:param name="isAbstract"/>
 		<xsl:choose>
 			<xsl:when test="string-length($prefix) &gt; 0">
-				<xsl:element name="text" xml:space="default">
+				<xsl:element name="text">
 					<xsl:attribute name="x"><xsl:number value="$center"/></xsl:attribute>
 					<xsl:attribute name="y">18</xsl:attribute>
 					<xsl:attribute name="class">centrado</xsl:attribute>
 					<xsl:value-of select="$prefix"/>
 				</xsl:element>
 				<xsl:element name="text" xml:space="default">
-					<xsl:attribute name="id">textoTitulo</xsl:attribute>
-					<xsl:if test="$isAbstract='true'">
-						<xsl:attribute name="class">abstract</xsl:attribute>
-					</xsl:if>
+					<xsl:attribute name="class">titulo<xsl:if test="$isAbstract='true'">-abstract</xsl:if></xsl:attribute>
 					<xsl:attribute name="x"><xsl:number value="$center"/></xsl:attribute>
 					<xsl:attribute name="y">38</xsl:attribute>
 					<xsl:value-of select="$title"/>
@@ -413,10 +398,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:element name="text" xml:space="default">
-					<xsl:attribute name="id">textoTitulo</xsl:attribute>
-					<xsl:if test="$isAbstract='true'">
-						<xsl:attribute name="class">abstract</xsl:attribute>
-					</xsl:if>
+					<xsl:attribute name="class">titulo<xsl:if test="$isAbstract='true'">-abstract</xsl:if></xsl:attribute>
 					<xsl:attribute name="x"><xsl:number value="$center"/></xsl:attribute>
 					<xsl:attribute name="y">18</xsl:attribute>
 					<xsl:value-of select="$title"/>
@@ -434,39 +416,30 @@
 			</xsl:if>
 			<xsl:for-each select="Hierarchy/Class">
 				<xsl:variable name="x" select="( position() -1 )*40 + 30 +$xOffset"/>
-				<xsl:variable name="y" select=" position() *50 + 15"/>
-				<xsl:choose>
-					<xsl:when test="position() = last()">
-						<xsl:element name="line" xml:space="default">
-							<xsl:attribute name="x1"><xsl:number value="$x"/></xsl:attribute>
-							<xsl:attribute name="y1"><xsl:number value="$y"/></xsl:attribute>
-							<xsl:attribute name="x2"><xsl:number value="$x"/></xsl:attribute>
-							<xsl:attribute name="y2"><xsl:number value="$y + 20 "/></xsl:attribute>
-						</xsl:element>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:element name="polyline" xml:space="default">
-							<xsl:attribute name="points"><xsl:value-of select="concat(
-								$x, ',', $y, ' ',
-								$x, ',', $y + 10, ' ',
-								$x +20, ',', $y + 10)"/>
-							</xsl:attribute>
-						</xsl:element>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:variable name="y" select=" position() *50 - 5"/>
+				<xsl:element name="polyline">
+					<xsl:attribute name="class">hierarchy-conector</xsl:attribute>
+					<xsl:attribute name="points">
+						<xsl:choose>
+							<xsl:when test="position() = last()">
+								<xsl:value-of select="concat($x, ',', $y, ' ', $x, ',', $y + 40)"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat(
+									$x, ',', $y, ' ',
+									$x, ',', $y + 30, ' ',
+									$x +20, ',', $y + 30)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:attribute>
+				</xsl:element>
 			</xsl:for-each>
 			<xsl:for-each select="Hierarchy/Class">
-				<xsl:element name="use" xml:space="default">
-					<xsl:attribute name="x"><xsl:number value="( position() -1 )*40 + 30 + $xOffset"/></xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position() *50 + 5"/></xsl:attribute>
-					<xsl:attribute name="xlink:href">#TrianguloJeraquia</xsl:attribute>
-					<xsl:attribute name="filter">url(shared/defs.svg#SpecShadow2)</xsl:attribute>
-				</xsl:element>
 				<xsl:element name="g" xml:space="default">
 					<xsl:attribute name="transform">translate(<xsl:number value="( position() -1 )*40 + 10 + $xOffset"/>, <xsl:number value="( position() -1 )*50 +10"/>)</xsl:attribute>
 					<xsl:choose>
 						<xsl:when test="position() = 1 and text()='...'">
-							<text id="textoTitulo" x="20" y="30">...</text>
+							<text class="titulo" x="20" y="30">...</text>
 						</xsl:when>
 						<xsl:otherwise>
 							<g filter="url(shared/defs.svg#SpecShadow2)">
@@ -551,7 +524,7 @@
 					<xsl:with-param name="prefix">
 						<xsl:choose>
 							<xsl:when test="$nodeName='Interface'"><![CDATA[<< interface >>]]></xsl:when>
-							<xsl:when test="$nodeName='Enum'">     <![CDATA[<< enumeration >>]]></xsl:when>
+							<xsl:when test="$nodeName='Enum'"><![CDATA[<< enumeration >>]]></xsl:when>
 						</xsl:choose>
 					</xsl:with-param>
 					<xsl:with-param name="title" select="EnclosingClasses/*[$count+1]/text()"/>
@@ -559,16 +532,11 @@
 				</xsl:call-template>
 			</xsl:element>
 			<xsl:element name="line" xml:space="default">
-				<xsl:attribute name="x1"><xsl:number value="$xOffsetEnclosingClasses+ $widthBox + 20"/></xsl:attribute>
+				<xsl:attribute name="class">container-conector</xsl:attribute>
+				<xsl:attribute name="x1"><xsl:number value="$xOffsetEnclosingClasses+ $widthBox"/></xsl:attribute>
 				<xsl:attribute name="y1"><xsl:number value="$yOffset  +$childYOffset + 13"/></xsl:attribute>
 				<xsl:attribute name="x2"><xsl:number value="$xOffsetEnclosingClasses+ $widthBox + 40"/></xsl:attribute>
 				<xsl:attribute name="y2"><xsl:number value="$yOffset  +$childYOffset + 13"/></xsl:attribute>
-			</xsl:element>
-			<xsl:element name="use" xml:space="default">
-				<xsl:attribute name="x"><xsl:number value="$xOffsetEnclosingClasses+ $widthBox + 10"/></xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value="$yOffset  +$childYOffset + 13"/></xsl:attribute>
-				<xsl:attribute name="xlink:href">#CirculoContenedor</xsl:attribute>
-				<xsl:attribute name="filter">url(shared/defs.svg#SpecShadow2)</xsl:attribute>
 			</xsl:element>
 			<xsl:call-template name="drawEnclosingClassesR">
 				<xsl:with-param name="count"  select="$count +1"/>
@@ -587,40 +555,34 @@
 				<xsl:otherwise>34</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:if test="count(Interfaces/Interface) &gt; 1">
-			<xsl:element name="line" xml:space="default">
-				<xsl:attribute name="x1"><xsl:number value="$xOffset + 15"/></xsl:attribute>
-				<xsl:attribute name="y1"><xsl:number value="$yOffset"/></xsl:attribute>
-				<xsl:attribute name="x2"><xsl:number value="$xOffset + 15"/></xsl:attribute>
-				<xsl:attribute name="y2"><xsl:number value="count(Interfaces/Interface) * 30 + $yOffset - 40"/></xsl:attribute>
-			</xsl:element>
-		</xsl:if>
 		<xsl:for-each select="Interfaces/Interface">
 			<xsl:variable name="y" select="( position() -1 )*30 + $yOffset"/>
-			<xsl:choose>
-				<xsl:when test="position() = 1">
-					<xsl:element name="line" xml:space="default">
-						<xsl:attribute name="x1"><xsl:number value="$xOffset"/></xsl:attribute>
-						<xsl:attribute name="y1"><xsl:number value="$y"/></xsl:attribute>
-						<xsl:attribute name="x2"><xsl:number value="$xOffset + 31"/></xsl:attribute>
-						<xsl:attribute name="y2"><xsl:number value="$y"/></xsl:attribute>
-					</xsl:element>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:element name="polyline" xml:space="default">
-						<xsl:attribute name="points"><xsl:value-of select="concat(
-							$xOffset + 15, ',', $y - 10, ' ',
-							$xOffset + 25, ',', $y, ' ',
-							$xOffset + 31, ',', $y)"/>
-						</xsl:attribute>
-					</xsl:element>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:element name="use" xml:space="default">
-				<xsl:attribute name="x"><xsl:number value="$xOffset + 40"/></xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value="( position() -1 )*30 + $yOffset"/></xsl:attribute>
-				<xsl:attribute name="xlink:href">#CirculoInteface</xsl:attribute>
-				<xsl:attribute name="filter">url(shared/defs.svg#SpecShadow2)</xsl:attribute>
+			<xsl:element name="polyline">
+				<xsl:attribute name="class">interface-conector</xsl:attribute>
+				<xsl:attribute name="points">
+					<xsl:choose>
+						<xsl:when test="position() = 1">
+							<xsl:value-of select="concat($xOffset, ',', $y, ' ', $xOffset + 51, ',', $y)"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="position() = last()">
+									<xsl:value-of select="concat(
+										$xOffset + 15, ',', $yOffset, ' ',
+										$xOffset + 15, ',', $y - 10, ' ',
+										$xOffset + 25, ',', $y, ' ',
+										$xOffset + 51, ',', $y)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat(
+										$xOffset + 15, ',', $y - 10, ' ',
+										$xOffset + 25, ',', $y, ' ',
+										$xOffset + 51, ',', $y)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
 			</xsl:element>
 			<xsl:element name="text" xml:space="default">
 				<xsl:attribute name="x"><xsl:number value="$xOffset + 55"/></xsl:attribute>
@@ -633,9 +595,9 @@
 	<xsl:template match="Parameters">
 		<xsl:param name="center"/>
 		<xsl:element name="text" xml:space="default">
+			<xsl:attribute name="class">titulo</xsl:attribute>
 			<xsl:attribute name="x"><xsl:value-of select="$center"/></xsl:attribute>
 			<xsl:attribute name="y">-2</xsl:attribute>
-			<xsl:attribute name="id">textoTitulo</xsl:attribute>
 			<xsl:value-of select="text()"/>
 		</xsl:element>
 	</xsl:template>

@@ -1,5 +1,5 @@
 text{
-	text-rendering:optimizeLegibility;/*geometricPrecision;*/
+	/*text-rendering:optimizeLegibility;geometricPrecision;*/
 	font-size:12px;
 	font-style:normal;
 	font-weight:normal;
@@ -11,21 +11,18 @@ text{
 text.static{
 	text-decoration:underline;
 }
-text.abstract{
+text.abstract, text.titulo-abstract{
 	font-style:oblique;
 }
-text.centrado{
+text.centrado, text.titulo, text.titulo-abstract{
 	text-anchor:middle;
 }
-text#textoTitulo, text.abstract#textoTitulo{
+text.titulo, text.titulo-abstract{
 	font-size:14px;
 	font-weight:bold;
-	text-anchor:middle;
 }
-line, polyline, path.default,
-rect.estilo1#titulo, rect.estilo1#parameters, rect.estilo1#contenido,
-rect.estilo2#titulo, rect.estilo2#parameters, rect.estilo2#contenido,
-rect.estilo3#titulo, rect.estilo3#contenido{
+
+line, polyline, path, rect{
 	stroke:#000000;
 	stroke-width:1;
 	stroke-linecap:butt;
@@ -39,36 +36,49 @@ rect.estilo3#titulo, rect.estilo3#contenido{
 	display:inline;
 	overflow:visible;
 	enable-background:accumulate;
-	fill:none
-}
-
-path.default{
-	fill:#E0E0E0;
+	fill:none;
 	fill-opacity:1;
-	fill-rule:nonzero;
+	fill-rule:nonzero
 }
 
-rect.estilo1#titulo, rect.estilo1#parameters{
-	fill:url(defs.svg#gradientInicialFinalV1);
+path{
+	fill:#E0E0E0
 }
-rect.estilo1#parameters{
+
+rect.titulo-estilo1, rect.parameters-estilo1{
+	fill:url(defs.svg#gradientInicialFinalV1)
+}
+rect.contenido-estilo1{
+	fill:url(defs.svg#gradientInicialFinalH1)
+}
+
+rect.titulo-estilo2, rect.parameters-estilo2{
+	fill:url(defs.svg#gradientInicialFinalV2)
+}
+rect.contenido-estilo2{
+	fill:url(defs.svg#gradientInicialFinalH2)
+}
+
+rect.titulo-estilo3{
+	fill:url(defs.svg#gradientInicialFinalV3)
+}
+rect.contenido-estilo3{
+	fill:url(defs.svg#gradientInicialFinalH3)
+}
+
+rect.parameters-estilo1, rect.parameters-estilo2{
+	stroke-width:2;
 	stroke-dasharray: 4, 4;
 }
-rect.estilo1#contenido{
-	fill:url(defs.svg#gradientInicialFinalH1);
+
+line.hierarchy-conector, polyline.hierarchy-conector{
+	marker-start:url(defs.svg#MarkerHierarchy)
 }
-rect.estilo2#titulo, rect.estilo2#parameters, path#CirculoInteface{
-	fill:url(defs.svg#gradientInicialFinalV2);
+
+line.container-conector, polyline.container-conector{
+	marker-start:url(defs.svg#MarkerContainer)
 }
-rect.estilo2#parameters{
-	stroke-dasharray: 4, 4;
-}
-rect.estilo2#contenido{
-	fill:url(defs.svg#gradientInicialFinalH2);
-}
-rect.estilo3#titulo{
-	fill:url(defs.svg#gradientInicialFinalV3);
-}
-rect.estilo3#contenido{
-	fill:url(defs.svg#gradientInicialFinalH3);
+
+line.interface-conector, polyline.interface-conector{
+	marker-end:url(defs.svg#MarkerInteface)
 }

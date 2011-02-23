@@ -39,7 +39,7 @@ public class GenerateImages {
 	
 	private static Collection<Class<?>> packageClassesCollection;
 	
-	private static String getHierarchicalName(Class<?> clazz){
+	static String getHierarchicalName(Class<?> clazz){
 		String name = clazz.getSimpleName();
 		Class<?> superClass = clazz.getSuperclass();
 		while( superClass != null && !superClass.equals(Object.class) && 
