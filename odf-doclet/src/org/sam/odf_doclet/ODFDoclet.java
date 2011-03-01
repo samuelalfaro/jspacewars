@@ -1,5 +1,5 @@
 /* 
- * ODT_Generator.java
+ * ShowDocumentation.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -28,22 +28,54 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+import org.sam.odf_doclet.bindings.ClassBinding;
+import org.sam.odf_doclet.bindings.Recorders;
+import org.sam.xml.XMLConverter;
+import org.sam.xml.XMLWriter;
 
-/**
- * 
- */
-public class ODT_Generator {
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.DocErrorReporter;
+import com.sun.javadoc.RootDoc;
+
+public class ODFDoclet {
+	
+	public static int optionLength(String option) {
+		if (option.equalsIgnoreCase("-projectRootpath")) 
+			return 2;
+		if (option.equalsIgnoreCase("-projectClasspath"))
+			return 2;
+		return 0;
+	}
+
+	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
+		
+		String projectRootpath  = ""; boolean foundProjectRootpath = false;
+		String projectClasspath = ""; boolean foundProjectClasspath = false;
+		
+		for(String[] option: options){
+			if(option[0].equalsIgnoreCase("-projectRootpath")){
+				if(foundProjectRootpath){
+					reporter.printError("Only one -projectRootpath option allowed.");
+					return false;
+				}
+				foundProjectRootpath = true;
+				projectRootpath = option[1];
+			}else if(option[0].equalsIgnoreCase("-projectClasspath")){
+				if(foundProjectClasspath){
+					reporter.printError("Only one -projectClasspath option allowed.");
+					return false;
+				}
+				foundProjectClasspath = true;
+				projectClasspath = option[1];
+			}
+		}
+		ClassBinding.setClassLoader(ClassLoaderTools.getLoader( projectRootpath, projectClasspath ) );
+		return true;
+	}
 	
 	public static File generarODT(
 			InputStream sourceContent, InputStream sourceStylesheet,
@@ -74,37 +106,33 @@ public class ODT_Generator {
 				entry = zin.getNextEntry();
 			}
 			zin.close();
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			out.putNextEntry(new ZipEntry("content.xml"));
-			aplicarPlantilla(tFactory, sourceContent, sourceStylesheet, out);
-			out.closeEntry();
-			if(manifestStylesheet != null){
-				out.putNextEntry(new ZipEntry("META-INF/manifest.xml"));
-				aplicarPlantilla(tFactory, null, manifestStylesheet, out);
-				out.closeEntry();
-			}
-			out.close();
+//			TransformerFactory tFactory = TransformerFactory.newInstance();
+//			out.putNextEntry(new ZipEntry("content.xml"));
+//			aplicarPlantilla(tFactory, sourceContent, sourceStylesheet, out);
+//			out.closeEntry();
+//			if(manifestStylesheet != null){
+//				out.putNextEntry(new ZipEntry("META-INF/manifest.xml"));
+//				aplicarPlantilla(tFactory, null, manifestStylesheet, out);
+//				out.closeEntry();
+//			}
+//			out.close();
 			return tempFile;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
+	
+	public static boolean start(RootDoc root) throws ClassNotFoundException {
 
-	public static File generarODT(InputStream sourceContent, InputStream sourceStylesheet, File plantillaODT){
-		return generarODT(sourceContent, sourceStylesheet, plantillaODT, null, null);
-	}
+		ClassDoc[] classes = root.classes();
+		
+		XMLConverter converter = new XMLConverter();
+		Recorders.register( converter );
+		converter.setWriter( new XMLWriter(System.out, true) );
 
-	private static void aplicarPlantilla(TransformerFactory tFactory, InputStream source, InputStream stylesheet, OutputStream result){
-		try {
-			Transformer transformer = tFactory.newTransformer(new StreamSource(stylesheet));
-			try {
-				transformer.transform ( new StreamSource(source), new StreamResult (result));
-			} catch (TransformerException e) {
-				e.printStackTrace();
-			}
-		} catch (TransformerConfigurationException e) {
-			e.printStackTrace();
-		}
+		for(ClassDoc classDoc: classes)
+			converter.write( ClassBinding.from(classDoc) );
+		return true;
 	}
 }

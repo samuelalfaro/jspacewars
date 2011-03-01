@@ -24,21 +24,14 @@ text.titulo, text.titulo-abstract{
 
 line, polyline, path, rect{
 	stroke:#000000;
-	stroke-width:1;
-	stroke-linecap:butt;
-	stroke-linejoin:miter;
-	stroke-miterlimit:4;
 	stroke-opacity:1;
-	stroke-dasharray:none;
-	stroke-dashoffset:0;
-	marker:none;
-	visibility:visible;
-	display:inline;
-	overflow:visible;
-	enable-background:accumulate;
+	stroke-width:1;
+	stroke-linecap:round;
+	stroke-linejoin:round;
 	fill:none;
 	fill-opacity:1;
-	fill-rule:nonzero
+	fill-rule:nonzero;
+	shape-rendering:geometricPrecision
 }
 
 path{

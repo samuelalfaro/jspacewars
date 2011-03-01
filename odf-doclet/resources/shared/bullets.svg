@@ -73,6 +73,18 @@
 				<feMergeNode in="SourceGraphic"/>
 			</feMerge>
 		</filter>
+		<filter id="Spec" filterUnits="userSpaceOnUse" x="-2" y="-2" width="38" height="38">
+			<feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+			<feSpecularLighting in="blur" result="specOut"
+				surfaceScale="1"
+				specularConstant=".75" 
+				specularExponent="64" lighting-color="#bbffbb">
+				<fePointLight x="-100" y="-150" z="300"/>
+			</feSpecularLighting>
+			<feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
+			<feComposite in="SourceGraphic" in2="specOut" result="SourceGraphic"
+				operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+		</filter>
 		
 		<filter id="SpecShadow2" filterUnits="userSpaceOnUse" x="-2" y="-2" width="38" height="38">
 			<feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
@@ -92,11 +104,11 @@
 			</feMerge>
 		</filter>
 		
-		<path id="Circulo" d="M -14,0 A 14,14 0 0,1 14,0 A 14,14 0 0,1 -14,0 z"/>
-		<path id="CirculoHueco" d="M -22,0 A 22,22 0 0,1 22,0 A 22,22 0 0,1 -22,0 z M -18,0 A 18,18 0 0,0 18,0 A 18,18 0 0,0 -18,0 z" style="fill-rule:evenodd"/>
-		<path id="Cuadrado" d="M -14,-14 -14,14 14,14 14,-14 Z"/>
-		<path id="CuadradoHueco" d="M -22,-22 -22,22 22,22 22,-22 Z M -18,-18 18,-18 18,18 -18,18 Z" style="fill-rule:evenodd"/>
-		<path id="Rombo" d="M -18,0 0,18 18,0 0,-18 Z"/>
+		<path id="Circulo" d="M -14,0 A 14,14 0 0,1 14,0 A 14,14 0 0,1 -14,0 z" style="shape-rendering:geometricPrecision"/>
+		<path id="CirculoHueco" d="M -22,0 A 22,22 0 0,1 22,0 A 22,22 0 0,1 -22,0 z M -18,0 A 18,18 0 0,0 18,0 A 18,18 0 0,0 -18,0 z" style="fill-rule:evenodd;shape-rendering:geometricPrecision"/>
+		<path id="Cuadrado" d="M -14,-14 -14,14 14,14 14,-14 Z" style="shape-rendering:geometricPrecision"/>
+		<path id="CuadradoHueco" d="M -22,-22 -22,22 22,22 22,-22 Z M -18,-18 18,-18 18,18 -18,18 Z" style="fill-rule:evenodd;shape-rendering:geometricPrecision"/>
+		<path id="Rombo" d="M -18,0 0,18 18,0 0,-18 Z" style="shape-rendering:geometricPrecision"/>
 		<path id="Cruz" d="M -10,-4 -10,4 -4,4 -4,10 4,10 4,4 10,4 10,-4 4,-4 4,-10 -4,-10 -4,-4 Z" style="fill:#FFFFFF;fill-opacity:1;stroke:#008000;stroke-width:2;shape-rendering:geometricPrecision"/>
 		<!--<path id="Almohadilla" d="M -6,-10 -6,-6 -10,-6 -10,-2 -6,-2 -6,2 -10,2 -10,6 -6,6 -6,10 -2,10 -2,6 2,6 2,10 6,10 6,6 10,6 10,2 6,2 6,-2 10,-2 10,-6 6,-6 6,-10 2,-10 2,-6 -2,-6 -2,-10 Z M -2,-2 2,-2 2,2 -2,2 Z" style="fill:#FFFFFF;fill-opacity:1;fill-rule:evenodd;stroke:#000080;stroke-width:2"/>-->
 		<path id="Almohadilla" d="M -7,-10 -7,-7 -10,-7 -10,-1 -7,-1 -7,1 -10,1 -10,7 -7,7 -7,10 -1,10 -1,7 1,7 1,10 7,10 7,7 10,7 10,1 7,1 7,-1 10,-1 10,-7 7,-7 7,-10 1,-10 1,-7 -1,-7 -1,-10 Z M -1,-1 1,-1 1,1 -1,1 Z" style="fill:#FFFFFF;fill-opacity:1;fill-rule:evenodd;stroke:#000080;stroke-width:2;shape-rendering:geometricPrecision"/>
@@ -613,7 +625,7 @@
 				<stop offset="0.6" style="stop-color:#808080; stop-opacity:1;"/>
 				<stop offset="0.7" style="stop-color:#202020; stop-opacity:1;"/>
 			</linearGradient>
-			<path style="fill:url(#darkMetal);stroke:url(#darkMetal2);stroke-width:2;stroke-opacity:1;"
+			<path id="gear1"
 				d="m 12.146793,16.396503 c 0.05706,-0.0095 0.16477,-0.03477
 				0.239371,-0.05617 0.0746,-0.0214 0.18591,-0.04671
 				0.247347,-0.05624 0.06143,-0.0096 0.140927,-0.03442
@@ -1112,7 +1124,7 @@
 				-0.09356,0.15958 l -0.06979,0.07979 -0.76369,0.0032 c
 				-0.441518,0.0018 -0.779009,-0.003 -0.800009,-0.01159 z"
 			/>
-			<path style="fill:url(#darkMetal);stroke:url(#darkMetal2);stroke-width:2;stroke-opacity:1;"
+			<path id="gear2"
 				d="m 24.793473,25.839474 c 0.06143,-0.0085 0.14761,-0.02939
 				0.191494,-0.04628 0.04389,-0.01688 0.13311,-0.04115 0.198282,-0.0539
 				0.06761,-0.01323 0.142983,-0.03998 0.175538,-0.06232
@@ -1380,6 +1392,36 @@
 				-0.09006,0.0248 -0.123037,0.04163 -0.07109,0.03627 -0.05324,0.03741
 				-0.14255,-0.0091 z"
 			/>
+			<use x="0" y="0" xlink:href="#gear1" style="
+				stroke:none;
+				fill:url(#darkMetal);
+				fill-opacity:1;
+				fill-rule:nonzero;
+				shape-rendering:geometricPrecision"
+				filter="url(#Spec)"/>
+			<use x="0" y="0" xlink:href="#gear2" style="
+				stroke:none;
+				fill:url(#darkMetal);
+				fill-opacity:1;
+				fill-rule:nonzero;
+				shape-rendering:geometricPrecision"
+				filter="url(#Spec)"/>
+			<use x="0"  y="0" xlink:href="#gear1" style="
+				stroke:url(#darkMetal2);
+				stroke-opacity:1;
+				stroke-width:2;
+				stroke-linecap:round;
+				stroke-linejoin:round;
+				fill:none;
+				shape-rendering:geometricPrecision"/>
+			<use x="0"  y="0" xlink:href="#gear2" style="
+				stroke:url(#darkMetal2);
+				stroke-opacity:1;
+				stroke-width:2;
+				stroke-linecap:round;
+				stroke-linejoin:round;
+				fill:none;
+				shape-rendering:geometricPrecision"/>
 		</g>
 	</defs>
 	

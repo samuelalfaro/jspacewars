@@ -26,28 +26,28 @@
 		<xsl:param name="count"/>
 		<xsl:param name="xOffsetEnclosingClasses"/>
 		<xsl:choose>
-			<xsl:when test="EnclosingClasses">
+			<xsl:when test='EnclosingClasses'>
 				<xsl:choose>
-					<xsl:when test="$count &lt; count(EnclosingClasses/*)">
+					<xsl:when test='$count &lt; count(EnclosingClasses/*)'>
 						<xsl:variable name="nodeName" select="name(EnclosingClasses/*[$count+1])"/>
 						<xsl:variable name="widthBox1" select="string-length(EnclosingClasses/*[$count+1]/text())*$widthChar2+20"/>
 						<xsl:variable name="widthBox">
 							<xsl:choose>
-								<xsl:when test="$nodeName='Class'">
+								<xsl:when test='$nodeName="Class"'>
 									<xsl:choose>
-										<xsl:when test="$widthBox1 &gt; 80"><xsl:number value="$widthBox1"/></xsl:when>
+										<xsl:when test='$widthBox1 &gt; 80'><xsl:number value="$widthBox1"/></xsl:when>
 										<xsl:otherwise>80</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
-								<xsl:when test="$nodeName='Interface'">
+								<xsl:when test='$nodeName="Interface"'>
 									<xsl:choose>
-										<xsl:when test="$widthBox1 &gt; 120"><xsl:number value="$widthBox1"/></xsl:when>
+										<xsl:when test='$widthBox1 &gt; 120'><xsl:number value="$widthBox1"/></xsl:when>
 										<xsl:otherwise>120</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:choose>
-										<xsl:when test="$widthBox1 &gt; 140"><xsl:number value="$widthBox1"/></xsl:when>
+										<xsl:when test='$widthBox1 &gt; 140'><xsl:number value="$widthBox1"/></xsl:when>
 										<xsl:otherwise>140</xsl:otherwise>
 									</xsl:choose>
 								</xsl:otherwise>
@@ -76,9 +76,9 @@
 		</xsl:variable>
 		<xsl:variable name="xOffsetHierarchy">
 			<xsl:choose>
-				<xsl:when test="Hierarchy">
+				<xsl:when test='Hierarchy'>
 					<xsl:choose>
-						<xsl:when test="Hierarchy/Class[1]/text()='...'"><xsl:number value="( count(Hierarchy/Class) -1 )*40 -10"/></xsl:when>
+						<xsl:when test='Hierarchy/Class[1]/text()="..."'><xsl:number value="( count(Hierarchy/Class) -1 )*40 -10"/></xsl:when>
 						<xsl:otherwise><xsl:number value="( count(Hierarchy/Class) -1 )*40"/></xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -87,10 +87,10 @@
 		</xsl:variable>
 		<xsl:variable name="widthHierarchy">
 			<xsl:choose>
-				<xsl:when test="Hierarchy">
+				<xsl:when test='Hierarchy'>
 					<xsl:for-each select="Hierarchy/Class">
 						<xsl:sort select="string-length(.)" order="descending" data-type="number"/>
-						<xsl:if test="position() = 1">
+						<xsl:if test='position() = 1'>
 							<xsl:number value="string-length(.) * $widthChar2 + 20"/>
 						</xsl:if>
 					</xsl:for-each>
@@ -100,9 +100,9 @@
 		</xsl:variable>
 		<xsl:variable name="heightHierarchy">
 			<xsl:choose>
-				<xsl:when test="Hierarchy">
+				<xsl:when test='Hierarchy'>
 					<xsl:choose>
-						<xsl:when test="Hierarchy/Class[1]/text()='...'"><xsl:number value="count(Hierarchy/Class)*50 +10"/></xsl:when>
+						<xsl:when test='Hierarchy/Class[1]/text()="..."'><xsl:number value="count(Hierarchy/Class)*50 +10"/></xsl:when>
 						<xsl:otherwise><xsl:number value="count(Hierarchy/Class)*50 + 35"/></xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -114,10 +114,10 @@
 		<xsl:variable name="numElements" select="count(Constants/Constant) + count(Fields/Field) + count(Constructors/Constructor) + count(Methods/Method)"/>
 		<xsl:variable name="widthElements">
 			<xsl:choose>
-				<xsl:when test="$numElements &gt; 0">
+				<xsl:when test='$numElements &gt; 0'>
 					<xsl:for-each select="Constants/Constant|Fields/Field|Constructors/Constructor|Methods/Method">
 						<xsl:sort select="string-length(./text())" order="descending" data-type="number"/>
-						<xsl:if test="position() = 1">
+						<xsl:if test='position() = 1'>
 							<xsl:number value="string-length(./text()) * $widthChar1 + 40"/>
 						</xsl:if>
 					</xsl:for-each>
@@ -128,13 +128,13 @@
 		<xsl:variable name="widthParameters" select="string-length(Parameters) * $widthChar2 +20"/>
 		<xsl:variable name="widthBox">
 			<xsl:choose>
-				<xsl:when test="$widthName &gt; $widthElements and $widthName &gt; $widthParameters and $widthName &gt; 140">
+				<xsl:when test='$widthName &gt; $widthElements and $widthName &gt; $widthParameters and $widthName &gt; 140'>
 					<xsl:number value="$widthName"/>
 				</xsl:when>
-				<xsl:when test="$widthElements &gt; $widthParameters and $widthElements &gt; 140">
+				<xsl:when test='$widthElements &gt; $widthParameters and $widthElements &gt; 140'>
 					<xsl:number value="$widthElements"/>
 				</xsl:when>
-				<xsl:when test="$widthParameters &gt; 140">
+				<xsl:when test='$widthParameters &gt; 140'>
 					<xsl:number value="$widthParameters +20"/>
 				</xsl:when>
 				<xsl:otherwise>140</xsl:otherwise>
@@ -142,10 +142,10 @@
 		</xsl:variable>
 		<xsl:variable name="widthInterfaces">
 			<xsl:choose>
-				<xsl:when test="Interfaces">
+				<xsl:when test='Interfaces'>
 					<xsl:for-each select="Interfaces/Interface">
 						<xsl:sort select="string-length(.)" order="descending" data-type="number"/>
-						<xsl:if test="position() = 1">
+						<xsl:if test='position() = 1'>
 							<xsl:number value="string-length(.) * $widthChar1 + 60"/>
 						</xsl:if>
 					</xsl:for-each>
@@ -155,10 +155,10 @@
 		</xsl:variable>
 		<xsl:variable name="xRemainderAux">
 			<xsl:choose>
-				<xsl:when test="Interfaces"><xsl:number value="$widthInterfaces"/></xsl:when>
+				<xsl:when test='Interfaces'><xsl:number value="$widthInterfaces"/></xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
-						<xsl:when test="Parameters"><xsl:number value="20"/></xsl:when>
+						<xsl:when test='Parameters'><xsl:number value="20"/></xsl:when>
 						<xsl:otherwise>0</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
@@ -166,13 +166,13 @@
 		</xsl:variable>
 		<xsl:variable name="xRemainder">
 			<xsl:choose>
-				<xsl:when test="$widthHierarchy - $widthBox  &gt; $xRemainderAux"><xsl:number value="$widthHierarchy - $widthBox"/></xsl:when>
+				<xsl:when test='$widthHierarchy - $widthBox  &gt; $xRemainderAux'><xsl:number value="$widthHierarchy - $widthBox"/></xsl:when>
 				<xsl:otherwise><xsl:number value="$xRemainderAux"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="xOffset">
 			<xsl:choose>
-				<xsl:when test="$xOffsetHierarchy  &gt; $xOffsetEnclosingClasses"><xsl:number value="$xOffsetHierarchy"/></xsl:when>
+				<xsl:when test='$xOffsetHierarchy  &gt; $xOffsetEnclosingClasses'><xsl:number value="$xOffsetHierarchy"/></xsl:when>
 				<xsl:otherwise><xsl:number value="$xOffsetEnclosingClasses"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -180,7 +180,7 @@
 
 		<xsl:variable name="height">
 			<xsl:choose>
-				<xsl:when test="$numElements &gt; 0">
+				<xsl:when test='$numElements &gt; 0'>
 					<xsl:number value="($numElements + 1) * 20 + 5"/>
 				</xsl:when>
 				<xsl:otherwise>20</xsl:otherwise>
@@ -189,23 +189,23 @@
 
 		<xsl:variable name="heightBox">
 			<xsl:choose>
-				<xsl:when test="name(.)='Enum'"><xsl:number value="$height + 10"/></xsl:when>
+				<xsl:when test='name(.)="Enum"'><xsl:number value="$height + 10"/></xsl:when>
 				<xsl:otherwise><xsl:number value="$height"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="heightInterfaces" select="count(Interfaces/Interface)*30 - 25"/>
 		<xsl:variable name="heightMax">
 			<xsl:choose>
-				<xsl:when test="$heightBox &gt; $heightInterfaces"><xsl:number value="$heightBox"/></xsl:when>
+				<xsl:when test='$heightBox &gt; $heightInterfaces'><xsl:number value="$heightBox"/></xsl:when>
 				<xsl:otherwise><xsl:number value="$heightInterfaces"/></xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="yLine">
 			<xsl:choose>
-				<xsl:when test="name(.)='Class'">
+				<xsl:when test='name(.)="Class"'>
 					<xsl:number value="( count(Fields/Field) )*20 + 33"/>
 				</xsl:when>
-				<xsl:when test="name(.)='Interface'">
+				<xsl:when test='name(.)="Interface"'>
 					<xsl:number value="( count(Fields/Field) )*20 + 53"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -215,23 +215,23 @@
 		</xsl:variable>
 		<xsl:variable name="estilo">
 			<xsl:choose>
-				<xsl:when test="name(.)='Class'">estilo1</xsl:when>
-				<xsl:when test="name(.)='Interface'">estilo2</xsl:when>
+				<xsl:when test='name(.)="Class"'>estilo1</xsl:when>
+				<xsl:when test='name(.)="Interface"'>estilo2</xsl:when>
 				<xsl:otherwise>estilo3</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:variable name="yOffset">
 			<xsl:choose>
-				<xsl:when test="Hierarchy"><xsl:number value="$heightHierarchy"/></xsl:when>
-				<xsl:when test="Parameters">30</xsl:when>
-				<xsl:when test="name(.)='Class' and (EnclosingClasses/Interface|EnclosingClasses/Enum)">30</xsl:when>
+				<xsl:when test='Hierarchy'><xsl:number value="$heightHierarchy"/></xsl:when>
+				<xsl:when test='Parameters'>30</xsl:when>
+				<xsl:when test='name(.)="Class" and (EnclosingClasses/Interface|EnclosingClasses/Enum)'>30</xsl:when>
 				<xsl:otherwise>10</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="prefixYOffset">
 			<xsl:choose>
-				<xsl:when test="name(.)='Class'">0</xsl:when>
+				<xsl:when test='name(.)="Class"'>0</xsl:when>
 				<xsl:otherwise>20</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -244,7 +244,7 @@
 			<xsl:attribute name="version">1.1</xsl:attribute>
 
 			<!-- Fondo -->
-			<xsl:if test="$background !='none'">
+			<xsl:if test='$background !="none"'>
 				<xsl:element name="rect" xml:space="default">
 					<xsl:attribute name="x">0</xsl:attribute>
 					<xsl:attribute name="y">0</xsl:attribute>
@@ -254,11 +254,11 @@
 				</xsl:element>
 			</xsl:if>
 
-			<xsl:if test="Hierarchy">
+			<xsl:if test='Hierarchy'>
 				<xsl:call-template name="drawHierarchy">
 					<xsl:with-param name="xOffset">
 						<xsl:choose>
-							<xsl:when test="$xOffsetHierarchy &lt; $xOffsetEnclosingClasses"><xsl:number value="$xOffsetEnclosingClasses - $xOffsetHierarchy "/></xsl:when>
+							<xsl:when test='$xOffsetHierarchy &lt; $xOffsetEnclosingClasses'><xsl:number value="$xOffsetEnclosingClasses - $xOffsetHierarchy "/></xsl:when>
 							<xsl:otherwise>0</xsl:otherwise>
 						</xsl:choose>
 					</xsl:with-param>
@@ -266,7 +266,7 @@
 				</xsl:call-template>
 			</xsl:if>
 
-			<xsl:if test="EnclosingClasses">
+			<xsl:if test='EnclosingClasses'>
 				<xsl:call-template name="drawEnclosingClassesR">
 					<xsl:with-param name="count"  select="0"/>
 					<xsl:with-param name="xOffsetEnclosingClasses" select="10"/>
@@ -276,7 +276,7 @@
 			</xsl:if>
 
 			<xsl:element name="g" xml:space="default">
-				<xsl:attribute name="transform">translate(<xsl:number value="10 + $xOffset"/>, <xsl:number value="$yOffset"/>)</xsl:attribute>              
+				<xsl:attribute name="transform">translate(<xsl:number value="10 + $xOffset"/>,<xsl:number value="$yOffset"/>)</xsl:attribute>              
 
 				<xsl:call-template name="drawInterfaces">
 					<xsl:with-param name="xOffset" select="$widthBox"/>
@@ -290,7 +290,7 @@
 						<xsl:with-param name="yLine1" select="$yLine"/>
 						<xsl:with-param name="yLine2">
 							<xsl:choose>
-								<xsl:when test="name(.)='Enum'"><xsl:value-of select="count(Constants/Constant)*20 + 53"/></xsl:when>
+								<xsl:when test='name(.)="Enum"'><xsl:value-of select="count(Constants/Constant)*20 + 53"/></xsl:when>
 								<xsl:otherwise>0</xsl:otherwise>
 							</xsl:choose>
 						</xsl:with-param>
@@ -298,7 +298,7 @@
 					</xsl:call-template>
 				</g>
 
-				<xsl:if test="Parameters">
+				<xsl:if test='Parameters'>
 					<g filter="url(shared/defs.svg#SpecShadow2)" >
 						<xsl:element name="rect" xml:space="default">
 							<xsl:attribute name="class">parameters-<xsl:value-of select="$estilo"/></xsl:attribute>
@@ -317,8 +317,8 @@
 					<xsl:with-param name="center" select="$widthBox div 2"/>
 					<xsl:with-param name="prefix">
 						<xsl:choose>
-							<xsl:when test="name(.)='Interface'"><![CDATA[<< interface >>]]></xsl:when>
-							<xsl:when test="name(.)='Enum'"><![CDATA[<< enumeration >>]]></xsl:when>
+							<xsl:when test='name(.)="Interface"'><![CDATA[<< interface >>]]></xsl:when>
+							<xsl:when test='name(.)="Enum"'><![CDATA[<< enumeration >>]]></xsl:when>
 						</xsl:choose>
 					</xsl:with-param>
 					<xsl:with-param name="title" select="@name"/>
@@ -327,7 +327,7 @@
 
 				<xsl:element name="g" xml:space="default">
 					<xsl:attribute name="transform"><xsl:value-of select="concat('translate(7, ', 10 + $prefixYOffset, ')')"/></xsl:attribute>
-					<xsl:if test="name(.)='Enum'">
+					<xsl:if test='name(.)="Enum"'>
 						<xsl:apply-templates select="Constants"/>
 					</xsl:if>
 					<xsl:apply-templates select="Fields|Constructors|Methods"/>
@@ -366,7 +366,7 @@
 			<xsl:attribute name="x2"><xsl:number value="$width"/></xsl:attribute>
 			<xsl:attribute name="y2"><xsl:number value="$yLine1"/></xsl:attribute>
 		</xsl:element>
-		<xsl:if test="$yLine2 &gt; 0">
+		<xsl:if test='$yLine2 &gt; 0'>
 			<xsl:element name="line">
 				<xsl:attribute name="x1">0</xsl:attribute>
 				<xsl:attribute name="y1"><xsl:number value="$yLine2"/></xsl:attribute>
@@ -382,7 +382,7 @@
 		<xsl:param name="title"/>
 		<xsl:param name="isAbstract"/>
 		<xsl:choose>
-			<xsl:when test="string-length($prefix) &gt; 0">
+			<xsl:when test='string-length($prefix) &gt; 0'>
 				<xsl:element name="text">
 					<xsl:attribute name="x"><xsl:number value="$center"/></xsl:attribute>
 					<xsl:attribute name="y">18</xsl:attribute>
@@ -390,7 +390,7 @@
 					<xsl:value-of select="$prefix"/>
 				</xsl:element>
 				<xsl:element name="text" xml:space="default">
-					<xsl:attribute name="class">titulo<xsl:if test="$isAbstract='true'">-abstract</xsl:if></xsl:attribute>
+					<xsl:attribute name="class">titulo<xsl:if test='$isAbstract="true"'>-abstract</xsl:if></xsl:attribute>
 					<xsl:attribute name="x"><xsl:number value="$center"/></xsl:attribute>
 					<xsl:attribute name="y">38</xsl:attribute>
 					<xsl:value-of select="$title"/>
@@ -398,7 +398,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:element name="text" xml:space="default">
-					<xsl:attribute name="class">titulo<xsl:if test="$isAbstract='true'">-abstract</xsl:if></xsl:attribute>
+					<xsl:attribute name="class">titulo<xsl:if test='$isAbstract="true"'>-abstract</xsl:if></xsl:attribute>
 					<xsl:attribute name="x"><xsl:number value="$center"/></xsl:attribute>
 					<xsl:attribute name="y">18</xsl:attribute>
 					<xsl:value-of select="$title"/>
@@ -411,7 +411,7 @@
 		<xsl:param name="xOffset"/>
 		<xsl:param name="widthBoxes"/>
 		<xsl:element name="g" xml:space="default">
-			<xsl:if test="Hierarchy/Class[1]/text()='...'">
+			<xsl:if test='Hierarchy/Class[1]/text()="..."'>
 				<xsl:attribute name="transform">translate(-10, -25)</xsl:attribute>
 			</xsl:if>
 			<xsl:for-each select="Hierarchy/Class">
@@ -421,7 +421,7 @@
 					<xsl:attribute name="class">hierarchy-conector</xsl:attribute>
 					<xsl:attribute name="points">
 						<xsl:choose>
-							<xsl:when test="position() = last()">
+							<xsl:when test='position() = last()'>
 								<xsl:value-of select="concat($x, ',', $y, ' ', $x, ',', $y + 40)"/>
 							</xsl:when>
 							<xsl:otherwise>
@@ -438,7 +438,7 @@
 				<xsl:element name="g" xml:space="default">
 					<xsl:attribute name="transform">translate(<xsl:number value="( position() -1 )*40 + 10 + $xOffset"/>, <xsl:number value="( position() -1 )*50 +10"/>)</xsl:attribute>
 					<xsl:choose>
-						<xsl:when test="position() = 1 and text()='...'">
+						<xsl:when test='position() = 1 and text()="..."'>
 							<text class="titulo" x="20" y="30">...</text>
 						</xsl:when>
 						<xsl:otherwise>
@@ -470,26 +470,26 @@
 		<xsl:param name="xOffsetEnclosingClasses"/>
 		<xsl:param name="yOffset"/>
 		<xsl:param name="childYOffset"/>
-		<xsl:if test="$count &lt; count(EnclosingClasses/*)">
+		<xsl:if test='$count &lt; count(EnclosingClasses/*)'>
 			<xsl:variable name="nodeName" select="name(EnclosingClasses/*[$count+1])"/>
 			<xsl:variable name="widthBox1" select="string-length(EnclosingClasses/*[$count+1]/text())*$widthChar2+20"/>
 			<xsl:variable name="widthBox">
 				<xsl:choose>
-					<xsl:when test="$nodeName='Class'">
+					<xsl:when test='$nodeName="Class"'>
 						<xsl:choose>
-							<xsl:when test="$widthBox1 &gt; 80"><xsl:number value="$widthBox1"/></xsl:when>
+							<xsl:when test='$widthBox1 &gt; 80'><xsl:number value="$widthBox1"/></xsl:when>
 							<xsl:otherwise>80</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
-					<xsl:when test="$nodeName='Interface'">
+					<xsl:when test='$nodeName="Interface"'>
 						<xsl:choose>
-							<xsl:when test="$widthBox1 &gt; 120"><xsl:number value="$widthBox1"/></xsl:when>
+							<xsl:when test='$widthBox1 &gt; 120'><xsl:number value="$widthBox1"/></xsl:when>
 							<xsl:otherwise>120</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
-							<xsl:when test="$widthBox1 &gt; 140"><xsl:number value="$widthBox1"/></xsl:when>
+							<xsl:when test='$widthBox1 &gt; 140'><xsl:number value="$widthBox1"/></xsl:when>
 							<xsl:otherwise>140</xsl:otherwise>
 						</xsl:choose>
 					</xsl:otherwise>
@@ -497,7 +497,7 @@
 			</xsl:variable>
 			<xsl:variable name="prefixYOffset">
 				<xsl:choose>
-					<xsl:when test="$nodeName='Class'">0</xsl:when>
+					<xsl:when test='$nodeName="Class"'>0</xsl:when>
 					<xsl:otherwise>20</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
@@ -512,8 +512,8 @@
 						<xsl:with-param name="yLine2" select="0"/>
 						<xsl:with-param name="estilo">
 							<xsl:choose>
-								<xsl:when test="$nodeName='Class'">estilo1</xsl:when>
-								<xsl:when test="$nodeName='Interface'">estilo2</xsl:when>
+								<xsl:when test='$nodeName="Class"'>estilo1</xsl:when>
+								<xsl:when test='$nodeName="Interface"'>estilo2</xsl:when>
 								<xsl:otherwise>estilo3</xsl:otherwise>
 							</xsl:choose>
 						</xsl:with-param>
@@ -523,8 +523,8 @@
 					<xsl:with-param name="center" select="$widthBox div 2"/>
 					<xsl:with-param name="prefix">
 						<xsl:choose>
-							<xsl:when test="$nodeName='Interface'"><![CDATA[<< interface >>]]></xsl:when>
-							<xsl:when test="$nodeName='Enum'"><![CDATA[<< enumeration >>]]></xsl:when>
+							<xsl:when test='$nodeName="Interface"'><![CDATA[<< interface >>]]></xsl:when>
+							<xsl:when test='$nodeName="Enum"'><![CDATA[<< enumeration >>]]></xsl:when>
 						</xsl:choose>
 					</xsl:with-param>
 					<xsl:with-param name="title" select="EnclosingClasses/*[$count+1]/text()"/>
@@ -551,7 +551,7 @@
 		<xsl:param name="xOffset"/>
 		<xsl:variable name="yOffset">
 			<xsl:choose>
-				<xsl:when test="name(.)='Class'">14</xsl:when>
+				<xsl:when test='name(.)="Class"'>14</xsl:when>
 				<xsl:otherwise>34</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -561,12 +561,12 @@
 				<xsl:attribute name="class">interface-conector</xsl:attribute>
 				<xsl:attribute name="points">
 					<xsl:choose>
-						<xsl:when test="position() = 1">
+						<xsl:when test='position() = 1'>
 							<xsl:value-of select="concat($xOffset, ',', $y, ' ', $xOffset + 51, ',', $y)"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
-								<xsl:when test="position() = last()">
+								<xsl:when test='position() = last()'>
 									<xsl:value-of select="concat(
 										$xOffset + 15, ',', $yOffset, ' ',
 										$xOffset + 15, ',', $y - 10, ' ',
@@ -604,257 +604,170 @@
 	
 	<xsl:template match="Constants">
 		<xsl:for-each select="Constant">
+			<xsl:variable name="y"><xsl:number value=" position() *20"/></xsl:variable>
 			<xsl:element name="use" xml:space="default">
 				<xsl:attribute name="x">0</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value="position()*20"/></xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 				<xsl:attribute name="xlink:href">shared/defs.svg#EnumConstant</xsl:attribute>
 			</xsl:element>
 			<xsl:element name="text" xml:space="default">
 				<xsl:attribute name="class">static</xsl:attribute>
 				<xsl:attribute name="x">23</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value="position()*20 +13"/></xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value='$y +13'/></xsl:attribute>
 				<xsl:value-of select="text()"/>
 			</xsl:element>
 		</xsl:for-each>
 	</xsl:template>
+	
+	<xsl:template name="Modifiers">
+		<xsl:choose>
+			<xsl:when test='@isStatic="true"'>Static</xsl:when>
+			<xsl:when test='@isAbstract="true"'>Abstract</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="Visibility">
+		<xsl:choose>
+			<xsl:when test='@visibility="+"'>Public</xsl:when>
+			<xsl:when test='@visibility="#"'>Protected</xsl:when>
+			<xsl:when test='@visibility="~"'>Package</xsl:when>
+			<xsl:when test='@visibility="-"'>Private</xsl:when>
+		</xsl:choose>
+	</xsl:template>
 
 	<xsl:template match="Fields">
+		<xsl:variable name="yOffset">
+			<xsl:choose>
+				<xsl:when test='name(..)="Enum"'>
+					<xsl:number value="( count(../Constants/Constant) )*20 + 10"/>
+				</xsl:when>
+				<xsl:otherwise>0</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:for-each select="Field">
-			<xsl:variable name="yOffset">
-				<xsl:choose>
-					<xsl:when test="name(../..)='Enum'">
-						<xsl:number value="( count(../../Constants/Constant) )*20 + 10"/>
-					</xsl:when>
-					<xsl:otherwise>0</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
+			<xsl:variable name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:variable>
 			<xsl:element name="use">
 				<xsl:attribute name="x">0</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
-				<xsl:choose>
-					<xsl:when test="@visibility='+'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicField</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#PublicField</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="@visibility='#'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedField</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedField</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="@visibility='~'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageField</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#PackageField</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="@visibility='-'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateField</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#PrivateField</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-				</xsl:choose>
+				<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
+				<xsl:attribute name="xlink:href">shared/defs.svg#<xsl:call-template name="Modifiers"/>
+					<xsl:call-template name="Visibility"/>Field</xsl:attribute>
 			</xsl:element>
-			<xsl:if test="@isTransient='true'">
+			<xsl:if test='@isTransient="true"'>
 				<xsl:element name="use">
 					<xsl:attribute name="x">0</xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 					<xsl:attribute name="xlink:href">shared/defs.svg#Transient</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
-			<xsl:if test="@isVolatile='true'">
+			<xsl:if test='@isVolatile="true"'>
 				<xsl:element name="use">
 					<xsl:attribute name="x">0</xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 					<xsl:attribute name="xlink:href">shared/defs.svg#Volatile</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
-			<xsl:if test="@isFinal='true'">
+			<xsl:if test='@isFinal="true"'>
 				<xsl:element name="use">
 					<xsl:attribute name="x">0</xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 					<xsl:attribute name="xlink:href">shared/defs.svg#Final</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
 			<xsl:element name="text">
-				<xsl:choose>
-					<xsl:when test="@isStatic='true'">
-					  <xsl:attribute name="class">static</xsl:attribute>
-					</xsl:when>
-					<xsl:when test="@isAbstract='true'">
-					  <xsl:attribute name="class">abstract</xsl:attribute>
-					</xsl:when>
-				</xsl:choose>
+				<xsl:if test='@isStatic="true"'>
+					<xsl:attribute name="class">static</xsl:attribute>
+				</xsl:if>
 				<xsl:attribute name="x">23</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value='$y + 13'/></xsl:attribute>
 				<xsl:value-of select="text()"/>
 			</xsl:element>
 		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="Constructors">
+		<xsl:variable name="yOffset">
+			<xsl:choose>
+				<xsl:when test='name(..)="Enum"'>
+					<xsl:number value="( count(../Constants/Constant) + count(../Fields/Field) )*20 + 20"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:number value="( count(../Fields/Field) )*20 + 10"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:for-each select="Constructor">
-			<xsl:variable name="yOffset">
-				<xsl:choose>
-					<xsl:when test="name(../..)='Enum'">
-						<xsl:number value="( count(../../Constants/Constant) + count(../../Fields/Field) )*20 + 20"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:number value="( count(../../Fields/Field) )*20 + 10"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
+			<xsl:variable name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:variable>
 			<xsl:element name="use" xml:space="default">
 				<xsl:attribute name="x">0</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:attribute>
-				<xsl:choose>
-					<xsl:when test="@visibility='+'">
-						<xsl:attribute name="xlink:href">shared/defs.svg#PublicConstructor</xsl:attribute>
-					</xsl:when>
-					<xsl:when test="@visibility='#'">
-						<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedConstructor</xsl:attribute>
-					</xsl:when>
-					<xsl:when test="@visibility='~'">
-						<xsl:attribute name="xlink:href">shared/defs.svg#PackageConstructor</xsl:attribute>
-					</xsl:when>
-					<xsl:when test="@visibility='-'">
-						<xsl:attribute name="xlink:href">shared/defs.svg#PrivateConstructor</xsl:attribute>
-					</xsl:when>
-				</xsl:choose>
+				<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
+				<xsl:attribute name="xlink:href">shared/defs.svg#<xsl:call-template name="Visibility"/>Constructor</xsl:attribute>
 			</xsl:element>
 			<xsl:element name="text" xml:space="default">
 				<xsl:attribute name="x">23</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset +13"/></xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value='$y + 13'/></xsl:attribute>
 				<xsl:value-of select="text()"/>
 			</xsl:element>
 		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="Methods">
+		<xsl:variable name="yOffset">
+			<xsl:choose>
+				<xsl:when test='name(..)="Enum"'>
+					<xsl:number value="( count(../Constants/Constant) + count(../Fields/Field) + count(../Constructors/Constructor) )*20 + 20"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:number value="( count(../Fields/Field) + count(../Constructors/Constructor) )*20 + 10"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:for-each select="Method">
-			<xsl:variable name="yOffset">
-				<xsl:choose>
-					<xsl:when test="name(../..)='Enum'">
-						<xsl:number value="( count(../../Constants/Constant) + count(../../Fields/Field) + count(../../Constructors/Constructor) )*20 + 20"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:number value="( count(../../Fields/Field) + count(../../Constructors/Constructor) )*20 + 10"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			<xsl:element name="use" xml:space="default">
+			<xsl:variable name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:variable>
+			<xsl:element name="use">
 				<xsl:attribute name="x">0</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value=" position() *20 + $yOffset"/></xsl:attribute>
-				<xsl:choose>
-					<xsl:when test="@visibility='+'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPublicMethod</xsl:attribute>
-							</xsl:when>
-							<xsl:when test="@isAbstract='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPublicMethod</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#PublicMethod</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="@visibility='#'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticProtectedMethod</xsl:attribute>
-							</xsl:when>
-							<xsl:when test="@isAbstract='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#AbstractProtectedMethod</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#ProtectedMethod</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="@visibility='~'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPackageMethod</xsl:attribute>
-							</xsl:when>
-							<xsl:when test="@isAbstract='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#AbstractPackageMethod</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#PackageMethod</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="@visibility='-'">
-						<xsl:choose>
-							<xsl:when test="@isStatic='true'">
-								<xsl:attribute name="xlink:href">shared/defs.svg#StaticPrivateMethod</xsl:attribute>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:attribute name="xlink:href">shared/defs.svg#PrivateMethod</xsl:attribute>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-				</xsl:choose>
+				<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
+				<xsl:attribute name="xlink:href">shared/defs.svg#<xsl:call-template name="Modifiers"/>
+					<xsl:call-template name="Visibility"/>Method</xsl:attribute>
 			</xsl:element>
-			<xsl:if test="@isNative='true'">
+			<xsl:if test='@isNative="true"'>
 				<xsl:element name="use">
 					<xsl:attribute name="x">0</xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 					<xsl:attribute name="xlink:href">shared/defs.svg#Native</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
-			<xsl:if test="@isStrictfp='true'">
+			<xsl:if test='@isStrictfp="true"'>
 				<xsl:element name="use">
 					<xsl:attribute name="x">0</xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 					<xsl:attribute name="xlink:href">shared/defs.svg#Strictfp</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
-			<xsl:if test="@isFinal='true'">
+			<xsl:if test='@isFinal="true"'>
 				<xsl:element name="use">
 					<xsl:attribute name="x">0</xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 					<xsl:attribute name="xlink:href">shared/defs.svg#Final</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
-			<xsl:if test="@isSynchronized='true'">
+			<xsl:if test='@isSynchronized="true"'>
 				<xsl:element name="use">
 					<xsl:attribute name="x">0</xsl:attribute>
-					<xsl:attribute name="y"><xsl:number value="position()*20 + $yOffset"/></xsl:attribute>
+					<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
 					<xsl:attribute name="xlink:href">shared/defs.svg#Synchronized</xsl:attribute>
 				</xsl:element>
 			</xsl:if>
 			<xsl:element name="text" xml:space="default">
 				<xsl:choose>
-					<xsl:when test="@isStatic='true'">
+					<xsl:when test='@isStatic="true"'>
 					  <xsl:attribute name="class">static</xsl:attribute>
 					</xsl:when>
-					<xsl:when test="@isAbstract='true'">
+					<xsl:when test='@isAbstract="true"'>
 					  <xsl:attribute name="class">abstract</xsl:attribute>
 					</xsl:when>
 				</xsl:choose>
 				<xsl:attribute name="x">23</xsl:attribute>
-				<xsl:attribute name="y"><xsl:number value="position() *20 + $yOffset +13"/></xsl:attribute>
+				<xsl:attribute name="y"><xsl:number value='$y + 13'/></xsl:attribute>
 				<xsl:value-of select="text()"/>
 			</xsl:element>
 		</xsl:for-each>

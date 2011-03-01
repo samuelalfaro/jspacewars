@@ -1,5 +1,5 @@
 /* 
- * XMLPrinter.java
+ * XMLWriter.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -25,13 +25,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
-import java.util.Collection;
 import java.util.Deque;
 
 /**
  * 
  */
-public final class XMLPrinter{
+public final class XMLWriter{
 	
 	/*
 	private static class StringPrintStream extends PrintStream{
@@ -85,8 +84,7 @@ public final class XMLPrinter{
 		String get();
 	}
 	
-	
-	private static final PrintStream toPrintStream(OutputStream out){
+	private static PrintStream toPrintStream(OutputStream out){
 		if (out instanceof PrintStream)
 			return (PrintStream)out;
 		try {
@@ -104,7 +102,7 @@ public final class XMLPrinter{
 	private final String eol;
 	private int previousNodeDepth;
 	
-	public XMLPrinter( OutputStream out, boolean tabulate ) {
+	public XMLWriter( OutputStream out, boolean tabulate ) {
 		this.out = toPrintStream(out);
 		this.nodeStack = new ArrayDeque<String>();
 		this.attributes = new StringBuffer(512);
@@ -119,11 +117,11 @@ public final class XMLPrinter{
 		this.previousNodeDepth = 0;
 	}
 	
-	public XMLPrinter(	OutputStream out ) {
+	public XMLWriter( OutputStream out ) {
 		this(out, false);
 	}
 	
-	final private boolean flushPreviousNode(){
+	private boolean flushPreviousNode(){
 		if( nodeStack.size() == previousNodeDepth )
 			return false;
 		if( attributes.length() > 0 ){
@@ -133,7 +131,7 @@ public final class XMLPrinter{
 		return true;
 	}
 	
-	final public void openNode(String nodeName) {
+	public void openNode(String nodeName) {
 		if(flushPreviousNode())
 			out.append(">").append(eol);
 		out.append(tabs.get()).append('<').append(nodeName);
@@ -141,41 +139,41 @@ public final class XMLPrinter{
 		tabs.add();
 	}
 	
-	final public void addAttribute(String name, String value) {
+	public void addAttribute(String name, String value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	final public void addAttribute(String name, boolean value) {
+	public void addAttribute(String name, boolean value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	final public void addAttribute(String name, char value) {
+	public void addAttribute(String name, char value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	final public void addAttribute(String name, int value) {
+	public void addAttribute(String name, int value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	final public void addAttribute(String name, long value) {
+	public void addAttribute(String name, long value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	final public void addAttribute(String name, float value) {
+	public void addAttribute(String name, float value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	final public void addAttribute(String name, double value) {
+	public void addAttribute(String name, double value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	final public void addAttribute(String name, Object value) {
+	public void addAttribute(String name, Object value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
 	private transient boolean hasContent = false;
 	
-	final public void print(String content) {
+	public void write(String content) {
 		hasContent = content != null && content.length() > 0;
 		if( hasContent ){
 			flushPreviousNode();
@@ -183,24 +181,7 @@ public final class XMLPrinter{
 		}
 	}
 	
-	final public void print(String nodeName, String content) {
-		if( content != null && content.length() > 0 ){
-			openNode(nodeName);
-				print(content);
-			closeNode();
-		}
-	}
-	
-	final public <T extends XMLSerializable> void print(String nodeName, Collection<T> collection){
-		if( collection != null && collection.size() > 0 ){
-			openNode( nodeName );
-			for(T element: collection)
-				element.toXML(this);
-			closeNode();
-		}
-	}
-	
-	final public void closeNode() {
+	public void closeNode() {
 		tabs.remove();
 		if( nodeStack.size() != previousNodeDepth ){
 			if(hasContent){

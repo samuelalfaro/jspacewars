@@ -1,5 +1,5 @@
 /* 
- * XMLSerializable.java
+ * XMLConverter.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -21,6 +21,28 @@
  */
 package org.sam.xml;
 
-public interface XMLSerializable{
-	void toXML(XMLPrinter out);
+/**
+ * 
+ */
+public class XMLConverter {
+	
+	private final RecordersMapper mapper;
+	private XMLWriter writer;
+	
+	public XMLConverter(){
+		this.mapper = new RecordersMapper();
+	}
+	
+	public void setWriter(XMLWriter writer){
+		this.writer = writer;
+	}
+	
+	public <T> void register( Recorder<T> recorder ){
+		mapper.putRecorder( recorder );
+	}
+
+	public <T> void write( T t ){
+		mapper.getRecorder( t.getClass() ).record( t, writer, mapper );
+	}
+
 }

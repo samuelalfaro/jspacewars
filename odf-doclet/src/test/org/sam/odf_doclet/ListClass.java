@@ -35,6 +35,7 @@ import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
 @SuppressWarnings("unused")
+@Deprecated
 public class ListClass {
 	
 	private static final Comparator<PackageDoc> COMPARADOR_DE_PACKAGES = new Comparator<PackageDoc>() {
@@ -77,7 +78,7 @@ public class ListClass {
 		}
 	};
 	
-	private static void printCollection(Collection<ClassDoc> collection, String title){
+	private static void print(String title, Collection<ClassDoc> collection){
 		if(collection.size() > 0){
 			System.err.println(title);
 			for(ClassDoc classDoc: collection)
@@ -86,6 +87,7 @@ public class ListClass {
 	}
 	
 	public static boolean start(RootDoc root) {
+		
 		ClassDoc[] classes = root.classes();
 		for(ClassDoc classDoc: classes){
 			if(classDoc.containingPackage().name().equals(""))
@@ -93,22 +95,22 @@ public class ListClass {
 		}
 
 		SortedSet<PackageDoc> sortedPackages = new TreeSet<PackageDoc>(COMPARADOR_DE_PACKAGES);
-		sortedPackages.addAll(Arrays.asList(root.specifiedPackages()));
+		sortedPackages.addAll( Arrays.asList(root.specifiedPackages()) );
 
 		for(PackageDoc packageDoc: sortedPackages){
 			System.err.println(packageDoc+"\n");
 			SortedSet<ClassDoc> sortedInterfaces = new TreeSet<ClassDoc>(COMPARADOR_POR_NOMBRE);
-			SortedSet<ClassDoc> sortedClasses = new TreeSet<ClassDoc>(COMPARADOR_DE_CLASES);
-			SortedSet<ClassDoc> sortedException = new TreeSet<ClassDoc>(COMPARADOR_POR_NOMBRE);
-			SortedSet<ClassDoc> sortedEnums = new TreeSet<ClassDoc>(COMPARADOR_POR_NOMBRE);
+			SortedSet<ClassDoc> sortedClasses    = new TreeSet<ClassDoc>(COMPARADOR_DE_CLASES);
+			SortedSet<ClassDoc> sortedException  = new TreeSet<ClassDoc>(COMPARADOR_POR_NOMBRE);
+			SortedSet<ClassDoc> sortedEnums      = new TreeSet<ClassDoc>(COMPARADOR_POR_NOMBRE);
 
 			sortedInterfaces.addAll(Arrays.asList(packageDoc.interfaces()));
 			sortedException.addAll(Arrays.asList(packageDoc.exceptions()));
 			sortedClasses.addAll(Arrays.asList(packageDoc.ordinaryClasses()));
 			sortedEnums.addAll(Arrays.asList(packageDoc.enums()));
 			
-			printCollection(sortedInterfaces, "Interfaces:");
-			printCollection(sortedException, "Exceptions:");
+			print("Interfaces:", sortedInterfaces);
+			print("Exceptions:", sortedException);
 			
 			if(sortedClasses.size() > 0){
 				System.err.println("Classes:");
@@ -142,7 +144,7 @@ public class ListClass {
 					
 				}
 			}
-			printCollection(sortedEnums, "Enumerations:");
+			print("Enumerations:", sortedEnums);
 			System.err.println();
 		}
 

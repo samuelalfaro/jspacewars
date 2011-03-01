@@ -34,33 +34,33 @@ public class TestCompareVisibility {
 	
 	public static void main(String... args) {
 
-		Visibility v1 = Visibility.PUBLIC;
-		Visibility v2 = Visibility.PROTECTED;
-		Visibility v3 = Visibility.PACKAGE;
-		Visibility v4 = Visibility.PRIVATE;
+		Visibility v1 = Visibility.Public;
+		Visibility v2 = Visibility.Protected;
+		Visibility v3 = Visibility.Package;
+		Visibility v4 = Visibility.Private;
 		
-		printComparation(v1, Visibility.PUBLIC);
-		printComparation(v1, Visibility.PROTECTED);
-		printComparation(v1, Visibility.PACKAGE);
-		printComparation(v1, Visibility.PRIVATE);
-		
-		System.out.println();
-		printComparation(v2, Visibility.PUBLIC);
-		printComparation(v2, Visibility.PROTECTED);
-		printComparation(v2, Visibility.PACKAGE);
-		printComparation(v2, Visibility.PRIVATE);
+		printComparation(v1, Visibility.Public);
+		printComparation(v1, Visibility.Protected);
+		printComparation(v1, Visibility.Package);
+		printComparation(v1, Visibility.Private);
 		
 		System.out.println();
-		printComparation(v3, Visibility.PUBLIC);
-		printComparation(v3, Visibility.PROTECTED);
-		printComparation(v3, Visibility.PACKAGE);
-		printComparation(v3, Visibility.PRIVATE);
+		printComparation(v2, Visibility.Public);
+		printComparation(v2, Visibility.Protected);
+		printComparation(v2, Visibility.Package);
+		printComparation(v2, Visibility.Private);
 		
 		System.out.println();
-		printComparation(v4, Visibility.PUBLIC);
-		printComparation(v4, Visibility.PROTECTED);
-		printComparation(v4, Visibility.PACKAGE);
-		printComparation(v4, Visibility.PRIVATE);
+		printComparation(v3, Visibility.Public);
+		printComparation(v3, Visibility.Protected);
+		printComparation(v3, Visibility.Package);
+		printComparation(v3, Visibility.Private);
+		
+		System.out.println();
+		printComparation(v4, Visibility.Public);
+		printComparation(v4, Visibility.Protected);
+		printComparation(v4, Visibility.Package);
+		printComparation(v4, Visibility.Private);
 
 	}
 }

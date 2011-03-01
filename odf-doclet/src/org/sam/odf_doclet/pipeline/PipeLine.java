@@ -43,15 +43,23 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.sam.odf_doclet.bindings.ClassBinding;
+import org.sam.odf_doclet.bindings.Recorders;
 import org.sam.pipeline.Filter;
 import org.sam.pipeline.FilterAbs;
 import org.sam.pipeline.FilterException;
 import org.sam.pipeline.Filterable;
-import org.sam.xml.XMLPrinter;
+import org.sam.xml.XMLConverter;
+import org.sam.xml.XMLWriter;
 
 class ToXML implements Filterable{
 
+	private final XMLConverter converter;
 	private ClassBinding clazz;
+	
+	ToXML(){
+		converter = new XMLConverter();
+		Recorders.register(converter);
+	}
 
 	/**
 	 * @param clazz valor del clazz asignado.
@@ -65,7 +73,8 @@ class ToXML implements Filterable{
 	 */
 	@Override
 	public void process(OutputStream out) throws IOException {
-		clazz.toXML( new XMLPrinter(out, false) );
+		converter.setWriter( new XMLWriter( out, false ) );
+		converter.write(clazz);
 	}
 }
 

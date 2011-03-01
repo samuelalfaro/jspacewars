@@ -83,22 +83,15 @@
 		<path id="MarkerIntefaceShape"
 			d="M -10,0 A 10,10 0 0,1 10,0 A 10,10 0 0,1 -10,0 z"
 			style="
-				stroke:#000000;
-				stroke-width:1;
-				stroke-linecap:butt;
-				stroke-linejoin:miter;
-				stroke-miterlimit:4;
-				stroke-opacity:1;
-				stroke-dasharray:none;
-				stroke-dashoffset:0;
-				marker:none;
-				visibility:visible;
-				display:inline;
-				overflow:visible;
-				enable-background:accumulate;
-				fill:url(#gradientInicialFinalV2);
-				fill-opacity:1;
-				fill-rule:nonzero"
+					stroke:#000000;
+					stroke-opacity:1;
+					stroke-width:1;
+					stroke-linecap:round;
+					stroke-linejoin:round;
+					fill:url(#gradientInicialFinalV2);
+					fill-opacity:1;
+					fill-rule:nonzero;
+					shape-rendering:geometricPrecision"
 			filter="url(#SpecShadow2)"/>
 		<marker id="MarkerInteface"
 			viewBox="-11 -11 26 26" refX="10" refY="0" 
@@ -111,21 +104,15 @@
 			d="M -10,0 10,10 10,-10 Z"
 			style="
 				stroke:#000000;
+				stroke-opacity:1;
 				stroke-width:1;
 				stroke-linecap:butt;
 				stroke-linejoin:miter;
 				stroke-miterlimit:4;
-				stroke-opacity:1;
-				stroke-dasharray:none;
-				stroke-dashoffset:0;
-				marker:none;
-				visibility:visible;
-				display:inline;
-				overflow:visible;
-				enable-background:accumulate;
 				fill:#E0E0E0;
 				fill-opacity:1;
-				fill-rule:nonzero"
+				fill-rule:nonzero;
+				shape-rendering:geometricPrecision"
 			filter="url(#SpecShadow3)"/>
 		<marker id="MarkerHierarchy"
 			viewBox="-11 -15 26 26" refX="-10" refY="0" 
@@ -138,21 +125,14 @@
 			<path d="M -10,0 A 10,10 0 0,1 10,0 A 10,10 0 0,1 -10,0 z"
 				style="
 					stroke:#000000;
-					stroke-width:1;
-					stroke-linecap:butt;
-					stroke-linejoin:miter;
-					stroke-miterlimit:4;
 					stroke-opacity:1;
-					stroke-dasharray:none;
-					stroke-dashoffset:0;
-					marker:none;
-					visibility:visible;
-					display:inline;
-					overflow:visible;
-					enable-background:accumulate;
+					stroke-width:1;
+					stroke-linecap:round;
+					stroke-linejoin:round;
 					fill:#E0E0E0;
 					fill-opacity:1;
-					fill-rule:nonzero"/>
+					fill-rule:nonzero;
+					shape-rendering:geometricPrecision"/>
 			<line x1="-10" y1="0" x2="10" y2="0" style="stroke:#000000;stroke-width:1;"/>
 			<line x1="0" y1="-10" x2="0" y2="10" style="stroke:#000000;stroke-width:1;"/>
 		</g>

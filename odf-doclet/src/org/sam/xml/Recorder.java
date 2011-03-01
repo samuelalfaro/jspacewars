@@ -1,5 +1,5 @@
 /* 
- * Pair.java
+ * Recorder.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -19,19 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with odf-doclet.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sam.odf_doclet.bindings;
+package org.sam.xml;
 
-/**
- * @param <T> dsf
- * @param <U> asdf
- */
-final class Pair<T,U>{
+public interface Recorder<T>{
 	
-	T d1;
-	U d2;
+	void record(T t, XMLWriter writer, RecordersMapper maper);
 	
-	protected Pair(T d1, U d2) {
-		this.d1 = d1;
-		this.d2 = d2;
-	}
 }

@@ -39,8 +39,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.sam.odf_doclet.Adapter;
-import org.sam.xml.XMLPrinter;
-import org.sam.xml.XMLSerializable;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.ConstructorDoc;
@@ -55,17 +53,29 @@ import com.sun.javadoc.SourcePosition;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.ThrowsTag;
 
-class AssertHelper{
+final class Strings{
+	
+	private Strings(){}
+	
+	static final Comparator<String> CaseSensitiveComparator = new Comparator<String>(){
+		public int compare(String o1, String o2) {
+			return o1.compareTo(o2);
+		}
+	};
+
+}
+
+final class AssertHelper{
 	
 	private AssertHelper(){}
 	
-	static <S, T extends ProgramElementDoc> String mostrar(String titulo, Map<String, Pair<S,T>> map){
+	static <T extends ProgramElementDoc> String mostrar(String titulo, Map<String, T> map){
 		StringBuffer buff = new StringBuffer(titulo);
-		for(Map.Entry< String, Pair<S, T>> entry: map.entrySet()){
+		for(Map.Entry< String, T> entry: map.entrySet()){
 			buff.append("\n[");
-			buff.append(entry.getValue().d2.position().line());
+			buff.append(entry.getValue().position().line());
 			buff.append(":");
-			buff.append(entry.getValue().d2.position().column());
+			buff.append(entry.getValue().position().column());
 			buff.append("] ");
 			buff.append(entry.getKey());
 		}
@@ -82,811 +92,118 @@ class AssertHelper{
 	}
 }
 
-/**
- * @param <T>
- */
-class DocFilter<T extends ProgramElementDoc> implements Filter<T>{
+final class Utils{
+	
+	private Utils(){}
+	
+	interface Filter<T>{
+		boolean validate(T t);
+	}
+	
+	static class DocFilter<T extends ProgramElementDoc> implements Filter<T>{
 
-	SourcePosition classPosition;
-	
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.Filter#validate(java.lang.Object)
-	 */
-	@Override
-	public boolean validate(T doc) {
-		// Comparamos la posicion pues el metodo isSynthetic() devuevle siempre ¿ false ?
-		SourcePosition docPosition = doc.position();
-		return docPosition != null && ( docPosition.line() != classPosition.line() || docPosition.column() != classPosition.column());
+		SourcePosition classPosition;
+		
+		/* (non-Javadoc)
+		 * @see org.sam.odf_doclet.bindings.Filter#validate(java.lang.Object)
+		 */
+		@Override
+		public boolean validate(T doc) {
+			// Comparamos la posicion pues el metodo isSynthetic() devuevle siempre ¿ false ?
+			SourcePosition docPosition = doc.position();
+			return docPosition != null && ( docPosition.line() != classPosition.line() || docPosition.column() != classPosition.column());
+		}
 	}
-}
+	
+	private static final DocFilter<ProgramElementDoc> DocsFilter = new DocFilter<ProgramElementDoc>();
 
-/**
- * 
- */
-enum Visibility{
-
-	PRIVATE('-'),
-	PACKAGE('~'),
-	PROTECTED('#'),
-	PUBLIC('+');
-	
-	public static Visibility fromModifiers(int att){
-		if( Modifier.isPublic(att) )
-			return PUBLIC;
-		if( Modifier.isProtected(att) )
-			return PROTECTED;
-		if( Modifier.isPrivate(att) )
-			return PRIVATE;
-		return PACKAGE;
-	}
-	
-	private final char c;
-	
-	private Visibility(char c){
-		this.c = c;
-	}
-	
-	public final char toChar(){
-		return c;
-	}
-}
-
-/**
- * 
- */
-abstract class Element implements XMLSerializable {
-	
-	final String name;
-	
-	Element(String name){
-		this.name = name;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object o){
-		if( o == null)
-			return false;
-		if( this == o)
-			return true;
-		if( !Element.class.isAssignableFrom(o.getClass()) )
-			return false;
-		return name == null ? ((Element)o).name == null : name.equals( ((Element)o).name );
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return name == null ? 0 : name.hashCode();
-	}
-}
-
-class Link implements XMLSerializable {
-	
-	final String link;
-	
-	Link(String link){
-		this.link = link;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-	 */
-	@Override
-	public void toXML(XMLPrinter out) {
-		out.print("Link", link);
-	}
-}
-
-/**
- * 
- */
-abstract class DocumentedElement extends Element {
-	
-	static final Comparator<String> STRING_COMPARATOR = new Comparator<String>(){
-		public int compare(String o1, String o2) {
-			return o1.compareTo(o2);
+	private static final Filter<Field> FieldsFilter = new Filter<Field>(){
+		@Override
+		public boolean validate(Field field) {
+			return !field.isSynthetic() && !field.isEnumConstant();
 		}
 	};
-	
-	final String documentation;
-	
-	DocumentedElement(String name, String documentation){
-		super(name);
-		this.documentation = documentation;
-	}
-	
-	DocumentedElement(String name){
-		this(name, null);
-	}
-}
 
-abstract class DocumentedElementLinks extends  DocumentedElement {
-	
-	static final Comparator<String> STRING_COMPARATOR = new Comparator<String>(){
-		public int compare(String o1, String o2) {
-			return o1.compareTo(o2);
+	private static final Filter<Constructor<?>> ConstructorsFilter = new Filter<Constructor<?>>(){
+		@Override
+		public boolean validate(Constructor<?> constructor) {
+			return !constructor.isSynthetic();
 		}
 	};
-	
-	private static final Collection<Link> getLinks(Doc doc){
-		if(doc == null)
-			return null;
-		SeeTag[] tags = doc.seeTags();
-		if(tags == null || tags.length == 0)
-			return null;
-		Collection<Link> links = new ArrayDeque<Link>(tags.length);
-		for(SeeTag tag:tags)
-			links.add(new Link(tag.text()));
-		return links;
-	}
-	
-	final String documentation;
-	final Collection<Link> links;
-	
-	<T extends Doc > DocumentedElementLinks(String name, T doc){
-		super(name);
-		this.documentation = doc != null ? doc.commentText(): null;
-		this.links = getLinks(doc);
-	}
-	
-	DocumentedElementLinks(String name){
-		this(name, null);
-	}
-}
 
-/**
- * 
- */
-abstract class SimpleClassBinding extends Element {
-	
-	/**
-	 * 
-	 */
-	static class SimpleInterfaceBinding extends SimpleClassBinding{
-		
-		SimpleInterfaceBinding(Type type){
-			super( Adapter.toString(type) );
-		}
-		
-		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-		 */
+	private static final Filter<Method> MethodsFilter = new Filter<Method>(){
 		@Override
-		public void toXML(XMLPrinter out) {
-			out.print("Interface", this.name);
+		public boolean validate(Method method) {
+			return !method.isSynthetic();
 		}
-	}
+	};
 
-	/**
-	 * 
-	 */
-	static class SimpleEnumBinding extends SimpleClassBinding{
-		
-		SimpleEnumBinding(Type type){
-			super( Adapter.toString(type) );
-		}
-		
-		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-		 */
+	private static final Filter<Method> EnumMethodsFilter = new Filter<Method>(){
 		@Override
-		public void toXML(XMLPrinter out) {
-			out.print("Enum", this.name);
-		}
-	}
-
-	static class SimpleConcreteClassBinding extends SimpleClassBinding{
-
-		final boolean isAbstract;
+		public boolean validate(Method method) {
+			String methodString = Adapter.toString( method );
+			return	!method.isSynthetic()
+					&& !methodString.startsWith("valueOf(java.lang.String)")
+					&& !methodString.startsWith("values()");
 		
-		SimpleConcreteClassBinding(Type type){
-			super( Adapter.toString(type) );
-			if(type instanceof Class<?>)
-				this.isAbstract = Modifier.isAbstract( ((Class<?>)type).getModifiers() );
-			else if(type instanceof ParameterizedType)
-				this.isAbstract = Modifier.isAbstract( ((Class<?>)((ParameterizedType)type).getRawType()).getModifiers() );
-			else
-				throw new IllegalArgumentException(type.toString());
 		}
-		
-		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-		 */
+	};
+
+	private static final DocFilter<MethodDoc> EnumMethodsDocFilter = new DocFilter<MethodDoc>(){
 		@Override
-		public void toXML(XMLPrinter out) {
-			out.openNode("Class");
-				if(isAbstract)
-					out.addAttribute("isAbstract", isAbstract);
-				out.print(this.name);
-			out.closeNode();
-		}
-	}
-	
-	static final SimpleClassBinding from(Type type){
-		
-		if(type instanceof Class<?>){
-			Class<?> clazz = (Class<?>)type;
-			if(clazz.isInterface())
-				return new SimpleInterfaceBinding( type );
-			if(clazz.isEnum())
-				return new SimpleEnumBinding( type );
-			return new SimpleConcreteClassBinding( type );
-		}
-		if(type instanceof ParameterizedType){
-			Class<?> clazz = (Class<?>)((ParameterizedType)type).getRawType();
-			if(clazz.isInterface())
-				return new SimpleInterfaceBinding( type );
-			return new SimpleConcreteClassBinding( type );
-		}
-		throw new IllegalArgumentException();
-	}
-	
-	SimpleClassBinding(String signature) {
-		super(signature);
-	}
-}
-
-/**
- * 
- */
-class ConstantBinding extends DocumentedElementLinks{
-
-	ConstantBinding(String name) {
-		super(name);
-	}
-
-	ConstantBinding(String name, FieldDoc doc) {
-		super( name, doc );
-	}
-
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-	 */
-	@Override
-	public void toXML(XMLPrinter out) {
-		out.openNode("Constant");
-			out.addAttribute("name", name);
-			out.print("Documentation", documentation);
-			out.print("Links", links);
-		out.closeNode();
-	}
-}
-
-class ExceptionBinding extends DocumentedElement{
-	
-	ExceptionBinding(Type type){
-		super( Adapter.toString(type) );
-	}
-	
-	ExceptionBinding(Type type, ThrowsTag tag){
-		super(	Adapter.toString(type),
-				tag != null ? tag.exceptionComment(): null
-		);
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-	 */
-	@Override
-	public void toXML(XMLPrinter out) {
-		out.openNode("Exception");
-			out.print("Type", name);
-			out.print("Documentation", documentation);
-		out.closeNode();
-	}
-}
-
-/**
- * 
- */
-class ParameterBinding extends DocumentedElement{
-	
-	final String type;
-	
-	private ParameterBinding(String name, String type){
-		super( name );
-		this.type = type;
-	}
-	
-	private ParameterBinding( String name, String type, String documentation ){
-		super( name, documentation );
-		this.type = type;
-	}
-	
-	ParameterBinding(TypeVariable<?> type, ParamTag tag){
-		this(	null,
-				Adapter.toString(type),
-				tag != null ? tag.parameterComment(): null
-		);
-	}
-	
-	ParameterBinding(TypeVariable<?> type){
-		this( null, Adapter.toString(type) );
-	}
-	
-	ParameterBinding(Type type, ParamTag tag){
-		this(	tag != null ? tag.parameterName(): null,
-				Adapter.toString(type),
-				tag != null ? tag.parameterComment(): null
-		);
-	}
-	
-	private static String concatComments(Tag[] tags){
-		if (tags == null || tags.length == 0)
-			return null;
-
-		StringBuilder builder = new StringBuilder();
-		for (Tag returnTag : tags) {
-			String returnTagText = returnTag.text();
-			if (returnTagText != null) {
-				builder.append(returnTagText);
-				builder.append("\n");
+		public boolean validate(MethodDoc method) {
+			if( super.validate(method) ){
+				String methodString = Adapter.toString( method );
+				return	!methodString.startsWith("valueOf(java.lang.String)")
+						&& !methodString.startsWith("values()");
 			}
+			return false;
 		}
-		return builder.substring(0, builder.length() - 1);
-	}
-	
-	ParameterBinding(Type type, Tag[] tags){
-		this( null, Adapter.toString(type), concatComments(tags) );
-	}
-	
-	ParameterBinding(Type type){
-		this( null, Adapter.toString(type) );
-	}
-	
-	final void toXML(String nodeName, XMLPrinter out) {
-		out.openNode(nodeName);
-			if(name!=null)
-				out.addAttribute("name", name);
-			out.print("Type", type);
-			out.print("Documentation", documentation);
-		out.closeNode();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-	 */
-	@Override
-	public void toXML(XMLPrinter out) {
-		toXML("Parameter", out);
-	}
-}
-
-/**
- * 
- */
-class FieldBinding extends DocumentedElementLinks{
-
-	final Visibility visibility;
-	final int modifiers;
-	final String type;
-	
-	FieldBinding(Pair<Field,FieldDoc> field){
-		super( 	field.d1.getName(), field.d2 );
-		this.modifiers = field.d1.getModifiers();
-		this.visibility = Visibility.fromModifiers(modifiers);
-		this.type = Adapter.toString(field.d1.getGenericType());
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-	 */
-	@Override
-	public void toXML(XMLPrinter out) {
-		out.openNode("Field");
-			out.addAttribute("name", name);
-			out.addAttribute("visibility", visibility.toChar());
-			if(Modifier.isStatic(modifiers))
-				out.addAttribute("isStatic", true);
-			if(Modifier.isTransient(modifiers))
-				out.addAttribute("isTransient", true);
-			if(Modifier.isVolatile(modifiers))
-				out.addAttribute("isVolatile", true);
-			if(Modifier.isFinal(modifiers))
-				out.addAttribute("isFinal", true);
-			out.print("Type", type);
-			out.print("Documentation", documentation);
-			out.print("Links", links);
-		out.closeNode();
-	}
-}
-
-abstract class CommandBinding extends DocumentedElementLinks{
-
-	private final static String getName(Member d){
-		return d instanceof Constructor<?> ?
-				((Constructor<?>)d).getDeclaringClass().getSimpleName():
-				d.getName();
-	}
-	
-	private final static <T extends Tag> T getTag(T[] tags, int index){
-		try{
-			return tags[index];
-		}catch(ArrayIndexOutOfBoundsException e){
-			return null;
-		}
-	}
-	
-	private static Collection<ParameterBinding> getParams(Pair<?, ? extends ExecutableMemberDoc> command){
-		
-		Type[] types = null;
-		if(command.d1 instanceof Constructor<?>)
-			types = ((Constructor<?>)command.d1).getGenericParameterTypes();
-		else if (command.d1 instanceof Method)
-			types =	((Method)command.d1).getGenericParameterTypes();
-		
-		if(types == null || types.length == 0)
-			return null;
-		
-		Collection<ParameterBinding>  parameters= new ArrayDeque<ParameterBinding>();
-		
-		if(command.d2 == null)
-			for(Type type: types)
-				parameters.add( new ParameterBinding( type ) );
-		else{
-			ParamTag[] tags = command.d2.paramTags();
-			int offset = types.length - command.d2.parameters().length; //Offset ignora Synthetic accesor 
-			assert(offset >= 0): "!!offset:"+offset;
-			for(int i= offset, j=0, len = types.length; i < len; i++, j++)
-				parameters.add( new ParameterBinding( types[i], getTag( tags, j ) ) );
-		}
-		return parameters;
-	}
-	
-	private static Collection<ExceptionBinding> getExceptions(Pair<?, ? extends ExecutableMemberDoc> command){
-		
-		Class<?> clazz = null;
-		
-		Type[] types = null;
-		if(command.d1 instanceof Constructor<?>){
-			clazz = ((Constructor<?>)command.d1).getDeclaringClass();
-			types = ((Constructor<?>)command.d1).getGenericExceptionTypes();
-		} else if (command.d1 instanceof Method) {
-			clazz = ((Method)command.d1).getDeclaringClass();
-			types =	((Method)command.d1).getGenericExceptionTypes();
-		}
-		
-		if(types == null || types.length == 0)
-			return null;
-		
-		Collection<ExceptionBinding> exceptions= new ArrayDeque<ExceptionBinding>();
-		
-		if(command.d2 == null)
-			for(Type type: types)
-				exceptions.add( new ExceptionBinding( type ) );
-		else {
-			Map<String, ThrowsTag> map = new TreeMap<String, ThrowsTag>(STRING_COMPARATOR);
-			for(ThrowsTag e: command.d2.throwsTags())
-				map.put( e.exceptionType().typeName(), e );
-			for(Type type: types)
-				exceptions.add( new ExceptionBinding( type, map.remove(Adapter.toString(type)) ) );
-			assert( map.size() == 0 ): "!!!Error en "+ clazz.toString() + ":\n\t" +
-				getName((Member)command.d1)+
-				AssertHelper.mostrar("Documentacion sobrante :", map.keySet());	
-		}
-		return exceptions;
-	}
-	
-	final Visibility visibility;
-	final Collection<ParameterBinding> typeParams;
-	final Collection<ParameterBinding> params;
-	final Collection<ExceptionBinding> exceptions;
-
-	<T extends AccessibleObject & Member & GenericDeclaration>
-	CommandBinding(Pair<? extends T, ? extends ExecutableMemberDoc> command){
-		super( getName(command.d1), command.d2 );
-		this.visibility = Visibility.fromModifiers( command.d1.getModifiers() );
-		
-		typeParams = ClassBinding.getTypeParams(command);
-		params = getParams(command);
-		exceptions = getExceptions(command);
-	}
-}
-
-/**
- * 
- */
-class ConstructorBinding extends CommandBinding{
-
-	ConstructorBinding(Pair<Constructor<?>,ConstructorDoc> constructor){
-		super( constructor );
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-	 */
-	@Override
-	public void toXML(XMLPrinter out) {
-		out.openNode("Constructor");
-			out.addAttribute("name", name);
-			out.addAttribute("visibility", visibility.toChar());
-			out.print("Documentation", documentation);
-			out.print("TypeParameters", typeParams );
-			out.print("Parameters", params );
-			out.print("Exceptions", exceptions );
-			out.print("Links", links);
-		out.closeNode();
-	}
-}
-
-/**
- * 
- */
-class MethodBinding extends CommandBinding{
-
-	final int modifiers;
-
-	final ParameterBinding  returnElement;
-	
-	static Pair<Method,MethodDoc> checkOverride(Pair<Method,MethodDoc> method){
-		MethodDoc doc = method.d2;
-		if( doc == null)
-			return method;
-		if( doc.overriddenMethod() != null && doc.getRawCommentText().length() == 0)
-			doc.setRawCommentText("@see " + doc.overriddenClass().qualifiedTypeName() +"#"+Adapter.toString(doc));
-		return method;
-	}
-	
-	MethodBinding(Pair<Method,MethodDoc> method){
-		super( checkOverride(method) );
-
-		this.modifiers = method.d1.getModifiers();
-
-		if(method.d2 == null){
-			returnElement = method.d1.getReturnType().equals(java.lang.Void.TYPE)? null:
-					new ParameterBinding(method.d1.getGenericReturnType());
-		} else {
-			returnElement = method.d1.getReturnType().equals(java.lang.Void.TYPE)? null:
-					new ParameterBinding(method.d1.getGenericReturnType(), method.d2.tags("@return"));
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-	 */
-	@Override
-	public void toXML(XMLPrinter out) {
-		out.openNode("Method");
-			out.addAttribute("name", name);
-			out.addAttribute("visibility", visibility.toChar());
-			if(Modifier.isStatic(modifiers))
-				out.addAttribute("isStatic", true);
-			if(Modifier.isAbstract(modifiers))
-				out.addAttribute("isAbstract", true);
-			if(Modifier.isNative(modifiers))
-				out.addAttribute("isNative", true);
-			if(Modifier.isStrict(modifiers))
-				out.addAttribute("isStrictfp", true);
-			if(Modifier.isFinal(modifiers))
-				out.addAttribute("isFinal", true);
-			if(Modifier.isSynchronized(modifiers))
-				out.addAttribute("isSynchronized", true);
-			out.print("Documentation", documentation);
-			out.print("TypeParameters", typeParams );
-			out.print("Parameters", params );
-			if(returnElement != null)
-				returnElement.toXML("ReturnType", out);
-			out.print("Exceptions", exceptions );
-			out.print("Links", links);
-		out.closeNode();
-	}
-}
-
-/**
- * 
- */
-public abstract class ClassBinding extends DocumentedElementLinks{
-	
-	static class InterfaceBinding extends ClassBinding{
-	
-		final Collection<ParameterBinding> parameters;
-		
-		InterfaceBinding(Pair<Class<?>, ClassDoc> clazz){
-			super( clazz );
-			this.parameters = getTypeParams(clazz);
-			
-			this.enclosingClasses = getEnclosingClasses(clazz.d1);
-			this.interfaces = getImplementedInterfaces(clazz.d1);
-			
-			this.fields = getFields(clazz);
-			this.methods = getMethods(clazz);
-		}
-	
-		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-		 */
-		@Override
-		public void toXML(XMLPrinter out) {
-			out.openNode( "Interface" );
-				out.addAttribute( "name", name );
-				out.print( "Documentation", documentation );
-				out.print( "TypeParameters", parameters );
-				out.print( "Links", links);
-				
-				out.print( "EnclosingClasses", enclosingClasses );
-				out.print( "Interfaces", interfaces );
-				out.print( "Fields", fields );
-				out.print( "Methods", methods );
-			out.closeNode();
-		}
-	}
-
-	static class EnumBinding extends ClassBinding{
-		
-		static Collection<ConstantBinding> getConstants(Pair<Class<?>, ClassDoc> clazz){
-			Deque<ConstantBinding> constants = new ArrayDeque<ConstantBinding>();
-			if(clazz.d2 == null) {
-				for(Object constant: clazz.d1.getEnumConstants())
-					constants.offerLast( new ConstantBinding(constant.toString() ) );
-			} else {
-				Map<String, FieldDoc> map = new TreeMap<String, FieldDoc>(STRING_COMPARATOR);
-				for(FieldDoc field: clazz.d2.fields())
-					map.put( field.name(), field );
-				for(Object constant: clazz.d1.getEnumConstants()){
-					FieldDoc field = map.remove(constant.toString());
-					if( field != null )
-						constants.offerLast( new ConstantBinding(constant.toString(), field ) );
-					assert( field != null ): "!!!Documentacion no encontrada para: " + constant.toString();
-				}
-			}
-			return constants;
-		}
-		
-		Collection<ConstantBinding> constants;
-		Collection<ConstructorBinding> constructors;
-		
-		EnumBinding(Pair<Class<?>, ClassDoc> clazz){
-			super( clazz );
-	
-			this.enclosingClasses = getEnclosingClasses(clazz.d1);
-			this.interfaces = getImplementedInterfaces(clazz.d1);
-			
-			this.constants = getConstants(clazz);
-			this.fields = getFields(clazz);
-			this.constructors = getConstructors(clazz);
-			this.methods = getMethods(clazz);
-		}
-	
-		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-		 */
-		@Override
-		public void toXML(XMLPrinter out) {
-			out.openNode( "Enum" );
-				out.addAttribute( "name", name );
-				out.print( "Documentation", documentation);
-				out.print( "Links", links);
-	
-				out.print( "EnclosingClasses", enclosingClasses );
-				out.print( "Interfaces", interfaces );
-				out.print( "Constants", constants );
-				out.print( "Fields", fields );
-				out.print( "Constructors", constructors );
-				out.print( "Methods", methods );
-			
-			out.closeNode();
-		}
-	}
-
-	static class ConcreteClassBinding extends ClassBinding{
-		
-		static Collection<SimpleClassBinding> getHierarchyBinding(Class<?> clazz){
-			Deque<SimpleClassBinding> hierarchy = new ArrayDeque<SimpleClassBinding>();
-			for(Type type: getHierarchy(clazz))
-				hierarchy.offer( SimpleClassBinding.from(type) );
-
-			return hierarchy;
-		}
-		
-		final boolean isAbstract;
-		final Collection<ParameterBinding> parameters;
-
-		final Collection<SimpleClassBinding> hierarchy;
-		final Collection<ConstructorBinding> constructors;
-		
-		ConcreteClassBinding(Pair<Class<?>, ClassDoc> clazz){
-			super( clazz );
-
-			this.isAbstract = Modifier.isAbstract( clazz.d1.getModifiers() );
-			this.parameters = getTypeParams(clazz);
-			
-			this.hierarchy = getHierarchyBinding(clazz.d1);
-			this.enclosingClasses = getEnclosingClasses(clazz.d1);
-			this.interfaces = getImplementedInterfaces(clazz.d1);
-			
-			this.fields = getFields(clazz);
-			this.constructors = getConstructors(clazz);
-			this.methods = getMethods(clazz);
-		}
-		
-		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.XMLSerializable#toXML(org.sam.odf_doclet.bindings.XMLPrinter)
-		 */
-		@Override
-		public void toXML(XMLPrinter out) {
-			out.openNode( "Class" );
-				out.addAttribute( "name", name );
-				if(isAbstract)
-					out.addAttribute( "isAbstract", isAbstract );
-				out.print( "Documentation", documentation);
-				out.print( "TypeParameters", parameters);
-				out.print( "Links", links);
-				
-				out.print( "Hierarchy", hierarchy );
-				out.print( "EnclosingClasses", enclosingClasses );
-				out.print( "Interfaces", interfaces );
-				out.print( "Fields", fields );
-				out.print( "Constructors", constructors );
-				out.print( "Methods", methods );
-			out.closeNode();
-		}
-	}
+	};
 
 	private static ClassLoader classLoader;
 	
-	public static final void setClassLoader(ClassLoader classLoader){
-		ClassBinding.classLoader = classLoader;
+	static void setClassLoader(ClassLoader classLoader){
+		Utils.classLoader = classLoader;
 	}
 	
-	static final ClassLoader getClassLoader(){
+	private static ClassLoader getClassLoader(){
 		if( classLoader == null)
 			classLoader = Thread.currentThread().getContextClassLoader();
 		return classLoader;
 	}
 	
-	private static Class<?> find(Class<?> containingClazz, String qualifiedName) throws ClassNotFoundException{
+	static Class<?> find(Class<?> containingClazz, String canonicalName) throws ClassNotFoundException{
+		if( canonicalName.equals(containingClazz.getCanonicalName()))
+			return containingClazz;
+		
 		Class<?> declaredClasses[] = containingClazz.getDeclaredClasses();
 		if(declaredClasses.length > 0)
 			for(Class<?> clazz: declaredClasses){
-				if( qualifiedName.equals(clazz.getCanonicalName()))
+				if( canonicalName.equals(clazz.getCanonicalName() ) )
 					return clazz;
-				if( qualifiedName.startsWith(clazz.getCanonicalName()+".") )
-					return find(clazz, qualifiedName);
+				if( canonicalName.startsWith(clazz.getCanonicalName()+"." ) )
+					return find(clazz, canonicalName);
 			}
-		throw new ClassNotFoundException( qualifiedName+": not found in " +containingClazz.getCanonicalName() );
+		throw new ClassNotFoundException( canonicalName + ": not found in " + containingClazz.getCanonicalName() );
 	}
 	
-	private static Pair<Class<?>, ClassDoc> getPair( Class<?> clazz, ClassDoc classDoc ) throws ClassNotFoundException {
-		if( classDoc.qualifiedName().equals(clazz.getCanonicalName()))
-			return new Pair<Class<?>, ClassDoc>( clazz, classDoc );
-		return new Pair<Class<?>, ClassDoc>( find(clazz, classDoc.qualifiedName()), classDoc );
-	}
-
-	private static Pair<Class<?>, ClassDoc> getPair(ClassDoc classDoc) throws ClassNotFoundException{
+	static Class<?> find(ClassDoc classDoc) throws ClassNotFoundException{
 		if( classDoc.containingClass() == null)
-			return new Pair<Class<?>, ClassDoc>(
-					Class.forName( classDoc.qualifiedName(), false, ClassBinding.getClassLoader() ),
-					classDoc
-			);
+			return Class.forName( classDoc.qualifiedName(), false, Utils.getClassLoader() );
 		
-		ClassDoc containingClass = classDoc;
-		while(containingClass.containingClass() != null){
-			containingClass = containingClass.containingClass();
-		}
+		ClassDoc containing = classDoc;
+		do{
+			containing = containing.containingClass();
+		}while(containing.containingClass() != null);
 		
-		return new Pair<Class<?>, ClassDoc>(
-				find(
-						Class.forName( 
-								containingClass.qualifiedName(), 
-								false, 
-								ClassBinding.getClassLoader()
-						), 
-						classDoc.qualifiedName() 
-				),
-				classDoc
-		);
+		
+		Class<?> containingClass = Class.forName( containing.qualifiedName(), false, Utils.getClassLoader() );
+		
+		return find( containingClass, classDoc.qualifiedName() );
 	}
 	
-	private static Pair<Class<?>, ClassDoc> getPair(Class<?> clazz) {
-		return new Pair<Class<?>, ClassDoc>( clazz, null );
-	}
-	
-	static Collection<Type> getHierarchy(Class<?> clazz){
+	private static Collection<Type> getHierarchy(Class<?> clazz){
 		Deque<Type> hierarchy = new ArrayDeque<Type>();
 		Type superClass = clazz.getGenericSuperclass();
 		while( superClass != null && !superClass.equals(Object.class) ){
@@ -902,6 +219,14 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 			else
 				superClass = null;
 		}
+		return hierarchy;
+	}
+	
+	static Collection<SimpleClassBinding> getHierarchyBinding(Class<?> clazz){
+		Deque<SimpleClassBinding> hierarchy = new ArrayDeque<SimpleClassBinding>();
+		for(Type type: getHierarchy(clazz))
+			hierarchy.offer( SimpleClassBinding.from(type) );
+
 		return hierarchy;
 	}
 	
@@ -934,7 +259,19 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		return interfaces;
 	}
 	
-	static ParamTag[] fileterTypeParameters(Tag[] tags){
+	static Collection<LinkBinding> getLinks(Doc doc){
+		if(doc == null)
+			return null;
+		SeeTag[] tags = doc.seeTags();
+		if(tags == null || tags.length == 0)
+			return null;
+		Collection<LinkBinding> links = new ArrayDeque<LinkBinding>(tags.length);
+		for(SeeTag tag:tags)
+			links.add(new LinkBinding(tag.text()));
+		return links;
+	}
+	
+	private static ParamTag[] fileterTypeParameters(Tag[] tags){
 		Collection<Tag> typeParameters = new ArrayDeque<Tag>();
 		for(Tag tag: tags )
 			if( (tag instanceof ParamTag) && ((ParamTag)tag).isTypeParameter())
@@ -945,55 +282,60 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		return typeParameters.toArray(new ParamTag[size]);
 	}
 
-	static Collection<ParameterBinding> getTypeParams(Pair<? extends GenericDeclaration, ? extends Doc> clazz){
-		TypeVariable<?>[] types = clazz.d1.getTypeParameters();
+	static Collection<TypeParamBinding> getTypeParams( GenericDeclaration generic, Doc doc){
+		TypeVariable<?>[] types = generic.getTypeParameters();
 		if(types.length == 0)
 			return null;
-		Collection<ParameterBinding>  parameters= new ArrayDeque<ParameterBinding>();
-		ParamTag[] tags = clazz.d2 != null ? fileterTypeParameters(clazz.d2.tags("@param")): null;
+		Collection<TypeParamBinding>  parameters= new ArrayDeque<TypeParamBinding>();
+		ParamTag[] tags = doc != null ? fileterTypeParameters(doc.tags("@param")): null;
 		if( tags == null || tags.length != types.length )
 			for(TypeVariable<?> type: types)
-				parameters.add( new ParameterBinding( type ) );
+				parameters.add( new TypeParamBinding( type ) );
 		else{
 			for( int i= 0, len = types.length; i < len; i++ )
-				parameters.add( new ParameterBinding( types[i], tags[i] ) );
+				parameters.add( new TypeParamBinding( types[i], tags[i] ) );
 		}
 		return parameters;
 	}
 	
-	private static final Filter<Field> FieldsFilter = new Filter<Field>(){
-		@Override
-		public boolean validate(Field field) {
-			return !field.isSynthetic() && !field.isEnumConstant();
+	static Collection<ConstantBinding> getConstants( Class<?> clazz, ClassDoc classDoc ) {
+		Deque<ConstantBinding> constants = new ArrayDeque<ConstantBinding>();
+		if(classDoc == null) {
+			for(Object constant: clazz.getEnumConstants())
+				constants.offerLast( new ConstantBinding(constant.toString() ) );
+		} else {
+			Map<String, FieldDoc> map = new TreeMap<String, FieldDoc>(Strings.CaseSensitiveComparator);
+			for(FieldDoc field: classDoc.fields())
+				map.put( field.name(), field );
+			for(Object constant: clazz.getEnumConstants()){
+				FieldDoc field = map.remove(constant.toString());
+				if( field != null )
+					constants.offerLast( new ConstantBinding(constant.toString(), field ) );
+				assert( field != null ): "!!!Documentacion no encontrada para: " + constant.toString();
+			}
 		}
-	};
+		return constants;
+	}
 	
-	private static final DocFilter<ProgramElementDoc> docsFilter = new DocFilter<ProgramElementDoc>();
-	
-
-	
-	static Collection<FieldBinding> getFields(Pair<Class<?>, ClassDoc> clazz){
+	static Collection<FieldBinding> getFields( Class<?> clazz, ClassDoc classDoc ) {
 		//TODO Ordenar
 		Deque<FieldBinding> fields = new ArrayDeque<FieldBinding>();
-		if(clazz.d2 == null) {
-			for(Field field: clazz.d1.getDeclaredFields())
+		if(classDoc == null) {
+			for(Field field: clazz.getDeclaredFields())
 				if( FieldsFilter.validate(field) )
-					fields.offer( new FieldBinding( new Pair<Field,FieldDoc>(field,null)) );
+					fields.offer( new FieldBinding( field, null ) );
 		} else {
-			Map<String, Pair<Field,FieldDoc>> map = new TreeMap<String, Pair<Field,FieldDoc>>(STRING_COMPARATOR);
-			docsFilter.classPosition =  clazz.d2.position();
-			for(FieldDoc field: clazz.d2.fields()){
-				if( docsFilter.validate(field) )
-					map.put( field.name(), new Pair<Field,FieldDoc>(null,field) );
+			Map<String, FieldDoc> map = new TreeMap<String,FieldDoc>(Strings.CaseSensitiveComparator);
+			DocsFilter.classPosition = classDoc.position();
+			for(FieldDoc field: classDoc.fields()){
+				if( DocsFilter.validate(field) )
+					map.put( field.name(), field );
 			}
-			for(Field field: clazz.d1.getDeclaredFields()){
+			for(Field field: clazz.getDeclaredFields()){
 				if( FieldsFilter.validate(field) ){
-					Pair<Field,FieldDoc> pair = map.remove(field.getName());
-					if( pair != null ){
-						pair.d1 = field;
-						fields.offer( new FieldBinding( pair ) );
-					} 
-					assert( pair != null ): "!!!Documentacion no encontrada para: " + field.getName();
+					FieldDoc doc = map.remove(field.getName());
+					assert( doc != null ): "!!!Documentacion no encontrada para: " + field.getName();
+					fields.offer( new FieldBinding( field, doc ) );
 				}
 			}
 //			assert( map.size() == 0 ): mostrar("!!!Documentacion sobrante:", map);
@@ -1001,145 +343,505 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 		return fields;
 	}
 	
-	private static final Filter<Constructor<?>> ConstructorsFilter = new Filter<Constructor<?>>(){
-		@Override
-		public boolean validate(Constructor<?> constructor) {
-			return !constructor.isSynthetic();
-		}
-	};
-	
-	static Collection<ConstructorBinding> getConstructors(Pair<Class<?>, ClassDoc> clazz){
+	static Collection<ConstructorBinding> getConstructors( Class<?> clazz, ClassDoc classDoc ) {
 		//TODO Ordenar
 		Deque<ConstructorBinding> constructors = new ArrayDeque<ConstructorBinding>();
-		if(clazz.d2 == null) {
-			for(Constructor<?> constructor: clazz.d1.getDeclaredConstructors())
+		if(classDoc == null) {
+			for(Constructor<?> constructor: clazz.getDeclaredConstructors())
 				if( ConstructorsFilter.validate(constructor) )
-					constructors.add( new ConstructorBinding( new Pair<Constructor<?>,ConstructorDoc>(constructor, null) ) );
+					constructors.add( new ConstructorBinding( constructor, null) );
 		} else {
-			docsFilter.classPosition = clazz.d2.position();
-			Map<String, Pair<Constructor<?>,ConstructorDoc>> map = 
-				new TreeMap<String, Pair<Constructor<?>,ConstructorDoc>>(STRING_COMPARATOR);
-			for(ConstructorDoc constructor: clazz.d2.constructors()){
-				if( docsFilter.validate(constructor) )
-					map.put( 
-							Adapter.toString( constructor ),
-							new Pair<Constructor<?>,ConstructorDoc>(null, constructor)
-					);
+			DocsFilter.classPosition = classDoc.position();
+			Map<String, ConstructorDoc> map = new TreeMap<String, ConstructorDoc>(Strings.CaseSensitiveComparator);
+			for(ConstructorDoc doc: classDoc.constructors()){
+				if( DocsFilter.validate(doc) )
+					map.put( Adapter.toString( doc ), doc );
 			}
 			Collection<String> undocumented = new ArrayDeque<String>();
-			for(Constructor<?> constructor: clazz.d1.getDeclaredConstructors()){
+			for(Constructor<?> constructor: clazz.getDeclaredConstructors()){
 				if( ConstructorsFilter.validate(constructor) ){
-					Pair<Constructor<?>,ConstructorDoc> pair = map.remove( Adapter.toString( constructor ) );
-					if( pair == null )
-						pair = map.remove( Adapter.toString( constructor, true ) );
-					if( pair != null ){
-						pair.d1 = constructor;
-						constructors.offer( new ConstructorBinding( pair ) );
-					} else 
+					ConstructorDoc doc = map.remove( Adapter.toString( constructor ) );
+					if( doc == null )
+						doc = map.remove( Adapter.toString( constructor, true ) );
+					if( doc != null )
+						constructors.offer( new ConstructorBinding( constructor, doc ) );
+					else 
 						undocumented.add( Adapter.toString( constructor ) );
 				}
 			}
-			assert( map.size() == 0 ): "!!!Error en "+clazz.d2.name() + ":\n" + 
+			assert( map.size() == 0 ): "!!!Error en "+classDoc.name() + ":\n" + 
 				AssertHelper.mostrar("Elementos indocumentados:",undocumented) + "\n" +
 				AssertHelper.mostrar("Documentacion sobrante :", map);
 		}
 		return constructors;
 	}
 	
-	private static final Filter<Method> MethodsFilter = new Filter<Method>(){
-		@Override
-		public boolean validate(Method method) {
-			return !method.isSynthetic();
-		}
-	};
-	
-	private static final Filter<Method> EnumMethodsFilter = new Filter<Method>(){
-		@Override
-		public boolean validate(Method method) {
-			String methodString = Adapter.toString( method );
-			return	!method.isSynthetic()
-					&& !methodString.startsWith("valueOf(java.lang.String)")
-					&& !methodString.startsWith("values()");
-		
-		}
-	};
-	
-	private static final DocFilter<MethodDoc> EnumMethodsDocFilter = new DocFilter<MethodDoc>(){
-		@Override
-		public boolean validate(MethodDoc method) {
-			if( super.validate(method) ){
-				String methodString = Adapter.toString( method );
-				return	!methodString.startsWith("valueOf(java.lang.String)")
-						&& !methodString.startsWith("values()");
-			}
-			return false;
-		}
-	};
-	
-	static Collection<MethodBinding> getMethods(final Pair<Class<?>, ClassDoc> clazz){
+	static Collection<MethodBinding> getMethods( Class<?> clazz, ClassDoc classDoc ) {
 		//TODO Ordenar
-		final Filter<Method> filter = clazz.d1.isEnum() ? EnumMethodsFilter : MethodsFilter;
+		final Filter<Method> filter = clazz.isEnum() ? EnumMethodsFilter : MethodsFilter;
 	
 		Deque<MethodBinding> methods = new ArrayDeque<MethodBinding>();
-		if(clazz.d2 == null) {
-			for(Method method: clazz.d1.getDeclaredMethods())
+		if(classDoc == null) {
+			for(Method method: clazz.getDeclaredMethods())
 				if( filter.validate(method) )
-					methods.offer( new MethodBinding( new Pair<Method, MethodDoc>(method, null) ) );
+					methods.offer( new MethodBinding( method, null) );
 		} else {
 			final DocFilter<? super MethodDoc> filterDoc;
-			if( clazz.d1.isEnum() )
+			if( clazz.isEnum() )
 				filterDoc = EnumMethodsDocFilter;
 			else
-				filterDoc = docsFilter;
+				filterDoc = DocsFilter;
 
-			filterDoc.classPosition = clazz.d2.position();
+			filterDoc.classPosition = classDoc.position();
 			
-			Map<String, Pair<Method, MethodDoc>> map = 
-				new TreeMap<String, Pair<Method, MethodDoc>>(STRING_COMPARATOR);
-			for(MethodDoc method: clazz.d2.methods()){
-				if( filterDoc.validate(method) )
-					map.put( 
-							Adapter.toString( method ),
-							new Pair<Method, MethodDoc>(null, method)
-					);
+			Map<String, MethodDoc> map = 
+				new TreeMap<String, MethodDoc>(Strings.CaseSensitiveComparator);
+			for(MethodDoc doc: classDoc.methods()){
+				if( filterDoc.validate(doc) )
+					map.put( Adapter.toString( doc ), doc );
 			}
 			Collection<String> undocumented = new ArrayDeque<String>();
-			for(Method method: clazz.d1.getDeclaredMethods()){
+			for(Method method: clazz.getDeclaredMethods()){
 				if( filter.validate(method) ){
-					Pair<Method, MethodDoc> pair = map.remove( Adapter.toString( method ) );
-					if( pair != null ) {
-						pair.d1 = method;
-						methods.offer( new MethodBinding( pair ) );
-					} else 
+					MethodDoc doc = map.remove( Adapter.toString( method ) );
+					if( doc != null )
+						methods.offer( new MethodBinding( method, doc ) );
+					else 
 						undocumented.add( Adapter.toString( method ) );
 				}
 			}
 			assert( map.size() == 0 ):
-				"!!!Error en " + clazz.d2.name() + ":\n" +
+				"!!!Error en " + classDoc.name() + ":\n" +
 				AssertHelper.mostrar("Elementos indocumentados:",undocumented) + "\n" +
 				AssertHelper.mostrar("Documentacion sobrante :", map);
 		}
 		return methods;
 	}
 	
-	private final static ClassBinding from(Pair<Class<?>, ClassDoc> clazz){
-		if(clazz.d1.isInterface())
-			return new InterfaceBinding( clazz );
-		if(clazz.d1.isEnum())
-			return new EnumBinding( clazz );
-		return new ConcreteClassBinding( clazz );
+	private static <T extends Tag> T getTag(T[] tags, int index){
+		try{
+			return tags[index];
+		}catch(ArrayIndexOutOfBoundsException e){
+			return null;
+		}
 	}
 	
-	public final static ClassBinding from(Class<?> clazz){
-		return from( getPair(clazz) );
+	static String concatComments(Tag[] tags){
+		if (tags == null || tags.length == 0)
+			return null;
+
+		StringBuilder builder = new StringBuilder();
+		for (Tag returnTag : tags) {
+			String returnTagText = returnTag.text();
+			if (returnTagText != null) {
+				builder.append(returnTagText);
+				builder.append("\n");
+			}
+		}
+		return builder.substring(0, builder.length() - 1);
 	}
 	
-	public final static ClassBinding from(ClassDoc classDoc) throws ClassNotFoundException{
-		return from( getPair(classDoc) );
+	static <T extends AccessibleObject & GenericDeclaration> 
+	Collection<ParameterBinding> getParams(T command, ExecutableMemberDoc doc){
+		
+		Type[] types = null;
+		if(command instanceof Constructor<?>)
+			types = ((Constructor<?>)command).getGenericParameterTypes();
+		else if (command instanceof Method)
+			types =	((Method)command).getGenericParameterTypes();
+		
+		if(types == null || types.length == 0)
+			return null;
+		
+		Collection<ParameterBinding>  parameters= new ArrayDeque<ParameterBinding>();
+		
+		if(doc == null)
+			for(Type type: types)
+				parameters.add( new ParameterBinding( type ) );
+		else{
+			ParamTag[] tags = doc.paramTags();
+			int offset = types.length - doc.parameters().length; //Offset ignora Synthetic accesor 
+			assert(offset >= 0): "!!offset:"+offset;
+			for(int i= offset, j=0, len = types.length; i < len; i++, j++)
+				parameters.add( new ParameterBinding( types[i], getTag( tags, j ) ) );
+		}
+		return parameters;
 	}
 	
-	public final static ClassBinding from(Class<?> clazz, ClassDoc classDoc) throws ClassNotFoundException{
-		return from( getPair( clazz, classDoc ) );
+	static <T extends AccessibleObject & GenericDeclaration & Member> 
+	Collection<ExceptionBinding> getExceptions(T command, ExecutableMemberDoc doc ){
+		
+		Type[] types = null;
+		if(command instanceof Constructor<?>)
+			types = ((Constructor<?>)command).getGenericExceptionTypes();
+		else if (command instanceof Method)
+			types =	((Method)command).getGenericExceptionTypes();
+		
+		if(types == null || types.length == 0)
+			return null;
+		
+		Collection<ExceptionBinding> exceptions= new ArrayDeque<ExceptionBinding>();
+		
+		if(doc == null)
+			for(Type type: types)
+				exceptions.add( new ExceptionBinding( type ) );
+		else {
+			Map<String, ThrowsTag> map = new TreeMap<String, ThrowsTag>(Strings.CaseSensitiveComparator);
+			for(ThrowsTag e: doc.throwsTags())
+				map.put( e.exceptionType().typeName(), e );
+			for(Type type: types)
+				exceptions.add( new ExceptionBinding( type, map.remove(Adapter.toString(type)) ) );
+			assert( map.size() == 0 ): "!!!Error en "+ command.getDeclaringClass() + ":\n\t" +
+				command.getName()+
+				AssertHelper.mostrar("Documentacion sobrante :", map.keySet());	
+		}
+		return exceptions;
+	}
+}
+
+/**
+ * 
+ */
+enum Visibility{
+	
+	Public('+'),
+	Protected('#'),
+	Package('~'),
+	Private('-');
+	
+	public static Visibility fromModifiers(int att){
+		if( Modifier.isPublic(att) )
+			return Public;
+		if( Modifier.isProtected(att) )
+			return Protected;
+		if( Modifier.isPrivate(att) )
+			return Private;
+		return Package;
+	}
+	
+	private final char c;
+	
+	private Visibility(char c){
+		this.c = c;
+	}
+	
+	public final char toChar(){
+		return c;
+	}
+}
+
+abstract class SimpleClassBinding {
+	
+	static class Interface extends SimpleClassBinding{
+		Interface(Type type){
+			super( Adapter.toString(type) );
+		}
+	}
+
+	static class Enum extends SimpleClassBinding{
+		Enum(Type type){
+			super( Adapter.toString(type) );
+		}
+	}
+
+	static class Clazz extends SimpleClassBinding{
+
+		final boolean isAbstract;
+		
+		Clazz(Type type){
+			super( Adapter.toString(type) );
+			if(type instanceof Class<?>)
+				this.isAbstract = Modifier.isAbstract( ((Class<?>)type).getModifiers() );
+			else if(type instanceof ParameterizedType)
+				this.isAbstract = Modifier.isAbstract( ((Class<?>)((ParameterizedType)type).getRawType()).getModifiers() );
+			else
+				throw new IllegalArgumentException(type.toString());
+		}
+
+	}
+	
+	static final SimpleClassBinding from(Type type){
+		
+		if(type instanceof Class<?>){
+			Class<?> clazz = (Class<?>)type;
+			if(clazz.isInterface())
+				return new Interface( type );
+			if(clazz.isEnum())
+				return new Enum( type );
+			return new Clazz( type );
+		}
+		if(type instanceof ParameterizedType){
+			Class<?> clazz = (Class<?>)((ParameterizedType)type).getRawType();
+			if(clazz.isInterface())
+				return new Interface( type );
+			return new Clazz( type );
+		}
+		throw new IllegalArgumentException();
+	}
+	
+	final String name;
+	
+	SimpleClassBinding(String name) {
+		this.name = name;
+	}
+}
+
+abstract class DocumentedType {
+	
+	final String type;
+	final String documentation;
+	
+	DocumentedType(String type){
+		this.type = type;
+		this.documentation = null;
+	}
+	
+	DocumentedType(String type, String documentation){
+		this.type = type;
+		this.documentation = documentation;
+	}
+}
+
+class TypeParamBinding extends DocumentedType{
+	
+	TypeParamBinding(TypeVariable<?> type){
+		super( Adapter.toString(type) );
+	}
+	
+	TypeParamBinding(TypeVariable<?> type, ParamTag tag){
+		super( Adapter.toString(type), tag != null ? tag.parameterComment(): null );
+	}
+}
+
+class ParameterBinding extends DocumentedType{
+	
+	final String name;
+	
+	ParameterBinding(Type type){
+		super( Adapter.toString(type) );
+		this.name = null;
+	}
+	
+	ParameterBinding(Type type, ParamTag tag){
+		super(Adapter.toString(type), tag != null ? tag.parameterComment(): null );
+		this.name =	tag != null ? tag.parameterName(): null;
+	}
+}
+
+class ReturnTypeBinding extends DocumentedType{
+	
+	ReturnTypeBinding(Type type){
+		super( Adapter.toString(type) );
+	}
+	
+	ReturnTypeBinding(Type type, Tag[] tags){
+		super(	Adapter.toString(type), Utils.concatComments(tags) );
+	}
+}
+
+class ExceptionBinding extends DocumentedType{
+	
+	ExceptionBinding(Type type){
+		super( Adapter.toString(type) );
+	}
+	
+	ExceptionBinding(Type type, ThrowsTag tag){
+		super(	Adapter.toString(type), tag != null ? tag.exceptionComment(): null );
+	}
+}
+
+class LinkBinding{
+	
+	final String link;
+	
+	LinkBinding(String link){
+		this.link = link;
+	}
+}
+
+abstract class DocumentedElement {
+	
+	final String name;
+	final String documentation;
+	final Collection<LinkBinding> links;
+	
+	DocumentedElement(String name, Doc doc){
+		this.name = name;
+		this.documentation = doc != null ? doc.commentText(): null;
+		this.links = Utils.getLinks(doc);
+	}
+	
+	DocumentedElement(String name){
+		this(name, null);
+	}
+}
+
+class ConstantBinding extends DocumentedElement{
+
+	ConstantBinding(String name) {
+		super(name);
+	}
+
+	ConstantBinding(String name, FieldDoc doc) {
+		super( name, doc );
+	}
+}
+
+class FieldBinding extends DocumentedElement{
+
+	final Visibility visibility;
+	final int modifiers;
+	final String type;
+	
+	FieldBinding( Field field, FieldDoc doc ){
+		super( 	field.getName(), doc );
+		this.modifiers = field.getModifiers();
+		this.visibility = Visibility.fromModifiers(modifiers);
+		this.type = Adapter.toString(field.getGenericType());
+	}
+	
+}
+
+abstract class CommandBinding extends DocumentedElement{
+
+	private static String getName(Member d){
+		return d instanceof Constructor<?> ?
+				((Constructor<?>)d).getDeclaringClass().getSimpleName():
+				d.getName();
+	}
+	
+	final Visibility visibility;
+	final Collection<TypeParamBinding> typeParams;
+	final Collection<ParameterBinding> params;
+	final Collection<ExceptionBinding> exceptions;
+
+	<T extends AccessibleObject & Member & GenericDeclaration>
+	CommandBinding(T command, ExecutableMemberDoc doc){
+		super( getName(command), doc );
+		this.visibility = Visibility.fromModifiers( command.getModifiers() );
+		
+		typeParams = Utils.getTypeParams(command, doc);
+		params = Utils.getParams(command, doc);
+		exceptions = Utils.getExceptions(command, doc);
+	}
+}
+
+class ConstructorBinding extends CommandBinding{
+	ConstructorBinding( Constructor<?> constructor, ConstructorDoc doc){
+		super( constructor, doc );
+	}
+}
+
+class MethodBinding extends CommandBinding{
+
+	private static MethodDoc checkOverride( MethodDoc doc ){
+		if( doc != null && doc.overriddenMethod() != null && doc.getRawCommentText().length() == 0)
+			doc.setRawCommentText("@see " + doc.overriddenClass().qualifiedTypeName() +"#"+Adapter.toString(doc));
+		return doc;
+	}
+	
+	final int modifiers;
+	final ReturnTypeBinding  returnType;
+	
+	MethodBinding( Method method, MethodDoc doc){
+		super( method, checkOverride(doc) );
+
+		this.modifiers = method.getModifiers();
+
+		if( method.getReturnType().equals(java.lang.Void.TYPE) )
+			returnType = null;
+		else{
+			if( doc == null )
+				returnType = new ReturnTypeBinding(method.getGenericReturnType());
+			else
+				returnType = new ReturnTypeBinding(method.getGenericReturnType(), doc.tags("@return"));
+		}
+	}
+}
+
+public abstract class ClassBinding extends DocumentedElement{
+	
+	static class Interface extends ClassBinding{
+	
+		final Collection<TypeParamBinding> parameters;
+		
+		Interface( Class<?> clazz, ClassDoc classDoc) {
+			super( clazz, classDoc );
+			this.parameters = Utils.getTypeParams(clazz, classDoc);
+			
+			this.enclosingClasses = Utils.getEnclosingClasses(clazz);
+			this.interfaces = Utils.getImplementedInterfaces(clazz);
+			
+			this.fields = Utils.getFields(clazz, classDoc);
+			this.methods = Utils.getMethods(clazz, classDoc);
+		}
+	}
+	
+	static class Enum extends ClassBinding{
+		
+		Collection<ConstantBinding> constants;
+		Collection<ConstructorBinding> constructors;
+		
+		Enum( Class<?> clazz, ClassDoc classDoc) {
+			super( clazz, classDoc );
+	
+			this.enclosingClasses = Utils.getEnclosingClasses(clazz);
+			this.interfaces = Utils.getImplementedInterfaces(clazz);
+			
+			this.constants = Utils.getConstants(clazz, classDoc);
+			this.fields = Utils.getFields(clazz, classDoc);
+			this.constructors = Utils.getConstructors(clazz, classDoc);
+			this.methods = Utils.getMethods(clazz, classDoc);
+		}
+	
+	}
+
+	static class Clazz extends ClassBinding{
+		
+		final boolean isAbstract;
+		final Collection<TypeParamBinding> parameters;
+
+		final Collection<SimpleClassBinding> hierarchy;
+		final Collection<ConstructorBinding> constructors;
+		
+		Clazz( Class<?> clazz, ClassDoc classDoc) {
+			super( clazz, classDoc);
+
+			this.isAbstract = Modifier.isAbstract( clazz.getModifiers() );
+			this.parameters = Utils.getTypeParams(clazz, classDoc);
+			
+			this.hierarchy = Utils.getHierarchyBinding(clazz);
+			this.enclosingClasses = Utils.getEnclosingClasses(clazz);
+			this.interfaces = Utils.getImplementedInterfaces(clazz);
+			
+			this.fields = Utils.getFields(clazz, classDoc);
+			this.constructors = Utils.getConstructors(clazz, classDoc);
+			this.methods = Utils.getMethods(clazz, classDoc);
+		}
+	}
+	
+	public static final void setClassLoader(ClassLoader classLoader){
+		Utils.setClassLoader(classLoader);
+	}
+
+	private final static ClassBinding newInstance( Class<?> clazz, ClassDoc classDoc ){
+		if(clazz.isInterface())
+			return new Interface( clazz, classDoc );
+		if(clazz.isEnum())
+			return new Enum( clazz, classDoc );
+		return new Clazz( clazz, classDoc );
+	}
+	
+	public final static ClassBinding from( Class<?> clazz ){
+		return newInstance( clazz, null );
+	}
+	
+	public final static ClassBinding from( ClassDoc classDoc ) throws ClassNotFoundException{
+		return newInstance( Utils.find(classDoc), classDoc );
+	}
+	
+	public final static ClassBinding from( Class<?> clazz, ClassDoc classDoc ) throws ClassNotFoundException{
+		return newInstance( Utils.find( clazz, classDoc.qualifiedName() ), classDoc );
 	}
 	
 	Collection<SimpleClassBinding> enclosingClasses;
@@ -1148,8 +850,8 @@ public abstract class ClassBinding extends DocumentedElementLinks{
 	Collection<FieldBinding> fields;
 	Collection<MethodBinding> methods;
 	
-	ClassBinding(Pair<Class<?>, ClassDoc> clazz) {
-		super(Adapter.toString(clazz.d1), clazz.d2);
+	ClassBinding( Class<?> clazz, ClassDoc classDoc ) {
+		super( Adapter.toString(clazz), classDoc );
 	}
 }
 
