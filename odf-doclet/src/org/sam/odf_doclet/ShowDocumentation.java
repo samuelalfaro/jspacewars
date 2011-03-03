@@ -22,6 +22,7 @@
 package org.sam.odf_doclet;
 
 import org.sam.odf_doclet.bindings.ClassBinding;
+import org.sam.odf_doclet.bindings.ClassBindingFactory;
 import org.sam.odf_doclet.bindings.Recorders;
 import org.sam.xml.XMLConverter;
 import org.sam.xml.XMLWriter;
@@ -42,27 +43,25 @@ public class ShowDocumentation {
 
 	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
 		
-		String projectRootpath  = ""; boolean foundProjectRootpath = false;
-		String projectClasspath = ""; boolean foundProjectClasspath = false;
+		String projectRootpath  = null;
+		String projectClasspath = null;
 		
 		for(String[] option: options){
 			if(option[0].equalsIgnoreCase("-projectRootpath")){
-				if(foundProjectRootpath){
+				if(projectRootpath != null){
 					reporter.printError("Only one -projectRootpath option allowed.");
 					return false;
 				}
-				foundProjectRootpath = true;
 				projectRootpath = option[1];
 			}else if(option[0].equalsIgnoreCase("-projectClasspath")){
-				if(foundProjectClasspath){
+				if(projectClasspath != null){
 					reporter.printError("Only one -projectClasspath option allowed.");
 					return false;
 				}
-				foundProjectClasspath = true;
 				projectClasspath = option[1];
 			}
 		}
-		ClassBinding.setClassLoader(ClassLoaderTools.getLoader( projectRootpath, projectClasspath ) );
+		ClassBindingFactory.setClassLoader(ClassLoaderTools.getLoader( projectRootpath, projectClasspath ) );
 		return true;
 	}
 	
@@ -75,7 +74,7 @@ public class ShowDocumentation {
 		converter.setWriter( new XMLWriter(System.out, true) );
 
 		for(ClassDoc classDoc: classes)
-			converter.write( ClassBinding.from(classDoc) );
+			converter.write( ClassBindingFactory.createBinding(classDoc) );
 
 		return true;
 	}

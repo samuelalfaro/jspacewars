@@ -21,9 +21,13 @@
  */
 package org.sam.odf_doclet.bindings;
 
+import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
+import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.PrettyXmlSerializer;
 import org.sam.xml.Recorder;
 import org.sam.xml.RecordersMapper;
 import org.sam.xml.XMLConverter;
@@ -48,6 +52,31 @@ public class Recorders {
 			for( T t: collection )
 				mapper.getRecorder(t.getClass()).record(t, writer, mapper);
 			writer.closeNode();
+		}
+	}
+	
+	private static final HtmlCleaner cleaner;
+	private static final PrettyXmlSerializer serializer;
+	    
+	
+	static{
+		CleanerProperties  props = new CleanerProperties();
+		// set some properties to non-default values
+		props.setTranslateSpecialEntities(true);
+		props.setTransResCharsToNCR(true);
+		props.setOmitComments(true);
+		
+		cleaner = new HtmlCleaner(props);
+		serializer = new PrettyXmlSerializer(props);
+	}
+	
+	static String clean(String s){
+		if(s == null || s.length() == 0)
+			return s;
+		try {
+			return serializer.getAsString( cleaner.clean(s), true );
+		} catch (IOException e) {
+			return null;
 		}
 	}
 	
@@ -116,7 +145,7 @@ public class Recorders {
 			
 			writer.openNode(nodeName);
 				writeNode( "Type", t.type, writer );
-				writeNode( "Documentation", t.documentation, writer );
+				writeNode( "Documentation", clean( t.documentation ), writer );
 			writer.closeNode();
 		}
 	}
@@ -134,7 +163,7 @@ public class Recorders {
 				if(t.name!=null)
 					writer.addAttribute("name", t.name);
 				writeNode( "Type", t.type, writer );
-				writeNode( "Documentation", t.documentation, writer );
+				writeNode( "Documentation", clean( t.documentation ), writer );
 			writer.closeNode();
 		}
 	}
@@ -163,7 +192,7 @@ public class Recorders {
 		public void record(ConstantBinding t, XMLWriter writer, RecordersMapper mapper){
 			writer.openNode("Constant");
 				writer.addAttribute("name", t.name);
-				writeNode( "Documentation", t.documentation, writer );
+				writeNode( "Documentation", clean( t.documentation ), writer );
 				writeNode( "Links", t.links, writer, mapper );
 			writer.closeNode();
 		}
@@ -190,7 +219,7 @@ public class Recorders {
 				if(Modifier.isFinal(t.modifiers))
 					writer.addAttribute("isFinal", true);
 				writeNode( "Type", t.type, writer );
-				writeNode( "Documentation", t.documentation, writer );
+				writeNode( "Documentation", clean( t.documentation ), writer );
 				writeNode( "Links", t.links, writer, mapper );
 			writer.closeNode();
 		}
@@ -208,7 +237,7 @@ public class Recorders {
 			writer.openNode("Constructor");
 				writer.addAttribute("name", t.name);
 				writer.addAttribute("visibility", t.visibility.toChar());
-				writeNode( "Documentation", t.documentation, writer );
+				writeNode( "Documentation", clean( t.documentation ), writer );
 				writeNode( "TypeParameters", t.typeParams, writer, mapper );
 				writeNode( "Parameters", t.params, writer, mapper );
 				writeNode( "Exceptions", t.exceptions, writer, mapper );
@@ -241,7 +270,7 @@ public class Recorders {
 					writer.addAttribute("isFinal", true);
 				if(Modifier.isSynchronized(t.modifiers))
 					writer.addAttribute("isSynchronized", true);
-				writeNode( "Documentation", t.documentation, writer );
+				writeNode( "Documentation", clean( t.documentation ), writer );
 				writeNode( "TypeParameters", t.typeParams, writer, mapper );
 				writeNode( "Parameters", t.params, writer, mapper );
 				if(t.returnType != null)
@@ -263,9 +292,9 @@ public class Recorders {
 		public void record(ClassBinding.Interface t, XMLWriter writer, RecordersMapper mapper){
 			writer.openNode( "Interface" );
 				writer.addAttribute( "name", t.name );
-				writeNode( "Documentation",  t.documentation, writer );
-				writeNode( "TypeParameters",  t.parameters, writer, mapper );
-				writeNode( "Links",  t.links, writer, mapper );
+				writeNode( "Documentation", clean( t.documentation ), writer );
+				writeNode( "TypeParameters", t.parameters, writer, mapper );
+				writeNode( "Links", t.links, writer, mapper );
 				
 				writeNode( "EnclosingClasses", t.enclosingClasses, writer, mapper );
 				writeNode( "Interfaces", t.interfaces, writer, mapper );
@@ -286,8 +315,8 @@ public class Recorders {
 		public void record(ClassBinding.Enum t, XMLWriter writer, RecordersMapper mapper){
 			writer.openNode( "Enum" );
 				writer.addAttribute( "name", t.name );
-				writeNode( "Documentation",  t.documentation, writer );
-				writeNode( "Links",  t.links, writer, mapper );
+				writeNode( "Documentation", clean( t.documentation ), writer );
+				writeNode( "Links", t.links, writer, mapper );
 				
 				writeNode( "EnclosingClasses", t.enclosingClasses, writer, mapper );
 				writeNode( "Interfaces", t.interfaces, writer, mapper );
@@ -311,7 +340,7 @@ public class Recorders {
 				writer.addAttribute( "name", t.name );
 				if(t.isAbstract)
 					writer.addAttribute( "isAbstract", t.isAbstract );
-				writeNode( "Documentation", t.documentation, writer );
+				writeNode( "Documentation", clean( t.documentation ), writer );
 				writeNode( "TypeParameters", t.parameters, writer, mapper );
 				writeNode( "Links", t.links, writer, mapper );
 				

@@ -41,6 +41,12 @@ public class ClassLoaderTools {
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		
+		if(classpath == null || classpath.length() == 0)
+			return classLoader;
+		
+		if(rootpath == null)
+			rootpath = "";
+		
 		StringTokenizer paths = new StringTokenizer(classpath, ":;");
 
 		Collection<File> filePaths = new ArrayDeque<File>();

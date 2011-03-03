@@ -57,7 +57,7 @@ public class PruebaToPNG {
 		//*/
 		
 		System.out.print("Generando gráfico de "+clazz.getSimpleName()+" ...");
-		PipeLine.setClass(clazz);
+		PipeLine.setSource(clazz);
 		PipeLine.toXML(System.out);
 		PipeLine.toPNG(new FileOutputStream("output/out.png"));
 		System.out.println("\tok");

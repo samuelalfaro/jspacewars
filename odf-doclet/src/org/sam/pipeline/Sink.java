@@ -1,5 +1,5 @@
 /* 
- * Filter.java
+ * Sink.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -23,10 +23,14 @@ package org.sam.pipeline;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
-public interface Filter extends PipeConnector, Pump {
+/**
+ * 
+ */
+public interface Sink extends PipeConnector {
 	
-	void process(InputStream in, OutputStream out) throws IOException, FilterException;
+	void process() throws IOException;
+	
+	void process(InputStream in) throws IOException, FilterException;
 	
 }

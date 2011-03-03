@@ -21,6 +21,7 @@
  */
 package org.sam.odf_doclet.pipeline;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.imageio.ImageIO;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -43,38 +45,33 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.sam.odf_doclet.bindings.ClassBinding;
+import org.sam.odf_doclet.bindings.ClassBindingFactory;
 import org.sam.odf_doclet.bindings.Recorders;
 import org.sam.pipeline.Filter;
 import org.sam.pipeline.FilterAbs;
 import org.sam.pipeline.FilterException;
-import org.sam.pipeline.Filterable;
+import org.sam.pipeline.Pump;
+import org.sam.pipeline.Sink;
+import org.sam.pipeline.SinkAbs;
 import org.sam.xml.XMLConverter;
 import org.sam.xml.XMLWriter;
 
-class ToXML implements Filterable{
+class ToXML implements Pump{
 
 	private final XMLConverter converter;
-	private ClassBinding clazz;
 	
 	ToXML(){
 		converter = new XMLConverter();
 		Recorders.register(converter);
 	}
 
-	/**
-	 * @param clazz valor del clazz asignado.
-	 */
-	public void setClass(ClassBinding clazz) {
-		this.clazz = clazz;
-	}
-
 	/* (non-Javadoc)
-	 * @see org.sam.pipeline.Filter#process(java.io.InputStream, java.io.OutputStream)
+	 * @see org.sam.pipeline.Pump#process(java.io.OutputStream)
 	 */
 	@Override
 	public void process(OutputStream out) throws IOException {
 		converter.setWriter( new XMLWriter( out, false ) );
-		converter.write(clazz);
+		converter.write(PipeLine.getSource());
 	}
 }
 
@@ -82,7 +79,7 @@ class ToSVG extends FilterAbs{
 	
 	private final Transformer transformer;
 
-	ToSVG() throws FileNotFoundException, TransformerFactoryConfigurationError, TransformerConfigurationException{
+	ToSVG(Pump source) throws IOException, FileNotFoundException, TransformerFactoryConfigurationError, TransformerConfigurationException{
 		File template = new File("resources/shared/toSVG.xsl");
 		transformer = TransformerFactory.newInstance().newTransformer(
 				new StreamSource(new FileInputStream(template), template.toString() )
@@ -91,6 +88,7 @@ class ToSVG extends FilterAbs{
 		transformer.setParameter("background", "#FFFFFF");
 		transformer.setParameter("widthChar1", 6.6);
 		transformer.setParameter("widthChar2", 9.0);
+		setPump(source);
 	}
 	
 	/* (non-Javadoc)
@@ -110,9 +108,10 @@ class ToPNG extends FilterAbs{
 	
 	final ImageTranscoder transcoder;
 	
-	ToPNG(){
+	ToPNG(Pump source) throws IOException{
 		transcoder = new PNGTranscoder();
-		transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_EXECUTE_ONLOAD, Boolean.TRUE);	
+		transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_EXECUTE_ONLOAD, Boolean.TRUE);
+		setPump(source);
 	}
 	
 	/* (non-Javadoc)
@@ -127,40 +126,68 @@ class ToPNG extends FilterAbs{
         try {
 			transcoder.transcode( input, output );
 		} catch (TranscoderException e) {
-			throw new FilterException("ToSVG Error!!!", e);
+			throw new FilterException("ToPNG Error!!!", e);
 		}
 	}
 }
 
-/**
- * 
- */
+class ToIMG extends SinkAbs{
+	
+	ToIMG(Pump source) throws IOException{
+		setPump(source);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.sam.pipeline.Sink#process(java.io.InputStream)
+	 */
+	@Override
+	public void process(InputStream in) throws IOException, FilterException {
+		PipeLine.setDestination( ImageIO.read(in) );
+	}
+}
+
 public final class PipeLine {
 	
 	private PipeLine(){}
 	
-	private static ToXML  source;
+	private static Pump   toXML;
 	private static Filter toSVG;
 	private static Filter toPNG;
+	private static Sink   toIMG;
 	
 	static{
 		try {
-			source = new ToXML();
-			toSVG = new ToSVG();
-			toSVG.setSource(source);
-			toPNG = new ToPNG();
-			toPNG.setSource(toSVG);
+			toXML = new ToXML();
+			toSVG = new ToSVG(toXML);
+			toPNG = new ToPNG(toSVG);
+			toIMG = new ToIMG(toPNG);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void setClass(Class<?> clazz){
-		source.setClass( ClassBinding.from(clazz) );
+	private static ClassBinding source;
+
+	static ClassBinding getSource(){
+		return source;
+	}
+	
+	public static void setSource(Class<?> source){
+		PipeLine.source = ClassBindingFactory.createBinding(source);
+	}
+	
+	private static BufferedImage destination;
+	
+	static void setDestination(BufferedImage destination){
+		PipeLine.destination = destination;
+	}
+	
+	public static BufferedImage getDestination(){
+		return destination;
 	}
 	
 	public static void toXML(OutputStream out) throws IOException{
-		source.process(out);
+		toXML.process(out);
 	}
 	
 	public static void toSVG(OutputStream out) throws IOException{
@@ -169,5 +196,9 @@ public final class PipeLine {
 	
 	public static void toPNG(OutputStream out) throws IOException{
 		toPNG.process(out);
+	}
+	
+	public static void toIMG() throws IOException{
+		toIMG.process();
 	}
 }

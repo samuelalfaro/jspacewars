@@ -1,5 +1,5 @@
 /* 
- * Filterable.java
+ * SinkAbs.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -22,10 +22,33 @@
 package org.sam.pipeline;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
-public interface Filterable{
+public abstract class SinkAbs extends PipeConectorAbs implements Sink{
 	
-	void process(OutputStream out) throws IOException;
-	
+	/* (non-Javadoc)
+	 * @see org.sam.pipeline.Sink#process()
+	 */
+	@Override
+	public final void process() throws IOException{
+		if(pump == null)
+			throw new RuntimeException("Source is null");
+		
+		PipedOutputStream pipeOut = new PipedOutputStream();
+		pump.setOutput(pipeOut);
+		Thread sourceThread = new Thread(pump);
+		
+		PipedInputStream pipeIn;
+		pipeIn = new PipedInputStream();
+		pipeIn.connect(pipeOut);
+		
+		sourceThread.start();
+		process(pipeIn);
+		try {
+			sourceThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }

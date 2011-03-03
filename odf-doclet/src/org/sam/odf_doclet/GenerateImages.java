@@ -131,11 +131,11 @@ public class GenerateImages {
 				System.out.format("package: %s\n", packageName.length() > 0 ? packageName : "(default  package)" );
 				for(Class<?> clazz:packageInterfacesSet){
 					System.out.println("\t"+clazz.getCanonicalName());
-					PipeLine.setClass(clazz);
+					PipeLine.setSource(clazz);
 					PipeLine.toPNG(new FileOutputStream("output/"+clazz.getCanonicalName()+".png"));
 
 					for(Class<?> subclazz : clazz.getDeclaredClasses()){
-						PipeLine.setClass(subclazz);
+						PipeLine.setSource(subclazz);
 						PipeLine.toPNG(new FileOutputStream("output/"+subclazz.getCanonicalName()+".png"));	
 					}
 				}if(packageClassesCollection.size() > 0){
@@ -144,10 +144,10 @@ public class GenerateImages {
 						listadoDeClasesOrdenado.add(clazz);
 					for(Class<?> clazz:listadoDeClasesOrdenado){
 						System.out.println("\t"+clazz.getCanonicalName());
-						PipeLine.setClass(clazz);
+						PipeLine.setSource(clazz);
 						PipeLine.toPNG(new FileOutputStream("output/"+clazz.getCanonicalName()+".png"));
 						for(Class<?> subclazz : clazz.getDeclaredClasses()){
-							PipeLine.setClass(subclazz);
+							PipeLine.setSource(subclazz);
 							PipeLine.toPNG(new FileOutputStream("output/"+subclazz.getCanonicalName()+".png"));
 						}
 					}

@@ -820,30 +820,6 @@ public abstract class ClassBinding extends DocumentedElement{
 		}
 	}
 	
-	public static final void setClassLoader(ClassLoader classLoader){
-		Utils.setClassLoader(classLoader);
-	}
-
-	private final static ClassBinding newInstance( Class<?> clazz, ClassDoc classDoc ){
-		if(clazz.isInterface())
-			return new Interface( clazz, classDoc );
-		if(clazz.isEnum())
-			return new Enum( clazz, classDoc );
-		return new Clazz( clazz, classDoc );
-	}
-	
-	public final static ClassBinding from( Class<?> clazz ){
-		return newInstance( clazz, null );
-	}
-	
-	public final static ClassBinding from( ClassDoc classDoc ) throws ClassNotFoundException{
-		return newInstance( Utils.find(classDoc), classDoc );
-	}
-	
-	public final static ClassBinding from( Class<?> clazz, ClassDoc classDoc ) throws ClassNotFoundException{
-		return newInstance( Utils.find( clazz, classDoc.qualifiedName() ), classDoc );
-	}
-	
 	Collection<SimpleClassBinding> enclosingClasses;
 	Collection<SimpleClassBinding> interfaces;
 	

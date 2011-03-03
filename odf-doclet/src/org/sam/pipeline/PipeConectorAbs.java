@@ -1,5 +1,5 @@
 /* 
- * Filter.java
+ * PipeConectorAbs.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -22,11 +22,41 @@
 package org.sam.pipeline;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
-public interface Filter extends PipeConnector, Pump {
+abstract class PipeConectorAbs implements PipeConnector{
 	
-	void process(InputStream in, OutputStream out) throws IOException, FilterException;
+	static class RunnablePump implements Runnable{
+		
+		private final Pump pump;
+		private OutputStream out;
+		
+		RunnablePump(Pump pump){
+			this.pump = pump;
+		}
+		
+		public void run() {
+			try {
+				pump.process(out);
+				out.flush();
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		public void setOutput(OutputStream out){
+			this.out = out;
+		}
+	}
 	
+	RunnablePump pump;
+	
+	/* (non-Javadoc)
+	 * @see org.sam.pipeline.PipeConnector#setPump(org.sam.pipeline.Pump)
+	 */
+	@Override
+	public final void setPump(Pump pump) throws IOException {
+		this.pump = new RunnablePump(pump);
+	}
 }

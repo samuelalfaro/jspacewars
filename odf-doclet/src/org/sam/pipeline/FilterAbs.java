@@ -26,45 +26,19 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-public abstract class FilterAbs implements Filter{
+public abstract class FilterAbs extends PipeConectorAbs implements Filter{
 	
-	private static class RunnableSource implements Runnable{
-		
-		private final Filterable source;
-		private OutputStream out;
-		
-		RunnableSource(Filterable source){
-			this.source = source;
-		}
-		
-		public void run() {
-			try {
-				source.process(out);
-				out.flush();
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		public void setOutput(OutputStream out){
-			this.out = out;
-		}
-	}
-	
-	private RunnableSource source;
-	
-	public final void setSource(Filterable source) throws IOException {
-		this.source = new RunnableSource(source);
-	}
-		
+	/* (non-Javadoc)
+	 * @see org.sam.pipeline.Pump#process(java.io.OutputStream)
+	 */
+	@Override
 	public final void process(OutputStream out) throws IOException{
-		if(source == null)
+		if(pump == null)
 			throw new RuntimeException("Source is null");
 		
 		PipedOutputStream pipeOut = new PipedOutputStream();
-		source.setOutput(pipeOut);
-		Thread sourceThread = new Thread(source);
+		pump.setOutput(pipeOut);
+		Thread sourceThread = new Thread(pump);
 		
 		PipedInputStream pipeIn;
 		pipeIn = new PipedInputStream();
