@@ -54,26 +54,56 @@ public final class XMLWriter{
 	
 	private interface TabsManager{
 		
+		/**
+		 */
 		static final class Default implements TabsManager{
+			/**
+			 * Method add.
+			 * @see org.sam.xml.XMLWriter$TabsManager#add()
+			 */
 			final public void add(){}
+			/**
+			 * Method remove.
+			 * @see org.sam.xml.XMLWriter$TabsManager#remove()
+			 */
 			final public void remove(){}
+			/**
+			 * Method get.
+			 * @return String
+			 * @see org.sam.xml.XMLWriter$TabsManager#get()
+			 */
 			final public String get(){
 				return "";
 			}
 		}
 		
+		/**
+		 */
 		static final class Tabulate implements TabsManager{
 			
 			private String tabs = "";
 			
+			/**
+			 * Method add.
+			 * @see org.sam.xml.XMLWriter$TabsManager#add()
+			 */
 			final public void add(){
 				tabs = tabs.concat("\t");
 			}
 			
+			/**
+			 * Method remove.
+			 * @see org.sam.xml.XMLWriter$TabsManager#remove()
+			 */
 			final public void remove(){
 				tabs = tabs.substring(1);
 			}
 			
+			/**
+			 * Method get.
+			 * @return String
+			 * @see org.sam.xml.XMLWriter$TabsManager#get()
+			 */
 			final public String get(){
 				return tabs;
 			}
@@ -81,6 +111,10 @@ public final class XMLWriter{
 		
 		void add();
 		void remove();
+		/**
+		 * Method get.
+		 * @return String
+		 */
 		String get();
 	}
 	
@@ -102,6 +136,11 @@ public final class XMLWriter{
 	private final String eol;
 	private int previousNodeDepth;
 	
+	/**
+	 * Constructor for XMLWriter.
+	 * @param out OutputStream
+	 * @param tabulate boolean
+	 */
 	public XMLWriter( OutputStream out, boolean tabulate ) {
 		this.out = toPrintStream(out);
 		this.nodeStack = new ArrayDeque<String>();
@@ -117,6 +156,10 @@ public final class XMLWriter{
 		this.previousNodeDepth = 0;
 	}
 	
+	/**
+	 * Constructor for XMLWriter.
+	 * @param out OutputStream
+	 */
 	public XMLWriter( OutputStream out ) {
 		this(out, false);
 	}
@@ -131,48 +174,96 @@ public final class XMLWriter{
 		return true;
 	}
 	
+	/**
+	 * Method openNode.
+	 * @param nodeName String
+	 */
 	public void openNode(String nodeName) {
 		if(flushPreviousNode())
-			out.append(">").append(eol);
+			out.append('>').append(eol);
 		out.append(tabs.get()).append('<').append(nodeName);
 		nodeStack.push(nodeName);
 		tabs.add();
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value String
+	 */
 	public void addAttribute(String name, String value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value boolean
+	 */
 	public void addAttribute(String name, boolean value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value char
+	 */
 	public void addAttribute(String name, char value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value int
+	 */
 	public void addAttribute(String name, int value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value long
+	 */
 	public void addAttribute(String name, long value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value float
+	 */
 	public void addAttribute(String name, float value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value double
+	 */
 	public void addAttribute(String name, double value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
+	/**
+	 * Method addAttribute.
+	 * @param name String
+	 * @param value Object
+	 */
 	public void addAttribute(String name, Object value) {
 		attributes.append(' ').append(name).append("=\"").append(value).append('\"');
 	}
 	
-	private transient boolean hasContent = false;
+	private boolean hasContent = false;
 	
+	/**
+	 * Method write.
+	 * @param content String
+	 */
 	public void write(String content) {
 		hasContent = content != null && content.length() > 0;
 		if( hasContent ){
@@ -185,7 +276,7 @@ public final class XMLWriter{
 		tabs.remove();
 		if( nodeStack.size() != previousNodeDepth ){
 			if(hasContent){
-				out.append("</").append(nodeStack.pop()).append(">").append(eol);
+				out.append("</").append(nodeStack.pop()).append('>').append(eol);
 				hasContent = false;
 			}else{
 				flushPreviousNode();
@@ -193,7 +284,7 @@ public final class XMLWriter{
 				nodeStack.pop();
 			}
 		}else
-			out.append(tabs.get()).append("</").append(nodeStack.pop()).append(">").append(eol);
+			out.append(tabs.get()).append("</").append(nodeStack.pop()).append('>').append(eol);
 		previousNodeDepth = nodeStack.size();
 	}
 }

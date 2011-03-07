@@ -33,14 +33,26 @@ public class XMLConverter {
 		this.mapper = new RecordersMapper();
 	}
 	
+	/**
+	 * Method setWriter.
+	 * @param writer XMLWriter
+	 */
 	public void setWriter(XMLWriter writer){
 		this.writer = writer;
 	}
 	
+	/**
+	 * Method register.
+	 * @param recorder Recorder<T>
+	 */
 	public <T> void register( Recorder<T> recorder ){
 		mapper.putRecorder( recorder );
 	}
 
+	/**
+	 * Method write.
+	 * @param t T
+	 */
 	public <T> void write( T t ){
 		mapper.getRecorder( t.getClass() ).record( t, writer, mapper );
 	}

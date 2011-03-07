@@ -41,8 +41,15 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.RootDoc;
 
+/**
+ */
 public class ODFDoclet {
 	
+	/**
+	 * Method optionLength.
+	 * @param option String
+	 * @return int
+	 */
 	public static int optionLength(String option) {
 		if (option.equalsIgnoreCase("-projectRootpath")) 
 			return 2;
@@ -51,6 +58,12 @@ public class ODFDoclet {
 		return 0;
 	}
 
+	/**
+	 * Method validOptions.
+	 * @param options String[][]
+	 * @param reporter DocErrorReporter
+	 * @return boolean
+	 */
 	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
 		
 		String projectRootpath  = null;
@@ -75,6 +88,15 @@ public class ODFDoclet {
 		return true;
 	}
 	
+	/**
+	 * Method generarODT.
+	 * @param sourceContent InputStream
+	 * @param sourceStylesheet InputStream
+	 * @param platillaODT File
+	 * @param images String[]
+	 * @param manifestStylesheet InputStream
+	 * @return File
+	 */
 	public static File generarODT(
 			InputStream sourceContent, InputStream sourceStylesheet,
 			File platillaODT, String images[], InputStream manifestStylesheet
@@ -121,6 +143,12 @@ public class ODFDoclet {
 		}
 	}
 	
+	/**
+	 * Method start.
+	 * @param root RootDoc
+	 * @return boolean
+	 * @throws ClassNotFoundException
+	 */
 	public static boolean start(RootDoc root) throws ClassNotFoundException {
 
 		ClassDoc[] classes = root.classes();

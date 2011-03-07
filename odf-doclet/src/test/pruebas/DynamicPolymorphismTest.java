@@ -1,3 +1,4 @@
+// $codepro.audit.disable
 package pruebas;
 
 import java.lang.Float;
@@ -8,10 +9,18 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ */
 interface I<T>{
+	/**
+	 * Method bar.
+	 * @param t T
+	 */
 	void bar(T t);
 }
 
+/**
+ */
 public class DynamicPolymorphismTest {
 
 	private static final Comparator<Class<?>> comparator = new Comparator<Class<?>>(){
@@ -27,6 +36,12 @@ public class DynamicPolymorphismTest {
 		map = new TreeMap<Class<?>, I<?>>(comparator);
 	}
 	
+	/**
+	 * Method getActualTypeArgument.
+	 * @param instance Object
+	 * @param parameterizedType Class<?>
+	 * @return Type
+	 */
 	Type getActualTypeArgument(Object instance, Class<?> parameterizedType){
 		Class<?> clazz= instance.getClass();
 		do{
@@ -41,12 +56,21 @@ public class DynamicPolymorphismTest {
 		return null;
 	}
 	
+	/**
+	 * Method put.
+	 * @param i I<?>
+	 */
 	void put( I<?> i ){
 		Type type = getActualTypeArgument(i, I.class);
 		Class<?> c =  (Class<?>)( type instanceof Class ? type : ((ParameterizedType)type).getRawType() );
 		map.put( c, i );
 	}
 	
+	/**
+	 * Method get.
+	 * @param clazz Class<? extends T>
+	 * @return I<? super T>
+	 */
 	@SuppressWarnings("unchecked")
 	<T> I<? super T> get( Class<? extends T> clazz ){
 		
@@ -66,6 +90,10 @@ public class DynamicPolymorphismTest {
 		}
 	}
 	
+	/**
+	 * Method foo.
+	 * @param t T
+	 */
 	<T> void foo(T t){
 		Class<?> clazz = t.getClass();
 		if( clazz.isArray() ){
@@ -175,6 +203,10 @@ public class DynamicPolymorphismTest {
 		foo( Arrays.asList(new Object[]{1,"Hola",19.0,'c'}) );
 	}
 	
+	/**
+	 * Method main.
+	 * @param args String[]
+	 */
 	public static void main(String... args){
 		new DynamicPolymorphismTest().prueba();
 	}

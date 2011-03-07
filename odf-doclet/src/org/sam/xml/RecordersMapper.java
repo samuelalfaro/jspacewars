@@ -59,12 +59,22 @@ public final class RecordersMapper{
 		return null;
 	}
 	
+	/**
+	 * Method putRecorder.
+	 * @param recorder Recorder<?>
+	 */
 	void putRecorder( Recorder<?> recorder ){
 		Type type = getActualTypeArgument( recorder, Recorder.class );
 		Class<?> c =  (Class<?>)( type instanceof Class ? type : ((ParameterizedType)type).getRawType() );
 		map.put( c, recorder );
 	}
 	
+	/**
+	 * Method getRecorder.
+	 * @param clazz Class<? extends T>
+	 * @return Recorder<? super T>
+	 * @throws RuntimeException
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> Recorder<? super T> getRecorder( Class<? extends T> clazz )throws RuntimeException{
 		

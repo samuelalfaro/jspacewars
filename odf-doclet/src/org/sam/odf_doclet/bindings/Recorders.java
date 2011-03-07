@@ -38,6 +38,12 @@ import org.sam.xml.XMLWriter;
  */
 public class Recorders {
 	
+	/**
+	 * Method writeNode.
+	 * @param nodeName String
+	 * @param content String
+	 * @param writer XMLWriter
+	 */
 	static void writeNode( String nodeName, String content, XMLWriter writer ) {
 		if( content != null && content.length() > 0 ){
 			writer.openNode(nodeName);
@@ -46,6 +52,13 @@ public class Recorders {
 		}
 	}
 	
+	/**
+	 * Method writeNode.
+	 * @param nodeName String
+	 * @param collection Collection<T>
+	 * @param writer XMLWriter
+	 * @param mapper RecordersMapper
+	 */
 	static <T> void writeNode( String nodeName, Collection<T> collection, XMLWriter writer, RecordersMapper mapper ) {
 		if( collection != null && collection.size() > 0 ){
 			writer.openNode( nodeName );
@@ -70,6 +83,11 @@ public class Recorders {
 		serializer = new PrettyXmlSerializer(props);
 	}
 	
+	/**
+	 * Method clean.
+	 * @param s String
+	 * @return String
+	 */
 	static String clean(String s){
 		if(s == null || s.length() == 0)
 			return s;
@@ -89,6 +107,12 @@ public class Recorders {
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
 		 */
+		/**
+		 * Method record.
+		 * @param t SimpleClassBinding.Interface
+		 * @param writer XMLWriter
+		 * @param mapper RecordersMapper
+		 */
 		@Override
 		public void record(SimpleClassBinding.Interface t, XMLWriter writer, RecordersMapper mapper){
 			writeNode( "Interface", t.name, writer );
@@ -102,6 +126,12 @@ public class Recorders {
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
 		 */
+		/**
+		 * Method record.
+		 * @param t SimpleClassBinding.Enum
+		 * @param writer XMLWriter
+		 * @param mapper RecordersMapper
+		 */
 		@Override
 		public void record(SimpleClassBinding.Enum t, XMLWriter writer, RecordersMapper mapper){
 			writeNode( "Enum", t.name, writer );
@@ -114,6 +144,12 @@ public class Recorders {
 		
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
+		 */
+		/**
+		 * Method record.
+		 * @param t SimpleClassBinding.Clazz
+		 * @param writer XMLWriter
+		 * @param mapper RecordersMapper
 		 */
 		@Override
 		public void record(SimpleClassBinding.Clazz t, XMLWriter writer, RecordersMapper mapper){
@@ -131,6 +167,12 @@ public class Recorders {
 		
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
+		 */
+		/**
+		 * Method record.
+		 * @param t DocumentedType
+		 * @param writer XMLWriter
+		 * @param mapper RecordersMapper
 		 */
 		@Override
 		public void record(DocumentedType t, XMLWriter writer, RecordersMapper mapper){
@@ -157,6 +199,12 @@ public class Recorders {
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
 		 */
+		/**
+		 * Method record.
+		 * @param t ParameterBinding
+		 * @param writer XMLWriter
+		 * @param mapper RecordersMapper
+		 */
 		@Override
 		public void record(ParameterBinding t, XMLWriter writer, RecordersMapper mapper){
 			writer.openNode("Parameter");
@@ -174,6 +222,12 @@ public class Recorders {
 
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
+		 */
+		/**
+		 * Method record.
+		 * @param t LinkBinding
+		 * @param writer XMLWriter
+		 * @param mapper RecordersMapper
 		 */
 		@Override
 		public void record(LinkBinding t, XMLWriter writer, RecordersMapper mapper){
@@ -233,7 +287,7 @@ public class Recorders {
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
 		 */
 		@Override
-		public void record(ConstructorBinding t, XMLWriter writer, RecordersMapper mapper){
+		public void record(final ConstructorBinding t, XMLWriter writer, RecordersMapper mapper){
 			writer.openNode("Constructor");
 				writer.addAttribute("name", t.name);
 				writer.addAttribute("visibility", t.visibility.toChar());
@@ -354,6 +408,10 @@ public class Recorders {
 		}
 	}
 	
+	/**
+	 * Method register.
+	 * @param converter XMLConverter
+	 */
 	public static void register(XMLConverter converter){
 
 		converter.register( new SimpleInterfaceRecorder());

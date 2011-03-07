@@ -33,6 +33,8 @@ import com.sun.javadoc.ConstructorDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
 
+/**
+ */
 public final class Adapter {
 	
 	private Adapter(){}
@@ -43,6 +45,11 @@ public final class Adapter {
 		return clazz;
 	}
 	
+	/**
+	 * Method toString.
+	 * @param params TypeVariable<?>[]
+	 * @return String
+	 */
 	public static String toString(TypeVariable<?>[] params){
 		StringBuffer buff = new StringBuffer();
 		for(int i = 0; i < params.length; ){
@@ -53,6 +60,11 @@ public final class Adapter {
 		return buff.toString();
 	}
 	
+	/**
+	 * Method toString.
+	 * @param type TypeVariable<?>
+	 * @return String
+	 */
 	public static String toString(TypeVariable<?> type){
 		StringBuffer buff = new StringBuffer(type.getName());
 		Type[] bounds = type.getBounds();
@@ -70,6 +82,11 @@ public final class Adapter {
 		return buff.toString();
 	}
 	
+	/**
+	 * Method toString.
+	 * @param params Type[]
+	 * @return String
+	 */
 	public static String toString(Type[] params){
 		StringBuffer buff = new StringBuffer();
 		for(int i = 0; i < params.length; ){
@@ -80,6 +97,11 @@ public final class Adapter {
 		return buff.toString();
 	}
 	
+	/**
+	 * Method toString.
+	 * @param type Type
+	 * @return String
+	 */
 	public static String toString(Type type){
 		if(type instanceof Class<?>)
 			return toString((Class<?>)type);
@@ -101,6 +123,11 @@ public final class Adapter {
 		return type.toString();
 	}
 
+	/**
+	 * Method toString.
+	 * @param clazz Class<?>
+	 * @return String
+	 */
 	public static String toString(Class<?> clazz){
 		Package pack = clazz.isArray() ? 
 				getPrimaryComponentType(clazz).getPackage():
@@ -110,11 +137,21 @@ public final class Adapter {
 		return  clazz.getCanonicalName().substring(pack.getName().length() + 1);
 	}
 	
+	/**
+	 * Method toString.
+	 * @param type ParameterizedType
+	 * @return String
+	 */
 	public static String toString(ParameterizedType type){
 		return toString((Class<?>)type.getRawType()) + 
 				"<" + toString(type.getActualTypeArguments()) + ">";
 	}
 	
+	/**
+	 * Method toString.
+	 * @param type WildcardType
+	 * @return String
+	 */
 	public static String toString(WildcardType type){
 		StringBuffer buff = new StringBuffer("?");
 		Type[] bounds = type.getUpperBounds();
@@ -169,10 +206,21 @@ public final class Adapter {
 		return buff.toString();
 	}
 	
+	/**
+	 * Method toString.
+	 * @param constructor Constructor<?>
+	 * @return String
+	 */
 	public static String toString(Constructor<?> constructor) {
 		return toString( constructor.getDeclaringClass().getSimpleName(), constructor.getParameterTypes(), 0 );
 	}
 	
+	/**
+	 * Method toString.
+	 * @param constructor Constructor<?>
+	 * @param hideSyntheticAccesor boolean
+	 * @return String
+	 */
 	public static String toString( Constructor<?> constructor, boolean hideSyntheticAccesor ){
 		return toString(
 				constructor.getDeclaringClass().getSimpleName(),
@@ -181,14 +229,29 @@ public final class Adapter {
 		);
 	}
 	
+	/**
+	 * Method toString.
+	 * @param constructor ConstructorDoc
+	 * @return String
+	 */
 	public static String toString(ConstructorDoc constructor){
 		return toString(constructor.containingClass().simpleTypeName(),constructor.parameters());
 	}
 	
+	/**
+	 * Method toString.
+	 * @param method Method
+	 * @return String
+	 */
 	public static String toString(Method method){
 		return toString( method.getName(), method.getParameterTypes(), 0);
 	}
 	
+	/**
+	 * Method toString.
+	 * @param method MethodDoc
+	 * @return String
+	 */
 	public static String toString(MethodDoc method){
 		return toString(method.name(),method.parameters());
 	}

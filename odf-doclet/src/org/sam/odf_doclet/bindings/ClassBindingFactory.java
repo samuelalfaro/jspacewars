@@ -23,8 +23,14 @@ package org.sam.odf_doclet.bindings;
 
 import com.sun.javadoc.ClassDoc;
 
+/**
+ */
 public final class ClassBindingFactory{
 
+	/**
+	 * Method setClassLoader.
+	 * @param classLoader ClassLoader
+	 */
 	public static void setClassLoader(ClassLoader classLoader){
 		Utils.setClassLoader(classLoader);
 	}
@@ -37,14 +43,32 @@ public final class ClassBindingFactory{
 		return new ClassBinding.Clazz( clazz, classDoc );
 	}
 	
+	/**
+	 * Method createBinding.
+	 * @param clazz Class<?>
+	 * @return ClassBinding
+	 */
 	public static ClassBinding createBinding( Class<?> clazz ){
 		return newInstance( clazz, null );
 	}
 	
+	/**
+	 * Method createBinding.
+	 * @param classDoc ClassDoc
+	 * @return ClassBinding
+	 * @throws ClassNotFoundException
+	 */
 	public static ClassBinding createBinding( ClassDoc classDoc ) throws ClassNotFoundException{
 		return newInstance( Utils.find(classDoc), classDoc );
 	}
 	
+	/**
+	 * Method createBinding.
+	 * @param clazz Class<?>
+	 * @param classDoc ClassDoc
+	 * @return ClassBinding
+	 * @throws ClassNotFoundException
+	 */
 	public static ClassBinding createBinding( Class<?> clazz, ClassDoc classDoc ) throws ClassNotFoundException{
 		return newInstance( Utils.find( clazz, classDoc.qualifiedName() ), classDoc );
 	}

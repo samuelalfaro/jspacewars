@@ -26,7 +26,18 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+/**
+ */
 public abstract class FilterAbs extends PipeConectorAbs implements Filter{
+	
+	/**
+	 * Constructor for FilterAbs.
+	 * @param pump Pump
+	 * @throws IOException
+	 */
+	public FilterAbs(Pump pump) throws IOException{
+		super(pump);
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.sam.pipeline.Pump#process(java.io.OutputStream)

@@ -25,8 +25,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ */
 public interface Filter extends PipeConnector, Pump {
 	
+	/**
+	 * Method process.
+	 * @param in InputStream
+	 * @param out OutputStream
+	 * @throws IOException
+	 * @throws FilterException
+	 */
 	void process(InputStream in, OutputStream out) throws IOException, FilterException;
 	
 }

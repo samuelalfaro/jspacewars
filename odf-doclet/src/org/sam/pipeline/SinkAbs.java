@@ -25,7 +25,18 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+/**
+ */
 public abstract class SinkAbs extends PipeConectorAbs implements Sink{
+	
+	/**
+	 * Constructor for SinkAbs.
+	 * @param pump Pump
+	 * @throws IOException
+	 */
+	public SinkAbs(Pump pump) throws IOException{
+		super(pump);
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.sam.pipeline.Sink#process()

@@ -21,7 +21,6 @@
  */
 package org.sam.odf_doclet;
 
-import org.sam.odf_doclet.bindings.ClassBinding;
 import org.sam.odf_doclet.bindings.ClassBindingFactory;
 import org.sam.odf_doclet.bindings.Recorders;
 import org.sam.xml.XMLConverter;
@@ -31,8 +30,15 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
 import com.sun.javadoc.RootDoc;
 
+/**
+ */
 public class ShowDocumentation {
 	
+	/**
+	 * Method optionLength.
+	 * @param option String
+	 * @return int
+	 */
 	public static int optionLength(String option) {
 		if (option.equalsIgnoreCase("-projectRootpath")) 
 			return 2;
@@ -41,6 +47,12 @@ public class ShowDocumentation {
 		return 0;
 	}
 
+	/**
+	 * Method validOptions.
+	 * @param options String[][]
+	 * @param reporter DocErrorReporter
+	 * @return boolean
+	 */
 	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
 		
 		String projectRootpath  = null;
@@ -65,6 +77,12 @@ public class ShowDocumentation {
 		return true;
 	}
 	
+	/**
+	 * Method start.
+	 * @param root RootDoc
+	 * @return boolean
+	 * @throws ClassNotFoundException
+	 */
 	public static boolean start(RootDoc root) throws ClassNotFoundException {
 
 		ClassDoc[] classes = root.classes();

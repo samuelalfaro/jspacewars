@@ -26,6 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ */
 @Deprecated
 //TODO mirar plantillas velocity
 public class SVGProperties{
@@ -55,10 +57,21 @@ public class SVGProperties{
 		}
 	}
 
+	/**
+	 * Method getProperty.
+	 * @param key String
+	 * @return String
+	 */
 	public static String getProperty(String key) {
 		return RESOURCES.getProperty(key);
 	}
 	
+	/**
+	 * Method getProperty.
+	 * @param key String
+	 * @param defaultValue int
+	 * @return int
+	 */
 	public static int getProperty(String key, int defaultValue) {
 		try {
 			return Integer.parseInt( RESOURCES.getProperty(key) );
@@ -67,6 +80,12 @@ public class SVGProperties{
 		}
 	}
 	
+	/**
+	 * Method getProperty.
+	 * @param key String
+	 * @param defaultValue float
+	 * @return float
+	 */
 	public static float getProperty(String key, float defaultValue) {
 		try {
 			return Float.parseFloat( RESOURCES.getProperty(key) );
@@ -75,6 +94,11 @@ public class SVGProperties{
 		}
 	}
 	
+	/**
+	 * Method getTemplate.
+	 * @param key String
+	 * @return String
+	 */
 	public static String getTemplate(String key) {
 		return TEMPLATES.getProperty(key);
 	}

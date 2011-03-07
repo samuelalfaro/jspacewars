@@ -58,12 +58,21 @@ public class PruebaToXML {
 			toString(node, buff);
 	}
 	
+	/**
+	 * Method toString.
+	 * @param node TagNode
+	 * @return String
+	 */
 	public static String toString(TagNode node){
 		StringBuffer buff = new StringBuffer();
 		toString(node.getElementsByName("body", true), buff);
 		return buff.toString();
 	}
 
+	/**
+	 * Method main.
+	 * @param args String[]
+	 */
 	public static void main(String[] args) {
 
 		String s="Esto es un\na <b>prueba<i> de un <p>texto</b> mal form<br>ado</i> y <p>con simbolos raros</p> < y & > en html.";

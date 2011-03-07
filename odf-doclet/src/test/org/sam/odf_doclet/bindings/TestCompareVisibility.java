@@ -21,6 +21,8 @@
  */
 package org.sam.odf_doclet.bindings;
 
+/**
+ */
 public class TestCompareVisibility {
 
 	private static <T> void printComparation(Comparable<T> c1, T c2){
@@ -32,6 +34,10 @@ public class TestCompareVisibility {
 			System.out.println(c1 +" es menor que "+c2);
 	}
 	
+	/**
+	 * Method main.
+	 * @param args String[]
+	 */
 	public static void main(String... args) {
 
 		Visibility v1 = Visibility.Public;

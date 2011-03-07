@@ -53,10 +53,16 @@ import com.sun.javadoc.SourcePosition;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.ThrowsTag;
 
+/**
+ */
 final class Strings{
 	
 	private Strings(){}
 	
+	/**
+	 * Field CaseSensitiveComparator.
+	 * Value: {@value CaseSensitiveComparator}
+	 */
 	static final Comparator<String> CaseSensitiveComparator = new Comparator<String>(){
 		public int compare(String o1, String o2) {
 			return o1.compareTo(o2);
@@ -65,16 +71,25 @@ final class Strings{
 
 }
 
+/**
+ */
 final class AssertHelper{
 	
 	private AssertHelper(){}
 	
+
+	/**
+	 * @param <T>
+	 * @param titulo
+	 * @param map
+	 * @return
+	 */
 	static <T extends ProgramElementDoc> String mostrar(String titulo, Map<String, T> map){
 		StringBuffer buff = new StringBuffer(titulo);
 		for(Map.Entry< String, T> entry: map.entrySet()){
 			buff.append("\n[");
 			buff.append(entry.getValue().position().line());
-			buff.append(":");
+			buff.append(':');
 			buff.append(entry.getValue().position().column());
 			buff.append("] ");
 			buff.append(entry.getKey());
@@ -82,6 +97,12 @@ final class AssertHelper{
 		return buff.toString();
 	}
 	
+	/**
+	 * Method mostrar.
+	 * @param titulo String
+	 * @param collection Collection<String>
+	 * @return String
+	 */
 	static String mostrar(String titulo, Collection<String> collection){
 		StringBuffer buff = new StringBuffer(titulo);
 		for(String entry: collection){
@@ -92,20 +113,31 @@ final class AssertHelper{
 	}
 }
 
+/**
+ */
 final class Utils{
 	
 	private Utils(){}
 	
+	/**
+	 */
 	interface Filter<T>{
+		/**
+		 * Method validate.
+		 * @param t T
+		 * @return boolean
+		 */
 		boolean validate(T t);
 	}
 	
+	/**
+	 */
 	static class DocFilter<T extends ProgramElementDoc> implements Filter<T>{
 
 		SourcePosition classPosition;
 		
 		/* (non-Javadoc)
-		 * @see org.sam.odf_doclet.bindings.Filter#validate(java.lang.Object)
+		 * @see org.sam.odf_doclet.bindings.Utils.Filter#validate(java.lang.Object)
 		 */
 		@Override
 		public boolean validate(T doc) {
@@ -163,6 +195,10 @@ final class Utils{
 
 	private static ClassLoader classLoader;
 	
+	/**
+	 * Method setClassLoader.
+	 * @param classLoader ClassLoader
+	 */
 	static void setClassLoader(ClassLoader classLoader){
 		Utils.classLoader = classLoader;
 	}
@@ -173,6 +209,13 @@ final class Utils{
 		return classLoader;
 	}
 	
+	/**
+	 * Method find.
+	 * @param containingClazz Class<?>
+	 * @param canonicalName String
+	 * @return Class<?>
+	 * @throws ClassNotFoundException
+	 */
 	static Class<?> find(Class<?> containingClazz, String canonicalName) throws ClassNotFoundException{
 		if( canonicalName.equals(containingClazz.getCanonicalName()))
 			return containingClazz;
@@ -188,6 +231,12 @@ final class Utils{
 		throw new ClassNotFoundException( canonicalName + ": not found in " + containingClazz.getCanonicalName() );
 	}
 	
+	/**
+	 * Method find.
+	 * @param classDoc ClassDoc
+	 * @return Class<?>
+	 * @throws ClassNotFoundException
+	 */
 	static Class<?> find(ClassDoc classDoc) throws ClassNotFoundException{
 		if( classDoc.containingClass() == null)
 			return Class.forName( classDoc.qualifiedName(), false, Utils.getClassLoader() );
@@ -222,6 +271,11 @@ final class Utils{
 		return hierarchy;
 	}
 	
+	/**
+	 * Method getHierarchyBinding.
+	 * @param clazz Class<?>
+	 * @return Collection<SimpleClassBinding>
+	 */
 	static Collection<SimpleClassBinding> getHierarchyBinding(Class<?> clazz){
 		Deque<SimpleClassBinding> hierarchy = new ArrayDeque<SimpleClassBinding>();
 		for(Type type: getHierarchy(clazz))
@@ -230,6 +284,11 @@ final class Utils{
 		return hierarchy;
 	}
 	
+	/**
+	 * Method getEnclosingClasses.
+	 * @param clazz Class<?>
+	 * @return Collection<SimpleClassBinding>
+	 */
 	static Collection<SimpleClassBinding> getEnclosingClasses(Class<?> clazz){
 		Deque<SimpleClassBinding> enclosingClasses = new ArrayDeque<SimpleClassBinding>();
 		Class<?> enclosingClass = clazz.getEnclosingClass();
@@ -240,6 +299,11 @@ final class Utils{
 		return enclosingClasses;
 	}
 	
+	/**
+	 * Method getImplementedInterfaces.
+	 * @param clazz Class<?>
+	 * @return Collection<SimpleClassBinding>
+	 */
 	static Collection<SimpleClassBinding> getImplementedInterfaces(Class<?> clazz){
 		Deque<SimpleClassBinding> interfaces = new ArrayDeque<SimpleClassBinding>();
 		for(Type parent: getHierarchy(clazz)){
@@ -249,7 +313,7 @@ final class Utils{
 			else if ( parent instanceof ParameterizedType)
 				superClass = (Class<?>)((ParameterizedType)parent).getRawType();
 			
-			for(Type implementedInterface: ((Class<?>) superClass).getGenericInterfaces())
+			for(Type implementedInterface: superClass.getGenericInterfaces())
 				if( !interfaces.contains(implementedInterface))
 					interfaces.offerLast( SimpleClassBinding.from(implementedInterface) );
 		}
@@ -259,6 +323,11 @@ final class Utils{
 		return interfaces;
 	}
 	
+	/**
+	 * Method getLinks.
+	 * @param doc Doc
+	 * @return Collection<LinkBinding>
+	 */
 	static Collection<LinkBinding> getLinks(Doc doc){
 		if(doc == null)
 			return null;
@@ -282,6 +351,12 @@ final class Utils{
 		return typeParameters.toArray(new ParamTag[size]);
 	}
 
+	/**
+	 * Method getTypeParams.
+	 * @param generic GenericDeclaration
+	 * @param doc Doc
+	 * @return Collection<TypeParamBinding>
+	 */
 	static Collection<TypeParamBinding> getTypeParams( GenericDeclaration generic, Doc doc){
 		TypeVariable<?>[] types = generic.getTypeParameters();
 		if(types.length == 0)
@@ -298,6 +373,12 @@ final class Utils{
 		return parameters;
 	}
 	
+	/**
+	 * Method getConstants.
+	 * @param clazz Class<?>
+	 * @param classDoc ClassDoc
+	 * @return Collection<ConstantBinding>
+	 */
 	static Collection<ConstantBinding> getConstants( Class<?> clazz, ClassDoc classDoc ) {
 		Deque<ConstantBinding> constants = new ArrayDeque<ConstantBinding>();
 		if(classDoc == null) {
@@ -317,6 +398,12 @@ final class Utils{
 		return constants;
 	}
 	
+	/**
+	 * Method getFields.
+	 * @param clazz Class<?>
+	 * @param classDoc ClassDoc
+	 * @return Collection<FieldBinding>
+	 */
 	static Collection<FieldBinding> getFields( Class<?> clazz, ClassDoc classDoc ) {
 		//TODO Ordenar
 		Deque<FieldBinding> fields = new ArrayDeque<FieldBinding>();
@@ -343,6 +430,12 @@ final class Utils{
 		return fields;
 	}
 	
+	/**
+	 * Method getConstructors.
+	 * @param clazz Class<?>
+	 * @param classDoc ClassDoc
+	 * @return Collection<ConstructorBinding>
+	 */
 	static Collection<ConstructorBinding> getConstructors( Class<?> clazz, ClassDoc classDoc ) {
 		//TODO Ordenar
 		Deque<ConstructorBinding> constructors = new ArrayDeque<ConstructorBinding>();
@@ -376,6 +469,12 @@ final class Utils{
 		return constructors;
 	}
 	
+	/**
+	 * Method getMethods.
+	 * @param clazz Class<?>
+	 * @param classDoc ClassDoc
+	 * @return Collection<MethodBinding>
+	 */
 	static Collection<MethodBinding> getMethods( Class<?> clazz, ClassDoc classDoc ) {
 		//TODO Ordenar
 		final Filter<Method> filter = clazz.isEnum() ? EnumMethodsFilter : MethodsFilter;
@@ -426,6 +525,11 @@ final class Utils{
 		}
 	}
 	
+	/**
+	 * Method concatComments.
+	 * @param tags Tag[]
+	 * @return String
+	 */
 	static String concatComments(Tag[] tags){
 		if (tags == null || tags.length == 0)
 			return null;
@@ -435,12 +539,18 @@ final class Utils{
 			String returnTagText = returnTag.text();
 			if (returnTagText != null) {
 				builder.append(returnTagText);
-				builder.append("\n");
+				builder.append('\n');
 			}
 		}
 		return builder.substring(0, builder.length() - 1);
 	}
 	
+	/**
+	 * Method getParams.
+	 * @param command T
+	 * @param doc ExecutableMemberDoc
+	 * @return Collection<ParameterBinding>
+	 */
 	static <T extends AccessibleObject & GenericDeclaration> 
 	Collection<ParameterBinding> getParams(T command, ExecutableMemberDoc doc){
 		
@@ -468,6 +578,12 @@ final class Utils{
 		return parameters;
 	}
 	
+	/**
+	 * Method getExceptions.
+	 * @param command T
+	 * @param doc ExecutableMemberDoc
+	 * @return Collection<ExceptionBinding>
+	 */
 	static <T extends AccessibleObject & GenericDeclaration & Member> 
 	Collection<ExceptionBinding> getExceptions(T command, ExecutableMemberDoc doc ){
 		
@@ -509,6 +625,11 @@ enum Visibility{
 	Package('~'),
 	Private('-');
 	
+	/**
+	 * Method fromModifiers.
+	 * @param att int
+	 * @return Visibility
+	 */
 	public static Visibility fromModifiers(int att){
 		if( Modifier.isPublic(att) )
 			return Public;
@@ -525,29 +646,53 @@ enum Visibility{
 		this.c = c;
 	}
 	
+	/**
+	 * Method toChar.
+	 * @return char
+	 */
 	public final char toChar(){
 		return c;
 	}
 }
 
+/**
+ */
 abstract class SimpleClassBinding {
 	
+	/**
+	 */
 	static class Interface extends SimpleClassBinding{
+		/**
+		 * Constructor for Interface.
+		 * @param type Type
+		 */
 		Interface(Type type){
 			super( Adapter.toString(type) );
 		}
 	}
 
+	/**
+	 */
 	static class Enum extends SimpleClassBinding{
+		/**
+		 * Constructor for Enum.
+		 * @param type Type
+		 */
 		Enum(Type type){
 			super( Adapter.toString(type) );
 		}
 	}
 
+	/**
+	 */
 	static class Clazz extends SimpleClassBinding{
 
 		final boolean isAbstract;
 		
+		/**
+		 * Constructor for Clazz.
+		 * @param type Type
+		 */
 		Clazz(Type type){
 			super( Adapter.toString(type) );
 			if(type instanceof Class<?>)
@@ -560,6 +705,11 @@ abstract class SimpleClassBinding {
 
 	}
 	
+	/**
+	 * Method from.
+	 * @param type Type
+	 * @return SimpleClassBinding
+	 */
 	static final SimpleClassBinding from(Type type){
 		
 		if(type instanceof Class<?>){
@@ -581,118 +731,212 @@ abstract class SimpleClassBinding {
 	
 	final String name;
 	
+	/**
+	 * Constructor for SimpleClassBinding.
+	 * @param name String
+	 */
 	SimpleClassBinding(String name) {
 		this.name = name;
 	}
 }
 
+/**
+ */
 abstract class DocumentedType {
 	
 	final String type;
 	final String documentation;
 	
+	/**
+	 * Constructor for DocumentedType.
+	 * @param type String
+	 */
 	DocumentedType(String type){
 		this.type = type;
 		this.documentation = null;
 	}
 	
+	/**
+	 * Constructor for DocumentedType.
+	 * @param type String
+	 * @param documentation String
+	 */
 	DocumentedType(String type, String documentation){
 		this.type = type;
 		this.documentation = documentation;
 	}
 }
 
+/**
+ */
 class TypeParamBinding extends DocumentedType{
 	
+	/**
+	 * Constructor for TypeParamBinding.
+	 * @param type TypeVariable<?>
+	 */
 	TypeParamBinding(TypeVariable<?> type){
 		super( Adapter.toString(type) );
 	}
 	
+	/**
+	 * Constructor for TypeParamBinding.
+	 * @param type TypeVariable<?>
+	 * @param tag ParamTag
+	 */
 	TypeParamBinding(TypeVariable<?> type, ParamTag tag){
 		super( Adapter.toString(type), tag != null ? tag.parameterComment(): null );
 	}
 }
 
+/**
+ */
 class ParameterBinding extends DocumentedType{
 	
 	final String name;
 	
+	/**
+	 * Constructor for ParameterBinding.
+	 * @param type Type
+	 */
 	ParameterBinding(Type type){
 		super( Adapter.toString(type) );
 		this.name = null;
 	}
 	
+	/**
+	 * Constructor for ParameterBinding.
+	 * @param type Type
+	 * @param tag ParamTag
+	 */
 	ParameterBinding(Type type, ParamTag tag){
 		super(Adapter.toString(type), tag != null ? tag.parameterComment(): null );
 		this.name =	tag != null ? tag.parameterName(): null;
 	}
 }
 
+/**
+ */
 class ReturnTypeBinding extends DocumentedType{
 	
+	/**
+	 * Constructor for ReturnTypeBinding.
+	 * @param type Type
+	 */
 	ReturnTypeBinding(Type type){
 		super( Adapter.toString(type) );
 	}
 	
+	/**
+	 * Constructor for ReturnTypeBinding.
+	 * @param type Type
+	 * @param tags Tag[]
+	 */
 	ReturnTypeBinding(Type type, Tag[] tags){
 		super(	Adapter.toString(type), Utils.concatComments(tags) );
 	}
 }
 
+/**
+ */
 class ExceptionBinding extends DocumentedType{
 	
+	/**
+	 * Constructor for ExceptionBinding.
+	 * @param type Type
+	 */
 	ExceptionBinding(Type type){
 		super( Adapter.toString(type) );
 	}
 	
+	/**
+	 * Constructor for ExceptionBinding.
+	 * @param type Type
+	 * @param tag ThrowsTag
+	 */
 	ExceptionBinding(Type type, ThrowsTag tag){
 		super(	Adapter.toString(type), tag != null ? tag.exceptionComment(): null );
 	}
 }
 
+/**
+ */
 class LinkBinding{
 	
 	final String link;
 	
+	/**
+	 * Constructor for LinkBinding.
+	 * @param link String
+	 */
 	LinkBinding(String link){
 		this.link = link;
 	}
 }
 
+/**
+ */
 abstract class DocumentedElement {
 	
 	final String name;
 	final String documentation;
 	final Collection<LinkBinding> links;
 	
+	/**
+	 * Constructor for DocumentedElement.
+	 * @param name String
+	 * @param doc Doc
+	 */
 	DocumentedElement(String name, Doc doc){
 		this.name = name;
 		this.documentation = doc != null ? doc.commentText(): null;
 		this.links = Utils.getLinks(doc);
 	}
 	
+	/**
+	 * Constructor for DocumentedElement.
+	 * @param name String
+	 */
 	DocumentedElement(String name){
 		this(name, null);
 	}
 }
 
+/**
+ */
 class ConstantBinding extends DocumentedElement{
 
+	/**
+	 * Constructor for ConstantBinding.
+	 * @param name String
+	 */
 	ConstantBinding(String name) {
 		super(name);
 	}
 
+	/**
+	 * Constructor for ConstantBinding.
+	 * @param name String
+	 * @param doc FieldDoc
+	 */
 	ConstantBinding(String name, FieldDoc doc) {
 		super( name, doc );
 	}
 }
 
+/**
+ */
 class FieldBinding extends DocumentedElement{
 
 	final Visibility visibility;
 	final int modifiers;
 	final String type;
 	
+	/**
+	 * Constructor for FieldBinding.
+	 * @param field Field
+	 * @param doc FieldDoc
+	 */
 	FieldBinding( Field field, FieldDoc doc ){
 		super( 	field.getName(), doc );
 		this.modifiers = field.getModifiers();
@@ -702,6 +946,8 @@ class FieldBinding extends DocumentedElement{
 	
 }
 
+/**
+ */
 abstract class CommandBinding extends DocumentedElement{
 
 	private static String getName(Member d){
@@ -715,6 +961,11 @@ abstract class CommandBinding extends DocumentedElement{
 	final Collection<ParameterBinding> params;
 	final Collection<ExceptionBinding> exceptions;
 
+	/**
+	 * Constructor for CommandBinding.
+	 * @param command T
+	 * @param doc ExecutableMemberDoc
+	 */
 	<T extends AccessibleObject & Member & GenericDeclaration>
 	CommandBinding(T command, ExecutableMemberDoc doc){
 		super( getName(command), doc );
@@ -726,12 +977,21 @@ abstract class CommandBinding extends DocumentedElement{
 	}
 }
 
+/**
+ */
 class ConstructorBinding extends CommandBinding{
+	/**
+	 * Constructor for ConstructorBinding.
+	 * @param constructor Constructor<?>
+	 * @param doc ConstructorDoc
+	 */
 	ConstructorBinding( Constructor<?> constructor, ConstructorDoc doc){
 		super( constructor, doc );
 	}
 }
 
+/**
+ */
 class MethodBinding extends CommandBinding{
 
 	private static MethodDoc checkOverride( MethodDoc doc ){
@@ -743,6 +1003,11 @@ class MethodBinding extends CommandBinding{
 	final int modifiers;
 	final ReturnTypeBinding  returnType;
 	
+	/**
+	 * Constructor for MethodBinding.
+	 * @param method Method
+	 * @param doc MethodDoc
+	 */
 	MethodBinding( Method method, MethodDoc doc){
 		super( method, checkOverride(doc) );
 
@@ -759,12 +1024,21 @@ class MethodBinding extends CommandBinding{
 	}
 }
 
+/**
+ */
 public abstract class ClassBinding extends DocumentedElement{
 	
+	/**
+	 */
 	static class Interface extends ClassBinding{
 	
 		final Collection<TypeParamBinding> parameters;
 		
+		/**
+		 * Constructor for Interface.
+		 * @param clazz Class<?>
+		 * @param classDoc ClassDoc
+		 */
 		Interface( Class<?> clazz, ClassDoc classDoc) {
 			super( clazz, classDoc );
 			this.parameters = Utils.getTypeParams(clazz, classDoc);
@@ -777,11 +1051,18 @@ public abstract class ClassBinding extends DocumentedElement{
 		}
 	}
 	
+	/**
+	 */
 	static class Enum extends ClassBinding{
 		
 		Collection<ConstantBinding> constants;
 		Collection<ConstructorBinding> constructors;
 		
+		/**
+		 * Constructor for Enum.
+		 * @param clazz Class<?>
+		 * @param classDoc ClassDoc
+		 */
 		Enum( Class<?> clazz, ClassDoc classDoc) {
 			super( clazz, classDoc );
 	
@@ -796,6 +1077,8 @@ public abstract class ClassBinding extends DocumentedElement{
 	
 	}
 
+	/**
+	 */
 	static class Clazz extends ClassBinding{
 		
 		final boolean isAbstract;
@@ -804,6 +1087,11 @@ public abstract class ClassBinding extends DocumentedElement{
 		final Collection<SimpleClassBinding> hierarchy;
 		final Collection<ConstructorBinding> constructors;
 		
+		/**
+		 * Constructor for Clazz.
+		 * @param clazz Class<?>
+		 * @param classDoc ClassDoc
+		 */
 		Clazz( Class<?> clazz, ClassDoc classDoc) {
 			super( clazz, classDoc);
 
@@ -826,8 +1114,12 @@ public abstract class ClassBinding extends DocumentedElement{
 	Collection<FieldBinding> fields;
 	Collection<MethodBinding> methods;
 	
+	/**
+	 * Constructor for ClassBinding.
+	 * @param clazz Class<?>
+	 * @param classDoc ClassDoc
+	 */
 	ClassBinding( Class<?> clazz, ClassDoc classDoc ) {
 		super( Adapter.toString(clazz), classDoc );
 	}
 }
-

@@ -13,6 +13,8 @@ import java.util.TreeSet;
 import org.apache.batik.transcoder.TranscoderException;
 import org.sam.odf_doclet.pipeline.PipeLine;
 
+/**
+ */
 public class GenerateImages {
 	
 	private static final Comparator<File> COMPARADOR_DE_FICHEROS = new Comparator<File>() {
@@ -39,6 +41,11 @@ public class GenerateImages {
 	
 	private static Collection<Class<?>> packageClassesCollection;
 	
+	/**
+	 * Method getHierarchicalName.
+	 * @param clazz Class<?>
+	 * @return String
+	 */
 	static String getHierarchicalName(Class<?> clazz){
 		String name = clazz.getSimpleName();
 		Class<?> superClass = clazz.getSuperclass();
@@ -104,8 +111,8 @@ public class GenerateImages {
 	
 	/**
 	 * @param args ignorados
-	 * @throws IOException 
-	 * @throws TranscoderException 
+	 * @throws IOException
+	 * @throws TranscoderException
 	 */
 	public static void main(String[] args) throws IOException, TranscoderException{
 		

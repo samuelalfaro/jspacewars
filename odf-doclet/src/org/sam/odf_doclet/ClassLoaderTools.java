@@ -37,6 +37,12 @@ public class ClassLoaderTools {
 	
 	private ClassLoaderTools(){}
 
+	/**
+	 * Method getLoader.
+	 * @param rootpath String
+	 * @param classpath String
+	 * @return ClassLoader
+	 */
 	public static ClassLoader getLoader(String rootpath, String classpath){
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

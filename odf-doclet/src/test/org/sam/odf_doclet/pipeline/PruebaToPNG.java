@@ -34,10 +34,10 @@ public class PruebaToPNG {
 
 	/**
 	 * @param args
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
-	 * @throws ClassNotFoundException 
-	 */
+	
+	
+	
+	 * @throws FileNotFoundException  * @throws IOException  * @throws ClassNotFoundException  */
 	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
 		
 		Class<?> clazz;

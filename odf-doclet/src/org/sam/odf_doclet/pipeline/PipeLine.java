@@ -56,6 +56,8 @@ import org.sam.pipeline.SinkAbs;
 import org.sam.xml.XMLConverter;
 import org.sam.xml.XMLWriter;
 
+/**
+ */
 class ToXML implements Pump{
 
 	private final XMLConverter converter;
@@ -75,11 +77,22 @@ class ToXML implements Pump{
 	}
 }
 
+/**
+ */
 class ToSVG extends FilterAbs{
 	
 	private final Transformer transformer;
 
-	ToSVG(Pump source) throws IOException, FileNotFoundException, TransformerFactoryConfigurationError, TransformerConfigurationException{
+	/**
+	 * Constructor for ToSVG.
+	 * @param pump Pump
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 * @throws TransformerFactoryConfigurationError
+	 * @throws TransformerConfigurationException
+	 */
+	ToSVG(Pump pump) throws IOException, FileNotFoundException, TransformerFactoryConfigurationError, TransformerConfigurationException{
+		super(pump);
 		File template = new File("resources/shared/toSVG.xsl");
 		transformer = TransformerFactory.newInstance().newTransformer(
 				new StreamSource(new FileInputStream(template), template.toString() )
@@ -88,7 +101,6 @@ class ToSVG extends FilterAbs{
 		transformer.setParameter("background", "#FFFFFF");
 		transformer.setParameter("widthChar1", 6.6);
 		transformer.setParameter("widthChar2", 9.0);
-		setPump(source);
 	}
 	
 	/* (non-Javadoc)
@@ -104,14 +116,21 @@ class ToSVG extends FilterAbs{
 	}
 }
 
+/**
+ */
 class ToPNG extends FilterAbs{
 	
 	final ImageTranscoder transcoder;
 	
-	ToPNG(Pump source) throws IOException{
+	/**
+	 * Constructor for ToPNG.
+	 * @param pump Pump
+	 * @throws IOException
+	 */
+	ToPNG(Pump pump) throws IOException{
+		super(pump);
 		transcoder = new PNGTranscoder();
 		transcoder.addTranscodingHint(SVGAbstractTranscoder.KEY_EXECUTE_ONLOAD, Boolean.TRUE);
-		setPump(source);
 	}
 	
 	/* (non-Javadoc)
@@ -131,10 +150,17 @@ class ToPNG extends FilterAbs{
 	}
 }
 
+/**
+ */
 class ToIMG extends SinkAbs{
 	
-	ToIMG(Pump source) throws IOException{
-		setPump(source);
+	/**
+	 * Constructor for ToIMG.
+	 * @param pump Pump
+	 * @throws IOException
+	 */
+	ToIMG(Pump pump) throws IOException{
+		super(pump);
 	}
 
 	/* (non-Javadoc)
@@ -146,6 +172,8 @@ class ToIMG extends SinkAbs{
 	}
 }
 
+/**
+ */
 public final class PipeLine {
 	
 	private PipeLine(){}
@@ -168,36 +196,71 @@ public final class PipeLine {
 	
 	private static ClassBinding source;
 
+	/**
+	 * Method getSource.
+	 * @return ClassBinding
+	 */
 	static ClassBinding getSource(){
 		return source;
 	}
 	
+	/**
+	 * Method setSource.
+	 * @param source Class<?>
+	 */
 	public static void setSource(Class<?> source){
 		PipeLine.source = ClassBindingFactory.createBinding(source);
 	}
 	
 	private static BufferedImage destination;
 	
+	/**
+	 * Method setDestination.
+	 * @param destination BufferedImage
+	 */
 	static void setDestination(BufferedImage destination){
 		PipeLine.destination = destination;
 	}
 	
+	/**
+	 * Method getDestination.
+	 * @return BufferedImage
+	 */
 	public static BufferedImage getDestination(){
 		return destination;
 	}
 	
+	/**
+	 * Method toXML.
+	 * @param out OutputStream
+	 * @throws IOException
+	 */
 	public static void toXML(OutputStream out) throws IOException{
 		toXML.process(out);
 	}
 	
+	/**
+	 * Method toSVG.
+	 * @param out OutputStream
+	 * @throws IOException
+	 */
 	public static void toSVG(OutputStream out) throws IOException{
 		toSVG.process(out);
 	}
 	
+	/**
+	 * Method toPNG.
+	 * @param out OutputStream
+	 * @throws IOException
+	 */
 	public static void toPNG(OutputStream out) throws IOException{
 		toPNG.process(out);
 	}
 	
+	/**
+	 * Method toIMG.
+	 * @throws IOException
+	 */
 	public static void toIMG() throws IOException{
 		toIMG.process();
 	}

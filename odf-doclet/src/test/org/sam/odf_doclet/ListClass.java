@@ -28,13 +28,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.ConstructorDoc;
 import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 
-@SuppressWarnings("unused")
+/**
+ */
 @Deprecated
 public class ListClass {
 	
@@ -86,6 +85,11 @@ public class ListClass {
 		}
 	}
 	
+	/**
+	 * Method start.
+	 * @param root RootDoc
+	 * @return boolean
+	 */
 	public static boolean start(RootDoc root) {
 		
 		ClassDoc[] classes = root.classes();
@@ -119,7 +123,7 @@ public class ListClass {
 					if(classDoc.superclass().qualifiedName().equals("java.lang.Enum")){
 						ClassDoc containingClass = classDoc.containingClass();
 						while(containingClass  != null){
-							System.err.print("\t");
+							System.err.print('\t');
 							containingClass = containingClass.containingClass();
 						}
 						System.err.println("\t"+classDoc.name());

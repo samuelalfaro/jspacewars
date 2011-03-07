@@ -29,8 +29,18 @@ import java.io.InputStream;
  */
 public interface Sink extends PipeConnector {
 	
+	/**
+	 * Method process.
+	 * @throws IOException
+	 */
 	void process() throws IOException;
 	
+	/**
+	 * Method process.
+	 * @param in InputStream
+	 * @throws IOException
+	 * @throws FilterException
+	 */
 	void process(InputStream in) throws IOException, FilterException;
 	
 }

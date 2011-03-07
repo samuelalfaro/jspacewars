@@ -21,8 +21,16 @@
  */
 package org.sam.xml;
 
+/**
+ */
 public interface Recorder<T>{
 	
+	/**
+	 * Method record.
+	 * @param t T
+	 * @param writer XMLWriter
+	 * @param maper RecordersMapper
+	 */
 	void record(T t, XMLWriter writer, RecordersMapper maper);
 	
 }

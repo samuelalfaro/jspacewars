@@ -1,3 +1,4 @@
+// $codepro.audit.disable
 /* 
  * ClaseDePrueba.java
  * 
@@ -34,7 +35,7 @@ class Float{
 
 /**
  * Documentacion de la clase ClaseDePrueba.
- * @param <E> Documentacion del parámetro {@code E}.
+
  */
 public class ClaseDePrueba<E> {
 	
@@ -56,11 +57,11 @@ public class ClaseDePrueba<E> {
 		abstract void metodo1(int a);
 		
 		/**
-		 * @param <T>
+		
 		 * @param t1
 		 * @param t2
-		 * @return bla bla bla bla
-		 */
+		
+		 * @return bla bla bla bla */
 		abstract <T> T metodo2(T t1, T t2);
 	}
 	
@@ -72,19 +73,19 @@ public class ClaseDePrueba<E> {
 		
 		/**
 		 * Documentación del constructor {@code InerClass(ClaseDePrueba<?> a1, boolean a2)}.
-		 * @param <T> Genérico {@code T}.
+		
 		 * @param a1 primer argumento.
 		 * @param a2 segundo argumento.
-		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla
-		 */
+		
+		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla */
 		<T> InerClass(ClaseDePrueba<T> a1, boolean a2) throws IllegalArgumentException{
 		}
 		
 		/**
 		 * Documentacion del constructor {@code InerClass()}.
-		 * @throws IOException exepción IO bla bla bla
-		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla
-		 */
+		
+		
+		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla * @throws IOException exepción IO bla bla bla */
 		InerClass() throws IllegalArgumentException, IOException{
 			this(null,false);
 		}
@@ -100,6 +101,12 @@ public class ClaseDePrueba<E> {
 		
 		/* (non-Javadoc)
 		 * @see pruebas.ClaseDePrueba.InerClassAbs#metodo2(java.lang.Object, java.lang.Object)
+		 */
+		/**
+		 * Method metodo2.
+		 * @param t1 T
+		 * @param t2 T
+		 * @return T
 		 */
 		@Override
 		<T> T metodo2(T t1, T t2) {
@@ -146,8 +153,8 @@ public class ClaseDePrueba<E> {
 		}
 		/**
 		 * Documentación del método {@code accion}.
-		 * @return valor devuelto:
-		 */
+		
+		 * @return valor devuelto: */
 		public final String getAccion(){
 			return accion;
 		}
@@ -190,13 +197,11 @@ public class ClaseDePrueba<E> {
 	 * @param a1 primer argumento.
 	 * @param a2 segundo argumento.
 	 * @param a3 tercer argumento.
+	
+	
 	 * @return
 	 * <ul><li>{@code true} si se cumple la condición.</li>
-	 * <li>{@code false} en caso contrario.</li></ul>
-	 * @return
-	 * <ul><li>{@code true} si se cumple la condición.</li>
-	 * <li>{@code false} en caso contrario.</li></ul>
-	 */
+	 * <li>{@code false} en caso contrario.</li></ul> */
 	public boolean metodo1(int a1, float a2, Collection<?> a3){
 		return false;
 	}
@@ -204,8 +209,8 @@ public class ClaseDePrueba<E> {
 	/**
 	 * Documentación del método {@code metodo2}.
 	 * @param a primer argumento.
-	 * @throws IllegalArgumentException causa de la excepción.
-	 */
+	
+	 * @throws IllegalArgumentException causa de la excepción. */
 	void metodo2(InerClassAbs.InerInerClass a) throws IllegalArgumentException{
 	}
 	

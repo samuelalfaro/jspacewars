@@ -24,8 +24,15 @@ package org.sam.pipeline;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ */
 public interface Pump {
 	
+	/**
+	 * Method process.
+	 * @param out OutputStream
+	 * @throws IOException
+	 */
 	void process(OutputStream out) throws IOException;
 	
 }
