@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -57,7 +56,7 @@ public class ODFDoclet {
 			return 2;
 		return 0;
 	}
-
+	
 	/**
 	 * Method validOptions.
 	 * @param options String[][]
@@ -90,37 +89,30 @@ public class ODFDoclet {
 	
 	/**
 	 * Method generarODT.
-	 * @param sourceContent InputStream
-	 * @param sourceStylesheet InputStream
 	 * @param platillaODT File
-	 * @param images String[]
-	 * @param manifestStylesheet InputStream
+	 * @param root RootDoc
 	 * @return File
 	 */
-	public static File generarODT(
-			InputStream sourceContent, InputStream sourceStylesheet,
-			File platillaODT, String images[], InputStream manifestStylesheet
-	){
+	public static File generarODT( File platillaODT, RootDoc root ){
 
 		try {
-			File tempFile = File.createTempFile("result", ".odt", null);
+			File tempFile = File.createTempFile( "result", ".odt", null );
 			byte[] buf = new byte[4096];
 
-			ZipInputStream zin = new ZipInputStream(new BufferedInputStream(new FileInputStream(platillaODT)));
-			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
+			ZipInputStream zin = new ZipInputStream( new BufferedInputStream( new FileInputStream( platillaODT ) ) );
+			ZipOutputStream out = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( tempFile ) ) );
 
 			ZipEntry entry = zin.getNextEntry();
-			while (entry != null) {
+			while( entry != null ){
 				String name = entry.getName();
-				boolean conservar = 
-					!name.equalsIgnoreCase("content.xml") &&
-					(!name.equalsIgnoreCase("META-INF/manifest.xml") || manifestStylesheet == null);
-				if (conservar) {
+				boolean conservar = !name.equalsIgnoreCase( "content.xml" )
+						&& !name.equalsIgnoreCase( "META-INF/manifest.xml" );
+				if( conservar ){
 					// System.out.println(name);
-					out.putNextEntry(new ZipEntry(name));
+					out.putNextEntry( new ZipEntry( name ) );
 					int len;
-					while ((len = zin.read(buf)) > 0) {
-						out.write(buf, 0, len);
+					while( ( len = zin.read( buf ) ) > 0 ){
+						out.write( buf, 0, len );
 					}
 				}
 				entry = zin.getNextEntry();
@@ -137,7 +129,7 @@ public class ODFDoclet {
 //			}
 //			out.close();
 			return tempFile;
-		} catch (IOException e) {
+		}catch( IOException e ){
 			e.printStackTrace();
 			return null;
 		}
@@ -149,16 +141,16 @@ public class ODFDoclet {
 	 * @return boolean
 	 * @throws ClassNotFoundException
 	 */
-	public static boolean start(RootDoc root) throws ClassNotFoundException {
+	public static boolean start( RootDoc root ) throws ClassNotFoundException{
 
 		ClassDoc[] classes = root.classes();
-		
+
 		XMLConverter converter = new XMLConverter();
 		Recorders.register( converter );
-		converter.setWriter( new XMLWriter(System.out, true) );
+		converter.setWriter( new XMLWriter( System.out, true ) );
 
-		for(ClassDoc classDoc: classes)
-			converter.write( ClassBindingFactory.createBinding(classDoc) );
+		for( ClassDoc classDoc: classes )
+			converter.write( ClassBindingFactory.createBinding( classDoc ) );
 		return true;
 	}
 }

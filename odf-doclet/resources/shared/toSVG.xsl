@@ -649,8 +649,8 @@
 			<xsl:element name="use">
 				<xsl:attribute name="x">0</xsl:attribute>
 				<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
-				<xsl:attribute name="xlink:href">shared/defs.svg#<xsl:call-template name="Modifiers"/>
-					<xsl:call-template name="Visibility"/>Field</xsl:attribute>
+				<xsl:attribute name="xlink:href">shared/defs.svg#<xsl:call-template name="Visibility"/>
+					<xsl:call-template name="Modifiers"/>Field</xsl:attribute>
 			</xsl:element>
 			<xsl:if test='@isTransient="true"'>
 				<xsl:element name="use">
@@ -726,8 +726,8 @@
 			<xsl:element name="use">
 				<xsl:attribute name="x">0</xsl:attribute>
 				<xsl:attribute name="y"><xsl:number value='$y'/></xsl:attribute>
-				<xsl:attribute name="xlink:href">shared/defs.svg#<xsl:call-template name="Modifiers"/>
-					<xsl:call-template name="Visibility"/>Method</xsl:attribute>
+				<xsl:attribute name="xlink:href">shared/defs.svg#<xsl:call-template name="Visibility"/>
+					<xsl:call-template name="Modifiers"/>Method</xsl:attribute>
 			</xsl:element>
 			<xsl:if test='@isNative="true"'>
 				<xsl:element name="use">

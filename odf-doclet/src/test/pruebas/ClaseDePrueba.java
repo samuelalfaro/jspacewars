@@ -189,7 +189,6 @@ public class ClaseDePrueba<E> {
 	 * @see #metodo1(int, float, Collection)
 	 */
 	private ClaseDePrueba(InerClass[] parametro1, int parametro2){
-		
 	}
 	
 	/**
@@ -221,7 +220,6 @@ public class ClaseDePrueba<E> {
 	 * @return valor devuelto.
 	 * @param <U> Documentación del parámetro genérico U del método.
 	 */
-
 	private native <T extends Number & Cloneable, U> E metodo3(T a1, Map<? super Number, ? extends InerClass> a2, U... a3);
 	
 	/**

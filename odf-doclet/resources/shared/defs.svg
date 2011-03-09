@@ -6,16 +6,16 @@
 	version="1.1">
 	<defs>
 		<linearGradient id="gradientInicialFinal1">
-			<stop id="colorInicial" offset="0.0" style="stop-color:#404080; stop-opacity:1;"/>
-			<stop id="colorMedio"   offset="0.5" style="stop-color:#C0E0FF; stop-opacity:1;"/>
+			<stop id="colorInicial" offset="0.0" style="stop-color:#208020; stop-opacity:1;"/>
+			<stop id="colorMedio"   offset="0.5" style="stop-color:#D0FF80; stop-opacity:1;"/>
 			<stop id="colorFinal"   offset="1.0" style="stop-color:#FFFFFF; stop-opacity:1;"/>
 		</linearGradient>
 		<linearGradient id="gradientInicialFinalH1" xlink:href="#gradientInicialFinal1" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="60" y2="0"/>
 		<linearGradient id="gradientInicialFinalV1" xlink:href="#gradientInicialFinal1" x1="0%" y1="0%" x2="100%" y2="125%"/>
 
 		<linearGradient id="gradientInicialFinal2">
-			<stop id="colorInicial" offset="0.0" style="stop-color:#208020; stop-opacity:1;"/>
-			<stop id="colorMedio"   offset="0.5" style="stop-color:#D0FF80; stop-opacity:1;"/>
+			<stop id="colorInicial" offset="0.0" style="stop-color:#404080; stop-opacity:1;"/>
+			<stop id="colorMedio"   offset="0.5" style="stop-color:#C0E0FF; stop-opacity:1;"/>
 			<stop id="colorFinal"   offset="1.0" style="stop-color:#FFFFFF; stop-opacity:1;"/>
 		</linearGradient>
 		<linearGradient id="gradientInicialFinalH2" xlink:href="#gradientInicialFinal2" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="60" y2="0"/>
@@ -145,14 +145,14 @@
 		</marker>
 		
 		<g id="EnumConstant">
-			<use                          transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticPublicField"/>
+			<use                          transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PublicStaticField"/>
 			<use                          transform="translate(-2, 8) scale(0.25)" xlink:href="bullets.svg#Lock"/>
 		</g>
 		
-		<use id="StaticPublicField"       transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticPublicField"/>
-		<use id="StaticProtectedField"    transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticProtectedField"/>
-		<use id="StaticPackageField"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticPackageField"/>
-		<use id="StaticPrivateField"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticPrivateField"/>
+		<use id="PublicStaticField"       transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PublicStaticField"/>
+		<use id="ProtectedStaticField"    transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#ProtectedStaticField"/>
+		<use id="PackageStaticField"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PackageStaticField"/>
+		<use id="PrivateStaticField"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PrivateStaticField"/>
 		
 		<use id="PublicField"             transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PublicField"/>
 		<use id="ProtectedField"          transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#ProtectedField"/>
@@ -164,19 +164,19 @@
 		<use id="PackageConstructor"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PackageConstructor"/>
 		<use id="PrivateConstructor"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PrivateConstructor"/>
 		
-		<use id="StaticPublicMethod"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticPublicMethod"/>
-		<use id="StaticProtectedMethod"   transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticProtectedMethod"/>
-		<use id="StaticPackageMethod"     transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticPackageMethod"/>
-		<use id="StaticPrivateMethod"     transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#StaticPrivateMethod"/>
+		<use id="PublicStaticMethod"      transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PublicStaticMethod"/>
+		<use id="ProtectedStaticMethod"   transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#ProtectedStaticMethod"/>
+		<use id="PackageStaticMethod"     transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PackageStaticMethod"/>
+		<use id="PrivateStaticMethod"     transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PrivateStaticMethod"/>
 		
 		<use id="PublicMethod"            transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PublicMethod"/>
 		<use id="ProtectedMethod"         transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#ProtectedMethod"/>
 		<use id="PackageMethod"           transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PackageMethod"/>
 		<use id="PrivateMethod"           transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PrivateMethod"/>
 	
-		<use id="AbstractPublicMethod"    transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#AbstractPublicMethod"/>
-		<use id="AbstractProtectedMethod" transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#AbstractProtectedMethod"/>
-		<use id="AbstractPackageMethod"   transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#AbstractPackageMethod"/>
+		<use id="PublicAbstractMethod"    transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PublicAbstractMethod"/>
+		<use id="ProtectedAbstractMethod" transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#ProtectedAbstractMethod"/>
+		<use id="PackageAbstractMethod"   transform="translate(8, 8) scale(0.3333)" xlink:href="bullets.svg#PackageAbstractMethod"/>
 	
 		<use id="Transient"               transform="translate(-2,-2) scale(0.25)" xlink:href="bullets.svg#Bubble"/>
 		<use id="Volatile"                transform="translate(10,-2) scale(0.25)" xlink:href="bullets.svg#Feather"/>

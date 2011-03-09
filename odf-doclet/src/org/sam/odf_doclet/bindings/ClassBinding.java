@@ -571,7 +571,7 @@ final class Utils{
 		else{
 			ParamTag[] tags = doc.paramTags();
 			int offset = types.length - doc.parameters().length; //Offset ignora Synthetic accesor 
-			assert(offset >= 0): "!!offset:"+offset;
+			assert(offset >= 0): "!!writtenBytes:"+offset;
 			for(int i= offset, j=0, len = types.length; i < len; i++, j++)
 				parameters.add( new ParameterBinding( types[i], getTag( tags, j ) ) );
 		}

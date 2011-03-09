@@ -7,29 +7,29 @@
 	height="480"
 	version="1.1">
 	<defs>
-		<linearGradient id="AbstractPublicGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
-			<stop offset="0.0" style="stop-color:#C0FFC0; stop-opacity:1"/>
-			<stop offset="0.5" style="stop-color:#A0FFA0; stop-opacity:1"/>
-			<stop offset="1.0" style="stop-color:#40A040; stop-opacity:1"/>
-		</linearGradient>
-		<linearGradient id="PublicGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
-			<stop offset="0.0" style="stop-color:#60FF20; stop-opacity:1"/>
-			<stop offset="0.5" style="stop-color:#00FF00; stop-opacity:1"/>
-			<stop offset="0.8" style="stop-color:#008000; stop-opacity:1"/>
-			<stop offset="1.0" style="stop-color:#004000; stop-opacity:1"/>
-		</linearGradient>
-		<linearGradient id="AbstractProtectedGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+		<linearGradient id="PublicAbstractGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
 			<stop offset="0.0" style="stop-color:#C0C0FF; stop-opacity:1"/>
 			<stop offset="0.5" style="stop-color:#A0A0FF; stop-opacity:1"/>
 			<stop offset="1.0" style="stop-color:#4040A0; stop-opacity:1"/>
 		</linearGradient>
-		<linearGradient id="ProtectedGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+		<linearGradient id="PublicGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
 			<stop offset="0.0" style="stop-color:#40FFFF; stop-opacity:1"/>
 			<stop offset="0.5" style="stop-color:#0080FF; stop-opacity:1"/>
 			<stop offset="0.8" style="stop-color:#0000FF; stop-opacity:1"/>
 			<stop offset="1.0" style="stop-color:#000080; stop-opacity:1"/>
 		</linearGradient>
-		<linearGradient id="AbstractPackageGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+		<linearGradient id="ProtectedAbstractGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#C0FFC0; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#A0FFA0; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#40A040; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="ProtectedGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
+			<stop offset="0.0" style="stop-color:#60FF20; stop-opacity:1"/>
+			<stop offset="0.5" style="stop-color:#00FF00; stop-opacity:1"/>
+			<stop offset="0.8" style="stop-color:#008000; stop-opacity:1"/>
+			<stop offset="1.0" style="stop-color:#004000; stop-opacity:1"/>
+		</linearGradient>
+		<linearGradient id="PackageAbstractGradient" x1="115%" y1="115%" x2="15%" y2="50%" spreadMethod="pad">
 			<stop offset="0.0" style="stop-color:#FFFFC0; stop-opacity:1"/>
 			<stop offset="0.5" style="stop-color:#FFFFA0; stop-opacity:1"/>
 			<stop offset="1.0" style="stop-color:#C0A040; stop-opacity:1"/>
@@ -109,9 +109,9 @@
 		<path id="Cuadrado" d="M -14,-14 -14,14 14,14 14,-14 Z" style="shape-rendering:geometricPrecision"/>
 		<path id="CuadradoHueco" d="M -22,-22 -22,22 22,22 22,-22 Z M -18,-18 18,-18 18,18 -18,18 Z" style="fill-rule:evenodd;shape-rendering:geometricPrecision"/>
 		<path id="Rombo" d="M -18,0 0,18 18,0 0,-18 Z" style="shape-rendering:geometricPrecision"/>
-		<path id="Cruz" d="M -10,-4 -10,4 -4,4 -4,10 4,10 4,4 10,4 10,-4 4,-4 4,-10 -4,-10 -4,-4 Z" style="fill:#FFFFFF;fill-opacity:1;stroke:#008000;stroke-width:2;shape-rendering:geometricPrecision"/>
+		<path id="Cruz" d="M -10,-4 -10,4 -4,4 -4,10 4,10 4,4 10,4 10,-4 4,-4 4,-10 -4,-10 -4,-4 Z" style="fill:#FFFFFF;fill-opacity:1;stroke:#000080;stroke-width:2;shape-rendering:geometricPrecision"/>
 		<!--<path id="Almohadilla" d="M -6,-10 -6,-6 -10,-6 -10,-2 -6,-2 -6,2 -10,2 -10,6 -6,6 -6,10 -2,10 -2,6 2,6 2,10 6,10 6,6 10,6 10,2 6,2 6,-2 10,-2 10,-6 6,-6 6,-10 2,-10 2,-6 -2,-6 -2,-10 Z M -2,-2 2,-2 2,2 -2,2 Z" style="fill:#FFFFFF;fill-opacity:1;fill-rule:evenodd;stroke:#000080;stroke-width:2"/>-->
-		<path id="Almohadilla" d="M -7,-10 -7,-7 -10,-7 -10,-1 -7,-1 -7,1 -10,1 -10,7 -7,7 -7,10 -1,10 -1,7 1,7 1,10 7,10 7,7 10,7 10,1 7,1 7,-1 10,-1 10,-7 7,-7 7,-10 1,-10 1,-7 -1,-7 -1,-10 Z M -1,-1 1,-1 1,1 -1,1 Z" style="fill:#FFFFFF;fill-opacity:1;fill-rule:evenodd;stroke:#000080;stroke-width:2;shape-rendering:geometricPrecision"/>
+		<path id="Almohadilla" d="M -7,-10 -7,-7 -10,-7 -10,-1 -7,-1 -7,1 -10,1 -10,7 -7,7 -7,10 -1,10 -1,7 1,7 1,10 7,10 7,7 10,7 10,1 7,1 7,-1 10,-1 10,-7 7,-7 7,-10 1,-10 1,-7 -1,-7 -1,-10 Z M -1,-1 1,-1 1,1 -1,1 Z" style="fill:#FFFFFF;fill-opacity:1;fill-rule:evenodd;stroke:#008000;stroke-width:2;shape-rendering:geometricPrecision"/>
 		<path id="Virgulilla" d="M -5,-6 c 1.8209194,0.062589 3.5239816,0.9318078 5,2 0.61463376,0.4448095 1.2037773,0.9282642 1.8567827,1.3145466 C 2.5097881,-2.2991711 3.2413623,-2.0099514 4,-2 4.9700523,-1.9872754 5.9343686,-2.4615539 6.5164501,-3.2376625 7.0985315,-4.0137711 7.2838303,-5.0723127 7,-6 c 1.4084361,0.429421 2.6497881,1.3847909 3.425501,2.6363357 0.775713,1.2515447 1.079007,2.78832666 0.836939,4.24073761 C 11.020371,2.3294843 10.235055,3.6848311 9.0953665,4.6171422 7.9556777,5.5494534 6.4715761,6.050581 5,6 3.1790806,5.9374114 1.4760184,5.0681922 0,4 -0.61463376,3.5551905 -1.2037773,3.0717358 -1.8567827,2.6854534 -2.5097881,2.2991711 -3.2413623,2.0099514 -4,2 -4.9700523,1.9872754 -5.9343686,2.4615539 -6.5164501,3.2376625 -7.0985315,4.0137711 -7.2838303,5.0723127 -7,6 -8.4084361,5.570579 -9.6497881,4.6152091 -10.425501,3.3636643 -11.201214,2.1121196 -11.504508,0.57533764 -11.26244,-0.87707331 -11.020371,-2.3294843 -10.235055,-3.6848311 -9.0953665,-4.6171422 -7.9556777,-5.5494534 -6.4715761,-6.050581 -5,-6" style="fill:#FFFFFF;fill-opacity:1;stroke:#804000;stroke-width:2;shape-rendering:geometricPrecision"/>
 		<path id="Raya" d="M -10,-4 -10,4 10,4 10,-4 Z" style="fill:#FFFFFF;fill-opacity:1;stroke:#800000;stroke-width:2;shape-rendering:geometricPrecision"/>
 		
@@ -119,7 +119,7 @@
 			<use xlink:href="#Circulo" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Cruz"/>
 		</g>
-		<g id="StaticPublicField">
+		<g id="PublicStaticField">
 			<use xlink:href="#CirculoHueco" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#PublicField"/>
 		</g>
@@ -127,7 +127,7 @@
 			<use xlink:href="#Circulo" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Almohadilla"/>
 		</g>
-		<g id="StaticProtectedField">
+		<g id="ProtectedStaticField">
 			<use xlink:href="#CirculoHueco" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#ProtectedField"/>
 		</g>
@@ -135,7 +135,7 @@
 			<use xlink:href="#Circulo" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Virgulilla"/>
 		</g>
-		<g id="StaticPackageField">
+		<g id="PackageStaticField">
 			<use xlink:href="#CirculoHueco" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#PackageField"/>
 		</g>
@@ -143,7 +143,7 @@
 			<use xlink:href="#Circulo" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Raya"/>
 		</g>
-		<g id="StaticPrivateField">
+		<g id="PrivateStaticField">
 			<use xlink:href="#CirculoHueco" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#PrivateField"/>
 		</g>
@@ -165,41 +165,41 @@
 			<use xlink:href="#Raya"/>
 		</g>
 		
-		<g id="AbstractPublicMethod" transform="skewX(-15)">
-			<use xlink:href="#Cuadrado" style="fill:url(#AbstractPublicGradient)" filter="url(#SpecShadow)"/>
+		<g id="PublicAbstractMethod" transform="skewX(-15)">
+			<use xlink:href="#Cuadrado" style="fill:url(#PublicAbstractGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Cruz"/>
 		</g>
 		<g id="PublicMethod">
 			<use xlink:href="#Cuadrado" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Cruz"/>
 		</g>
-		<g id="StaticPublicMethod">
+		<g id="PublicStaticMethod">
 			<use xlink:href="#CuadradoHueco" style="fill:url(#PublicGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#PublicMethod"/>
 		</g>
 		
-		<g id="AbstractProtectedMethod" transform="skewX(-15)">
-			<use xlink:href="#Cuadrado" style="fill:url(#AbstractProtectedGradient)" filter="url(#SpecShadow)"/>
+		<g id="ProtectedAbstractMethod" transform="skewX(-15)">
+			<use xlink:href="#Cuadrado" style="fill:url(#ProtectedAbstractGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Almohadilla"/>
 		</g>
 		<g id="ProtectedMethod">
 			<use xlink:href="#Cuadrado" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Almohadilla"/>
 		</g>
-		<g id="StaticProtectedMethod">
+		<g id="ProtectedStaticMethod">
 			<use xlink:href="#CuadradoHueco" style="fill:url(#ProtectedGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#ProtectedMethod"/>
 		</g>
 		
-		<g id="AbstractPackageMethod" transform="skewX(-15)">
-			<use xlink:href="#Cuadrado" style="fill:url(#AbstractPackageGradient)" filter="url(#SpecShadow)"/>
+		<g id="PackageAbstractMethod" transform="skewX(-15)">
+			<use xlink:href="#Cuadrado" style="fill:url(#PackageAbstractGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Virgulilla"/>
 		</g>
 		<g id="PackageMethod">
 			<use xlink:href="#Cuadrado" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Virgulilla"/>
 		</g>
-		<g id="StaticPackageMethod">
+		<g id="PackageStaticMethod">
 			<use xlink:href="#CuadradoHueco" style="fill:url(#PackageGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#PackageMethod"/>
 		</g>
@@ -208,7 +208,7 @@
 			<use xlink:href="#Cuadrado" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#Raya"/>
 		</g>
-		<g id="StaticPrivateMethod">
+		<g id="PrivateStaticMethod">
 			<use xlink:href="#CuadradoHueco" style="fill:url(#PrivateGradient)" filter="url(#SpecShadow)"/>
 			<use xlink:href="#PrivateMethod"/>
 		</g>
@@ -605,7 +605,7 @@
 			/>
 		</g>
 		<path id="Pi"
-			style="fill:url(#ProtectedGradient);stroke:#000040;stroke-width:2;shape-rendering:geometricPrecision"
+			style="fill:url(#PublicGradient);stroke:#000040;stroke-width:2;shape-rendering:geometricPrecision"
 			d="m 29.962536,2.5090743 0,4.1730394 -6.631133,0 -0.571652,8.6890723 c -0.114351,1.505356 -0.171518,2.810619 -0.171495,3.915797 -2.3e-5,2.64865 0.309621,4.263558 0.928932,4.844729 0.619266,0.581181 1.36717,0.871769 2.243723,0.871766 1.829254,3e-6 2.915383,-1.15282 3.258404,-3.458477 l 1.028968,0 c -0.628842,5.297285 -2.743941,7.945925 -6.345311,7.945925 -1.676859,0 -3.024997,-0.514486 -4.044417,-1.543453 -1.019458,-1.028968 -1.529177,-2.553364 -1.529163,-4.573195 -1.4e-5,-1.333843 0.20006,-4.153976 0.600233,-8.46041 l 0.771726,-8.2317543 -6.059483,0 c -0.400166,6.9360293 -0.881305,12.0046503 -1.443415,15.2058743 -0.56213,3.201242 -1.181419,5.268705 -1.857861,6.202396 -0.676459,0.933694 -1.5958592,1.400542 -2.7582078,1.400542 -0.8765321,0 -1.6149135,-0.257241 -2.2151408,-0.771727 -0.6002351,-0.514484 -0.900351,-1.190935 -0.9003466,-2.029354 -4.4e-6,-0.800306 0.5144788,-1.895968 1.543451,-3.286984 C 7.315686,21.38304 8.4399295,19.282231 9.1830796,17.100426 9.9262152,14.918644 10.488336,11.445878 10.869447,6.6821137 l -1.9436096,0 C 7.3633228,6.682136 6.1676257,7.029891 5.3387382,7.7253764 4.509843,8.4209019 3.7238247,9.4165236 2.9806836,10.712244 l -1.0289666,0 C 2.5043097,8.6733796 3.2188677,6.9965424 4.0953998,5.6817296 4.9719252,4.3669578 5.8722718,3.5094871 6.7964429,3.1093056 7.7206051,2.7091772 9.3640951,2.5091 11.72692,2.5090743 z"
 		/>
 		<g id="Gears">
@@ -1425,10 +1425,10 @@
 		</g>
 	</defs>
 	
-	<use x="30"  y="30"  xlink:href="#StaticPublicField"/>
-	<use x="90"  y="30"  xlink:href="#StaticProtectedField"/>
-	<use x="150" y="30"  xlink:href="#StaticPackageField"/>
-	<use x="210" y="30"  xlink:href="#StaticPrivateField"/>
+	<use x="30"  y="30"  xlink:href="#PublicStaticField"/>
+	<use x="90"  y="30"  xlink:href="#ProtectedStaticField"/>
+	<use x="150" y="30"  xlink:href="#PackageStaticField"/>
+	<use x="210" y="30"  xlink:href="#PrivateStaticField"/>
 	
 	<use x="30"  y="90"  xlink:href="#PublicField"/>
 	<use x="90"  y="90"  xlink:href="#ProtectedField"/>
@@ -1440,19 +1440,19 @@
 	<use x="150" y="150" xlink:href="#PackageConstructor"/>
 	<use x="210" y="150" xlink:href="#PrivateConstructor"/>
 	
-	<use x="30"  y="210" xlink:href="#StaticPublicMethod"/>
-	<use x="90"  y="210" xlink:href="#StaticProtectedMethod"/>
-	<use x="150" y="210" xlink:href="#StaticPackageMethod"/>
-	<use x="210" y="210" xlink:href="#StaticPrivateMethod"/>
+	<use x="30"  y="210" xlink:href="#PublicStaticMethod"/>
+	<use x="90"  y="210" xlink:href="#ProtectedStaticMethod"/>
+	<use x="150" y="210" xlink:href="#PackageStaticMethod"/>
+	<use x="210" y="210" xlink:href="#PrivateStaticMethod"/>
 	
 	<use x="30"  y="270" xlink:href="#PublicMethod"/>
 	<use x="90"  y="270" xlink:href="#ProtectedMethod"/>
 	<use x="150" y="270" xlink:href="#PackageMethod"/>
 	<use x="210" y="270" xlink:href="#PrivateMethod"/>
 	
-	<use x="30"  y="330" xlink:href="#AbstractPublicMethod"/>
-	<use x="90"  y="330" xlink:href="#AbstractProtectedMethod"/>
-	<use x="150" y="330" xlink:href="#AbstractPackageMethod"/>
+	<use x="30"  y="330" xlink:href="#PublicAbstractMethod"/>
+	<use x="90"  y="330" xlink:href="#ProtectedAbstractMethod"/>
+	<use x="150" y="330" xlink:href="#PackageAbstractMethod"/>
 	
 	<use x="15"  y="375" xlink:href="#Bubble"/>
 	<use x="75"  y="375" xlink:href="#Feather"/>

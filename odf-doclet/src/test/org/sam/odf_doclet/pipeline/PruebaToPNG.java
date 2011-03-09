@@ -25,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.sam.odf_doclet.bindings.ClassBindingFactory;
+
 import pruebas.ClaseDePrueba;
 
 /**
@@ -34,10 +36,10 @@ public class PruebaToPNG {
 
 	/**
 	 * @param args
-	
-	
-	
-	 * @throws FileNotFoundException  * @throws IOException  * @throws ClassNotFoundException  */
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException {
 		
 		Class<?> clazz;
@@ -57,9 +59,8 @@ public class PruebaToPNG {
 		//*/
 		
 		System.out.print("Generando gráfico de "+clazz.getSimpleName()+" ...");
-		PipeLine.setSource(clazz);
-		PipeLine.toXML(System.out);
-		PipeLine.toPNG(new FileOutputStream("output/out.png"));
+		PipeLine.toXML( ClassBindingFactory.createBinding( clazz ), System.out );
+		PipeLine.toPNG( ClassBindingFactory.createBinding( clazz ), new FileOutputStream( "output/out.png" ) );
 		System.out.println("\tok");
 	}
 }
