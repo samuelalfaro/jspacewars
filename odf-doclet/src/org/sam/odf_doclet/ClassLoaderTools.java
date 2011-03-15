@@ -75,7 +75,6 @@ public class ClassLoaderTools {
 			}
 			classLoader = new URLClassLoader( urls, classLoader );
 		}
-
 		return classLoader;
 	}
 }

@@ -24,7 +24,6 @@ package org.sam.odf_doclet.pipeline;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +44,7 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 import org.apache.batik.transcoder.image.PNGTranscoder;
+import org.sam.odf_doclet.Loader;
 import org.sam.odf_doclet.bindings.ClassBinding;
 import org.sam.odf_doclet.bindings.Recorders;
 import org.sam.pipeline.Filter;
@@ -103,9 +103,12 @@ class ToSVG extends FilterAbs{
 	ToSVG( Pump pump ) throws IOException, FileNotFoundException, TransformerFactoryConfigurationError,
 			TransformerConfigurationException{
 		super( pump );
-		File template = new File( "resources/shared/toSVG.xsl" );
+
 		transformer = TransformerFactory.newInstance().newTransformer(
-				new StreamSource( new FileInputStream( template ), template.toString() ) );
+					new StreamSource( 
+							Loader.getResourceAsStream("resources/shared/toSVG.xsl"),
+							Loader.getResourceAsURI("resources/shared/toSVG.xsl").toString() )
+		);
 		transformer.setParameter( "scale", 1.0 );
 		transformer.setParameter( "background", "#FFFFFF" );
 		transformer.setParameter( "widthChar1", 6.6 );
@@ -202,7 +205,8 @@ final class PNGSizeGrabber extends OutputStream{
  */
 class ToPNG extends FilterAbs{
 
-	final ImageTranscoder transcoder;
+	private final ImageTranscoder transcoder;
+	private final String uri;
 
 	/**
 	 * Constructor for ToPNG.
@@ -214,6 +218,8 @@ class ToPNG extends FilterAbs{
 		super( pump );
 		transcoder = new PNGTranscoder();
 		transcoder.addTranscodingHint( SVGAbstractTranscoder.KEY_EXECUTE_ONLOAD, Boolean.TRUE );
+		uri = new File( Loader.getRunPath() + "resources").toURI().toString();
+		System.err.println( uri );
 	}
 
 	/* (non-Javadoc)
@@ -222,7 +228,7 @@ class ToPNG extends FilterAbs{
 	@Override
 	public void process( InputStream in, OutputStream out ) throws IOException, FilterException{
 		TranscoderInput input = new TranscoderInput( in );
-		input.setURI( new File( "resources" ).toURI().toString() );
+		input.setURI( uri );
 		TranscoderOutput output = new TranscoderOutput( out );
 		try{
 			transcoder.transcode( input, output );

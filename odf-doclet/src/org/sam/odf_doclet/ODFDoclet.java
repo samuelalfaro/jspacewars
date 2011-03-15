@@ -24,17 +24,15 @@ package org.sam.odf_doclet;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.sam.odf_doclet.bindings.ClassBindingFactory;
-import org.sam.odf_doclet.bindings.Recorders;
-import org.sam.xml.XMLConverter;
-import org.sam.xml.XMLWriter;
+import org.sam.odf_doclet.pipeline.PipeLine;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
@@ -43,6 +41,34 @@ import com.sun.javadoc.RootDoc;
 /**
  */
 public class ODFDoclet {
+	
+	private static final String docletPath = "/media/DATA/Samuel/Proyectos/odf-doclet/";
+	private static final String libPath =
+		"batik-anim.jar:"+
+		"batik-awt-util.jar:"+
+		"batik-bridge.jar:"+
+		"batik-codec.jar:"+
+		"batik-css.jar:"+
+		"batik-dom.jar:"+
+		"batik-extension.jar:"+
+		"batik-ext.jar:"+
+		"batik-gui-util.jar:"+
+		"batik-gvt.jar:"+
+		"batik-parser.jar:"+
+		"batik-script.jar:"+
+		"batik-svg-dom.jar:"+
+		"batik-svggen.jar:"+
+		"batik-swing.jar:"+
+		"batik-transcoder.jar:"+
+		"batik-util.jar:"+
+		"batik-xml.jar:"+
+		"htmlcleaner-2.2.jar:"+
+		"js.jar:"+
+		"pdf-transcoder.jar:"+
+		"xalan-2.6.0.jar:"+
+		"xerces_2_5_0.jar:"+
+		"xml-apis-ext.jar:"+
+		"xml-apis.jar";
 	
 	/**
 	 * Method optionLength.
@@ -93,31 +119,42 @@ public class ODFDoclet {
 	 * @param root RootDoc
 	 * @return File
 	 */
-	public static File generarODT( File platillaODT, RootDoc root ){
+	public static void generarODT( InputStream plantilla, File resultFile, RootDoc root ) throws IOException{
 
-		try {
-			File tempFile = File.createTempFile( "result", ".odt", null );
-			byte[] buf = new byte[4096];
+		byte[] buf = new byte[4096];
 
-			ZipInputStream zin = new ZipInputStream( new BufferedInputStream( new FileInputStream( platillaODT ) ) );
-			ZipOutputStream out = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( tempFile ) ) );
+		ZipInputStream  zin = new ZipInputStream( new BufferedInputStream( plantilla ) );
+		ZipOutputStream out = new ZipOutputStream( new BufferedOutputStream( new FileOutputStream( resultFile ) ) );
 
-			ZipEntry entry = zin.getNextEntry();
-			while( entry != null ){
-				String name = entry.getName();
-				boolean conservar = !name.equalsIgnoreCase( "content.xml" )
-						&& !name.equalsIgnoreCase( "META-INF/manifest.xml" );
-				if( conservar ){
-					// System.out.println(name);
-					out.putNextEntry( new ZipEntry( name ) );
-					int len;
-					while( ( len = zin.read( buf ) ) > 0 ){
-						out.write( buf, 0, len );
-					}
+		ZipEntry entry = zin.getNextEntry();
+		while( entry != null ){
+			String name = entry.getName();
+//				boolean conservar = !name.equalsIgnoreCase( "content.xml" )
+//						&& !name.equalsIgnoreCase( "META-INF/manifest.xml" );
+			boolean conservar = true;
+			if( conservar ){
+				// System.out.println(name);
+				out.putNextEntry( new ZipEntry( name ) );
+				int len;
+				while( ( len = zin.read( buf ) ) > 0 ){
+					out.write( buf, 0, len );
 				}
-				entry = zin.getNextEntry();
 			}
-			zin.close();
+			entry = zin.getNextEntry();
+		}
+		zin.close();
+		
+		ClassDoc[] classes = root.classes();
+		for( ClassDoc classDoc: classes ){
+			out.putNextEntry( new ZipEntry( "Pictures/" + classDoc.qualifiedName() + ".png" ) );
+			try{
+				PipeLine.toPNG( ClassBindingFactory.createBinding( classDoc ), out );
+			}catch( ClassNotFoundException e ){
+				e.printStackTrace();
+			}
+			out.closeEntry();
+		}
+		out.close();
 //			TransformerFactory tFactory = TransformerFactory.newInstance();
 //			out.putNextEntry(new ZipEntry("content.xml"));
 //			aplicarPlantilla(tFactory, sourceContent, sourceStylesheet, out);
@@ -127,30 +164,44 @@ public class ODFDoclet {
 //				aplicarPlantilla(tFactory, null, manifestStylesheet, out);
 //				out.closeEntry();
 //			}
-//			out.close();
-			return tempFile;
-		}catch( IOException e ){
-			e.printStackTrace();
-			return null;
-		}
+		
 	}
 	
 	/**
 	 * Method start.
 	 * @param root RootDoc
 	 * @return boolean
-	 * @throws ClassNotFoundException
 	 */
-	public static boolean start( RootDoc root ) throws ClassNotFoundException{
-
-		ClassDoc[] classes = root.classes();
-
-		XMLConverter converter = new XMLConverter();
-		Recorders.register( converter );
-		converter.setWriter( new XMLWriter( System.out, true ) );
-
-		for( ClassDoc classDoc: classes )
-			converter.write( ClassBindingFactory.createBinding( classDoc ) );
-		return true;
+	public static boolean start( RootDoc root ){
+//		SecurityManager sm = System.getSecurityManager();
+//		if( sm != null)
+//			System.getSecurityManager().checkPermission( new RuntimePermission( "setContextClassLoader" ) );
+		try{
+			Thread.currentThread().setContextClassLoader( ClassLoaderTools.getLoader( docletPath, libPath ) );
+		}catch(SecurityException e){
+			e.printStackTrace();
+		}
+		try{
+			File fileOutput = new File( "output/result.odf" );
+//			System.out.println( Loader.getResourceAsURI( "resources/plantilla.odf" ) );
+//			System.out.println( fileOutput.getCanonicalPath() );
+			generarODT(	
+					Loader.getResourceAsStream( "resources/plantilla.odf" ),
+					fileOutput,
+					root
+			);
+			return true;
+		}catch( IOException e ){
+			e.printStackTrace();
+			return false;
+		}
+//		ClassDoc[] classes = root.classes();
+//
+//		XMLConverter converter = new XMLConverter();
+//		Recorders.register( converter );
+//		converter.setWriter( new XMLWriter( System.out, true ) );
+//
+//		for( ClassDoc classDoc: classes )
+//			converter.write( ClassBindingFactory.createBinding( classDoc ) );
 	}
 }
