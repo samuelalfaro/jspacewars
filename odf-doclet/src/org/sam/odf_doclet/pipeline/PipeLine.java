@@ -219,7 +219,6 @@ class ToPNG extends FilterAbs{
 		transcoder = new PNGTranscoder();
 		transcoder.addTranscodingHint( SVGAbstractTranscoder.KEY_EXECUTE_ONLOAD, Boolean.TRUE );
 		uri = new File( Loader.getRunPath() + "resources").toURI().toString();
-		System.err.println( uri );
 	}
 
 	/* (non-Javadoc)
