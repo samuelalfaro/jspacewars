@@ -1,4 +1,4 @@
-function fit(){
+function pack(){
 
 	function getMaxTextWidth( item, checkX ){
 		var textos = item.getElementsByTagName( "text" ),

@@ -240,9 +240,9 @@
 			<xsl:attribute name="width"><xsl:number value="$widthArea * $scale"/></xsl:attribute>
 			<xsl:attribute name="height"><xsl:number value="$heightArea * $scale"/></xsl:attribute>
 			<xsl:attribute name="viewBox"><xsl:value-of select="concat('0 0 ', $widthArea, ' ', $heightArea)"/></xsl:attribute>
-			<xsl:attribute name="onload">fit()</xsl:attribute>
+			<xsl:attribute name="onload">pack()</xsl:attribute>
 			<xsl:attribute name="version">1.1</xsl:attribute>
-			<script type="text/ecmascript" xlink:href="scripts/ajustar.es"/>
+			<script type="text/ecmascript" xlink:href="scripts/pack.es"/>
 
 			<xsl:if test='$background !="none"'>
 				<path id="background">
