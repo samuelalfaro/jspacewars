@@ -1,5 +1,5 @@
 /* 
- * ShowDocumentation.java
+ * ODFDoclet.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -53,33 +53,37 @@ public class ODFDoclet {
 		private static final Charset UTF8 = Charset.forName( "UTF-8" );
 
 		private BufferedReader reader;
-		private String breakLine;
 		private boolean havePicturesDir;
 		private boolean addPicturesDir;
+		private String breakLine;
 		private final StringWriter newManifest;
 		private final PrintWriter writer;
 		
-		ManifestGenerator(){
+		ManifestGenerator( InputStream in ) throws IOException {
+			reader = new BufferedReader( new StringReader( readOldManifest( in ) ) );
 			newManifest = new StringWriter();
 			writer = new PrintWriter( new BufferedWriter( newManifest ) );
-			addPicturesDir = false;
+			havePicturesDir = addPicturesDir = false;
+			wirteBeginOldManifest();
 		}
 		
-		void readOldManifest( InputStream in ) throws IOException {
+		private String readOldManifest( InputStream in ) throws IOException {
 			StringBuffer oldManifest = new StringBuffer();
 			byte[] buf = new byte[4096];
 			int len;
 			while( ( len = in.read( buf ) ) > 0 ){
 				oldManifest.append( new String( buf, 0, len, UTF8 ) );
 			}
-			reader = new BufferedReader( new StringReader( oldManifest.toString() ) );
-			havePicturesDir = false;
+			return oldManifest.toString();
+		}
+		
+		private void wirteBeginOldManifest() throws IOException {
 			while(true){
 				breakLine = reader.readLine();
 				if( breakLine == null ||
 					breakLine.contains( "manifest:full-path=\"Pictures/\"" ) ||
 					breakLine.contains( "manifest:full-path=\"content.xml\"" ) ||
-					breakLine.contains( "</manifest:manifest>")
+					breakLine.contains( "</manifest:manifest>" )
 				){
 					if( breakLine.contains( "manifest:full-path=\"Pictures/\"" ) )
 						havePicturesDir = true;
@@ -87,6 +91,16 @@ public class ODFDoclet {
 				}
 				writer.println( breakLine );
 			}
+		}
+		
+		private void wirteEndOldManifest() throws IOException {
+			if( addPicturesDir )
+				addEntry("", "Pictures/");
+			do{
+				writer.println( breakLine );
+				breakLine = reader.readLine();
+			}while( breakLine != null );
+			writer.flush();
 		}
 		
 		void addEntry(String type, String path){
@@ -100,13 +114,7 @@ public class ODFDoclet {
 		}
 		
 		byte[] getBytes() throws IOException{
-			if( addPicturesDir )
-				addEntry("", "Pictures/");
-			do{
-				writer.println( breakLine );
-				breakLine = reader.readLine();
-			}while( breakLine != null );
-			writer.flush();
+			wirteEndOldManifest();
 			return newManifest.toString().getBytes( UTF8 );
 		}
 	}
@@ -169,12 +177,11 @@ public class ODFDoclet {
 
 		ZipEntry entry = zin.getNextEntry();
 
-
-		ManifestGenerator manifest = new ManifestGenerator();
+		ManifestGenerator manifest = null;
 		while( entry != null ){
 			String name = entry.getName();
 			if( name.equalsIgnoreCase( "META-INF/manifest.xml" ) ){
-				manifest.readOldManifest( zin );
+				manifest = new ManifestGenerator( zin );
 			}else if( !name.equalsIgnoreCase( "content.xml" ) ){
 				out.putNextEntry( new ZipEntry( name ) );
 				int len;
@@ -192,7 +199,10 @@ public class ODFDoclet {
 			manifest.addImage( pictName );
 			out.putNextEntry( new ZipEntry( pictName ) );
 			try{
-				PipeLine.toPNG( ClassBindingFactory.createBinding( classDoc ), out );
+				BigDecimalDimension dim = BigDecimalDimension.toCentimeters(
+					PipeLine.toPNG( ClassBindingFactory.createBinding( classDoc ), out ),
+					75
+				);
 			}catch( ClassNotFoundException e ){
 				e.printStackTrace();
 			}
@@ -202,17 +212,7 @@ public class ODFDoclet {
 		out.putNextEntry( new ZipEntry( "META-INF/manifest.xml" ) );
 		out.write( manifest.getBytes() );
 		out.close();
-		
-//			TransformerFactory tFactory = TransformerFactory.newInstance();
-//			out.putNextEntry(new ZipEntry("content.xml"));
-//			aplicarPlantilla(tFactory, sourceContent, sourceStylesheet, out);
-//			out.closeEntry();
-//			if(manifestStylesheet != null){
-//				out.putNextEntry(new ZipEntry("META-INF/manifest.xml"));
-//				aplicarPlantilla(tFactory, null, manifestStylesheet, out);
-//				out.closeEntry();
-//			}
-		
+
 	}
 	
 	/**

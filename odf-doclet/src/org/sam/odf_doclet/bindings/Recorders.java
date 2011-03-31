@@ -71,7 +71,6 @@ public class Recorders {
 	private static final HtmlCleaner cleaner;
 	private static final PrettyXmlSerializer serializer;
 	    
-	
 	static{
 		CleanerProperties  props = new CleanerProperties();
 		// set some properties to non-default values
@@ -107,12 +106,6 @@ public class Recorders {
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
 		 */
-		/**
-		 * Method record.
-		 * @param t SimpleClassBinding.Interface
-		 * @param writer XMLWriter
-		 * @param mapper RecordersMapper
-		 */
 		@Override
 		public void record(SimpleClassBinding.Interface t, XMLWriter writer, RecordersMapper mapper){
 			writeNode( "Interface", t.name, writer );
@@ -126,12 +119,6 @@ public class Recorders {
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
 		 */
-		/**
-		 * Method record.
-		 * @param t SimpleClassBinding.Enum
-		 * @param writer XMLWriter
-		 * @param mapper RecordersMapper
-		 */
 		@Override
 		public void record(SimpleClassBinding.Enum t, XMLWriter writer, RecordersMapper mapper){
 			writeNode( "Enum", t.name, writer );
@@ -144,12 +131,6 @@ public class Recorders {
 		
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
-		 */
-		/**
-		 * Method record.
-		 * @param t SimpleClassBinding.Clazz
-		 * @param writer XMLWriter
-		 * @param mapper RecordersMapper
 		 */
 		@Override
 		public void record(SimpleClassBinding.Clazz t, XMLWriter writer, RecordersMapper mapper){
@@ -167,12 +148,6 @@ public class Recorders {
 		
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
-		 */
-		/**
-		 * Method record.
-		 * @param t DocumentedType
-		 * @param writer XMLWriter
-		 * @param mapper RecordersMapper
 		 */
 		@Override
 		public void record(DocumentedType t, XMLWriter writer, RecordersMapper mapper){
@@ -199,12 +174,6 @@ public class Recorders {
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
 		 */
-		/**
-		 * Method record.
-		 * @param t ParameterBinding
-		 * @param writer XMLWriter
-		 * @param mapper RecordersMapper
-		 */
 		@Override
 		public void record(ParameterBinding t, XMLWriter writer, RecordersMapper mapper){
 			writer.openNode("Parameter");
@@ -222,12 +191,6 @@ public class Recorders {
 
 		/* (non-Javadoc)
 		 * @see org.sam.xml.Recorder#record(java.lang.Object, org.sam.xml.XMLWriter, org.sam.xml.RecordersMapper)
-		 */
-		/**
-		 * Method record.
-		 * @param t LinkBinding
-		 * @param writer XMLWriter
-		 * @param mapper RecordersMapper
 		 */
 		@Override
 		public void record(LinkBinding t, XMLWriter writer, RecordersMapper mapper){

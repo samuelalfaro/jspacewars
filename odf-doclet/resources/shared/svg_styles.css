@@ -38,40 +38,43 @@ path{
 	fill:#E0E0E0
 }
 
-rect.titulo-estilo1, rect.parameters-estilo1{
+.titulo-estilo1, .parameters-estilo1{
 	fill:url(defs.svg#gradientInicialFinalV1)
 }
-rect.contenido-estilo1{
+.contenido-estilo1{
 	fill:url(defs.svg#gradientInicialFinalH1)
 }
 
-rect.titulo-estilo2, rect.parameters-estilo2{
+.titulo-estilo2, .parameters-estilo2{
 	fill:url(defs.svg#gradientInicialFinalV2)
 }
-rect.contenido-estilo2{
+.contenido-estilo2{
 	fill:url(defs.svg#gradientInicialFinalH2)
 }
 
-rect.titulo-estilo3{
+.titulo-estilo3{
 	fill:url(defs.svg#gradientInicialFinalV3)
 }
-rect.contenido-estilo3{
+.contenido-estilo3{
 	fill:url(defs.svg#gradientInicialFinalH3)
 }
 
-rect.parameters-estilo1, rect.parameters-estilo2{
+.parameters-estilo1, .parameters-estilo2{
 	stroke-width:2;
 	stroke-dasharray: 4, 4;
 }
 
-line.hierarchy-conector, polyline.hierarchy-conector{
+.hierarchy-conector{
+	fill:none;
 	marker-start:url(defs.svg#MarkerHierarchy)
 }
 
-line.container-conector, polyline.container-conector{
+.container-conector{
+	fill:none;
 	marker-start:url(defs.svg#MarkerContainer)
 }
 
-line.interface-conector, polyline.interface-conector{
+.interface-conector{
+	fill:none;
 	marker-end:url(defs.svg#MarkerInteface)
 }
