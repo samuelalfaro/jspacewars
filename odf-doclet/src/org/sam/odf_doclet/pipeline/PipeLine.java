@@ -21,6 +21,7 @@
  */
 package org.sam.odf_doclet.pipeline;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -109,12 +110,26 @@ class ToSVG extends FilterAbs{
 							Loader.getResourceAsStream("resources/shared/toSVG.xsl"),
 							Loader.getResourceAsURI("resources/shared/toSVG.xsl").toString() )
 		);
-		transformer.setParameter( "scale", 1.0 );
-		transformer.setParameter( "background", "#FFFFFF" );
 		transformer.setParameter( "widthChar1", 6.6 );
 		transformer.setParameter( "widthChar2", 9.0 );
 	}
+	
+	public void setScale( double scale ){
+		transformer.setParameter( "scale", scale );
+	}
 
+	public void setBackground( String background ){
+		transformer.setParameter( "background", background );
+	}
+
+	public void setBackground( int r, int g, int b ){
+		setBackground( String.format( "#%X%X%X", r, g, b ) );
+	}
+
+	public void setBackground( Color color ){
+		setBackground( color.getRed(), color.getGreen(), color.getBlue() );
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.sam.pipeline.Filter#process(java.io.InputStream, java.io.OutputStream)
 	 */
@@ -274,7 +289,7 @@ class ToIMG extends SinkAbs{
 public final class PipeLine {
 	
 	private static ToXML  toXML;
-	private static Filter toSVG;
+	private static ToSVG  toSVG;
 	private static Filter toPNG;
 	private static ToIMG  toIMG;
 	
@@ -303,25 +318,48 @@ public final class PipeLine {
 	
 	/**
 	 * @param clazz
+	 * @param scale
 	 * @param out
 	 * @throws IOException
 	 */
-	public static void toSVG( ClassBinding clazz, OutputStream out ) throws IOException{
+	public static void toSVG( ClassBinding clazz, double scale, OutputStream out ) throws IOException{
 		toXML.setSource( clazz );
+		toSVG.setScale( scale );
 		toSVG.process( out );
 	}
 	
 	/**
 	 * @param clazz
 	 * @param out
-	 * @return Dimension
 	 * @throws IOException
 	 */
-	public static Dimension toPNG( ClassBinding clazz, OutputStream out ) throws IOException{
+	public static void toSVG( ClassBinding clazz, OutputStream out ) throws IOException{
+		toSVG( clazz, 1.0, out );
+	}
+	
+	/**
+	 * @param clazz
+	 * @param scale
+	 * @param out
+	 * @return
+	 * @throws IOException
+	 */
+	public static Dimension toPNG( ClassBinding clazz, double scale, OutputStream out ) throws IOException{
 		toXML.setSource( clazz );
+		toSVG.setScale( scale );
 		PNGSizeGrabber grabber = new PNGSizeGrabber( out );
 		toPNG.process( grabber );
 		return new Dimension( grabber.getWidth(), grabber.getHeight() );
+	}
+	
+	/**
+	 * @param clazz
+	 * @param out
+	 * @return
+	 * @throws IOException
+	 */
+	public static Dimension toPNG( ClassBinding clazz, OutputStream out ) throws IOException{
+		return toPNG( clazz, 1.0, out  );
 	}
 	
 	/**

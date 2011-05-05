@@ -30,6 +30,7 @@ class BigDecimalDimension {
 	private static final MathContext mc = new MathContext( 3 );
 
 	private static final BigDecimal INCH_TO_CM = new BigDecimal( "2.54", mc );
+	private static final BigDecimal INCH_TO_MM = new BigDecimal( "25.4", mc );
 	
 	public final BigDecimal width;
 	public final BigDecimal height;
@@ -48,6 +49,16 @@ class BigDecimalDimension {
 		);
 	}
 
+	public static BigDecimalDimension toMilimeters( Dimension dim, int dpi ){
+		BigDecimal divisor = new BigDecimal( Integer.toString( dpi ) );
+		
+		return new BigDecimalDimension( 
+			new BigDecimal( Integer.toString( dim.width ) ).multiply( INCH_TO_MM ).divide( divisor, mc  ),
+			new BigDecimal( Integer.toString( dim.height ) ).multiply( INCH_TO_MM ).divide( divisor, mc  )
+		);
+	}
+	
+	
 	public static BigDecimalDimension toInches( Dimension dim, int dpi ){
 		BigDecimal divisor = new BigDecimal( Integer.toString( dpi ) );
 		

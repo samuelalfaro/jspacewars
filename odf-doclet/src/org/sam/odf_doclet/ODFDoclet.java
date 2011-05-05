@@ -21,6 +21,7 @@
  */
 package org.sam.odf_doclet;
 
+import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -33,10 +34,14 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 import org.sam.odf_doclet.bindings.ClassBindingFactory;
 import org.sam.odf_doclet.pipeline.PipeLine;
 
@@ -48,10 +53,11 @@ import com.sun.javadoc.RootDoc;
  */
 public class ODFDoclet {
 	
+	static final Charset UTF8 = Charset.forName( "UTF-8" );
+	static final double scaleFactor = 1.0 / 120;
+	
 	private static class ManifestGenerator{
 		
-		private static final Charset UTF8 = Charset.forName( "UTF-8" );
-
 		private BufferedReader reader;
 		private boolean havePicturesDir;
 		private boolean addPicturesDir;
@@ -119,6 +125,41 @@ public class ODFDoclet {
 		}
 	}
 	
+	private static class ContentGenerator{
+		
+		private static String readTemplate( InputStream in ) throws IOException {
+			StringBuffer template = new StringBuffer();
+			byte[] buf = new byte[4096];
+			int len;
+			while( ( len = in.read( buf ) ) > 0 ){
+				template.append( new String( buf, 0, len, UTF8 ) );
+			}
+			return template.toString();
+		}
+		
+		private final String template;
+		private final VelocityContext context;
+		private final Collection<Graphic> graphics;
+		
+		ContentGenerator() throws IOException {
+			Velocity.init();
+			template = readTemplate( Loader.getResourceAsStream( "/resources/toODT.vm" ) );
+			context = new VelocityContext();
+			graphics = new LinkedList<Graphic>();
+			context.put( "graphics", graphics );
+		}
+		
+		void addGraphic( String name, String path, Dimension dim, int dpi ){
+			graphics.add( new Graphic( name, path, dim, dpi ) );
+		}
+		
+		byte[] getBytes() {
+			StringWriter writer = new StringWriter();
+			Velocity.evaluate( context, writer, "toODT.vm", template );
+			return writer.getBuffer().toString().getBytes( UTF8 );
+		}
+	}
+	
 	/**
 	 * Method optionLength.
 	 * @param option String
@@ -169,6 +210,8 @@ public class ODFDoclet {
 	 * @return File
 	 */
 	public static void generarODT( InputStream plantilla, File resultFile, RootDoc root ) throws IOException{
+		
+		final int dpi = 120;
 
 		byte[] buf = new byte[4096];
 
@@ -193,21 +236,30 @@ public class ODFDoclet {
 		}
 		zin.close();
 		
+		ContentGenerator content = new ContentGenerator();
+		
 		ClassDoc[] classes = root.classes();
 		for( ClassDoc classDoc: classes ){
-			String pictName = "Pictures/" + classDoc.qualifiedName() + ".png";
-			manifest.addImage( pictName );
-			out.putNextEntry( new ZipEntry( pictName ) );
+			String pictName = classDoc.qualifiedName();
+			String pictPath = "Pictures/" + pictName + ".png";
+			manifest.addImage( pictPath );
+			
+			out.putNextEntry( new ZipEntry( pictPath ) );
 			try{
-				BigDecimalDimension dim = BigDecimalDimension.toCentimeters(
-					PipeLine.toPNG( ClassBindingFactory.createBinding( classDoc ), out ),
-					75
+				content.addGraphic( 
+						pictName, pictPath,
+						PipeLine.toPNG( ClassBindingFactory.createBinding( classDoc ), scaleFactor * dpi, out ),
+						dpi
 				);
 			}catch( ClassNotFoundException e ){
 				e.printStackTrace();
 			}
 			out.closeEntry();
 		}
+		
+		out.putNextEntry( new ZipEntry( "content.xml" ) );
+		manifest.addEntry( "text/xml", "content.xml");
+		out.write( content.getBytes() );
 		
 		out.putNextEntry( new ZipEntry( "META-INF/manifest.xml" ) );
 		out.write( manifest.getBytes() );
