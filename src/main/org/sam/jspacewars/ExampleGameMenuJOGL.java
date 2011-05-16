@@ -27,9 +27,11 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
+import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -52,17 +54,17 @@ import com.sun.opengl.util.Animator;
 
 public class ExampleGameMenuJOGL {
 
-	private static int getPort(){
+	static int getPort(){
 		return 1111;
 	}
 	
-	private static String getHostName(){
+	static String getHostName(){
 		return "localhost";
 	}
 	
-	private static JFrame getFullScreenFrame(){
+	private static Window getFullScreenFrame(){
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		JFrame frame = new JFrame(myDevice.getDefaultConfiguration());
+		Frame frame = new Frame(myDevice.getDefaultConfiguration());
 		frame.setUndecorated(true);
 		frame.setResizable(false);
 
@@ -89,15 +91,19 @@ public class ExampleGameMenuJOGL {
 		return frame;
 	}
 	
-	private static void mostrar(JFrame frame, Component component) {
-		if( Container.class.isAssignableFrom(component.getClass()) ){
-			frame.setContentPane((Container) component);
-		}else{
-			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
-				frame.getContentPane().setLayout(new BorderLayout());
-			frame.getContentPane().removeAll();
-			frame.getContentPane().add(component, BorderLayout.CENTER);
-		}
+	private static void mostrar(Window frame, Component component) {
+//		if( Container.class.isAssignableFrom(component.getClass()) ){
+//			frame.setContentPane((Container) component);
+//		}else{
+//			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
+//				frame.getContentPane().setLayout(new BorderLayout());
+//			frame.getContentPane().removeAll();
+//			frame.getContentPane().add(component, BorderLayout.CENTER);
+//		}
+		if( !( frame.getLayout() instanceof BorderLayout ) )
+			frame.setLayout( new BorderLayout() );
+		frame.removeAll();
+		frame.add( component, BorderLayout.CENTER );
 		frame.validate();
 		if(!frame.isVisible()){
 			frame.setVisible(true);
@@ -106,8 +112,11 @@ public class ExampleGameMenuJOGL {
 	}
 	
 	private static class ClientServer{
+		
 		Cliente cliente;
 		ServidorJuego server;
+		
+		ClientServer(){}
 	}
 	
 	public static void main(String[] args) {
@@ -147,7 +156,7 @@ public class ExampleGameMenuJOGL {
 		splashWindow = null;
 		System.gc();
 
-		final JFrame frame = getFullScreenFrame();
+		final Window frame = getFullScreenFrame();
 		
 		ButtonAction action =  new ButtonAction() {
 			public void run() {

@@ -127,12 +127,12 @@ public class ObjLoader {
 		
 		private static final char BACKSLASH = '\\';
 		
-		private ObjParser(Reader r) {
+		ObjParser(Reader r) {
 			super(r);
 			setup();
 		} 
 		
-		private void setup() {
+		void setup() {
 			resetSyntax();
 			eolIsSignificant(true);
 			lowerCaseMode(true);
@@ -150,7 +150,7 @@ public class ObjLoader {
 			ordinaryChar(BACKSLASH);
 		}
 		
-		private void getToken() throws ParsingErrorException {
+		void getToken() throws ParsingErrorException {
 			try {
 				while (true){
 					nextToken();
@@ -167,20 +167,20 @@ public class ObjLoader {
 			}
 		}
 		
-		private void skipToNextLine() throws ParsingErrorException {
+		void skipToNextLine() throws ParsingErrorException {
 			while (ttype != StreamTokenizer.TT_EOF && ttype != StreamTokenizer.TT_EOL) {
 				getToken();
 			}
 		}
 		
-		private float getFloat() throws ParsingErrorException {
+		float getFloat() throws ParsingErrorException {
 			do{
 				getToken();
 			}while(ttype == StreamTokenizer.TT_EOL);
 			return getLastValueAsFloat();
 		}
 		
-		private float getLastValueAsFloat() throws ParsingErrorException {
+		float getLastValueAsFloat() throws ParsingErrorException {
 			try{
 //				if(ttype == StreamTokenizer.TT_NUMBER)
 //					return (float)this.nval;
@@ -193,14 +193,14 @@ public class ObjLoader {
 			}
 		}
 
-		private int getInteger() throws ParsingErrorException {
+		int getInteger() throws ParsingErrorException {
 			do{
 				getToken();
 			}while(ttype == StreamTokenizer.TT_EOL);
 			return getLastValueAsInteger();
 		}
 
-		private int getLastValueAsInteger() throws ParsingErrorException {
+		int getLastValueAsInteger() throws ParsingErrorException {
 			try {
 //				if(ttype == StreamTokenizer.TT_NUMBER)
 //					return (int)this.nval;
@@ -215,6 +215,9 @@ public class ObjLoader {
 	}
 	
 	private static abstract class Primitive{
+		
+		Primitive(){}
+		
 		abstract Triangle[] toTriangles();
 		abstract void generateTangents(final List<Point3f> coordList, Vector3f[][] tangents);
 		
@@ -1028,7 +1031,7 @@ public class ObjLoader {
 		double centerZ = (minZ + maxZ)/2;
 
 		double scale = 1.0 / Math.max(1.0, getMaxDistance() );
-		//System.err.println("Centro: ("+centerX+", "+centerY+", "+centerZ+")\nEscala: "+scale);
+		//System.err.println("Centro: ("+centerX+", "+centerY+", "+centerZ+")\nEscala: "+length);
 	
 		Matrix4d mt = new Matrix4d();
 		mt.set(scale, new Vector3d(-centerX*scale,-centerY*scale,-centerZ*scale));
@@ -1159,8 +1162,8 @@ public class ObjLoader {
 			}
 			
 			Generator generator = (flags & ObjLoader.GENERATE_NTB) != 0 ? 
-					new Generator.NTBGenerator(0.25f):
-					Generator.VerticesTangents;
+					Generator.Predefined.NTB.lineLength(0.25f):
+					Generator.Predefined.VerticesTangents;
 					
 			if( (flags & ObjLoader.TRIANGULATE) != 0){
 				gl.glBegin(	getGLPrimitive( primitives.element(), flags) );
@@ -1184,15 +1187,15 @@ public class ObjLoader {
 			Generator generator;
 			
 			if( (flags & WIREFRAME) != 0 )
-				generator = Generator.VerticesWireFrame;
+				generator = Generator.Predefined.VerticesWireFrame;
 			else if( normal  && textCoord )
-				generator = Generator.VerticesNormalsTexCoords;
+				generator = Generator.Predefined.VerticesNormalsTexCoords;
 			else if( textCoord )
-				generator = Generator.VerticesTexCoords;
+				generator = Generator.Predefined.VerticesTexCoords;
 			else if( normal )
-				generator = Generator.VerticesNormals;
+				generator = Generator.Predefined.VerticesNormals;
 			else
-				generator = Generator.Vertices;
+				generator = Generator.Predefined.Vertices;
 			
 			if( (flags & ObjLoader.TRIANGULATE) != 0){
 				gl.glBegin(	getGLPrimitive( primitives.element(), flags) );

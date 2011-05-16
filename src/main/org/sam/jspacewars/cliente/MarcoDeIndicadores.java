@@ -41,106 +41,106 @@ import org.sam.jogl.gui.PixmapComponent;
 import org.sam.util.Imagen;
 
 public abstract class MarcoDeIndicadores extends GLComponent{
-	
-	private static class LedsNiveles extends BarraImagenes {
 
-		private int vFijos, vActuales, vDisponibles;
-		private boolean hayCambios = false;
+	private static class LedsNiveles extends BarraImagenes{
 
-		public LedsNiveles(	int nValores, Pixmap[] pixmaps ) {
+		int vFijos, vActuales, vDisponibles;
+		boolean hayCambios = false;
+
+		LedsNiveles( int nValores, Pixmap[] pixmaps ){
 			super( nValores, pixmaps );
 		}
 
-		public void setVFijos(int fijos) {
+		void setVFijos( int fijos ){
 			if( vFijos != fijos ){
 				hayCambios = true;
 				vFijos = fijos;
 			}
 		}
 
-		public void setVActuales(int actuales) {
+		void setVActuales( int actuales ){
 			if( vActuales != actuales ){
 				hayCambios = true;
 				vActuales = actuales;
 			}
 		}
 
-		public void setVDisponibles(int disponibles) {
+		void setVDisponibles( int disponibles ){
 			if( vDisponibles != disponibles ){
 				hayCambios = true;
 				vDisponibles = disponibles;
 			}
 		}
 
-		public boolean actualizar() {
+		boolean actualizar(){
 			if( !hayCambios )
 				return false;
 
 			hayCambios = false;
-			assert (vFijos <= vActuales && vActuales <= vDisponibles && vDisponibles <= getNValues());
+			assert ( vFijos <= vActuales && vActuales <= vDisponibles && vDisponibles <= getNValues() );
 
 			for( int i = 0, len = getNValues(); i < len; i++ ){
 				if( i < vFijos )
-					setValueAt(i, 3);
+					setValueAt( i, 3 );
 				else if( i < vActuales )
-					setValueAt(i, 2);
+					setValueAt( i, 2 );
 				else if( i < vDisponibles )
-					setValueAt(i, 1);
+					setValueAt( i, 1 );
 				else
-					setValueAt(i, 0);
+					setValueAt( i, 0 );
 			}
 			return true;
 		}
 	}
 
-	private static class LedsIndicadores extends BarraImagenes {
+	private static class LedsIndicadores extends BarraImagenes{
 
-		private final LedsNiveles indicadorAsociado;
+		final LedsNiveles indicadorAsociado;
 
-		private int iluminados;
-		private boolean activo;
+		int iluminados;
+		boolean activo;
 
-		private boolean hayCambios = false;
+		boolean hayCambios = false;
 
-		public LedsIndicadores(	int nValores, Pixmap[] pixmaps, LedsNiveles indicadorAsociado) {
+		LedsIndicadores( int nValores, Pixmap[] pixmaps, LedsNiveles indicadorAsociado ){
 			super( nValores, pixmaps );
 			this.indicadorAsociado = indicadorAsociado;
 		}
 
-		public void setIluminados(int iluminados) {
+		void setIluminados( int iluminados ){
 			if( this.iluminados != iluminados ){
 				hayCambios = true;
 				this.iluminados = iluminados;
 			}
 		}
 
-		public void setActivo(boolean activo) {
+		void setActivo( boolean activo ){
 			if( this.activo != activo ){
 				hayCambios = true;
 				this.activo = activo;
 			}
 		}
 
-		private boolean seleccionable(int i) {
+		boolean seleccionable( int i ){
 			if( i == 0 )
 				return indicadorAsociado.vFijos < indicadorAsociado.vActuales;
 			return indicadorAsociado.vActuales < indicadorAsociado.vDisponibles;
 		}
 
-		public boolean actualizar() {
+		boolean actualizar(){
 			hayCambios = indicadorAsociado.actualizar() || hayCambios;
 			if( !hayCambios )
 				return false;
-			assert (iluminados <= 2);
+			assert ( iluminados <= 2 );
 
 			hayCambios = false;
 			for( int i = 0; i < 2; i++ ){
 				if( i >= iluminados )
-					setValueAt(i, seleccionable(i) ? 1 : 0);
-				else if( activo && (i + 1) == iluminados )
-					setValueAt(i, seleccionable(i) ? 3 : 4);
+					setValueAt( i, seleccionable( i ) ? 1: 0 );
+				else if( activo && ( i + 1 ) == iluminados )
+					setValueAt( i, seleccionable( i ) ? 3: 4 );
 				else
-					setValueAt(i, 2);
+					setValueAt( i, 2 );
 			}
 			return true;
 		}
@@ -148,23 +148,23 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 
 	private static class LedIndicadorGrado extends BarraImagenes {
 
-		private final LedsNiveles indicadorAsociado;
-		private boolean iluminado;
-		private boolean hayCambios = false;
+		final LedsNiveles indicadorAsociado;
+		boolean iluminado;
+		boolean hayCambios = false;
 
-		public LedIndicadorGrado( Pixmap[] pixmaps, LedsNiveles indicadorAsociado ) {
+		LedIndicadorGrado( Pixmap[] pixmaps, LedsNiveles indicadorAsociado ) {
 			super( 1, pixmaps );
 			this.indicadorAsociado = indicadorAsociado;
 		}
 
-		public void setIluminado(boolean iluminado) {
+		void setIluminado(boolean iluminado) {
 			if( this.iluminado != iluminado ){
 				hayCambios = true;
 				this.iluminado = iluminado;
 			}
 		}
 
-		public boolean actualizar() {
+		boolean actualizar() {
 			hayCambios = indicadorAsociado.actualizar() || hayCambios;
 			if( !hayCambios )
 				return false;
@@ -298,11 +298,11 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		
 		private transient float proporcionesPantalla;
 		
-		public float getAreaInternaWidth(float w, float h){
+		public float getWidthAreaInterna(float w, float h){
 			return 31*w/32;
 		}
 		
-		public float getAreaInternaHeight(float w, float h){
+		public float getHeightAreaInterna(float w, float h){
 			return h - 3*w/32;
 		}
 		
@@ -311,8 +311,8 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		 */
 		@Override
 		protected void actualizar( Rectangle areaInterna, float w, float h){
-			float aWidth = getAreaInternaWidth( w, h );
-			float aHeight = getAreaInternaHeight( w, h );
+			float aWidth = getWidthAreaInterna( w, h );
+			float aHeight = getHeightAreaInterna( w, h );
 			
 			areaInterna.x      = (int)((w - aWidth)/2);
 			areaInterna.y      = (int)((h - aHeight)/6);
@@ -529,9 +529,9 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 	
 	protected abstract void recalcularBoundsComponentesInternos(float w, float h);
 	
-	public abstract float getAreaInternaWidth(float w, float h);
+	public abstract float getWidthAreaInterna(float w, float h);
 	
-	public abstract float getAreaInternaHeight(float w, float h);
+	public abstract float getHeightAreaInterna(float w, float h);
 	
 	public final void setViewportAreaInterna(GL gl){
 		gl.glViewport(areaInterna.x, areaInterna.y, areaInterna.width, areaInterna.height );

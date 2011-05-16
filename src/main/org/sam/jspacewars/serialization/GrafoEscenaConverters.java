@@ -67,19 +67,8 @@ import com.thoughtworks.xstream.core.ReferenceByXPathMarshallingStrategy;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-public class GrafoEscenaConverters {
+public final class GrafoEscenaConverters {
 
-	private static int parseInt(String s){
-		int i= 0;
-		if(s != null){
-			if(s.substring(0, 2).equalsIgnoreCase("0x"))
-				i = Integer.parseInt(s.substring(2),16);
-			else
-				i = Integer.parseInt(s);
-		}
-		return i;
-	}
-	
 	private GrafoEscenaConverters(){}
 	
 	/**
@@ -200,34 +189,52 @@ public class GrafoEscenaConverters {
 		private static final String Uniform = "Uniform";
 		private static final String name = "name";
 	}
-
-	private static Nodo forName( String name, HierarchicalStreamReader reader, UnmarshallingContext context ){
-
-		if(name.equals(S.Grupo))
-			return (Grupo)context.convertAnother(null, Grupo.class);
-		if(name.equals(S.NodoCompartido))
-			return (NodoCompartido)context.convertAnother(null, NodoCompartido.class);
-		if(name.equals(S.NodoTransformador))
-			return (NodoTransformador)context.convertAnother(null, NodoTransformador.class);
-		if(name.equals(S.Objeto3D))
-			return (Objeto3D)context.convertAnother(null, Objeto3D.class);
-		if(name.equals(S.Particulas)){
-			boolean clone = reader.getAttribute(S.reference) != null;
-			Particulas particulas = (Particulas)context.convertAnother(null, Particulas.class);
-			if(clone)
-				particulas =  particulas.clone();
-			return particulas;
-		}
-		throw new RuntimeException("Child no soportado: "+name);
-	}
 	
-	private static void writeNodo( Nodo nodo, HierarchicalStreamWriter writer, MarshallingContext context ){
-		writer.startNode( nodo instanceof Particulas ? S.Particulas : nodo.getClass().getSimpleName() );
-			context.convertAnother(nodo);
-		writer.endNode();
+	private static class Utils{
+		private Utils(){}
+		
+		static int parseInt(String s){
+			int i= 0;
+			if(s != null){
+				if(s.substring(0, 2).equalsIgnoreCase("0x"))
+					i = Integer.parseInt(s.substring(2),16);
+				else
+					i = Integer.parseInt(s);
+			}
+			return i;
+		}
+	
+		static Nodo fromName( String name, HierarchicalStreamReader reader, UnmarshallingContext context ){
+	
+			if(name.equals(S.Grupo))
+				return (Grupo)context.convertAnother(null, Grupo.class);
+			if(name.equals(S.NodoCompartido))
+				return (NodoCompartido)context.convertAnother(null, NodoCompartido.class);
+			if(name.equals(S.NodoTransformador))
+				return (NodoTransformador)context.convertAnother(null, NodoTransformador.class);
+			if(name.equals(S.Objeto3D))
+				return (Objeto3D)context.convertAnother(null, Objeto3D.class);
+			if(name.equals(S.Particulas)){
+				boolean clone = reader.getAttribute(S.reference) != null;
+				Particulas particulas = (Particulas)context.convertAnother(null, Particulas.class);
+				if(clone)
+					particulas =  particulas.clone();
+				return particulas;
+			}
+			throw new RuntimeException("Child no soportado: "+name);
+		}
+		
+		static void writeNodo( Nodo nodo, HierarchicalStreamWriter writer, MarshallingContext context ){
+			writer.startNode( nodo instanceof Particulas ? S.Particulas : nodo.getClass().getSimpleName() );
+				context.convertAnother(nodo);
+			writer.endNode();
+		}
+	
 	}
 	
 	private static class Instancia3DConverter implements Converter {
+		
+		Instancia3DConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -243,7 +250,7 @@ public class GrafoEscenaConverters {
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			Instancia3D instancia3D = (Instancia3D)value;
 			writer.addAttribute(S.type, Short.toString(instancia3D.getType()));
-			writeNodo( instancia3D.getChilds()[0], writer, context );
+			Utils.writeNodo( instancia3D.getChilds()[0], writer, context );
 			try{
 				Field field = Reflexion.findField(Instancia3D.class, S.rotation);
 				field.setAccessible(true);
@@ -264,7 +271,7 @@ public class GrafoEscenaConverters {
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			short type = (short)parseInt( reader.getAttribute(S.type) );
+			short type = (short)Utils.parseInt( reader.getAttribute(S.type) );
 			Nodo child = null;
 			Vector3f axis = null;
 			
@@ -278,7 +285,7 @@ public class GrafoEscenaConverters {
 							Float.parseFloat(reader.getAttribute(S.z))
 					);
 				else
-					child = forName( nodeName, reader, context );
+					child = Utils.fromName( nodeName, reader, context );
 				reader.moveUp();
 			}
 			Instancia3D instancia3D = new Instancia3D(type, child);
@@ -290,6 +297,8 @@ public class GrafoEscenaConverters {
 	
 	
 	private static class GrupoConverter implements Converter {
+		
+		GrupoConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -304,7 +313,7 @@ public class GrafoEscenaConverters {
 		 */
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
 			for( Nodo nodo: ((Grupo)value).getChilds() )
-				writeNodo( nodo, writer, context );
+				Utils.writeNodo( nodo, writer, context );
 		}
 
 		/* (non-Javadoc)
@@ -314,7 +323,7 @@ public class GrafoEscenaConverters {
 			Grupo grupo = new Grupo();
 			while (reader.hasMoreChildren()) {
 				reader.moveDown();
-				grupo.add( forName( reader.getNodeName(), reader, context ) );
+				grupo.add( Utils.fromName( reader.getNodeName(), reader, context ) );
 				reader.moveUp();
 			}
 			return grupo;
@@ -322,6 +331,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class NodoCompartidoConverter implements Converter {
+		
+		NodoCompartidoConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -335,7 +346,7 @@ public class GrafoEscenaConverters {
 		 * @see com.thoughtworks.xstream.converters.Converter#marshal(java.lang.Object, com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext)
 		 */
 		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
-			writeNodo( ((NodoCompartido)value).getChilds()[0], writer, context );
+			Utils.writeNodo( ((NodoCompartido)value).getChilds()[0], writer, context );
 		}
 
 		/* (non-Javadoc)
@@ -345,7 +356,7 @@ public class GrafoEscenaConverters {
 			Nodo child = null;
 			if (reader.hasMoreChildren()) {
 				reader.moveDown();
-				child = forName( reader.getNodeName(), reader, context );
+				child = Utils.fromName( reader.getNodeName(), reader, context );
 				reader.moveUp();
 			}
 			return child != null ? new NodoCompartido(child) : null;
@@ -353,6 +364,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class NodoTransformadorConverter implements Converter {
+		
+		NodoTransformadorConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -370,7 +383,7 @@ public class GrafoEscenaConverters {
 			writer.startNode( S.transformMatrix );
 				context.convertAnother(nodoTransformador.getTransform());
 			writer.endNode();
-			writeNodo( nodoTransformador.getChilds()[0], writer, context );
+			Utils.writeNodo( nodoTransformador.getChilds()[0], writer, context );
 		}
 
 		/* (non-Javadoc)
@@ -388,30 +401,31 @@ public class GrafoEscenaConverters {
 				if (nodeName.equals(S.transformMatrix))
 					transform = (Matrix4f)context.convertAnother(null, Matrix4f.class);
 				else
-					child = forName( nodeName, reader, context );
+					child = Utils.fromName( nodeName, reader, context );
 				reader.moveUp();
 			}
 			if (child == null)
 				return null;
 			return new NodoTransformador(transform, child);
 		}
-	}
+	}	
 	
-	private static class ObjLoaderData{
-		private String path;
-		private int flags = ObjLoader.NONE;
-		private Matrix4d transformMatrix;
-	}
-	
-	
-	private static class ObjLoaderDataConverter implements Converter {
+	private static class Objeto3DFromObjFileConverter implements Converter {
+		
+		static class Data{
+			String path;
+			int flags = ObjLoader.NONE;
+			Matrix4d transformMatrix;
+		}
+		
+		Objeto3DFromObjFileConverter(){}
 		
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class type) {
-			return type.equals(ObjLoaderData.class);
+			return type.equals(Data.class);
 		}
 		
 		/* (non-Javadoc)
@@ -424,7 +438,7 @@ public class GrafoEscenaConverters {
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			ObjLoaderData loaderData = new ObjLoaderData();
+			Data loaderData = new Data();
 			loaderData.path = reader.getAttribute(S.path);
 			String flagsAtt = reader.getAttribute(S.flags);
 			if(flagsAtt != null){
@@ -449,46 +463,48 @@ public class GrafoEscenaConverters {
 		}
 	}
 	
-	private static class TexturedQuadData{
-		float x1;
-		float y1;
-		float x2;
-		float y2;
+	private static class TexturedQuadConverter implements Converter {
 		
-		float u1;
-		float v1;
-		float u2;
-		float v2;
-	}
-	
-	private static OglList createTexturedQuad(GL gl, TexturedQuadData data){
+		static class Data{
+			float x1;
+			float y1;
+			float x2;
+			float y2;
+			
+			float u1;
+			float v1;
+			float u2;
+			float v2;
+		}
 		
-		OglList oglList = new OglList(gl);
+		private static OglList createTexturedQuad(GL gl, Data data){
+			
+			OglList oglList = new OglList(gl);
+			
+			gl.glBegin(GL.GL_QUADS);
+				gl.glTexCoord2f(data.u1,data.v1);
+				gl.glVertex3f(data.x1,data.y1,0);
+				gl.glTexCoord2f(data.u2,data.v1);
+				gl.glVertex3f(data.x2,data.y1,0);
+				gl.glTexCoord2f(data.u2,data.v2);
+				gl.glVertex3f(data.x2,data.y2,0);
+				gl.glTexCoord2f(data.u1,data.v2);
+				gl.glVertex3f(data.x1,data.y2,0);
+			gl.glEnd();
+			
+			OglList.endList(gl);
+			
+			return oglList;
+		}
 		
-		gl.glBegin(GL.GL_QUADS);
-			gl.glTexCoord2f(data.u1,data.v1);
-			gl.glVertex3f(data.x1,data.y1,0);
-			gl.glTexCoord2f(data.u2,data.v1);
-			gl.glVertex3f(data.x2,data.y1,0);
-			gl.glTexCoord2f(data.u2,data.v2);
-			gl.glVertex3f(data.x2,data.y2,0);
-			gl.glTexCoord2f(data.u1,data.v2);
-			gl.glVertex3f(data.x1,data.y2,0);
-		gl.glEnd();
-		
-		OglList.endList(gl);
-		
-		return oglList;
-	}
-	
-	private static class TexturedQuadDataConverter implements Converter {
+		TexturedQuadConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class type) {
-			return type.equals(TexturedQuadData.class);
+			return type.equals(Data.class);
 		}
 		
 		/* (non-Javadoc)
@@ -501,7 +517,7 @@ public class GrafoEscenaConverters {
 		 * @see com.thoughtworks.xstream.converters.Converter#unmarshal(com.thoughtworks.xstream.io.HierarchicalStreamReader, com.thoughtworks.xstream.converters.UnmarshallingContext)
 		 */
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			TexturedQuadData data = new TexturedQuadData();
+			Data data = new Data();
 
 			if( reader.getAttribute(S.x1) == null ){
 				float ancho_med = Float.parseFloat(reader.getAttribute(S.ancho)) / 2;
@@ -527,6 +543,8 @@ public class GrafoEscenaConverters {
 	
 	private static class Objeto3DConverter implements Converter {
 
+		Objeto3DConverter(){}
+		
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
@@ -559,9 +577,9 @@ public class GrafoEscenaConverters {
 				if(nodeName.equals(S.Apariencia)){
 					objeto3D.setApariencia((Apariencia)context.convertAnother(null, Apariencia.class));
 				}else if( nodeName.equals(S.Forma3DFromObjFile) ){
-					objeto3D.setGeometria((Geometria)context.convertAnother(null, ObjLoaderData.class));
+					objeto3D.setGeometria((Geometria)context.convertAnother(null, Objeto3DFromObjFileConverter.Data.class));
 				}else if( nodeName.equals(S.TexturedQuad) ){
-					objeto3D.setGeometria((Geometria)context.convertAnother(null, TexturedQuadData.class));
+					objeto3D.setGeometria((Geometria)context.convertAnother(null, TexturedQuadConverter.Data.class));
 				}
 				reader.moveUp();
 			}
@@ -570,6 +588,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class AparienciaConverter implements Converter {
+		
+		AparienciaConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -678,6 +698,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class MaterialConverter implements Converter {
+		
+		MaterialConverter(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -788,6 +810,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class AtributosTransparenciaConverter implements Converter {
+		
+		AtributosTransparenciaConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -842,6 +866,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class UnidadTexturaConverter implements Converter {
+		
+		UnidadTexturaConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -897,6 +923,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class TexturaConverter implements Converter {
+		
+		TexturaConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -949,6 +977,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class AtributosTexturaConverter implements Converter {
+		
+		AtributosTexturaConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -1121,6 +1151,8 @@ public class GrafoEscenaConverters {
 	}
 	
 	private static class GenCoordTexturaConverter implements Converter {
+		
+		GenCoordTexturaConverter(){}
 
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
@@ -1164,6 +1196,8 @@ public class GrafoEscenaConverters {
 	
 	private static class ShaderConverter implements Converter {
 
+		ShaderConverter(){}
+		
 		/* (non-Javadoc)
 		 * @see com.thoughtworks.xstream.converters.ConverterMatcher#canConvert(java.lang.Class)
 		 */
@@ -1206,10 +1240,6 @@ public class GrafoEscenaConverters {
 		}
 	}
 	
-	/**
-	 *
-	 * @param xStream
-	 */
 	public static void register(XStream xStream) {
 
 		xStream.alias(S.Instancia3D, Instancia3D.class);
@@ -1223,8 +1253,8 @@ public class GrafoEscenaConverters {
 		xStream.registerConverter(new NodoTransformadorConverter());
 		xStream.alias(S.Objeto3D, Objeto3D.class);
 		xStream.registerConverter(new Objeto3DConverter());
-		xStream.registerConverter(new ObjLoaderDataConverter());
-		xStream.registerConverter(new TexturedQuadDataConverter());
+		xStream.registerConverter(new Objeto3DFromObjFileConverter());
+		xStream.registerConverter(new TexturedQuadConverter());
 
 		xStream.alias(S.Apariencia, Apariencia.class);
 		xStream.registerConverter(new AparienciaConverter());

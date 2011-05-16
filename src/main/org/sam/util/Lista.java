@@ -25,205 +25,235 @@ package org.sam.util;
 import java.util.*;
 
 /**
- * Clase que implementa {@code List<E>}. La peculiaridad de esta implementación, es que permite
- * seguir recorriendo la lista con un {@code ListIterator<E>}, a la vez que se añaden elementos
- * al final de la lista, sin lanzar una excepción de acceso concurrente.
- * @param <E> Tipo genérico contenido por la lista.
+ * Clase que implementa {@code List<E>}. La peculiaridad de esta implementación, es que permite seguir recorriendo la
+ * lista con un {@code ListIterator<E>}, a la vez que se añaden elementos al final de la lista, sin lanzar una excepción
+ * de acceso concurrente.
+ * 
+ * @param <E>
+ *            Tipo genérico contenido por la lista.
  */
-public class Lista<E> implements List<E>{
-	
-	private static class Nodo<D>{
-		protected Nodo<D> pre, pos;
-		protected D datos;
-		
-		Nodo(Nodo<D> pre, D datos, Nodo<D> pos){
+public class Lista <E> implements List<E>{
+
+	private static final class Nodo <D>{
+		Nodo<D> pre, pos;
+		D datos;
+
+		Nodo( Nodo<D> pre, D datos, Nodo<D> pos ){
 			this.datos = datos;
 			this.pre = pre;
 			this.pos = pos;
 		}
 	}
-	
-	private void addNodo(Nodo<E> nodo){
-		if (nodo.pre == null)
+
+	/**
+	 * @param nodo que será añadido.
+	 */
+	void addNodo( Nodo<E> nodo ){
+		if( nodo.pre == null )
 			primero = nodo;
 		else
 			nodo.pre.pos = nodo;
-		if (nodo.pos == null)
+		if( nodo.pos == null )
 			ultimo = nodo;
 		else
 			nodo.pos.pre = nodo;
 	}
-	
-	private void removeNodo(Nodo<E> nodo){
-		if(nodo.pre == null)
+
+	/**
+	 * @param nodo que será eliminado.
+	 */
+	void removeNodo( Nodo<E> nodo ){
+		if( nodo.pre == null )
 			primero = nodo.pos;
 		else
 			nodo.pre.pos = nodo.pos;
-		if(nodo.pos == null)
+		if( nodo.pos == null )
 			ultimo = nodo.pre;
 		else
 			nodo.pos.pre = nodo.pre;
 		nodo.pre = null;
 		nodo.pos = null;
 	}
-	
-	private class Iterador implements ListIterator<E>{
+
+	private final class Iterador implements ListIterator<E>{
 		protected Nodo<E> it, lastReturned;
 		protected int index;
-		
-		private Iterador(){
+
+		Iterador(){
 			this.gotoBegin();
 		}
-		
-		private void gotoBegin(){
+
+		void gotoBegin(){
 			this.it = primero;
 			this.lastReturned = null;
 			this.index = 0;
 		}
-		
-		private void gotoIndex(final int index){
-			if (index<0 || index >=size)
-				throw new NoSuchElementException("\nIndex: "+index+"\tSize:"+size);
-			
-			if(this.index == index)
+
+		void gotoIndex( final int index ){
+			if( index < 0 || index >= size )
+				throw new NoSuchElementException( "\nIndex: " + index + "\tSize:" + size );
+
+			if( this.index == index )
 				return;
-			
+
 			boolean avanzar;
-			
-			if(Math.abs(index-this.index)< (size >> 1))
-				avanzar = this.index<index;
-			else if( avanzar = index < (size >> 1) ){
+
+			if( Math.abs( index - this.index ) < ( size >> 1 ) )
+				avanzar = this.index < index;
+			else if( avanzar = index < ( size >> 1 ) ){
 				this.it = primero;
 				this.index = 0;
 			}else{
 				this.it = ultimo;
-				this.index = size-1;
+				this.index = size - 1;
 			}
-			
-			if(avanzar){
-				while(this.index < index){
-					this.index ++;
+
+			if( avanzar ){
+				while( this.index < index ){
+					this.index++;
 					this.it = this.it.pos;
 				}
 			}else{
-				while(this.index > index){
-					this.index --;
+				while( this.index > index ){
+					this.index--;
 					this.it = this.it.pre;
 				}
 			}
 		}
-		
-		private void gotoEnd(){
+
+		void gotoEnd(){
 			this.it = ultimo;
 			this.lastReturned = null;
-			this.index = size-1;
+			this.index = size - 1;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.Iterator#hasNext()
 		 */
-		public boolean hasNext() {
+		public boolean hasNext(){
 			return it != null;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.Iterator#next()
 		 */
-		public E next() {
-			if (it == null)
-				throw new NoSuchElementException("\nIndex: "+index+"\tSize:"+size);
+		public E next(){
+			if( it == null )
+				throw new NoSuchElementException( "\nIndex: " + index + "\tSize:" + size );
 			lastReturned = it;
 			it = it.pos;
 			index++;
 			return lastReturned.datos;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.Iterator#remove()
 		 */
-		public void remove() {
-			if(lastReturned == null)
+		public void remove(){
+			if( lastReturned == null )
 				throw new IllegalStateException();
-			removeNodo(lastReturned);
+			removeNodo( lastReturned );
 			index--;
-			size --;
+			size--;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.ListIterator#hasPrevious()
 		 */
-		public boolean hasPrevious() {
+		public boolean hasPrevious(){
 			return it != null;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.ListIterator#previous()
 		 */
-		public E previous() {
-			if (it == null)
-				throw new NoSuchElementException("\nIndex: "+index+"\tSize:"+size);
-		    lastReturned = it;
+		public E previous(){
+			if( it == null )
+				throw new NoSuchElementException( "\nIndex: " + index + "\tSize:" + size );
+			lastReturned = it;
 			it = it.pre;
 			index--;
 			return lastReturned.datos;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.ListIterator#nextIndex()
 		 */
-		public int nextIndex() {
-			return index+1;
+		public int nextIndex(){
+			return index + 1;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.ListIterator#previousIndex()
 		 */
-		public int previousIndex() {
-			return index-1;
+		public int previousIndex(){
+			return index - 1;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.ListIterator#set(java.lang.Object)
 		 */
-		public void set(E datos) {
-			if(lastReturned == null)
+		public void set( E datos ){
+			if( lastReturned == null )
 				throw new IllegalStateException();
-//			Nodo aux = lastReturned;
-//			if(aux.pre != null && comparar(aux.pre.datos,datos)>0){
-//				do{
-//					aux = aux.pre;
-//				}while(aux.pre != null && comparar(aux.pre.datos,datos)>0);
-//				lastReturned.removeMe();
-//				lastReturned.datos = datos;
-//				lastReturned.addMe(aux.pre,aux);
-//				return;
-//			}
-//			if (aux.pos != null && comparar(aux.pos.datos,datos)<0){
-//				do{
-//					aux = aux.pos;
-//				}while(aux.pos != null && comparar(aux.pos.datos,datos)<0);
-//				lastReturned.removeMe();
-//				lastReturned.datos = datos;
-//				lastReturned.addMe(aux,aux.pos);
-//				return;
-//			}
+			// Nodo aux = lastReturned;
+			// if(aux.pre != null && comparar(aux.pre.datos,datos)>0){
+			// do{
+			// aux = aux.pre;
+			// }while(aux.pre != null && comparar(aux.pre.datos,datos)>0);
+			// lastReturned.removeMe();
+			// lastReturned.datos = datos;
+			// lastReturned.addMe(aux.pre,aux);
+			// return;
+			// }
+			// if (aux.pos != null && comparar(aux.pos.datos,datos)<0){
+			// do{
+			// aux = aux.pos;
+			// }while(aux.pos != null && comparar(aux.pos.datos,datos)<0);
+			// lastReturned.removeMe();
+			// lastReturned.datos = datos;
+			// lastReturned.addMe(aux,aux.pos);
+			// return;
+			// }
 			lastReturned.datos = datos;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see java.util.ListIterator#add(java.lang.Object)
 		 */
-		public void add(E datos) {
-			addNodo(new Nodo<E>(lastReturned==null?ultimo:lastReturned.pre, datos, lastReturned));
+		public void add( E datos ){
+			addNodo( new Nodo<E>( lastReturned == null ? ultimo: lastReturned.pre, datos, lastReturned ) );
 			index++;
 			size++;
 		}
 	}
-	
+
 	private final Iterador iterador;
-	private Nodo<E> primero, ultimo;
-	private int size;
-	
+	/** Nodo<E> que contiene: */
+	Nodo<E> primero;
+	/** Nodo<E> que contiene: */
+	Nodo<E> ultimo;
+	/** int que contiene: */
+	int size;
+
 	/**
 	 * 
 	 */
@@ -232,258 +262,304 @@ public class Lista<E> implements List<E>{
 		size = 0;
 		this.iterador = new Iterador();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#size()
 	 */
 	public int size(){
 		return size;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#isEmpty()
 	 */
 	public boolean isEmpty(){
-		return size==0;
+		return size == 0;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Iterable#iterator()
 	 */
 	public Iterator<E> iterator(){
 		iterador.gotoBegin();
 		return iterador;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#add(E)
 	 */
-	public boolean add(E o){
-		addNodo(new Nodo<E>(ultimo, o, null));
+	public boolean add( E o ){
+		addNodo( new Nodo<E>( ultimo, o, null ) );
 		size++;
 		return true;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#remove(java.lang.Object)
 	 */
-	public boolean remove(Object o){
-		if(indexOf(o)!=-1){
+	public boolean remove( Object o ){
+		if( indexOf( o ) != -1 ){
 			iterador.remove();
 			return true;
 		}
 		return false;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#contains(java.lang.Object)
 	 */
-	public boolean contains(Object o){
+	public boolean contains( Object o ){
 		iterador.gotoBegin();
-		if (o==null){
-			while(iterador.hasNext()){
-				if (iterador.next()==null)
+		if( o == null ){
+			while( iterador.hasNext() ){
+				if( iterador.next() == null )
 					return true;
 			}
 		}else{
-			while(iterador.hasNext()){
-				if (o.equals(iterador.next()))
+			while( iterador.hasNext() ){
+				if( o.equals( iterador.next() ) )
 					return true;
 			}
 		}
 		return false;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#containsAll(java.util.Collection)
 	 */
-	public boolean containsAll(Collection<?> collection){
-		for(Object o: collection)
-			if(!contains(o))
+	public boolean containsAll( Collection<?> collection ){
+		for( Object o: collection )
+			if( !contains( o ) )
 				return false;
 		return true;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#addAll(java.util.Collection)
 	 */
-	public boolean addAll(Collection<? extends E> collection){
+	public boolean addAll( Collection<? extends E> collection ){
 		boolean modified = false;
-		for(E e: collection)
-			if (add(e))
+		for( E e: collection )
+			if( add( e ) )
 				modified = true;
 		return modified;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#retainAll(java.util.Collection)
 	 */
-	public boolean retainAll(Collection<?> c){
+	public boolean retainAll( Collection<?> c ){
 		boolean modified = false;
 		iterador.gotoBegin();
-		while (iterador.hasNext()) {
-			if (!c.contains(iterador.next())) {
+		while( iterador.hasNext() ){
+			if( !c.contains( iterador.next() ) ){
 				iterador.remove();
 				modified = true;
 			}
 		}
 		return modified;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#removeAll(java.util.Collection)
 	 */
-	public boolean removeAll(Collection<?> c) {
+	public boolean removeAll( Collection<?> c ){
 		boolean modified = false;
 		iterador.gotoBegin();
-		while (iterador.hasNext()) {
-			if (c.contains(iterador.next())) {
+		while( iterador.hasNext() ){
+			if( c.contains( iterador.next() ) ){
 				iterador.remove();
 				modified = true;
 			}
 		}
 		return modified;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#clear()
 	 */
-	public void clear() {
+	public void clear(){
 		iterador.gotoBegin();
-		while (iterador.hasNext()) {
+		while( iterador.hasNext() ){
 			iterador.next();
 			iterador.remove();
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#toArray()
 	 */
 	public Object[] toArray(){
-		if( size()== 0)
+		if( size() == 0 )
 			return null;
-		Object[] result = (Object[])java.lang.reflect.Array.newInstance(primero.datos.getClass().getComponentType(), size());
+		Object[] result = (Object[])java.lang.reflect.Array.newInstance( primero.datos.getClass().getComponentType(),
+				size() );
 		int i = 0;
-        for (Nodo<E> n = primero; n != null; n = n.pos)
-            result[i++] = n.datos;
+		for( Nodo<E> n = primero; n != null; n = n.pos )
+			result[i++] = n.datos;
 		return result;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.Collection#toArray(T[])
 	 */
 
-	@SuppressWarnings("unchecked")
-	public <T> T[] toArray(T[] a) {
-		int size = size();
+	@SuppressWarnings( "unchecked" )
+	public <T>T[] toArray( T[] a ){
 		Object[] result;
-		if (a.length < size)
-			result = (Object[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), size);
+		if( a.length < size )
+			result = (Object[])java.lang.reflect.Array.newInstance( a.getClass().getComponentType(), size );
 		else
 			result = a;
 		int i = 0;
-        for ( Nodo n = primero; n != null; n = n.pos)
-        	result[i++] = n.datos;
-		while(i < a.length)
+		for( Nodo<E> n = primero; n != null; n = n.pos )
+			result[i++] = n.datos;
+		while( i < a.length )
 			a[i++] = null;
 		return (T[])result;
 	}
-    
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#get(int)
 	 */
-	public E get(int index) {
-		iterador.gotoIndex(index);
+	public E get( int index ){
+		iterador.gotoIndex( index );
 		return iterador.next();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 */
-	public boolean addAll(int index, Collection<? extends E> c) {
+	public boolean addAll( int index, Collection<? extends E> c ){
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#set(int, java.lang.Object)
 	 */
-	public E set(int index, E element) {
+	public E set( int index, E element ){
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#add(int, java.lang.Object)
 	 */
-	public void add(int index, E element) {
+	public void add( int index, E element ){
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#remove(int)
 	 */
-	public E remove(int index) {
-		iterador.gotoIndex(index);
+	public E remove( int index ){
+		iterador.gotoIndex( index );
 		E datos = iterador.next();
 		iterador.remove();
 		return datos;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#indexOf(java.lang.Object)
 	 */
-	public int indexOf(Object o) {
+	public int indexOf( Object o ){
 		iterador.gotoBegin();
-		if (o==null)
-			while(iterador.hasNext()){
-				if (iterador.next() == null)
+		if( o == null )
+			while( iterador.hasNext() ){
+				if( iterador.next() == null )
 					return iterador.previousIndex();
 			}
 		else
-			while(iterador.hasNext()){
-				if (o.equals(iterador.next()))
+			while( iterador.hasNext() ){
+				if( o.equals( iterador.next() ) )
 					return iterador.previousIndex();
 			}
 		return -1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#lastIndexOf(java.lang.Object)
 	 */
-	public int lastIndexOf(Object o) {
+	public int lastIndexOf( Object o ){
 		iterador.gotoEnd();
-		if (o==null)
-			while(iterador.hasPrevious()){
-				if (iterador.previous() == null)
+		if( o == null )
+			while( iterador.hasPrevious() ){
+				if( iterador.previous() == null )
 					return iterador.nextIndex();
 			}
 		else
-			while(iterador.hasPrevious()){
-				if (o.equals(iterador.previous()))
+			while( iterador.hasPrevious() ){
+				if( o.equals( iterador.previous() ) )
 					return iterador.nextIndex();
 			}
 		return -1;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#listIterator()
 	 */
-	public ListIterator<E> listIterator() {
+	public ListIterator<E> listIterator(){
 		iterador.gotoBegin();
 		return iterador;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#listIterator(int)
 	 */
-	public ListIterator<E> listIterator(final int index) {
-		iterador.gotoIndex(index);
+	public ListIterator<E> listIterator( final int index ){
+		iterador.gotoIndex( index );
 		return iterador;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.util.List#subList(int, int)
 	 */
-	public List<E> subList(int fromIndex, int toIndex) {
+	public List<E> subList( int fromIndex, int toIndex ){
 		throw new UnsupportedOperationException();
 	}
 }

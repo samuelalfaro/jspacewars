@@ -185,11 +185,11 @@ public class GeneradorDeSiluetas {
 		final List<Point3f> vertList;
 		final List<Line> lines;
 
-		private ObjLoader(final Reader reader) {
+		ObjLoader(final Reader reader) {
 			this(reader, false, null);
 		}
 
-		private ObjLoader(final Reader reader, boolean resize, Matrix4d mt){
+		ObjLoader(final Reader reader, boolean resize, Matrix4d mt){
 			vertList = new ArrayList<Point3f>(128);
 			lines = new ArrayList<Line>(128);
 			read(new ObjParser(new BufferedReader(reader)));
@@ -327,7 +327,7 @@ public class GeneradorDeSiluetas {
 			double centerZ = (minZ + maxZ)/2;
 
 			double scale = 1.0 / Math.max(1.0, getMaxDistance() );
-			//System.err.println("Centro: ("+centerX+", "+centerY+", "+centerZ+")\nEscala: "+scale);
+			//System.err.println("Centro: ("+centerX+", "+centerY+", "+centerZ+")\nEscala: "+length);
 
 			Matrix4d mt = new Matrix4d();
 			mt.set(scale, new Vector3d(-centerX*scale,-centerY*scale,-centerZ*scale));
@@ -336,7 +336,7 @@ public class GeneradorDeSiluetas {
 		}
 	}
 	
-	private static void paintProjection(Graphics2D g2d, List<Point3f> vertList, List<Line> lines, int w, int h){
+	static void paintProjection(Graphics2D g2d, List<Point3f> vertList, List<Line> lines, int w, int h){
 		g2d.setBackground(Color.BLACK);
 		g2d.clearRect(0, 0, w, h);
 		
@@ -384,7 +384,7 @@ public class GeneradorDeSiluetas {
 
 	}
 	
-	private static float[] getArray(Poligono p, String name){
+	static float[] getArray(Poligono p, String name){
 		java.lang.reflect.Field f = Reflexion.findField(Poligono.class, name);
 		float[] array = null;
 		try {
@@ -399,6 +399,9 @@ public class GeneradorDeSiluetas {
 	}
 	
 	private static class PoligonoConverter implements Converter {
+
+		PoligonoConverter(){}
+		
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Poligono.class == clazz;

@@ -43,15 +43,15 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ElementosConverters {
 	
-	private static float getFloatAttribute(HierarchicalStreamReader reader, String att, float defecto){
-		try{
-			return Float.parseFloat(reader.getAttribute(att));
-		}catch(Exception e){
-			return defecto;
+private static class PoligonoConverter implements Converter {
+		
+		private static float getFloatAttribute(HierarchicalStreamReader reader, String att, float defecto){
+			try{
+				return Float.parseFloat(reader.getAttribute(att));
+			}catch(Exception e){
+				return defecto;
+			}
 		}
-	}
-
-	private static class PoligonoConverter implements Converter {
 		
 		PoligonoConverter(){}
 
