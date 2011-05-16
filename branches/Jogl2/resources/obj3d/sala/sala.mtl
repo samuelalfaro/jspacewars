@@ -1,0 +1,7 @@
+newmtl material
+Ka 0.745098 0.745098 0.745098
+Kd 1 1 1
+Ks 0.752941 0.752941 0.752941
+illum 2
+Ns 8
+map_Kd pasillo.jpg

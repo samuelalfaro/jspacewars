@@ -1,0 +1,1538 @@
+<object-stream>
+	<Misil type="0x40">
+	</Misil>
+	<DisparoInterpolado type="0x60">
+		<trayectoria>
+			<Keys keyGen="PROPORCIONALES" scale="1000000000.0" translation="0.0"/>
+			<Values class="[[F" length="31">
+				<Punto2F x="0.0" y="0.0"/>
+				<Punto2F x="-0.10" y="0.0"/>
+				<Punto2F x="-0.25" y="0.15"/>
+				<Punto2F x="-0.25" y="0.25"/>
+				<Punto2F x="-0.25" y="0.35"/>
+				<Punto2F x="0.5" y="0.5"/>
+				<Punto2F x="1.0" y="0.5"/>
+				<Punto2F x="1.5" y="0.5"/>
+				<Punto2F x="2.5" y="-0.25"/>
+				<Punto2F x="3.0" y="-0.25"/>
+				<Punto2F x="3.5" y="-0.25"/>
+				<Punto2F x="4.5" y="0.25"/>
+				<Punto2F x="5.0" y="0.25"/>
+				<Punto2F x="5.5" y="0.25"/>
+				<Punto2F x="6.5" y="-0.25"/>
+				<Punto2F x="7.0" y="-0.25"/>
+				<Punto2F x="7.5" y="-0.25"/>
+				<Punto2F x="8.5" y="0.25"/>
+				<Punto2F x="9.0" y="0.25"/>
+				<Punto2F x="9.5" y="0.25"/>
+				<Punto2F x="10.5" y="-0.25"/>
+				<Punto2F x="11.0" y="-0.25"/>
+				<Punto2F x="11.5" y="-0.25"/>
+				<Punto2F x="12.5" y="0.25"/>
+				<Punto2F x="13.0" y="0.25"/>
+				<Punto2F x="13.5" y="0.25"/>
+				<Punto2F x="14.5" y="-0.25"/>
+				<Punto2F x="15.0" y="-0.25"/>
+				<Punto2F x="15.5" y="-0.25"/>
+				<Punto2F x="16.5" y="0.25"/>
+				<Punto2F x="17.0" y="0.25"/>
+			</Values>
+			<MetodoDeInterpolacion predefinido="BEZIER"/>
+		</trayectoria>
+	</DisparoInterpolado>
+	<DisparoLineal type="0x80">
+	</DisparoLineal>
+	<DisparoLineal type="0x81">
+	</DisparoLineal>
+	<DisparoLineal type="0x82">
+	</DisparoLineal>
+	<DisparoLineal type="0x83">
+	</DisparoLineal>
+	<DisparoLineal type="0x84">
+	</DisparoLineal>
+	<DisparoLineal type="0x85">
+	</DisparoLineal>
+	<DisparoLineal type="0x86">
+	</DisparoLineal>
+	<DisparoLineal type="0x87">
+	</DisparoLineal>
+	<DisparoLineal type="0x88">
+	</DisparoLineal>
+	<DisparoLineal type="0x89">
+	</DisparoLineal>
+	<DisparoLineal type="0x8A">
+	</DisparoLineal>
+	<DisparoLineal type="0x8B">
+	</DisparoLineal>
+	<DisparoLineal type="0x8C">
+	</DisparoLineal>
+	<DisparoLineal type="0x8D">
+	</DisparoLineal>
+	<DisparoLineal type="0x8E">
+	</DisparoLineal>
+	<DisparoLineal type="0x8F">
+	</DisparoLineal>
+	<DisparoLineal type="0x90">
+	</DisparoLineal>
+	<DisparoLineal type="0x91">
+	</DisparoLineal>
+	<DisparoLineal type="0x92">
+	</DisparoLineal>
+	<DisparoLineal type="0x93">
+	</DisparoLineal>
+	<DisparoLineal type="0x94">
+	</DisparoLineal>
+	<DisparoLineal type="0x95">
+	</DisparoLineal>
+	<DisparoLineal type="0x96">
+	</DisparoLineal>
+	<DisparoLineal type="0x97">
+	</DisparoLineal>
+	<DisparoLineal type="0x98">
+	</DisparoLineal>
+	<DisparoLineal type="0x99">
+	</DisparoLineal>
+	<DisparoLineal type="0x9A">
+	</DisparoLineal>
+	<DisparoLineal type="0x9B">
+	</DisparoLineal>
+	<DisparoLineal type="0x9C">
+	</DisparoLineal>
+	<DisparoLineal type="0x9D">
+	</DisparoLineal>
+	<DisparoLineal type="0x9E">
+	</DisparoLineal>
+	<DisparoLineal type="0x9F">
+	</DisparoLineal>
+	<NaveUsuario type="0x00">
+		<limitesDeNiveles>
+			<int-array>
+				<int>0</int>
+				<int>0</int>
+				<int>4</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x80</int>
+								<int>0x88</int>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionInterpolado>
+						<data>
+							<vIdDisparos>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000000010</float>
+								<float>0.00000000012</float>
+								<float>0.00000000014</float>
+								<float>0.00000000016</float>
+							</vVelocidades>
+						</data>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>2.0</scaleY>
+					</CanionInterpolado>
+					<CanionInterpolado>
+						<data reference="../../CanionInterpolado/data"/>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>-2.0</scaleY>
+					</CanionInterpolado>
+				</Canion-array>
+				<Canion-array>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000010</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<NaveUsuario type="0x01">
+		<limitesDeNiveles>
+			<int-array>
+				<int>0</int>
+				<int>0</int>
+				<int>4</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x80</int>
+								<int>0x88</int>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionInterpolado>
+						<data>
+							<vIdDisparos>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000000010</float>
+								<float>0.00000000012</float>
+								<float>0.00000000014</float>
+								<float>0.00000000016</float>
+							</vVelocidades>
+						</data>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>2.0</scaleY>
+					</CanionInterpolado>
+					<CanionInterpolado>
+						<data reference="../../CanionInterpolado/data"/>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>-2.0</scaleY>
+					</CanionInterpolado>
+				</Canion-array>
+				<Canion-array>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000010</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<NaveUsuario type="0x02">
+		<limitesDeNiveles>
+			<int-array>
+				<int>1</int>
+				<int>1</int>
+				<int>1</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.0</float>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x82</int>
+								<int>0x8A</int>
+								<int>0x92</int>
+								<int>0x9A</int>
+								<int>0x9A</int>
+								<int>0x9A</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x89</int>
+								<int>0x91</int>
+								<int>0x99</int>
+								<int>0x99</int>
+								<int>0x99</int>
+								<int>0x99</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+								<float>0.00000002125</float>
+								<float>0.00000002125</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+								<int>0x98</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+								<float>0.00000002125</float>
+								<float>0.00000002250</float>
+								<float>0.00000002250</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[4]/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array[2]/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionInterpolado>
+						<data>
+							<vIdDisparos>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000000010</float>
+								<float>0.00000000012</float>
+								<float>0.00000000014</float>
+								<float>0.00000000016</float>
+							</vVelocidades>
+						</data>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>2.0</scaleY>
+					</CanionInterpolado>
+					<CanionInterpolado>
+						<data reference="../../CanionInterpolado/data"/>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>-2.0</scaleY>
+					</CanionInterpolado>
+				</Canion-array>
+				<Canion-array>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000010</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<NaveUsuario type="0x03">
+		<limitesDeNiveles>
+			<int-array>
+				<int>0</int>
+				<int>0</int>
+				<int>4</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x80</int>
+								<int>0x88</int>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionInterpolado>
+						<data>
+							<vIdDisparos>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000000010</float>
+								<float>0.00000000012</float>
+								<float>0.00000000014</float>
+								<float>0.00000000016</float>
+							</vVelocidades>
+						</data>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>2.0</scaleY>
+					</CanionInterpolado>
+					<CanionInterpolado>
+						<data reference="../../CanionInterpolado/data"/>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>-2.0</scaleY>
+					</CanionInterpolado>
+				</Canion-array>
+				<Canion-array>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000010</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<NaveUsuario type="0x04">
+		<limitesDeNiveles>
+			<int-array>
+				<int>0</int>
+				<int>0</int>
+				<int>4</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x80</int>
+								<int>0x88</int>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionInterpolado>
+						<data>
+							<vIdDisparos>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000000010</float>
+								<float>0.00000000012</float>
+								<float>0.00000000014</float>
+								<float>0.00000000016</float>
+							</vVelocidades>
+						</data>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>2.0</scaleY>
+					</CanionInterpolado>
+					<CanionInterpolado>
+						<data reference="../../CanionInterpolado/data"/>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>-2.0</scaleY>
+					</CanionInterpolado>
+				</Canion-array>
+				<Canion-array>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000010</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<NaveUsuario type="0x05">
+		<limitesDeNiveles>
+			<int-array>
+				<int>0</int>
+				<int>0</int>
+				<int>4</int>
+				<int>0</int>
+				<int>0</int>
+			</int-array>
+			<int-array>
+				<int>2</int>
+				<int>2</int>
+				<int>2</int>
+				<int>1</int>
+				<int>1</int>
+			</int-array>
+			<int-array>
+				<int>4</int>
+				<int>4</int>
+				<int>4</int>
+				<int>2</int>
+				<int>2</int>
+			</int-array>
+			<int-array>
+				<int>5</int>
+				<int>5</int>
+				<int>5</int>
+				<int>3</int>
+				<int>3</int>
+			</int-array>
+		</limitesDeNiveles>
+		<velocidadesDisponibles>
+			<float>0.00000000300</float>
+			<float>0.00000000375</float>
+			<float>0.00000000450</float>
+			<float>0.00000000525</float>
+			<float>0.00000000600</float>
+		</velocidadesDisponibles>
+		<canionesDisponibles>
+			<Canion-array-array>
+				<Canion-array>
+					<CanionLineal>
+						<data>
+							<vIdDisparos>
+								<int>0x80</int>
+								<int>0x88</int>
+								<int>0x90</int>
+								<int>0x98</int>
+								<int>0x98</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>136000000</long>
+								<long>124000000</long>
+								<long>112000000</long>
+								<long>100000000</long>
+								<long>88000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000001500</float>
+								<float>0.00000001625</float>
+								<float>0.00000001750</float>
+								<float>0.00000001875</float>
+								<float>0.00000002000</float>
+							</vVelocidades>
+						</data>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+				<Canion-array>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.5</posX>
+						<posY>-0.1</posY>
+						<angulo>0.0</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>-0.2</posY>
+						<angulo>-0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.47</posX>
+						<posY>0.0</posY>
+						<angulo>0.08726646</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>-0.25</posY>
+						<angulo>-0.17453292</angulo>
+					</CanionLineal>
+					<CanionLineal>
+						<data reference="../../../Canion-array/CanionLineal/data"/>
+						<posX>0.45</posX>
+						<posY>0.05</posY>
+						<angulo>0.17453292</angulo>
+					</CanionLineal>
+				</Canion-array>
+			</Canion-array-array>
+			<Canion-array-array>
+				<Canion-array/>
+				<Canion-array>
+					<CanionInterpolado>
+						<data>
+							<vIdDisparos>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+								<int>0x60</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>625000000</long>
+								<long>500000000</long>
+								<long>375000000</long>
+								<long>250000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.00000000010</float>
+								<float>0.00000000012</float>
+								<float>0.00000000014</float>
+								<float>0.00000000016</float>
+							</vVelocidades>
+						</data>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>2.0</scaleY>
+					</CanionInterpolado>
+					<CanionInterpolado>
+						<data reference="../../CanionInterpolado/data"/>
+						<posX>-0.5</posX>
+						<posY>0.0</posY>
+						<scaleX>1.0</scaleX>
+						<scaleY>-2.0</scaleY>
+					</CanionInterpolado>
+				</Canion-array>
+				<Canion-array>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado"/>
+					<CanionInterpolado reference="../../Canion-array[2]/CanionInterpolado[2]"/>
+					<LanzaMisiles>
+						<data>
+							<vIdDisparos>
+								<int>0x40</int>
+							</vIdDisparos>
+							<vTRecarga>
+								<long>1000000000</long>
+							</vTRecarga>
+							<vVelocidades>
+								<float>0.000000010</float>
+							</vVelocidades>
+						</data>
+						<posX>0</posX>
+						<posY>-0.5</posY>
+						<angulo>-0.7853981633974483</angulo>
+					</LanzaMisiles>
+					<LanzaMisiles>
+						<data reference="../../LanzaMisiles/data"/>
+						<posX>0</posX>
+						<posY>0.5</posY>
+						<angulo>0.7853981633974483</angulo>
+					</LanzaMisiles>
+				</Canion-array>
+			</Canion-array-array>
+		</canionesDisponibles>
+	</NaveUsuario>
+	<NaveEnemiga type="0x08">
+	</NaveEnemiga>
+</object-stream>
