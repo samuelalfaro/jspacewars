@@ -1,5 +1,5 @@
 /* 
- * ClienteTestColisiones.java
+ * PantallaTestColisiones.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -43,7 +43,8 @@ import org.sam.util.Reflexion;
  * tanto los polígonos como sus límites asociados a cada elemento del juego.</br>
  * Esta clase es usada llamada por la clase {@code TestColisiones}.
  */
-public class ClienteTestColisiones {
+@SuppressWarnings( "serial" )
+public class PantallaTestColisiones extends GLCanvas{
 	
 	private static class PoligonoDibujable extends Hoja{
 		
@@ -123,42 +124,42 @@ public class ClienteTestColisiones {
 		private final transient ClientData data;
 		private final transient Apariencia apLineas;
 		private final transient MarcoDeIndicadores marco;
-		
-		Renderer( ClientData data) {
+
+		Renderer( ClientData data ){
 			this.data = data;
 			this.apLineas = new Apariencia();
-			this.marco = MarcoDeIndicadores.getMarco(0);
+			this.marco = MarcoDeIndicadores.getMarco( 0 );
 		}
 
 		private boolean iniciado = false;
-		
-		public void init(GLAutoDrawable drawable) {
+
+		public void init( GLAutoDrawable drawable ){
 			GL gl = drawable.getGL();
-			while(!marco.isLoadComplete())
-				marco.loadTexturas(gl);
+			while( !marco.isLoadComplete() )
+				marco.loadTexturas( gl );
 			iniciado = true;
 		}
 
-		public void display(GLAutoDrawable drawable) {
-			if(!iniciado){
-				reshape(drawable, 0, 0, drawable.getWidth(), drawable.getHeight());
-				init(drawable);
+		public void display( GLAutoDrawable drawable ){
+			if( !iniciado ){
+				reshape( drawable, 0, 0, drawable.getWidth(), drawable.getHeight() );
+				init( drawable );
 			}
 			GL gl = drawable.getGL();
 
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 
-			marco.setViewportAreaInterna(gl);
-			gl.glMatrixMode(GL.GL_MODELVIEW);
-			glu.gluLookAt(0.0, 0.0, 11, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+			marco.setViewportAreaInterna( gl );
+			gl.glMatrixMode( GL.GL_MODELVIEW );
+			glu.gluLookAt( 0.0, 0.0, 11, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
-			apLineas.usar(gl);
+			apLineas.usar( gl );
 			for( Instancia3D elemento: data.elementos )
-				elemento.draw(gl);
-//		 	gl.glDepthMask(false);
-			
-			marco.update(data);
-			marco.draw(gl);
+				elemento.draw( gl );
+			// gl.glDepthMask(false);
+
+			marco.update( data );
+			marco.draw( gl );
 			gl.glFlush();
 		}
 
@@ -167,45 +168,43 @@ public class ClienteTestColisiones {
 
 		//private transient final Rectangle areaInterna = new Rectangle();
 		
-		public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ){
 			GL gl = drawable.getGL();
-			gl.glViewport(0, 0, width, height);
+			gl.glViewport( 0, 0, width, height );
 			marco.setBounds( 0, 0, width, height );
-
 			
-			gl.glMatrixMode(GL.GL_PROJECTION);
+			gl.glMatrixMode( GL.GL_PROJECTION );
 			gl.glLoadIdentity();
 			double near = 0.5;
 			double far = 240.0;
 			double a1 = 35.0; // angulo en grados
-			double a2 = a1/360*Math.PI; // mitad del angulo en radianes
-			double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
+			double a2 = a1 / 360 * Math.PI; // mitad del angulo en radianes
+			double d = near / Math.sqrt( ( 1 / Math.pow( Math.sin( a2 ), 2 ) ) - 1 );
 
 			// Formato 4/3 centrado, panorámico a la derecha en caso contrario.
-			float ratio_4_3 = marco.getAreaInternaWidth(4, 3)/marco.getAreaInternaHeight(4, 3);
-			float aWidth = marco.getAreaInternaWidth( width, height );
-			float aHeight =marco.getAreaInternaHeight( width, height );
-			
-			gl.glFrustum(-ratio_4_3 * d, ((2.0 * aWidth) / aHeight - ratio_4_3) * d, -d, d, near, far);
-			
-			gl.glMatrixMode(GL.GL_MODELVIEW);
+			float ratio_4_3 = marco.getWidthAreaInterna( 4, 3 ) / marco.getHeightAreaInterna( 4, 3 );
+			float aWidth = marco.getWidthAreaInterna( width, height );
+			float aHeight = marco.getHeightAreaInterna( width, height );
+
+			gl.glFrustum( -ratio_4_3 * d, ( ( 2.0 * aWidth ) / aHeight - ratio_4_3 ) * d, -d, d, near, far );
+
+			gl.glMatrixMode( GL.GL_MODELVIEW );
 		}
 	}
-
+	
 	private final transient ClientData data;
-
+	
 	/**
-	 * Constructor que genera un cliente que se encarga de mostrar un {@code GLCanvas} los poligonos asociados
-	 * a los distintos elementos elementos del juego. 
-	 * @param canvas {@code GLCanvas} donde se mostrarán dichos polígonos.
+	 * Constructor que genera un cliente que se encarga de mostrar los poligonos
+	 * asociados a los distintos elementos elementos del juego. 
 	 */
-	public ClienteTestColisiones(GLCanvas canvas) {
+	public PantallaTestColisiones() {
 		this.data =  new ClientData();
 				
-		canvas.setBackground(Color.BLACK);
-		canvas.setIgnoreRepaint(true);
-		canvas.addGLEventListener( new Renderer(data) );
-		canvas.addKeyListener(new GameKeyListener(data));	
+		this.setBackground(Color.BLACK);
+		this.setIgnoreRepaint(true);
+		this.addGLEventListener( new Renderer(data) );
+		this.addKeyListener(new GameKeyListener(data));	
 	}
 	
 	/**

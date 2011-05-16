@@ -48,15 +48,15 @@ import org.sam.jspacewars.servidor.elementos.NaveUsuario;
 import org.sam.jspacewars.servidor.elementos.SingletonObjetivos;
 
 /**
- * Clase encargada de atender a los clientes.<br/>
+ * <p>Clase encargada de atender a los clientes.
  * <ul>
  * <li>Recibe las órdenes del cliente correspondiente.</li>
  * <li>Calcula las acciones realizadas por los distintos elementos.</li>
  * <li>Envía los resultados al cliente correspondiente.</li>
  * </ul>
  * Actualmente estos cálculos son <b>asíncronos</b>, calculando las acciones
- * por cada petición.<br/>
- * <p>TODO Calcular las acciones de forma síncrona. Esto permitirá:<ul>
+ * por cada petición.</p>
+ * @todo XXX<p>Calcular las acciones de forma síncrona. Esto permitirá:<ul>
  * <li>Enviar la misma respuesta a varios clientes a la vez, cuando sus peticiones
  * coincidan.</li>
  * <li>Que elementos, cuyo comportamiento es <b>díficil integrar en función del tiempo</b>,
@@ -68,7 +68,7 @@ import org.sam.jspacewars.servidor.elementos.SingletonObjetivos;
  */
 public class ServidorJuego {
 	
-	private static final float ratio = (30*4.0f/32) / (3.0f - 4*4.0f/32); // ratio 4/3 sin bordes GUI
+	private static final float ratio = ( 30 * 4.0f / 32 ) / ( 3.0f - 4 * 4.0f / 32 ); // ratio 4/3 sin bordes GUI
 	private static final float LIMITE_VERTICAL =  2.9f;
 	private static final float LIMITE_HORIZONTAL = ratio * LIMITE_VERTICAL;
 	
@@ -108,8 +108,8 @@ public class ServidorJuego {
 	 * @throws IOException Si se produce algún error al establecer
 	 * los canales de comunicación.
 	 */
-	public ServidorJuego(Cache<Elemento> cache) throws IOException {
-		this(cache, true, 0);
+	public ServidorJuego( Cache<Elemento> cache ) throws IOException{
+		this( cache, true, 0 );
 	}
 
 	/**
@@ -120,11 +120,11 @@ public class ServidorJuego {
 	 * @throws IOException Si se produce algún error al establecer
 	 * los canales de comunicación.
 	 */
-	public ServidorJuego(Cache<Elemento> cache, int port) throws IOException {
-		this(cache, false, port);
+	public ServidorJuego( Cache<Elemento> cache, int port ) throws IOException{
+		this( cache, false, port );
 	}
 
-	private ServidorJuego(Cache<Elemento> cache, boolean localOnly, int port) throws IOException {
+	private ServidorJuego( Cache<Elemento> cache, boolean localOnly, int port ) throws IOException{
 
 		this.cache = cache;
 		
@@ -187,18 +187,19 @@ public class ServidorJuego {
 		disparosEnemigos.clear();
 		elementos.add(disparosEnemigos);
 		
-		NaveEnemiga naveEnemiga = (NaveEnemiga)cache.newObject(0x30);
-		naveEnemiga.setPosicion(3, -0.5f);
-		SingletonObjetivos.setObjetivoUsuario(naveEnemiga);
-		navesEnemigas.add(naveEnemiga);
-		
-		naveEnemiga = (NaveEnemiga)cache.newObject(0x10);
+		NaveEnemiga naveEnemiga = (NaveEnemiga)cache.newObject(0x10);
 		naveEnemiga.setPosicion(0, -2.5f);
 		navesEnemigas.add(naveEnemiga);
 		
 		naveEnemiga = (NaveEnemiga)cache.newObject(0x12);
 		naveEnemiga.setPosicion(3, 2.5f);
 		navesEnemigas.add(naveEnemiga);
+		
+		naveEnemiga = (NaveEnemiga)cache.newObject(0x30);
+		naveEnemiga.setPosicion(3, -0.5f);
+		navesEnemigas.add(naveEnemiga);
+		
+		SingletonObjetivos.setObjetivoUsuario(naveEnemiga);
 	}
 
 	private transient Selector selector;

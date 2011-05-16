@@ -75,7 +75,7 @@ final class Interpolador{
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param introductor {@code Conversor} encargado de convetir los resultados de las funciones {@code double[]} en un valor del tipo genérico {@code T}.
 		 * @param values Valores a interpolar.
@@ -162,7 +162,7 @@ final class Interpolador{
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param introductor {@code Conversor} encargado de convetir los resultados de las funciones {@code float[]} en un valor del tipo genérico {@code T}.
 		 * @param values Valores a interpolar.

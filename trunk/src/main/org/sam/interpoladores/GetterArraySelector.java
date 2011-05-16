@@ -62,7 +62,7 @@ final class GetterArraySelector{
 
 		/**
 		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code double}.
-		 * @param scale escala que se aplicará a la clave.
+		 * @param length escala que se aplicará a la clave.
 		 * @param translation traslación que se aplicará a la clave.
 		 * @param values valores que serán devueltos.
 		 */
@@ -101,7 +101,7 @@ final class GetterArraySelector{
 
 		/**
 		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code float}.
-		 * @param scale escala que se aplicará a la clave.
+		 * @param length escala que se aplicará a la clave.
 		 * @param translation traslación que se aplicará a la clave.
 		 * @param values valores que serán devueltos.
 		 */
@@ -140,7 +140,7 @@ final class GetterArraySelector{
 
 		/**
 		 * Constructor que crea un {@code GetterArraySelector} con precisión {@code int}.
-		 * @param scale escala que se aplicará a la clave.
+		 * @param length escala que se aplicará a la clave.
 		 * @param translation traslación que se aplicará a la clave.
 		 * @param values valores que serán devueltos.
 		 */

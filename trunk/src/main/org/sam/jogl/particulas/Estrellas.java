@@ -37,6 +37,8 @@ class Estrellas extends Particulas{
 	private static final Random aleatorio = new Random();
 	
 	private class ModificadorDeParticulas implements Modificador{
+		
+		ModificadorDeParticulas(){}
 
 		private void setPos( float p11x, float p11y, float p12x, float p12y ){
 			// Orden inverso a las agujas del reloj, normal hacia el observador

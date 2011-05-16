@@ -71,7 +71,7 @@ public final class Funcion {
          *     g = f.scaleIn(k)  =>
          *     g(x) = f(k·x)
          * </i></pre></p>
-         * @param scale valor de escala de la entrada.
+         * @param length valor de escala de la entrada.
          */
         public void scaleIn(double scale);
 
@@ -82,7 +82,7 @@ public final class Funcion {
          *     g = f.scaleOut(k)  =>
          *     g(x) = k·f(x)
          * </i></pre></p>
-         * @param scale valor de escala de la salida.
+         * @param length valor de escala de la salida.
          */
         public void scaleOut(double scale);
 

@@ -143,9 +143,9 @@ class Renderer implements GLEventListener {
 		double d  = near/Math.sqrt((1/Math.pow(Math.sin(a2), 2))-1);
 
 		// Formato 4/3 centrado, panorámico a la derecha en caso contrario.
-		float ratio_4_3 = marco.getAreaInternaWidth(4, 3)/marco.getAreaInternaHeight(4, 3);
-		float aWidth = marco.getAreaInternaWidth( width, height );
-		float aHeight =marco.getAreaInternaHeight( width, height );
+		float ratio_4_3 = marco.getWidthAreaInterna(4, 3)/marco.getHeightAreaInterna(4, 3);
+		float aWidth = marco.getWidthAreaInterna( width, height );
+		float aHeight =marco.getHeightAreaInterna( width, height );
 		
 		gl.glFrustum(-ratio_4_3 * d, ((2.0 * aWidth) / aHeight - ratio_4_3) * d, -d, d, near, far);
 		

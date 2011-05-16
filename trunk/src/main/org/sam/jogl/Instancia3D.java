@@ -40,7 +40,7 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		
 		private final transient Modificador modificadores[];
 	
-		private ModificardorChilds(Collection<Modificador> modificadores){
+		ModificardorChilds(Collection<Modificador> modificadores){
 			this.modificadores = modificadores.toArray( new Modificador[modificadores.size()] );
 		}
 		
@@ -150,8 +150,8 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		return type;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode(){
@@ -186,8 +186,8 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		this.rotation.z = axis.z;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Recibible#recibir(java.nio.ByteBuffer)
 	 */
 	@Override
 	public void recibir(ByteBuffer buff){
@@ -199,32 +199,32 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 		transformMatrix.setTranslation(translation);
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Modificable#getModificador()
 	 */
 	@Override
 	public Modificador getModificador() {
 		return modificador;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.NodoTransformador#clone()
 	 */
 	@Override
 	public Instancia3D clone(){
 		return new Instancia3D(this);
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString(){
 		return new String("Instancia3D: "+hashCode()+" : " + this.id);
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Reseteable#reset()
 	 */
 	@Override
 	public void reset() {

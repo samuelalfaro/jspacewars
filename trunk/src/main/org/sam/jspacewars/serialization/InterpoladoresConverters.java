@@ -81,7 +81,7 @@ public class InterpoladoresConverters {
 		private static final String keyGen = "keyGen";
 		private static final String PROPORCIONALES = "PROPORCIONALES";
 		private static final String HOMOGENEAS = "HOMOGENEAS";
-		private static final String scale = "scale";
+		private static final String scale = "length";
 		private static final String translation = "translation";
 		
 		private static final String Introductor = "Introductor";
@@ -95,6 +95,8 @@ public class InterpoladoresConverters {
 	}
 
 	private static class Punto2D implements Converter {
+		
+		Punto2D(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -112,6 +114,8 @@ public class InterpoladoresConverters {
 	}
 
 	private static class Punto2F implements Converter {
+		
+		Punto2F(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -129,6 +133,8 @@ public class InterpoladoresConverters {
 	}
 
 	private static class Punto2I implements Converter {
+		
+		Punto2I(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -146,6 +152,8 @@ public class InterpoladoresConverters {
 	}
 
 	private static class Punto3D implements Converter {
+		
+		Punto3D(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -164,6 +172,8 @@ public class InterpoladoresConverters {
 	}
 
 	private static class Punto3F implements Converter {
+		
+		Punto3F(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -183,6 +193,8 @@ public class InterpoladoresConverters {
 	}
 
 	private static class Punto3I implements Converter {
+		
+		Punto3I(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -201,6 +213,8 @@ public class InterpoladoresConverters {
 	}
 	
 	private static class Color3F implements Converter {
+		
+		Color3F(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -219,14 +233,15 @@ public class InterpoladoresConverters {
 		}
 	}
 
-	private static void writeValuesOfGetter(Object values, HierarchicalStreamWriter writer, MarshallingContext context){
+	static void writeValuesOfGetter( Object values, HierarchicalStreamWriter writer, MarshallingContext context ){
+		
 		if ( values != null && values.getClass().isArray() ) {
 			writer.startNode(S.Values);
 			writer.addAttribute(S.clazz, values.getClass().getName());
 			Class<?> clazz = values.getClass().getComponentType();
 
 			boolean guardado = false;
-			if ( clazz.equals(double.class)){
+			if ( clazz.equals(double.class) ){
 				double[] valuesArray = (double[])values;
 				writer.addAttribute(S.length, ((Integer) valuesArray.length).toString());
 				for (double v: valuesArray) {
@@ -235,7 +250,7 @@ public class InterpoladoresConverters {
 					writer.endNode();
 				}
 				guardado = true;
-			}else if ( clazz.equals(float.class)){
+			}else if ( clazz.equals(float.class) ){
 				float[] valuesArray = (float[])values;
 				writer.addAttribute(S.length, ((Integer) valuesArray.length).toString());
 				for (float v: valuesArray) {
@@ -244,7 +259,7 @@ public class InterpoladoresConverters {
 					writer.endNode();
 				}
 				guardado = true;
-			}else if ( clazz.equals(int.class)){
+			}else if ( clazz.equals(int.class) ){
 				int[] valuesArray = (int[])values;
 				writer.addAttribute(S.length, ((Integer) valuesArray.length).toString());
 				for (int v: valuesArray) {
@@ -328,17 +343,19 @@ public class InterpoladoresConverters {
 
 	private static class GetterDoubleConverter implements Converter {
 
-		private static class DoubleParams{
-			private double keys[];
-			private int keysGen;
-			private double keysScale;
-			private double keysTranslation;
-			private Object values;
-			private Conversor<?, ?> introductor;
-			private Conversor<?, ?> extractor;
-			private MetodoDeInterpolacion metodoDeInterpolacion;
-			private Object mdiParams[];
+		static class DoubleParams{
+			double keys[];
+			int keysGen;
+			double keysScale;
+			double keysTranslation;
+			Object values;
+			Conversor<?, ?> introductor;
+			Conversor<?, ?> extractor;
+			MetodoDeInterpolacion metodoDeInterpolacion;
+			Object mdiParams[];
 		}
+		
+		GetterDoubleConverter(){}
 		
 		@SuppressWarnings("unchecked")
 		private static <T> Getter.Double<?> create(DoubleParams params){
@@ -475,17 +492,19 @@ public class InterpoladoresConverters {
 
 	private static class GetterFloatConverter implements Converter {
 
-		private static class FloatParams{
-			private float keys[];
-			private int keysGen;
-			private float keysScale;
-			private float keysTranslation;
-			private Object values;
-			private Conversor<?, ?> introductor;
-			private Conversor<?, ?> extractor;
-			private MetodoDeInterpolacion metodoDeInterpolacion;
-			private Object mdiParams[];
+		static class FloatParams{
+			float keys[];
+			int keysGen;
+			float keysScale;
+			float keysTranslation;
+			Object values;
+			Conversor<?, ?> introductor;
+			Conversor<?, ?> extractor;
+			MetodoDeInterpolacion metodoDeInterpolacion;
+			Object mdiParams[];
 		}
+		
+		GetterFloatConverter(){}
 
 		@SuppressWarnings("unchecked")
 		private static <T> Getter.Float<?> create(FloatParams params){
@@ -621,10 +640,6 @@ public class InterpoladoresConverters {
 		}
 	}
 
-	/**
-	 *
-	 * @param xStream
-	 */
 	public static void register(XStream xStream) {
 
 		xStream.alias(S.Getter_Double, Getter.Double.class);
@@ -653,10 +668,6 @@ public class InterpoladoresConverters {
 		xStream.registerConverter(new Color3F());
 	}
 	
-    /**
-     * 
-     * @param args
-     */
     // TODO Borrar es para pruebas
 	public static void main(String... args){
 		XStream xStream = new XStream(new DomDriver());
@@ -673,7 +684,7 @@ public class InterpoladoresConverters {
 		@SuppressWarnings("unchecked")
 		Getter.Double<Double> interpolador = (Getter.Double<Double>)xStream.fromXML(
 				"<Getter.Double>"+
-				"  <Keys keyGen=\"PROPORCIONALES\" scale=\"1.0\" translation=\"0.0\"/>"+
+				"  <Keys keyGen=\"PROPORCIONALES\" length=\"1.0\" translation=\"0.0\"/>"+
 				"  <Values class=\"[D\" length=\"3\">"+
 				"    <double>0.0</double>"+
 			    "    <double>0.5</double>"+

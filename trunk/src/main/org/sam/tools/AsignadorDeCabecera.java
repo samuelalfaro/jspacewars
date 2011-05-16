@@ -117,7 +117,7 @@ public class AsignadorDeCabecera {
 							includeCabecera(
 								archivo,
 								"2008-2010",
-								"autor>",
+								"autor",
 								"nombre del proyecto"
 							);
 						} catch (FileNotFoundException e) {

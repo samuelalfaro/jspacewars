@@ -71,7 +71,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param values Valores a interpolar.
 		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
@@ -109,7 +109,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param values Valores a interpolar.
 		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
@@ -149,7 +149,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param values Valores a interpolar.
 		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
@@ -189,7 +189,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param in {@code Conversor} encargado de convetir los resultados de las funciones {@code double[]} en un valor del tipo genérico {@code T}.
 		 * @param values Valores a interpolar.
@@ -232,7 +232,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param values Valores a interpolar.
 		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
@@ -270,7 +270,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param values Valores a interpolar.
 		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
@@ -310,7 +310,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param values Valores a interpolar.
 		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
@@ -350,7 +350,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param scale Valor de escalado que se aplicará a las claves generadas.
+		 * @param length Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param in {@code Conversor} encargado de convetir los resultados de las funciones {@code double[]} en un valor del tipo genérico {@code T}.
 		 * @param values Valores a interpolar.
