@@ -34,14 +34,14 @@ public class ListClassFromAPackage {
 	
 	private static final Comparator<Class<?>> COMPARADOR_DE_CLASES = new Comparator<Class<?>>() {
 		/** {@inheritDoc} */
-		public int compare(Class<?> e1, Class<?> e2) {
-			return getHierarchicalName(e1).compareTo(getHierarchicalName(e2));
+		public int compare( Class<?> e1, Class<?> e2 ){
+			return getHierarchicalName( e1 ).compareTo( getHierarchicalName( e2 ) );
 		}
 	};
 	
 	private static Collection<Class<?>> packageClassesCollection;
 	
-	private static String getHierarchicalName(Class<?> clazz){
+	static String getHierarchicalName(Class<?> clazz){
 		String name = clazz.getSimpleName();
 		Class<?> superClass = clazz.getSuperclass();
 		while( superClass != null && !superClass.equals(Object.class) && 

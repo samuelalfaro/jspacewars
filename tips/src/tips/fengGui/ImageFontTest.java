@@ -77,7 +77,7 @@ public class ImageFontTest {
 	@SuppressWarnings("unused")
 	private static final ImageFont imageFont1 =  fontToImageFont( awtFont, Font.BOLD, 40, null );
 	
-	private static final ImageFont imageFont =  fontToImageFont(
+	static final ImageFont imageFont =  fontToImageFont(
 			awtFont, Font.BOLD, 40,
 			new FontDecorator(
 					new GradientPaint(0, 0, new java.awt.Color(128,64,0,255), 15, 15,  new java.awt.Color(192,192,0,255), true),

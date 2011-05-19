@@ -36,10 +36,15 @@ package tips.joal;
 * Adapted from DevMaster SingleStaticSource Tutorial by Jesse Maurais
 */
 
-import net.java.games.joal.*;
-import net.java.games.joal.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+
+import com.jogamp.openal.AL;
+import com.jogamp.openal.ALConstants;
+import com.jogamp.openal.ALFactory;
+import com.jogamp.openal.util.ALut;
 
 public class SingleStaticSource {
 

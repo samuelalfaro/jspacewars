@@ -1,15 +1,20 @@
 package tips.joal;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import javax.sound.sampled.AudioFormat;
 
-import net.java.games.joal.*;
-import net.java.games.joal.util.ALut;
-
 import org.sam.util.sound.TrackerInputStream;
+
+import com.jogamp.openal.AL;
+import com.jogamp.openal.ALConstants;
+import com.jogamp.openal.ALException;
+import com.jogamp.openal.ALFactory;
+import com.jogamp.openal.util.ALut;
 
 public class TrackerStreamer {
 

@@ -2,8 +2,12 @@ package tips.joal;
 
 import java.nio.ByteBuffer;
 
-import net.java.games.joal.*;
-import net.java.games.joal.util.ALut;
+import com.jogamp.openal.AL;
+import com.jogamp.openal.ALC;
+import com.jogamp.openal.ALConstants;
+import com.jogamp.openal.ALException;
+import com.jogamp.openal.ALFactory;
+import com.jogamp.openal.util.ALut;
 
 /**
  * Adapted from <a href="http://www.devmaster.net/">DevMaster</a>

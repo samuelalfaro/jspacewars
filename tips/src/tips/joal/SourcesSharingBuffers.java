@@ -1,16 +1,27 @@
 package tips.joal;
 
-import java.io.*;
-import java.nio.*;
-import java.util.*;
-
-// For the gui
 import java.awt.GridLayout;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
-import net.java.games.joal.*;
-import net.java.games.joal.util.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import com.jogamp.openal.AL;
+import com.jogamp.openal.ALC;
+import com.jogamp.openal.ALCConstants;
+import com.jogamp.openal.ALCcontext;
+import com.jogamp.openal.ALCdevice;
+import com.jogamp.openal.ALConstants;
+import com.jogamp.openal.ALException;
+import com.jogamp.openal.ALFactory;
+import com.jogamp.openal.util.ALut;
 
 /**
  * Adapted from <a href="http://www.devmaster.net/">DevMaster</a> <a
