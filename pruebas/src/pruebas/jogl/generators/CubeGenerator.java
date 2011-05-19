@@ -23,6 +23,7 @@
 package pruebas.jogl.generators;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.Material;
@@ -35,19 +36,19 @@ public class CubeGenerator {
 
 	private interface Generator{
 		int getMode();
-		void generarPlanoX(GL gl,
+		void generarPlanoX(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float y0, float y1, 
 				float z0, float z1, 
 				float x);
-		void generarPlanoY(GL gl,
+		void generarPlanoY(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float x0, float x1, 
 				float z0, float z1, 
 				float y);
-		void generarPlanoZ(GL gl,
+		void generarPlanoZ(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float x0, float x1, 
@@ -58,10 +59,10 @@ public class CubeGenerator {
 	private static Generator QuadsGenerator = new Generator(){
 		@Override
 		public int getMode() {
-			return GL.GL_QUADS;
+			return GL2.GL_QUADS;
 		}
 	
-		public void generarPlanoX(GL gl,
+		public void generarPlanoX(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float y0, float y1, 
@@ -88,7 +89,7 @@ public class CubeGenerator {
 			gl.glVertex3f(           x, y1, z0);
 		}
 		
-		public void generarPlanoY(GL gl,
+		public void generarPlanoY(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float x0, float x1, 
@@ -115,7 +116,7 @@ public class CubeGenerator {
 			gl.glVertex3f(          x0,  y, z1);
 		}
 		
-		public void generarPlanoZ(GL gl,
+		public void generarPlanoZ(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float x0, float x1, 
@@ -155,7 +156,7 @@ public class CubeGenerator {
 			return GL.GL_LINES;
 		}
 	
-		public void generarPlanoX(GL gl,
+		public void generarPlanoX(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float y0, float y1, 
@@ -179,7 +180,7 @@ public class CubeGenerator {
 			gl.glVertex3f( x, (y0 + y1)/2 + b*scale, (z0 + z1)/2);
 		}
 		
-		public void generarPlanoY(GL gl,
+		public void generarPlanoY(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float x0, float x1, 
@@ -203,7 +204,7 @@ public class CubeGenerator {
 			gl.glVertex3f((x0 + x1)/2, y, (z0 + z1)/2 + b*scale);
 		}
 		
-		public void generarPlanoZ(GL gl,
+		public void generarPlanoZ(GL2 gl,
 				float u0, float u1, 
 				float v0, float v1,
 				float x0, float x1, 
@@ -230,7 +231,7 @@ public class CubeGenerator {
 	
 	private static NTBGenerator MyNTBGenerator = new NTBGenerator();
 	
-	private static OglList generate(GL gl, float lado, Generator generator) {
+	private static OglList generate(GL2 gl, float lado, Generator generator) {
 		float l = lado / 2;
 		
 		OglList oglList = new OglList(gl);
@@ -343,13 +344,13 @@ public class CubeGenerator {
 		return oglList;
 	}
 	
-	public static Objeto3D generate(GL gl, float lado) {
+	public static Objeto3D generate(GL2 gl, float lado) {
 		Apariencia ap = new Apariencia();
 		ap.setMaterial(Material.DEFAULT);
 		return new Objeto3D( generate(gl, lado, QuadsGenerator), ap );
 	}
 	
-	public static Objeto3D generateNTB(GL gl, float lado, float scale) {
+	public static Objeto3D generateNTB(GL2 gl, float lado, float scale) {
 		MyNTBGenerator.scale = scale;
 		return new Objeto3D( generate(gl, lado, MyNTBGenerator), new Apariencia() );
 	}

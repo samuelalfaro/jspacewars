@@ -36,8 +36,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 /**
- * @author samuel
- *
  */
 public class OrbitBehavior{
 
@@ -45,11 +43,11 @@ public class OrbitBehavior{
 		
 		private transient Point ptCurrentMousePosit, ptLastMousePosit;
 		
-		private transient final Point3d  eyePos;
-		private transient final Point3d  targetPos;
-		private transient final Vector3d upDir;
-		private transient final Vector3d eyeDir;
-		private transient final Vector3d sideDir;
+		transient final Point3d  eyePos;
+		transient final Point3d  targetPos;
+		transient final Vector3d upDir;
+		transient final Vector3d eyeDir;
+		transient final Vector3d sideDir;
 		
 		private transient final AxisAngle4d rotH = new AxisAngle4d();
 		private transient final Matrix4d t1 = new Matrix4d(
@@ -69,39 +67,39 @@ public class OrbitBehavior{
 		private transient final Matrix4d tc = new Matrix4d();
 
 		OrbitListener(){
-			eyePos =     new Point3d(0, 0, 5);
-			targetPos =  new Point3d(0, 0, 0);
-			upDir =      new Vector3d(0, 1, 0);
-			
-			eyeDir =     new Vector3d();
-			eyeDir.set(targetPos);
-			eyeDir.sub(eyePos);
+			eyePos =    new Point3d ( 0, 0, 5 );
+			targetPos = new Point3d ( 0, 0, 0 );
+			upDir =     new Vector3d( 0, 1, 0 );
+
+			eyeDir = new Vector3d();
+			eyeDir.set( targetPos );
+			eyeDir.sub( eyePos );
 			eyeDir.normalize();
-			
+
 			sideDir = new Vector3d();
 			sideDir.cross( eyeDir, upDir );
 			sideDir.normalize();
 		}
-		
+
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mouseClicked(MouseEvent e) {
+		public void mouseClicked( MouseEvent e ){
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mouseEntered(MouseEvent e) {
+		public void mouseEntered( MouseEvent e ){
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mouseExited(MouseEvent e) {
+		public void mouseExited( MouseEvent e ){
 		}
 
 		private transient double dist;
@@ -110,13 +108,13 @@ public class OrbitBehavior{
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mousePressed(MouseEvent e) {
+		public void mousePressed( MouseEvent e ){
 			ptLastMousePosit = e.getPoint();
 
-			dist = eyePos.distance(targetPos);
+			dist = eyePos.distance( targetPos );
 
-			eyeDir.set(targetPos);
-			eyeDir.sub(eyePos);
+			eyeDir.set( targetPos );
+			eyeDir.sub( eyePos );
 			eyeDir.normalize();
 			upDir.normalize();
 			sideDir.cross( eyeDir, upDir );
@@ -127,33 +125,33 @@ public class OrbitBehavior{
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mouseReleased(MouseEvent e) {
+		public void mouseReleased( MouseEvent e ){
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mouseDragged(MouseEvent e) {
+		public void mouseDragged( MouseEvent e ){
 
 			ptCurrentMousePosit = e.getPoint();
 
-			rotH.set(upDir,      (double)(ptCurrentMousePosit.x - ptLastMousePosit.x)/200 );
-			rotV.set(sideDir, (double)(ptCurrentMousePosit.y - ptLastMousePosit.y)/200 );
+			rotH.set( upDir, (double)( ptCurrentMousePosit.x - ptLastMousePosit.x ) / 200 );
+			rotV.set( sideDir, (double)( ptCurrentMousePosit.y - ptLastMousePosit.y ) / 200 );
 
-			t1.setRotation(rotH);
-			t2.setRotation(rotV);
+			t1.setRotation( rotH );
+			t2.setRotation( rotV );
 
-			tc.mul(t1, t2);
+			tc.mul( t1, t2 );
 
-			tc.transform(eyeDir);
+			tc.transform( eyeDir );
 			eyeDir.normalize();
-			eyePos.set(eyeDir);
+			eyePos.set( eyeDir );
 			eyePos.negate();
-			eyePos.scale(dist);
-			eyePos.add(targetPos);
-			
-			tc.transform(upDir);
+			eyePos.scale( dist );
+			eyePos.add( targetPos );
+
+			tc.transform( upDir );
 			upDir.normalize();
 
 			ptLastMousePosit = ptCurrentMousePosit;
@@ -163,29 +161,29 @@ public class OrbitBehavior{
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mouseMoved(MouseEvent e) {
+		public void mouseMoved( MouseEvent e ){
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void mouseWheelMoved(MouseWheelEvent e) {
+		public void mouseWheelMoved( MouseWheelEvent e ){
 			int x = e.getWheelRotation();
 
-			dist = eyePos.distance(targetPos);
+			dist = eyePos.distance( targetPos );
 
-			eyeDir.set(targetPos);
-			eyeDir.sub(eyePos);
+			eyeDir.set( targetPos );
+			eyeDir.sub( eyePos );
 			eyeDir.normalize();
 
-			eyePos.set(eyeDir);
+			eyePos.set( eyeDir );
 			eyePos.negate();
-			eyePos.scale( (1 + x/25.0f)*dist );
-			eyePos.add(targetPos);
+			eyePos.scale( ( 1 + x / 25.0f ) * dist );
+			eyePos.add( targetPos );
 		}
 		
-		private void setLookAt(GLU glu){
+		void setLookAt( GLU glu ){
 			glu.gluLookAt(
 					this.eyePos.x,    this.eyePos.y,    this.eyePos.z,
 					this.targetPos.x, this.targetPos.y, this.targetPos.z,
@@ -195,37 +193,37 @@ public class OrbitBehavior{
 	}
 
 	private final transient OrbitListener myListener;
-	
+
 	public OrbitBehavior(){
 		myListener = new OrbitListener();
 	}
-	
-	public void setEyePos(double x, double y, double z){
+
+	public void setEyePos( double x, double y, double z ){
 		myListener.eyePos.x = x;
 		myListener.eyePos.y = y;
 		myListener.eyePos.z = z;
 	}
-	
-	public void setTargetPos(double x, double y, double z){
+
+	public void setTargetPos( double x, double y, double z ){
 		myListener.targetPos.x = x;
 		myListener.targetPos.y = y;
 		myListener.targetPos.z = z;
 	}
-	
-	public void setUpDir(double x, double y, double z){
+
+	public void setUpDir( double x, double y, double z ){
 		myListener.upDir.x = x;
 		myListener.upDir.y = y;
 		myListener.upDir.z = z;
 		myListener.upDir.normalize();
 	}
-	
-	public void setLookAt(GLU glu){
-	    myListener.setLookAt(glu);
+
+	public void setLookAt( GLU glu ){
+		myListener.setLookAt( glu );
 	}
 	
-	public void addMouseListeners(Component component){
-		component.addMouseListener(myListener);
-		component.addMouseMotionListener(myListener);
-		component.addMouseWheelListener(myListener);
+	public void addMouseListeners( Component component ){
+		component.addMouseListener( myListener );
+		component.addMouseMotionListener( myListener );
+		component.addMouseWheelListener( myListener );
 	}
 }

@@ -11,6 +11,10 @@ uniform vec4 viewport;
 varying vec4  distances;
 varying float perspective;
 
+attribute vec3 vertice0;
+attribute vec3 vertice1;
+attribute vec3 vertice2;
+attribute vec3 vertice3;
 
 void main()
 {	// Light direction is always (0.0, 0.0, 1.0), i.e. looking out of the camera.
@@ -25,74 +29,46 @@ void main()
 	// properties are passed through built-in uniforms.
 	//
 	gl_FrontColor = 
-		max(normalize(gl_NormalMatrix*gl_Normal).z, 0.0)*(gl_FrontMaterial.diffuse*gl_LightSource[0].diffuse) + 
-		gl_FrontMaterial.ambient*gl_LightSource[0].ambient;
+		max( normalize( gl_NormalMatrix * gl_Normal ).z, 0.0 ) *
+		gl_FrontMaterial.diffuse * gl_LightSource[0].diffuse + 
+		gl_FrontMaterial.ambient * gl_LightSource[0].ambient;
 
 	// Stored in the (multi-)texture coordinates for each vertex are the 
 	// three vertex positions of the triangle that the vertex belongs to.
 	// Project the triangle vertices into viewport (screen) space.
 	//
-/*
-	vec4 vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord0;
+
+	vec4 vertex = gl_ModelViewProjectionMatrix * vec4( vertice0.xyz, 1.0 );
 	vec2 vp0 = vec2(
 		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
 		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
 	
-	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord1;
+	vertex = gl_ModelViewProjectionMatrix * vec4( vertice1.xyz, 1.0 );
 	vec2 vp1 = vec2(
 		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
 		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
 
-	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord2;
+	vertex = gl_ModelViewProjectionMatrix * vec4( vertice2.xyz, 1.0 );
 	vec2 vp2 = vec2(
 		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
 		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
 
-	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord3;
+	vertex = gl_ModelViewProjectionMatrix * vec4( vertice3.xyz, 1.0 );
 	vec2 vp3 = vec2(
 		viewport.x + 0.5 * viewport.z * ( vertex.x / vertex.w + 1.0 ),
 		viewport.y + 0.5 * viewport.w * ( vertex.y / vertex.w + 1.0 )
 	);
-*/
-	vec4 vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord0;
-	vec2 vp0 = vec2(
-		viewport.x + viewport.z * ( vertex.x / vertex.z ),
-		viewport.y + viewport.w * ( vertex.y / vertex.z )
-	);
-	
-	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord1;
-	vec2 vp1 = vec2(
-		viewport.x + viewport.z * ( vertex.x / vertex.z ),
-		viewport.y + viewport.w * ( vertex.y / vertex.z )
-	);
 
-	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord2;
-	vec2 vp2 = vec2(
-		viewport.x + viewport.z * ( vertex.x / vertex.z ),
-		viewport.y + viewport.w * ( vertex.y / vertex.z )
-	);
-
-	vertex = gl_ModelViewProjectionMatrix*gl_MultiTexCoord3;
-	vec2 vp3 = vec2(
-		viewport.x + viewport.z * ( vertex.x / vertex.z ),
-		viewport.y + viewport.w * ( vertex.y / vertex.z )
-	);
 
 	// Project current vertex into viewport (screen) space.
 	gl_Position = gl_ModelViewProjectionMatrix*gl_Vertex;
-	/*
-	vec2 vp = vec2(
-		viewport.x + 0.5 * viewport.z * (gl_Position.x / gl_Position.w + 1.0),
-		viewport.y + 0.5 * viewport.w * (gl_Position.y / gl_Position.w + 1.0)
-	);
-	*/
 
 	vec2 vp = vec2(
-		viewport.x + viewport.z * ( gl_Position.x / gl_Position.z ),
-		viewport.y + viewport.w * ( gl_Position.y / gl_Position.z )
+		viewport.x + 0.5 * viewport.z * ( gl_Position.x / gl_Position.w + 1.0),
+		viewport.y + 0.5 * viewport.w * ( gl_Position.y / gl_Position.w + 1.0)
 	);
 
 	// Compute the distance in viewport (screen) space to each of the triangle
@@ -116,7 +92,7 @@ void main()
 
 	float m = max( max( distances[0], distances[1] ), max( distances[2], distances[3] ) );
 
-	/*
+
 	if( l1 == 0.0 )
 		distances.x = m;
 	if( l2 == 0.0 )
@@ -125,9 +101,7 @@ void main()
 		distances.z = m;
 	if( l4 == 0.0 )
 		distances.w = m;
-	*/
 
 	distances *= gl_Position.w;	// Perspective pre-multiplication.
-	
 	perspective = 1.0/gl_Position.w;	// Varying post-multiplication for fragment shader.
 }

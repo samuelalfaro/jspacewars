@@ -34,10 +34,13 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLException;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
@@ -52,29 +55,26 @@ import org.sam.util.ModificableBoolean;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class Loader implements GLEventListener {
-	
-	private static class Properties{
-		private Properties(){}
-		
-		private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("Loader");
+public class Loader implements GLEventListener{
 
-		private static String getProperty(String key) {
-			try {
-				return BUNDLE.getString(key);
-			} catch (MissingResourceException e) {
+	private static class Properties{
+		
+		private Properties(){}
+
+		private static final ResourceBundle BUNDLE = ResourceBundle.getBundle( "Loader" );
+
+		private static String getProperty( String key ){
+			try{
+				return BUNDLE.getString( key );
+			}catch( MissingResourceException e ){
 				return '!' + key + '!';
 			}
 		}
 
-		private static class Paths{
-			private Paths(){}
-			
-			private static final String fondo = getProperty("Paths.fondo");
-			private static final String instancias = getProperty("Paths.instancias");
-		}
+		static final String fondo = getProperty( "Paths.fondo" );
+		static final String instancias = getProperty( "Paths.instancias" );
 	}
-	
+
 	public static class Data{
 		GLContext context;
 		Apariencia apFondo;
@@ -82,14 +82,14 @@ public class Loader implements GLEventListener {
 	}
 
 	// Indices rgb
-	@SuppressWarnings("unused")
+	@SuppressWarnings( "unused" )
 	private static final transient int r = 0, g = 1, b = 2;
 
 	private final transient Data data;
 	private final transient ModificableBoolean loading;
 	private final transient float[] color1, color2;
 
-	Loader(Data data, ModificableBoolean loading) {
+	Loader( Data data, ModificableBoolean loading ){
 		this.data = data;
 		this.loading = loading;
 		color1 = new float[] { 1.0f, 0.0f, 0.0f };
@@ -101,23 +101,21 @@ public class Loader implements GLEventListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
-	 * )
+	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable )
 	 */
 	@Override
-	public void init(GLAutoDrawable drawable) {
+	public void init( GLAutoDrawable drawable ){
 		data.context = drawable.getContext();
 
-		GL gl = drawable.getGL();
-		gl.glDepthMask(false);
-		gl.glShadeModel(GL.GL_SMOOTH);
-		gl.glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glDepthMask( false );
+		gl.glShadeModel( GLLightingFunc.GL_SMOOTH );
+		gl.glClearColor( 0.1f, 0.1f, 0.1f, 0.0f );
 		ciclo = 0;
 	}
 
-	private static final transient int MAX_CICLOS = 1+54;
-	private static final transient float inc1 = 1.0f / (MAX_CICLOS / 2);
+	private static final transient int MAX_CICLOS = 1 + 54;
+	private static final transient float inc1 = 1.0f / ( MAX_CICLOS / 2 );
 	private static final transient float inc2 = 1.0f / MAX_CICLOS;
 
 	private transient float proporcionesPantalla;
@@ -129,97 +127,93 @@ public class Loader implements GLEventListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seejavax.media.opengl.GLEventListener#display(javax.media.opengl.
-	 * GLAutoDrawable)
+	 * @seejavax.media.opengl.GLEventListener#display(javax.media.opengl. GLAutoDrawable)
 	 */
 	@Override
-	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		if (ciclo == 0) {
+	public void display( GLAutoDrawable drawable ){
+		GL2 gl = drawable.getGL().getGL2();
+		if( ciclo == 0 ){
 
-		} else if (data.apFondo == null) {
-			BufferedImage img = Imagen.cargarToBufferedImage(Properties.Paths.fondo);
+		}else if( data.apFondo == null ){
+			BufferedImage img = Imagen.cargarToBufferedImage( Properties.fondo );
 			data.apFondo = new Apariencia();
 
-			data.apFondo.setTextura(new Textura(gl, Textura.Format.RGB,
-					img, true));
-			data.apFondo.setAtributosTextura(new AtributosTextura());
-			data.apFondo.getAtributosTextura().setMode(
-					AtributosTextura.Mode.REPLACE);
-		} else {
-			try {
-				if (in == null) {
-					XStream xStream = new XStream(new DomDriver());
-					xStream.setMode(XStream.XPATH_RELATIVE_REFERENCES);
-					GrafoEscenaConverters.register(xStream);
-					GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy(xStream);
+			data.apFondo.setTextura( new Textura( gl, Textura.Format.RGB, img, true ) );
+			data.apFondo.setAtributosTextura( new AtributosTextura() );
+			data.apFondo.getAtributosTextura().setMode( AtributosTextura.Mode.REPLACE );
+		}else{
+			try{
+				if( in == null ){
+					XStream xStream = new XStream( new DomDriver() );
+					xStream.setMode( XStream.XPATH_RELATIVE_REFERENCES );
+					GrafoEscenaConverters.register( xStream );
+					GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy( xStream );
 
-					xStream.registerConverter(new Ignorado());
-					xStream.alias("NaveUsuario", Ignorado.class);
-					xStream.alias("DisparoLineal", Ignorado.class);
-					xStream.alias("DisparoInterpolado", Ignorado.class);
-					xStream.alias("Misil", Ignorado.class);
-					xStream.alias("NaveEnemiga", Ignorado.class);
+					xStream.registerConverter( new Ignorado() );
+					xStream.alias( "NaveUsuario", Ignorado.class );
+					xStream.alias( "DisparoLineal", Ignorado.class );
+					xStream.alias( "DisparoInterpolado", Ignorado.class );
+					xStream.alias( "Misil", Ignorado.class );
+					xStream.alias( "NaveEnemiga", Ignorado.class );
 
 					intanciasCollection = new LinkedList<Instancia3D>();
-					in = xStream.createObjectInputStream(new FileReader(Properties.Paths.instancias));
+					in = xStream.createObjectInputStream( new FileReader( Properties.instancias ) );
 				}
-				if (!eof)
-					try {
+				if( !eof )
+					try{
 						Object object;
-						do {
+						do{
 							object = in.readObject();
-							if (object != null)
-								intanciasCollection.add((Instancia3D) object);
-						} while (object == null);
-					} catch (ClassNotFoundException e) {
+							if( object != null )
+								intanciasCollection.add( (Instancia3D)object );
+						}while( object == null );
+					}catch( ClassNotFoundException e ){
 						e.printStackTrace();
-					} catch (EOFException eofEx) {
+					}catch( EOFException eofEx ){
 						eof = true;
 						in.close();
 					}
-			} catch (FileNotFoundException e) {
+			}catch( FileNotFoundException e ){
 				e.printStackTrace();
-			} catch (IOException e) {
+			}catch( IOException e ){
 				e.printStackTrace();
-			} catch (ObjLoader.ParsingErrorException e) {
+			}catch( ObjLoader.ParsingErrorException e ){
 				e.printStackTrace();
-			} catch (GLException e) {
+			}catch( GLException e ){
 				e.printStackTrace();
 			}
 		}
 
 		color1[g] += inc1;
-		if (color1[g] > 1.0f) {
+		if( color1[g] > 1.0f ){
 			color1[g] = 1.0f;
 			color1[r] -= inc1;
-			if (color1[r] < 0)
+			if( color1[r] < 0 )
 				color1[r] = 0.0f;
 		}
 		color2[g] += inc2;
-		if (color2[g] > 1.0f)
+		if( color2[g] > 1.0f )
 			color2[g] = 1.0f;
 
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		gl.glClear( GL.GL_COLOR_BUFFER_BIT );
 
 		ciclo++;
 
-		gl.glBegin(GL.GL_QUADS);
-		gl.glColor3fv(color2, 0);
-		gl.glVertex3f(0, 0, 0);
-		gl.glColor3fv(color1, 0);
-		gl.glVertex3f(proporcionesPantalla * ciclo / MAX_CICLOS, 0, 0);
-		gl.glColor3fv(color1, 0);
-		gl.glVertex3f(proporcionesPantalla * ciclo / MAX_CICLOS, 1, 0);
-		gl.glColor3fv(color2, 0);
-		gl.glVertex3f(0, 1, 0);
+		gl.glBegin( GL2.GL_QUADS );
+		gl.glColor3fv( color2, 0 );
+		gl.glVertex3f( 0, 0, 0 );
+		gl.glColor3fv( color1, 0 );
+		gl.glVertex3f( proporcionesPantalla * ciclo / MAX_CICLOS, 0, 0 );
+		gl.glColor3fv( color1, 0 );
+		gl.glVertex3f( proporcionesPantalla * ciclo / MAX_CICLOS, 1, 0 );
+		gl.glColor3fv( color2, 0 );
+		gl.glVertex3f( 0, 1, 0 );
 		gl.glEnd();
 		gl.glFlush();
 
-		if (eof && intanciasCollection != null) {
-			synchronized (loading) {
-				data.instancias = intanciasCollection
-						.toArray(new Instancia3D[intanciasCollection.size()]);
+		if( eof && intanciasCollection != null ){
+			synchronized( loading ){
+				data.instancias = intanciasCollection.toArray( new Instancia3D[intanciasCollection.size()] );
 				intanciasCollection = null;
 				loading.setFalse();
 				loading.notifyAll();
@@ -231,33 +225,30 @@ public class Loader implements GLEventListener {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seejavax.media.opengl.GLEventListener#reshape(javax.media.opengl.
-	 * GLAutoDrawable, int, int, int, int)
+	 * @seejavax.media.opengl.GLEventListener#reshape(javax.media.opengl. GLAutoDrawable, int, int, int, int)
 	 */
 	@Override
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
-			int height) {
-		GL gl = drawable.getGL();
-		gl.glViewport(0, 0, width, height);
-		proporcionesPantalla = (float) width / height;
+	public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ){
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glViewport( 0, 0, width, height );
+		proporcionesPantalla = (float)width / height;
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 		gl.glLoadIdentity();
-		gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
+		gl.glOrtho( 0.0, proporcionesPantalla, 0.0, 1.0, 0, 1 );
 
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		gl.glLoadIdentity();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl
-	 * .GLAutoDrawable, boolean, boolean)
+	 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
 	 */
 	@Override
-	public void displayChanged(GLAutoDrawable drawable,
-			boolean modeChanged, boolean deviceChanged) {
+	public void dispose( GLAutoDrawable drawable ){
+		// TODO Auto-generated method stub
+
 	}
 }

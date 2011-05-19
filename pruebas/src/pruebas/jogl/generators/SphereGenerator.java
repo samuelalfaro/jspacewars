@@ -23,6 +23,7 @@
 package pruebas.jogl.generators;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.vecmath.Point3f;
 import javax.vecmath.TexCoord2f;
 import javax.vecmath.Vector2f;
@@ -38,16 +39,6 @@ import org.sam.jogl.VectorUtils;
 
 public class SphereGenerator {
 	
-	public  static final int ONLY_VERTICES          = 0x00;
-	public  static final int GENERATE_NORMALS       = 0x01;
-	public  static final int GENERATE_TEXT_COORDS   = 0x02;
-	public  static final int WIREFRAME              = 0x05;
-	private static final int WIREFRAME_MASK         = 0x04;
-	public  static final int GENERATE_TANGENTS      = 0x0B;
-	private static final int GENERATE_TANGENTS_MASK = 0x08;
-	public  static final int GENERATE_NTB           = 0x1B;
-	private static final int GENERATE_NTB_MASK      = 0x10;
-
 	private SphereGenerator(){}
 
 	private static final float TOW_PI  = (float)( 2 * Math.PI );
@@ -198,19 +189,19 @@ public class SphereGenerator {
         t4f.scale( uSign );
 	}
 	
-	private static OglList generate(GL gl, int flags, Generator generator, float r, int steps1, int steps2) {
+	private static OglList generate(GL2 gl, int flags, Generator generator, float r, int steps1, int steps2) {
 		
 		Point3f[][] vertices = new Point3f [steps1 + 1][steps2];
 		generateVertices(vertices, r, steps1, steps2 );
 		
 		Vector3f[][] normals = null;
-		if ( (flags & GENERATE_NORMALS) != 0 ){
+		if ( (flags & Generator.GENERATE_NORMALS) != 0 ){
 			normals  = new Vector3f[steps1+1][steps2];
 			generateNormals(normals, steps1, steps2 );
 		}
 		
 		TexCoord2f[][] tCoords = null;
-		if ( (flags & GENERATE_TEXT_COORDS) != 0 ){
+		if ( (flags & Generator.GENERATE_TEXT_COORDS) != 0 ){
 			tCoords  = new TexCoord2f [steps1+1][steps2+1];
 			generateTextCoords( tCoords, 12.0f, 4.0f );
 		}
@@ -221,7 +212,7 @@ public class SphereGenerator {
 		Vector3f n01 = null; Vector4f t01 = null; TexCoord2f c01 = null; Point3f p01;
 
 		Vector3f[][][] tb = null;
-		if ((flags & GENERATE_TANGENTS_MASK) != 0) {
+		if ((flags & Generator.GENERATE_TANGENTS_MASK) != 0) {
 			t00 = new Vector4f();
 			t10 = new Vector4f();
 			t11 = new Vector4f();
@@ -240,7 +231,7 @@ public class SphereGenerator {
 		
 		OglList oglList = new OglList(gl);
 		
-		gl.glBegin((flags & GENERATE_NTB_MASK) != 0 ? GL.GL_LINES : GL.GL_QUADS );
+		gl.glBegin((flags & Generator.GENERATE_NTB_MASK) != 0 ? GL.GL_LINES : GL2.GL_QUADS );
 		
 		final Vector2f s = new Vector2f();
 		final Vector2f t = new Vector2f();
@@ -253,19 +244,19 @@ public class SphereGenerator {
 				p10 = vertices[i+1][j  ]; 
 				p11 = vertices[i+1][j_1];
 				p01 = vertices[i  ][j_1];
-				if ((flags & GENERATE_NORMALS) != 0) {
+				if ((flags & Generator.GENERATE_NORMALS) != 0) {
 					n00 = normals[i  ][j  ]; 
 					n10 = normals[i+1][j  ];
 					n11 = normals[i+1][j_1];
 					n01 = normals[i  ][j_1];
 				}
-				if ((flags & GENERATE_TEXT_COORDS) != 0) {
+				if ((flags & Generator.GENERATE_TEXT_COORDS) != 0) {
 					c00 = tCoords[i  ][j  ]; 
 					c10 = tCoords[i+1][j  ];
 					c11 = tCoords[i+1][j+1];
 					c01 = tCoords[i  ][j+1];
 				}
-				if ((flags & GENERATE_TANGENTS_MASK) != 0) {
+				if ((flags & Generator.GENERATE_TANGENTS_MASK) != 0) {
 					/*
 					float uSign = c00.x < c01.x ?  1.0f: -1.0f;
 					float vSign = c00.y < c10.y ? -1.0f:  1.0f;
@@ -306,18 +297,18 @@ public class SphereGenerator {
 		return oglList;
 	}
 	
-	public static Objeto3D generate(GL gl, int flags, float r, int steps1, int steps2) {
+	public static Objeto3D generate(GL2 gl, int flags, float r, int steps1, int steps2) {
 
 		Generator generator;
-		if( (flags & GENERATE_TANGENTS_MASK) != 0 )
+		if( ( flags & Generator.GENERATE_TANGENTS_MASK ) != 0 )
 			generator = Generator.VerticesTangents;
-		else if( (flags & WIREFRAME_MASK) != 0 )
+		else if( ( flags & Generator.WIREFRAME_MASK ) != 0 )
 			generator = Generator.VerticesWireFrame;
-		else if( (flags & GENERATE_NORMALS) != 0  && (flags & GENERATE_TEXT_COORDS) != 0 )
+		else if( ( flags & Generator.GENERATE_NORMALS ) != 0 && ( flags & Generator.GENERATE_TEXT_COORDS ) != 0 )
 			generator = Generator.VerticesNormalsTexCoords;
-		else if( (flags & GENERATE_TEXT_COORDS) != 0 )
+		else if( ( flags & Generator.GENERATE_TEXT_COORDS ) != 0 )
 			generator = Generator.VerticesTexCoords;
-		else if( (flags & GENERATE_NORMALS) != 0 )
+		else if( ( flags & Generator.GENERATE_NORMALS ) != 0 )
 			generator = Generator.VerticesNormals;
 		else
 			generator = Generator.Vertices;
@@ -329,23 +320,23 @@ public class SphereGenerator {
 		return new Objeto3D(list, ap);
 	}
 	
-	public static Objeto3D generate(GL gl, int flags, float r) {
+	public static Objeto3D generate(GL2 gl, int flags, float r) {
 		return generate(gl, flags, r, 12, 36);
 	}
 	
-	public static Objeto3D generate(GL gl, float r) {
-		return generate(gl, GENERATE_NORMALS, r, 12, 36);
+	public static Objeto3D generate(GL2 gl, float r) {
+		return generate(gl, Generator.GENERATE_NORMALS, r, 12, 36);
 	}
 	
-	public static Objeto3D generateNTB(GL gl, float r, int steps1, int steps2, float scale) {
+	public static Objeto3D generateNTB(GL2 gl, float r, int steps1, int steps2, float scale) {
 		OglList list = generate(
-				gl, GENERATE_NTB, new Generator.NTBGenerator(scale),
+				gl, Generator.GENERATE_NTB, new Generator.NTBGenerator(scale),
 				r, steps1, steps2
 		);
 		return new Objeto3D(list, new Apariencia());
 	}
 	
-	public static Objeto3D generateNTB(GL gl, float r, float scale) {
+	public static Objeto3D generateNTB(GL2 gl, float r, float scale) {
 		return generateNTB( gl, r, 12, 36, scale );
 	}
 }
