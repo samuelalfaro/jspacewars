@@ -34,10 +34,22 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.media.opengl.GL;
-import javax.vecmath.*;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GL2ES2;
+import javax.vecmath.Point2f;
+import javax.vecmath.Point2i;
+import javax.vecmath.Point3f;
+import javax.vecmath.Point3i;
+import javax.vecmath.Point4f;
+import javax.vecmath.Point4i;
+import javax.vecmath.Tuple2f;
+import javax.vecmath.Tuple2i;
+import javax.vecmath.Tuple3f;
+import javax.vecmath.Tuple3i;
+import javax.vecmath.Tuple4f;
+import javax.vecmath.Tuple4i;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 /**
  * Clase que encapsula los datos necesarios en el manejo de <i>shaders</i> y proporciona
@@ -53,7 +65,7 @@ public class Shader{
 			this.id = id;
 		}
 		public abstract void setValue(Object value);
-		public abstract void Uniform(GL gl);
+		public abstract void Uniform(GL2 gl);
 		
 		static Atributo<?> getAtributo( int id, Object value ){
 	    	if( value instanceof Integer )
@@ -108,7 +120,7 @@ public class Shader{
 			this.value = (Integer)value;
 		}
 
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform1i( id, value );
 		}
 	}
@@ -132,7 +144,7 @@ public class Shader{
 			}
 		}
 			
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform2i( id, value.x, value.y );
 		}
 	}
@@ -156,7 +168,7 @@ public class Shader{
 			}
 		}
 		
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform3i( id, value.x, value.y, value.z );
 		}
 	}
@@ -180,7 +192,7 @@ public class Shader{
 			}
 		}
 		
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform4i( id, value.x, value.y, value.z, value.w );
 		}
 	}
@@ -196,7 +208,7 @@ public class Shader{
 			this.value = (Float)value;
 		}
 
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform1f( id, value );
 		}
 	}
@@ -220,7 +232,7 @@ public class Shader{
 			}
 		}
 		
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform2f( id, value.x, value.y );
 		}
 	}
@@ -244,7 +256,7 @@ public class Shader{
 			}
 		}
 		
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform3f( id, value.x, value.y, value.z );
 		}
 	}
@@ -268,7 +280,7 @@ public class Shader{
 			}
 		}
 		
-		public void Uniform(GL gl){
+		public void Uniform(GL2 gl){
 			gl.glUniform4f( id, value.x, value.y, value.z, value.w );
 		}
 	}
@@ -287,47 +299,47 @@ public class Shader{
 	 * @param vertexFile Ruta del archivo que contiene el <i>vertex shader</i>.
 	 * @param fragmentFile Ruta del archivo que contiene el <i>fragment shader</i>.
 	 */
-	public Shader(GL gl, String vertexFile, String fragmentFile){
+	public Shader( GL2 gl, String vertexFile, String fragmentFile ){
 		int vertexShader = 0;
 		int fragmentShader = 0;
-		
+
 		boolean ok = false;
-		
+
 		try{
 
-			vertexShader = gl.glCreateShaderObjectARB(GL.GL_VERTEX_SHADER_ARB);
-			gl.glShaderSourceARB(vertexShader, 1, new String[]{loadShader(vertexFile)}, (int[]) null, 0);
-			gl.glCompileShaderARB(vertexShader);
-			checkLogInfo(gl, vertexShader);
+			vertexShader = gl.glCreateShaderObjectARB( GL2ES2.GL_VERTEX_SHADER );
+			gl.glShaderSourceARB( vertexShader, 1, new String[] { loadShader( vertexFile ) }, (int[])null, 0 );
+			gl.glCompileShaderARB( vertexShader );
+			checkLogInfo( gl, vertexShader );
 
-			fragmentShader = gl.glCreateShaderObjectARB(GL.GL_FRAGMENT_SHADER_ARB);
-			gl.glShaderSourceARB(fragmentShader, 1, new String[]{loadShader(fragmentFile)}, (int[]) null, 0);
-			gl.glCompileShaderARB(fragmentShader);
-			
-			checkLogInfo(gl, fragmentShader);
+			fragmentShader = gl.glCreateShaderObjectARB( GL2ES2.GL_FRAGMENT_SHADER );
+			gl.glShaderSourceARB( fragmentShader, 1, new String[] { loadShader( fragmentFile ) }, (int[])null, 0 );
+			gl.glCompileShaderARB( fragmentShader );
+
+			checkLogInfo( gl, fragmentShader );
 			ok = true;
 
-		}catch(FileNotFoundException e){
+		}catch( FileNotFoundException e ){
 			e.printStackTrace();
-		}catch(IOException e){
+		}catch( IOException e ){
 			e.printStackTrace();
 		}
-		
-		if(ok){
+
+		if( ok ){
 			programObject = gl.glCreateProgramObjectARB();
 
-			gl.glAttachObjectARB(programObject, vertexShader);
-			gl.glAttachObjectARB(programObject, fragmentShader);
-			gl.glLinkProgramARB(programObject);
-			
-			gl.glValidateProgramARB(programObject);
-			
-			checkLogInfo(gl, programObject);
-			
+			gl.glAttachObjectARB( programObject, vertexShader );
+			gl.glAttachObjectARB( programObject, fragmentShader );
+			gl.glLinkProgramARB( programObject );
+
+			gl.glValidateProgramARB( programObject );
+
+			checkLogInfo( gl, programObject );
+
 		}else{
 			programObject = 0;
 		}
-		uniforms = new HashMap<String,Atributo<? extends Object>>(0);
+		uniforms = new HashMap<String, Atributo<? extends Object>>( 0 );
 	}
 	
 	private static String loadShader( String filename ) throws FileNotFoundException, IOException{
@@ -347,24 +359,24 @@ public class Shader{
 		return shaderWriter.getBuffer().toString();
 	}
 	
-    private static void checkLogInfo(GL gl, int obj) {
-        IntBuffer iVal = BufferUtil.newIntBuffer(1);
-        gl.glGetObjectParameterivARB(obj, GL.GL_OBJECT_INFO_LOG_LENGTH_ARB, iVal);
+	private static void checkLogInfo( GL2 gl, int obj ){
+		IntBuffer iVal = Buffers.newDirectIntBuffer( 1 );
+		gl.glGetObjectParameterivARB( obj, GL2.GL_OBJECT_INFO_LOG_LENGTH_ARB, iVal );
 
-        int length = iVal.get();
+		int length = iVal.get();
 
-        if (length <= 1)
-            return;
+		if( length <= 1 )
+			return;
 
-        ByteBuffer infoLog = BufferUtil.newByteBuffer(length);
+		ByteBuffer infoLog = Buffers.newDirectByteBuffer( length );
 
-        iVal.flip();
-        gl.glGetInfoLogARB(obj, length, iVal, infoLog);
+		iVal.flip();
+		gl.glGetInfoLogARB( obj, length, iVal, infoLog );
 
-        byte[] infoBytes = new byte[length];
-        infoLog.get(infoBytes);
-        System.out.println("GLSL Validation >> " + new String(infoBytes, 0, length - 1));
-    }
+		byte[] infoBytes = new byte[length];
+		infoLog.get( infoBytes );
+		System.out.println( "GLSL Validation >> " + new String( infoBytes, 0, length - 1 ) );
+	}
 	
     /**
      * Método que añade y asigna un valor a un atributo uniforme.
@@ -372,22 +384,33 @@ public class Shader{
      * @param name  {@code String} que identifica el atributo uniforme añadido.
      * @param value Valor del atributo uniforme añadido.
      */
-    public void addUniform(GL gl, String name, Object value){
-    	int id = gl.glGetUniformLocation(programObject, name);
-   		uniforms.put( name, Atributo.getAtributo(id, value) );
-    }
+	public void addUniform( GL2 gl, String name, Object value ){
+		int id = gl.glGetUniformLocation( programObject, name );
+		uniforms.put( name, Atributo.getAtributo( id, value ) );
+	}
     
     /**
      * Método que modifica el valor de un atributo uniforme anteriormente añadido.
      * @param name  {@code String} que identifica el atributo uniforme asignado.
      * @param value Valor del atributo uniforme asignado.
      */
-    public void setUniform(String name, Object value){
-    	Atributo<?> att = uniforms.get( name );
-    	if( att != null)
-    		att.setValue(value);
-    }
-    
+	public void setUniform( String name, Object value ){
+		Atributo<?> att = uniforms.get( name );
+		if( att != null )
+			att.setValue( value );
+	}
+
+	/**
+	 * Método que devuelve la posición de los atributos de vértice.
+	 * 
+     * @param gl Contexto gráfico en el que se realiza a acción.
+     * @param name {@code String} que identifica los atributos de vértice ligados.
+	 * @return Posición donde están ligados los atributos de vértice.
+	 */
+	public int getAttribLocation( GL2 gl, String name ){
+		return gl.glGetAttribLocation( programObject, name );
+	}
+	
     /**
      * Método que liga los atributos de vértice a una posición.
      * 
@@ -395,9 +418,9 @@ public class Shader{
      * @param index Posición donde serán ligados los atributos de vértice.
      * @param name {@code String} que identifica los atributos de vértice ligados.
      */
-    public void bindAttribLocation(GL gl, int index, String name){
-    	gl.glBindAttribLocation(programObject, index, name);
-    }
+	public void bindAttribLocation( GL2 gl, int index, String name ){
+		gl.glBindAttribLocation( programObject, index, name );
+	}
     
 	/**
 	 * Método que activa el uso de <i>shaders</i> con los valores de
@@ -405,7 +428,7 @@ public class Shader{
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void activar(GL gl) {
+	public void activar(GL2 gl) {
 		if( anterior == this )
 			return;
 		gl.glUseProgramObjectARB(programObject);
@@ -418,7 +441,7 @@ public class Shader{
 	 * Método estático que desactiva el uso de <i>shaders</i>.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public static void desactivar(GL gl) {
+	public static void desactivar(GL2 gl) {
 		anterior = null;
 		gl.glUseProgramObjectARB(0);
 	}

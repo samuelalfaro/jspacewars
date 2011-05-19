@@ -22,7 +22,10 @@
  */
 package org.sam.jspacewars;
 
-import javax.media.opengl.*;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
 import org.sam.jogl.fondos.Fondo;
 
@@ -60,7 +63,7 @@ class GLEventListenerBackgroundRenderer implements GLEventListener {
 		tAnterior = tActual;
 		tActual = System.nanoTime();
 		float incT = (float) (tActual - tAnterior) / 1000000000;
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 
 		fondo.getModificador().modificar(incT);
 		fondo.draw(gl);
@@ -74,11 +77,11 @@ class GLEventListenerBackgroundRenderer implements GLEventListener {
 	 * , int, int, int, int)
 	 */
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		fondo.setProporcionesPantalla((float) width / height);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
 		gl.glLoadIdentity();
 		double near = 0.5;
 		double far = 240.0;
@@ -88,16 +91,13 @@ class GLEventListenerBackgroundRenderer implements GLEventListener {
 		// gl.glFrustum(-d,((2.0*w)/h -1.0)*d, -d, d, near, far);
 		double anchovisible = 4.5 / 3.0;
 		gl.glFrustum(-anchovisible * d, ((2.0 * width) / height - anchovisible) * d, -d, d, near, far);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl.
-	 * GLAutoDrawable, boolean, boolean)
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
 	 */
-	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
+	@Override
+	public void dispose( GLAutoDrawable drawable ){
 	}
 }

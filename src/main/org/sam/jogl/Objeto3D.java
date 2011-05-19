@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que representa un {@code Nodo} final {@code Dibujable},
@@ -75,18 +75,19 @@ public class Objeto3D extends Objeto3DAbs{
 		this.geometria = geometria;
 	}
 	
-	/**
-	 * {@inheritDoc}
+
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Objeto3DAbs#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
+	public void draw(GL2 gl) {
 		super.draw(gl);
 		if(geometria != null)
 			geometria.draw(gl);
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Hoja#clone()
 	 */
 	@Override
 	public Objeto3D clone(){

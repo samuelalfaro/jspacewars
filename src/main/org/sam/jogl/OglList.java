@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que almacena en una lista memoria de video, la información de la
@@ -37,29 +37,29 @@ public class OglList implements Geometria {
 	 * Constructor que crea un {@code OglList}, almacenando su indentificador
 	 * y activando el contexto, para comenzar a almacenar la geometría 
 	 * en memoria de video.<br/>
-	 * <u>Nota:</u> Es inpresdible invocar {@link #endList(GL)}, tras llamar a
+	 * <u>Nota:</u> Es inpresdible invocar {@link #endList(GL2)}, tras llamar a
 	 * este constructor, para indicar cuando se ha finalizado de almacenar la
 	 * lista.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public OglList(GL gl){
+	public OglList(GL2 gl){
 		this.idList = gl.glGenLists(1);
-		gl.glNewList(this.idList, GL.GL_COMPILE);
+		gl.glNewList(this.idList, GL2.GL_COMPILE);
 	}
 	
 	/**
 	 * Método que indica se ha finalizado de almacenar la lista.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public static void endList(GL gl) {
+	public static void endList(GL2 gl) {
 		gl.glEndList();
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
+	public void draw(GL2 gl) {
 		gl.glCallList(idList);
 	}
 }

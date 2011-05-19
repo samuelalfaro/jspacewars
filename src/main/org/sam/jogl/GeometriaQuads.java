@@ -23,6 +23,8 @@
 package org.sam.jogl;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLPointerFunc;
 
 /**
  * Implementación de una {@code Geometria} diseñada para almacenar cuadriláteros.
@@ -38,31 +40,32 @@ public class GeometriaQuads extends GeometriaAbs {
 		super(nVertex, att_mask);
 	}
 
-	/**
-	 * {@inheritDoc}
+
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
-		if( (att_mask & Geometria.USAR_BUFFERS) != 0 ){
-			if( (att_mask & Geometria.COLOR_3) != 0 ){
-				gl.glEnableClientState(GL.GL_COLOR_ARRAY);
-				if( (att_mask & Geometria.COLOR_4) == 0 )
-					gl.glColorPointer(3, GL.GL_FLOAT, 0, colorBuff);
+	public void draw( GL2 gl ){
+		if( ( att_mask & Geometria.USAR_BUFFERS ) != 0 ){
+			if( ( att_mask & Geometria.COLOR_3 ) != 0 ){
+				gl.glEnableClientState( GLPointerFunc.GL_COLOR_ARRAY );
+				if( ( att_mask & Geometria.COLOR_4 ) == 0 )
+					gl.glColorPointer( 3, GL.GL_FLOAT, 0, colorBuff );
 				else
-					gl.glColorPointer(4, GL.GL_FLOAT, 0, colorBuff);
+					gl.glColorPointer( 4, GL.GL_FLOAT, 0, colorBuff );
 			}
-			if( (att_mask & Geometria.COORDENADAS_TEXTURA) != 0 ){
-				gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-				gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, texCoordBuff[0]);
+			if( ( att_mask & Geometria.COORDENADAS_TEXTURA ) != 0 ){
+				gl.glEnableClientState( GLPointerFunc.GL_TEXTURE_COORD_ARRAY );
+				gl.glTexCoordPointer( 2, GL.GL_FLOAT, 0, texCoordBuff[0] );
 			}
-			if( (att_mask & Geometria.NORMALES) != 0 ){
-				gl.glEnableClientState(GL.GL_NORMAL_ARRAY);
-				gl.glNormalPointer(GL.GL_FLOAT, 0, normalBuff);
+			if( ( att_mask & Geometria.NORMALES ) != 0 ){
+				gl.glEnableClientState( GLPointerFunc.GL_NORMAL_ARRAY );
+				gl.glNormalPointer( GL.GL_FLOAT, 0, normalBuff );
 			}
-			gl.glEnableClientState(GL.GL_VERTEX_ARRAY);
-			gl.glVertexPointer(3, GL.GL_FLOAT, 0, coordBuff);
+			gl.glEnableClientState( GLPointerFunc.GL_VERTEX_ARRAY );
+			gl.glVertexPointer( 3, GL.GL_FLOAT, 0, coordBuff );
 
-			gl.glDrawArrays(GL.GL_QUADS, 0, nVertex);
+			gl.glDrawArrays( GL2.GL_QUADS, 0, nVertex );
 		}else{
 		}
 	}

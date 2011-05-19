@@ -23,7 +23,8 @@
 package org.sam.jogl;
 
 import java.nio.IntBuffer;
-import com.sun.opengl.util.BufferUtil;
+
+import com.jogamp.common.nio.Buffers;
 
 /**
  * Clase abstracta, empleada como base, de la cual derivar distintas implementaciones,
@@ -165,7 +166,7 @@ public abstract class GeometriaIndexada extends GeometriaAbs {
 		if((att_mask & POR_REFERENCIA )!= 0){
 			coordIndicesBuff = bufferIndices;
 		}else{
-			coordIndicesBuff = BufferUtil.copyIntBuffer(bufferIndices);
+			coordIndicesBuff = Buffers.copyIntBuffer(bufferIndices);
 		}
 	}
 	
