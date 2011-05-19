@@ -22,17 +22,24 @@
  */
 package org.sam.jogl.particulas;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.Random;
 
 import javax.media.opengl.GL;
-import javax.vecmath.*;
+import javax.media.opengl.GL2;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Point3f;
+import javax.vecmath.Quat4f;
+import javax.vecmath.Vector2f;
+import javax.vecmath.Vector3f;
 
 import org.sam.elementos.Modificador;
 import org.sam.interpoladores.Getter;
 import org.sam.jogl.MatrixSingleton;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 class ParticulasQuads extends Particulas{
 
@@ -371,9 +378,9 @@ class ParticulasQuads extends Particulas{
 		radio = 1.0f;
 		semiEje = 0.0f;
 
-		pos = ByteBuffer.allocateDirect(nParticulas*4*3*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		col = ByteBuffer.allocateDirect(nParticulas*4*4*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		tex = ByteBuffer.allocateDirect(nParticulas*4*2*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		pos = ByteBuffer.allocateDirect(nParticulas*4*3*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		col = ByteBuffer.allocateDirect(nParticulas*4*4*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		tex = ByteBuffer.allocateDirect(nParticulas*4*2*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		
 		modificador = new ModificadorDeParticulas();
 	}
@@ -391,9 +398,9 @@ class ParticulasQuads extends Particulas{
 		this.radio = me.radio;
 		this.iRadio = me.iRadio;
 
-		pos = ByteBuffer.allocateDirect(nParticulas*4*3*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		col = ByteBuffer.allocateDirect(nParticulas*4*4*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		tex = ByteBuffer.allocateDirect(nParticulas*4*2*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		pos = ByteBuffer.allocateDirect(nParticulas*4*3*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		col = ByteBuffer.allocateDirect(nParticulas*4*4*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		tex = ByteBuffer.allocateDirect(nParticulas*4*2*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		
 		modificador = new ModificadorDeParticulas();
 	}
@@ -477,20 +484,24 @@ class ParticulasQuads extends Particulas{
 		return new ParticulasQuads(this);
 	}
 
-	public void draw(GL gl) {
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Objeto3DAbs#draw(javax.media.opengl.GL2)
+	 */
+	@Override
+	public void draw(GL2 gl) {
 		super.draw(gl);
 		
-		gl.glMatrixMode( GL.GL_MODELVIEW );
+		gl.glMatrixMode( GL2.GL_MODELVIEW );
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL.GL_COLOR_ARRAY);
-		gl.glEnableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
+		gl.glEnableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
 
 		pos.rewind();
 		gl.glVertexPointer(3, GL.GL_FLOAT, 0, pos);
@@ -499,16 +510,16 @@ class ParticulasQuads extends Particulas{
 		tex.rewind();
 		gl.glTexCoordPointer(2, GL.GL_FLOAT, 0, tex);
 		
-		gl.glDrawArrays(GL.GL_QUADS, 0, nParticulas * 4);
+		gl.glDrawArrays(GL2.GL_QUADS, 0, nParticulas * 4);
 		
-		gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-		gl.glDisableClientState(GL.GL_COLOR_ARRAY);
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL2.GL_TEXTURE_COORD_ARRAY);
+		gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glPopMatrix();
 		
-		gl.glMatrixMode( GL.GL_MODELVIEW );
+		gl.glMatrixMode( GL2.GL_MODELVIEW );
 		gl.glPopMatrix();
 	}
 }

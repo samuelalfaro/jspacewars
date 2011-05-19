@@ -22,9 +22,10 @@
  */
 package org.sam.jogl;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Implementación de un {@code Nodo}, que premite tratar un grupo de
@@ -89,25 +90,26 @@ public class Grupo implements Nodo {
 		return false;
 	}
 
-	/**
-	 * {@inheritDoc}
+
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
+	public void draw(GL2 gl) {
 		for( Nodo  child: childs )
 			 child.draw(gl);
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#setParent(org.sam.jogl.Nodo)
 	 */
 	@Override
 	public void setParent(Nodo parent) {
 		this.parent = parent;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#getParent()
 	 */
 	@Override
 	public Nodo getParent() {
@@ -116,8 +118,8 @@ public class Grupo implements Nodo {
 	
 	private transient Nodo[] nodos;
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#getChilds()
 	 */
 	@Override
 	public Nodo[] getChilds(){
@@ -127,8 +129,8 @@ public class Grupo implements Nodo {
 		return childs.toArray(nodos);
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
 	 */
 	@Override
 	public Grupo clone(){

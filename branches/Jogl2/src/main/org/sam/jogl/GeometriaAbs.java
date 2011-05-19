@@ -23,7 +23,8 @@
 package org.sam.jogl;
 
 import java.nio.FloatBuffer;
-import com.sun.opengl.util.BufferUtil;
+
+import com.jogamp.common.nio.Buffers;
 
 /**
  * Clase abstracta, empleada como base, de la cual derivar distintas implementaciones,
@@ -167,7 +168,7 @@ public abstract class GeometriaAbs implements Geometria {
 		if((att_mask & POR_REFERENCIA )!= 0){
 			texCoordBuff[texCoordSet] = buffer;
 		}else{
-			texCoordBuff[texCoordSet] = BufferUtil.copyFloatBuffer(buffer);
+			texCoordBuff[texCoordSet] = Buffers.copyFloatBuffer(buffer);
 		}
 	}
 	
@@ -201,7 +202,7 @@ public abstract class GeometriaAbs implements Geometria {
 		if((att_mask & POR_REFERENCIA )!= 0){
 			colorBuff = buffer;
 		}else{
-			colorBuff = BufferUtil.copyFloatBuffer(buffer);
+			colorBuff = Buffers.copyFloatBuffer(buffer);
 		}
 	}
 	
@@ -235,7 +236,7 @@ public abstract class GeometriaAbs implements Geometria {
 		if((att_mask & POR_REFERENCIA )!= 0){
 			normalBuff = buffer;
 		}else{
-			normalBuff = BufferUtil.copyFloatBuffer(buffer);
+			normalBuff = Buffers.copyFloatBuffer(buffer);
 		}
 	}
 	
@@ -267,7 +268,7 @@ public abstract class GeometriaAbs implements Geometria {
 		if((att_mask & POR_REFERENCIA )!= 0){
 			coordBuff = buffer;
 		}else{
-			coordBuff = BufferUtil.copyFloatBuffer(buffer);
+			coordBuff = Buffers.copyFloatBuffer(buffer);
 		}
 	}
 	
@@ -305,7 +306,7 @@ public abstract class GeometriaAbs implements Geometria {
 		if((att_mask & POR_REFERENCIA )!= 0){
 			vertexAttrBuff[vertexAttrNum] = buffer;
 		}else{
-			vertexAttrBuff[vertexAttrNum] = BufferUtil.copyFloatBuffer(buffer);
+			vertexAttrBuff[vertexAttrNum] = Buffers.copyFloatBuffer(buffer);
 		}
 	}
 }

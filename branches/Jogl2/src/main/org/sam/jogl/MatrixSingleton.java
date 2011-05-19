@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Matrix4f;
 
@@ -44,8 +44,8 @@ public final class MatrixSingleton {
 	 * Método que almacena la matriz <i>MODELVIEW</i> que están actualmente en uso.
 	 */
 	public static final void loadModelViewMatrix(){
-		GLU.getCurrentGL().glGetFloatv(GL.GL_MODELVIEW_MATRIX, model_view_array, 0);
-		model_view_matrix.set(model_view_array);
+		GLU.getCurrentGL().glGetFloatv( GLMatrixFunc.GL_MODELVIEW_MATRIX, model_view_array, 0 );
+		model_view_matrix.set( model_view_array );
 		model_view_matrix.transpose();
 	}
 	
@@ -61,8 +61,8 @@ public final class MatrixSingleton {
 	 * Método que almacena la matriz <i>PROJECTION</i> que están actualmente en uso.
 	 */
 	public static final void loadProjectionMatrix(){
-		GLU.getCurrentGL().glGetFloatv(GL.GL_PROJECTION_MATRIX, projection_array, 0);
-		projection_matrix.set(projection_array);
+		GLU.getCurrentGL().glGetFloatv( GLMatrixFunc.GL_PROJECTION_MATRIX, projection_array, 0 );
+		projection_matrix.set( projection_array );
 	}
 	
 	/**

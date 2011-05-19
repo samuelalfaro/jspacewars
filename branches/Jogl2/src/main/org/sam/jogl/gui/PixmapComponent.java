@@ -25,18 +25,21 @@
  */
 package org.sam.jogl.gui;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 public class PixmapComponent extends GLComponent{
 	public final Pixmap pixmap;
-	
+
 	public PixmapComponent( Pixmap pixmap ){
 		this.pixmap = pixmap;
 	}
-	
-	/** {@inheritDoc} */
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
+	 */
 	@Override
-	public void draw(GL gl){
-		pixmap.draw(gl, x1, y1, x2, y2);
+	public void draw( GL2 gl ){
+		pixmap.draw( gl, x1, y1, x2, y2 );
 	}
 }

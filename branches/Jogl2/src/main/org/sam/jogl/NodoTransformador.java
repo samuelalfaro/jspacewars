@@ -23,7 +23,9 @@
 package org.sam.jogl;
 
 import javax.media.opengl.GL;
-import javax.vecmath.*;
+import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
+import javax.vecmath.Matrix4f;
 
 /**
  * Clase que representa un {@code Nodo} que puede ser
@@ -97,11 +99,12 @@ public class NodoTransformador implements Nodo {
 	
 	private transient final float[]  mt_array = new float[16];
 	
-	/**
-	 * {@inheritDoc}
+
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
+	public void draw(GL2 gl) {
 		gl.glPushMatrix();
 
 		mt_array[ 0] = transformMatrix.m00; mt_array[ 1] = transformMatrix.m10; mt_array[ 2] = transformMatrix.m20; mt_array[ 3] = transformMatrix.m30;
@@ -116,8 +119,8 @@ public class NodoTransformador implements Nodo {
 	}
 	
 	@SuppressWarnings("unused")
-	private static void drawBox(GL gl){
-		gl.glDisable(GL.GL_LIGHTING);
+	private static void drawBox(GL2 gl){
+		gl.glDisable(GLLightingFunc.GL_LIGHTING);
 		gl.glDisable(GL.GL_TEXTURE_2D);
 
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
@@ -147,20 +150,20 @@ public class NodoTransformador implements Nodo {
 		gl.glEnd();
 
 		gl.glEnable(GL.GL_TEXTURE_2D);
-		gl.glEnable(GL.GL_LIGHTING);
-		gl.glEnable(GL.GL_LIGHT0);
+		gl.glEnable(GLLightingFunc.GL_LIGHTING);
+		gl.glEnable(GLLightingFunc.GL_LIGHT0);
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#setParent(org.sam.jogl.Nodo)
 	 */
 	@Override
 	public void setParent(Nodo parent) {
 		this.parent = parent;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#getParent()
 	 */
 	@Override
 	public Nodo getParent() {
@@ -169,8 +172,8 @@ public class NodoTransformador implements Nodo {
 	
 	private transient Nodo[] nodos;
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#getChilds()
 	 */
 	@Override
 	public Nodo[] getChilds(){
@@ -180,8 +183,8 @@ public class NodoTransformador implements Nodo {
 		return nodos;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
 	 */
 	@Override
 	public NodoTransformador clone(){

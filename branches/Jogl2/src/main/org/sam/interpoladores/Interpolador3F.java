@@ -60,7 +60,7 @@ final class Interpolador3F implements Trayectoria.Float<float[]>{
 	 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 	 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 	 * </ul>
-	 * @param length Valor de escalado que se aplicará a las claves generadas.
+	 * @param scale Valor de escalado que se aplicará a las claves generadas.
 	 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 	 * @param values Valores a interpolar.
 	 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.

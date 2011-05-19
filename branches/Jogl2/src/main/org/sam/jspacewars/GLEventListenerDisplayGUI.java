@@ -24,11 +24,8 @@ package org.sam.jspacewars;
 
 import java.util.Map;
 
-import javax.media.opengl.*;
-
-import org.fenggui.Display;
-import org.fenggui.binding.render.jogl.*;
-import org.fenggui.event.IButtonPressedListener;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
 
 /**
  * 
@@ -36,7 +33,7 @@ import org.fenggui.event.IButtonPressedListener;
  */
 class GLEventListenerDisplayGUI implements GLEventListener {
 
-	private transient Display display;
+//	private transient Display display;
 	private final transient GameMenu gameMenu;
 	private transient boolean menu_isVisible;
 
@@ -53,14 +50,14 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * )
 	 */
 	public void init(GLAutoDrawable drawable) {
-		display = new Display(new JOGLBinding((GLCanvas) drawable));
+//		display = new Display(new JOGLBinding((GLCanvas) drawable));
 		// try{
 		// FengGUI.setTheme( new XMLTheme("data/themes/QtCurve/QtCurve.xml") );
 		// }catch( IOException ignorada ){
 		// }catch( IXMLStreamableException ignorada ){
 		// }
-		new EventBinding((GLCanvas) drawable, display);
-		showMenu();
+//		new EventBinding((GLCanvas) drawable, display);
+//		showMenu();
 	}
 
 	/*
@@ -71,7 +68,7 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	 * )
 	 */
 	public void display(GLAutoDrawable drawable) {
-		display.display();
+//		display.display();
 	}
 
 	/*
@@ -84,29 +81,27 @@ class GLEventListenerDisplayGUI implements GLEventListener {
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#displayChanged(javax.media.opengl.
-	 * GLAutoDrawable, boolean, boolean)
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
 	 */
-	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
+	@Override
+	public void dispose( GLAutoDrawable drawable ){
 	}
+
 	
-	public void showMenu(){
-		if(!menu_isVisible){
-			menu_isVisible = true;
-			display.addWidget(gameMenu);
-		}
-	}
-	
-	public void hideMenu(){
-		if(menu_isVisible){
-			menu_isVisible = false;
-			display.removeAllWidgets();
-			//display.removeWidget(gameMenu);
-		}
-	}
+//	public void showMenu(){
+//		if(!menu_isVisible){
+//			menu_isVisible = true;
+//			display.addWidget(gameMenu);
+//		}
+//	}
+//	
+//	public void hideMenu(){
+//		if(menu_isVisible){
+//			menu_isVisible = false;
+//			display.removeAllWidgets();
+//			//display.removeWidget(gameMenu);
+//		}
+//	}
 	
 }

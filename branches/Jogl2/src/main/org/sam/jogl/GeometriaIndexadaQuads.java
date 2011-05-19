@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Implementación de una {@code Geometria} diseñada para almacenar cuadriláteros indexados.
@@ -39,11 +39,11 @@ public class GeometriaIndexadaQuads extends GeometriaIndexada {
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
+	public void draw(GL2 gl) {
 		// TODO Auto-generated method stub
 	}
 }

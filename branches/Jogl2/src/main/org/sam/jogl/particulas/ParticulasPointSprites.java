@@ -22,17 +22,20 @@
  */
 package org.sam.jogl.particulas;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.Random;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.vecmath.Matrix4f;
 
 import org.sam.elementos.Modificador;
 import org.sam.interpoladores.Getter;
 import org.sam.jogl.MatrixSingleton;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 class ParticulasPointSprites extends Particulas{
 
@@ -180,8 +183,8 @@ class ParticulasPointSprites extends Particulas{
 		modulosVelocidad = new float[nParticulas];
 		giros = new float[nParticulas];
 
-		pos = ByteBuffer.allocateDirect(nParticulas*3*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		col = ByteBuffer.allocateDirect(nParticulas*4*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		pos = ByteBuffer.allocateDirect(nParticulas*3*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		col = ByteBuffer.allocateDirect(nParticulas*4*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		
 		modificador = new ModificadorEmisionDiscreta();
 	}
@@ -194,8 +197,8 @@ class ParticulasPointSprites extends Particulas{
 		modulosVelocidad = new float[me.nParticulas];
 		giros = new float[me.nParticulas];
 		
-		pos = ByteBuffer.allocateDirect(nParticulas*3*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
-		col = ByteBuffer.allocateDirect(nParticulas*4*BufferUtil.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		pos = ByteBuffer.allocateDirect(nParticulas*3*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		col = ByteBuffer.allocateDirect(nParticulas*4*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 		
 		modificador = (me.emision == Particulas.Emision.CONTINUA) ?
 				new ModificadorEmisionContinua():
@@ -311,12 +314,16 @@ class ParticulasPointSprites extends Particulas{
 	
 	private transient final float[]  mt_array = new float[16];
 	
-	public void draw(GL gl) {
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Objeto3DAbs#draw(javax.media.opengl.GL2)
+	 */
+	@Override
+	public void draw(GL2 gl) {
 		
 		super.draw(gl);
 		
 		float[] tmp = new float[1];
-		gl.glGetFloatv( GL.GL_POINT_SIZE_MAX, tmp, 0 );
+		gl.glGetFloatv( GL2.GL_POINT_SIZE_MAX, tmp, 0 );
 		float maxSize = tmp[0];
 
 		gl.glPointSize(radio > maxSize ? maxSize: radio);
@@ -329,9 +336,9 @@ class ParticulasPointSprites extends Particulas{
 //		float quadratic[] =  { 1.0f, 0.0f, 0.01f };
 //		gl.glPointParameterfv( GL.GL_POINT_DISTANCE_ATTENUATION, quadratic, 0 );
 
-		gl.glTexEnvf( GL.GL_POINT_SPRITE, GL.GL_COORD_REPLACE, GL.GL_TRUE );	 
+		gl.glTexEnvf( GL2.GL_POINT_SPRITE, GL2.GL_COORD_REPLACE, GL.GL_TRUE );	 
 		
-		gl.glMatrixMode( GL.GL_MODELVIEW );
+		gl.glMatrixMode( GL2.GL_MODELVIEW );
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
 		
@@ -344,9 +351,9 @@ class ParticulasPointSprites extends Particulas{
 		
 		gl.glMultMatrixf(mt_array, 0);
 
-		gl.glEnable( GL.GL_POINT_SPRITE );
-		gl.glEnableClientState(GL.GL_VERTEX_ARRAY);
-		gl.glEnableClientState(GL.GL_COLOR_ARRAY);
+		gl.glEnable( GL2.GL_POINT_SPRITE );
+		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
 		pos.rewind();
 		gl.glVertexPointer(3, GL.GL_FLOAT, 0, pos);
 		col.rewind();
@@ -354,11 +361,11 @@ class ParticulasPointSprites extends Particulas{
 
 		gl.glDrawArrays(GL.GL_POINTS, 0, nParticulas);
 
-		gl.glDisableClientState(GL.GL_COLOR_ARRAY);
-		gl.glDisableClientState(GL.GL_VERTEX_ARRAY); 
-		gl.glDisable( GL.GL_POINT_SPRITE );
+		gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
+		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY); 
+		gl.glDisable( GL2.GL_POINT_SPRITE );
 		
-		gl.glMatrixMode( GL.GL_MODELVIEW );
+		gl.glMatrixMode( GL2.GL_MODELVIEW );
 		gl.glPopMatrix();
 	}
 }

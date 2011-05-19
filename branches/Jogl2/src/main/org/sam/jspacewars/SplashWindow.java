@@ -31,7 +31,7 @@ import java.awt.Robot;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
