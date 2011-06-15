@@ -1,5 +1,5 @@
 /* 
- * ShowDocumentation.java
+ * XMLDoclet.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -32,49 +32,25 @@ import com.sun.javadoc.RootDoc;
 
 /**
  */
-public class ShowDocumentation {
+public final class XMLDoclet{
 	
 	/**
 	 * Method optionLength.
 	 * @param option String
 	 * @return int
 	 */
-	public static int optionLength(String option) {
-		if (option.equalsIgnoreCase("-projectRootpath")) 
-			return 2;
-		if (option.equalsIgnoreCase("-projectClasspath"))
-			return 2;
-		return 0;
+	public static int optionLength( String option ){
+		return DocletValidator.optionLength( option );
 	}
-
+	
 	/**
 	 * Method validOptions.
 	 * @param options String[][]
 	 * @param reporter DocErrorReporter
 	 * @return boolean
 	 */
-	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
-		
-		String projectRootpath  = null;
-		String projectClasspath = null;
-		
-		for(String[] option: options){
-			if(option[0].equalsIgnoreCase("-projectRootpath")){
-				if(projectRootpath != null){
-					reporter.printError("Only one -projectRootpath option allowed.");
-					return false;
-				}
-				projectRootpath = option[1];
-			}else if(option[0].equalsIgnoreCase("-projectClasspath")){
-				if(projectClasspath != null){
-					reporter.printError("Only one -projectClasspath option allowed.");
-					return false;
-				}
-				projectClasspath = option[1];
-			}
-		}
-		ClassBindingFactory.setClassLoader(ClassLoaderTools.getLoader( projectRootpath, projectClasspath ) );
-		return true;
+	public static boolean validOptions( String options[][], DocErrorReporter reporter ){
+		return DocletValidator.validOptions( options, reporter );
 	}
 	
 	/**
@@ -83,16 +59,16 @@ public class ShowDocumentation {
 	 * @return boolean
 	 * @throws ClassNotFoundException
 	 */
-	public static boolean start(RootDoc root) throws ClassNotFoundException {
+	public static boolean start( RootDoc root ) throws ClassNotFoundException{
 
 		ClassDoc[] classes = root.classes();
 
 		XMLConverter converter = new XMLConverter();
 		Recorders.register( converter );
-		converter.setWriter( new XMLWriter(System.out, true) );
+		converter.setWriter( new XMLWriter( System.out, true ) );
 
-		for(ClassDoc classDoc: classes)
-			converter.write( ClassBindingFactory.createBinding(classDoc) );
+		for( ClassDoc classDoc: classes )
+			converter.write( ClassBindingFactory.createBinding( classDoc ) );
 
 		return true;
 	}

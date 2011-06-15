@@ -35,7 +35,9 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import org.sam.odf_doclet.Adapter;
@@ -76,7 +78,6 @@ final class Strings{
 final class AssertHelper{
 	
 	private AssertHelper(){}
-	
 
 	/**
 	 * @param <T>
@@ -84,15 +85,15 @@ final class AssertHelper{
 	 * @param map
 	 * @return
 	 */
-	static <T extends ProgramElementDoc> String mostrar(String titulo, Map<String, T> map){
-		StringBuffer buff = new StringBuffer(titulo);
-		for(Map.Entry< String, T> entry: map.entrySet()){
-			buff.append("\n[");
-			buff.append(entry.getValue().position().line());
-			buff.append(':');
-			buff.append(entry.getValue().position().column());
-			buff.append("] ");
-			buff.append(entry.getKey());
+	static <T extends ProgramElementDoc>String mostrar( String titulo, Map<String, T> map ){
+		StringBuffer buff = new StringBuffer( titulo );
+		for( Map.Entry<String, T> entry: map.entrySet() ){
+			buff.append( "\n[" );
+			buff.append( entry.getValue().position().line() );
+			buff.append( ':' );
+			buff.append( entry.getValue().position().column() );
+			buff.append( "] " );
+			buff.append( entry.getKey() );
 		}
 		return buff.toString();
 	}
@@ -103,11 +104,11 @@ final class AssertHelper{
 	 * @param collection Collection<String>
 	 * @return String
 	 */
-	static String mostrar(String titulo, Collection<String> collection){
-		StringBuffer buff = new StringBuffer(titulo);
-		for(String entry: collection){
-			buff.append('\n');
-			buff.append(entry);
+	static String mostrar( String titulo, Collection<String> collection ){
+		StringBuffer buff = new StringBuffer( titulo );
+		for( String entry: collection ){
+			buff.append( '\n' );
+			buff.append( entry );
 		}
 		return buff.toString();
 	}
@@ -121,18 +122,22 @@ final class Utils{
 	
 	/**
 	 */
-	interface Filter<T>{
+	interface Filter <T>{
 		/**
 		 * Method validate.
 		 * @param t T
 		 * @return boolean
 		 */
-		boolean validate(T t);
+		boolean validate( T t );
 	}
 	
+	interface Taglet{
+		void apply( String text, StringBuilder builder );
+	}
+
 	/**
 	 */
-	static class DocFilter<T extends ProgramElementDoc> implements Filter<T>{
+	static class DocFilter <T extends ProgramElementDoc> implements Filter<T>{
 
 		SourcePosition classPosition;
 		
@@ -145,6 +150,46 @@ final class Utils{
 			SourcePosition docPosition = doc.position();
 			return docPosition != null && ( docPosition.line() != classPosition.line() || docPosition.column() != classPosition.column());
 		}
+	}
+	
+	private static final Map<String, Taglet> taglets;
+	
+	static{
+		taglets = new HashMap<String, Taglet>();
+		taglets.put( "@value", new Taglet(){
+			@Override
+			public void apply( String text, StringBuilder builder ){
+				//FIXME obtener valor mediante reflexion.
+				builder.append( "{ En proceso: Valor de " );
+				builder.append( text );
+				builder.append( "!! }" );
+			}
+		});
+		taglets.put( "@code", new Taglet(){
+			@Override
+			public void apply( String text, StringBuilder builder ){
+				builder.append( "<code>" );
+				builder.append( text );
+				builder.append( "</code>" );
+				
+			}
+		});
+		taglets.put( "@link", new Taglet(){
+			@Override
+			public void apply( String text, StringBuilder builder ){
+				StringTokenizer tokens = new StringTokenizer( text );
+				builder.append( "<a href=\"" );
+				String t = tokens.nextToken();
+				builder.append( t );
+				builder.append( "\">" );
+				if( tokens.hasMoreElements() )
+					builder.append( text.substring( t.length() + 1 ) );
+				else
+					builder.append( t );
+				builder.append( "</a>" );
+			}
+		});
+		taglets.put( "@linkplain", taglets.get( "@link" ) );
 	}
 	
 	private static final DocFilter<ProgramElementDoc> DocsFilter = new DocFilter<ProgramElementDoc>();
@@ -238,34 +283,32 @@ final class Utils{
 	 * @throws ClassNotFoundException
 	 */
 	static Class<?> find(ClassDoc classDoc) throws ClassNotFoundException{
-		if( classDoc.containingClass() == null)
+		if( classDoc.containingClass() == null )
 			return Class.forName( classDoc.qualifiedName(), false, Utils.getClassLoader() );
-		
+
 		ClassDoc containing = classDoc;
 		do{
 			containing = containing.containingClass();
-		}while(containing.containingClass() != null);
-		
-		
+		}while( containing.containingClass() != null );
+
 		Class<?> containingClass = Class.forName( containing.qualifiedName(), false, Utils.getClassLoader() );
-		
+
 		return find( containingClass, classDoc.qualifiedName() );
 	}
 	
 	private static Collection<Type> getHierarchy(Class<?> clazz){
 		Deque<Type> hierarchy = new ArrayDeque<Type>();
 		Type superClass = clazz.getGenericSuperclass();
-		while( superClass != null && !superClass.equals(Object.class) ){
+		while( superClass != null && !superClass.equals( Object.class ) ){
 			if( superClass instanceof Class<?> ){
-				hierarchy.offerFirst(superClass);
-				superClass = ((Class<?>)superClass).getGenericSuperclass();
-			}else if ( superClass instanceof ParameterizedType){
-				Type rawType = ((ParameterizedType)superClass).getRawType();
-				if( !rawType.equals(Enum.class) )
-					hierarchy.offerFirst(superClass);
-				superClass = ((Class<?>)rawType).getGenericSuperclass();
-			}
-			else
+				hierarchy.offerFirst( superClass );
+				superClass = ( (Class<?>)superClass ).getGenericSuperclass();
+			}else if( superClass instanceof ParameterizedType ){
+				Type rawType = ( (ParameterizedType)superClass ).getRawType();
+				if( !rawType.equals( Enum.class ) )
+					hierarchy.offerFirst( superClass );
+				superClass = ( (Class<?>)rawType ).getGenericSuperclass();
+			}else
 				superClass = null;
 		}
 		return hierarchy;
@@ -278,8 +321,8 @@ final class Utils{
 	 */
 	static Collection<SimpleClassBinding> getHierarchyBinding(Class<?> clazz){
 		Deque<SimpleClassBinding> hierarchy = new ArrayDeque<SimpleClassBinding>();
-		for(Type type: getHierarchy(clazz))
-			hierarchy.offer( SimpleClassBinding.from(type) );
+		for( Type type: getHierarchy( clazz ) )
+			hierarchy.offer( SimpleClassBinding.from( type ) );
 
 		return hierarchy;
 	}
@@ -293,7 +336,7 @@ final class Utils{
 		Deque<SimpleClassBinding> enclosingClasses = new ArrayDeque<SimpleClassBinding>();
 		Class<?> enclosingClass = clazz.getEnclosingClass();
 		while( enclosingClass != null ){
-			enclosingClasses.offerFirst( SimpleClassBinding.from(enclosingClass) );
+			enclosingClasses.offerFirst( SimpleClassBinding.from( enclosingClass ) );
 			enclosingClass = enclosingClass.getEnclosingClass();
 		}
 		return enclosingClasses;
@@ -306,21 +349,63 @@ final class Utils{
 	 */
 	static Collection<SimpleClassBinding> getImplementedInterfaces(Class<?> clazz){
 		Deque<SimpleClassBinding> interfaces = new ArrayDeque<SimpleClassBinding>();
-		for(Type parent: getHierarchy(clazz)){
+		for( Type parent: getHierarchy( clazz ) ){
 			Class<?> superClass = null;
 			if( parent instanceof Class<?> )
 				superClass = (Class<?>)parent;
-			else if ( parent instanceof ParameterizedType)
-				superClass = (Class<?>)((ParameterizedType)parent).getRawType();
-			
-			for(Type implementedInterface: superClass.getGenericInterfaces())
-				if( !interfaces.contains(implementedInterface))
-					interfaces.offerLast( SimpleClassBinding.from(implementedInterface) );
+			else if( parent instanceof ParameterizedType )
+				superClass = (Class<?>)( (ParameterizedType)parent ).getRawType();
+
+			for( Type implementedInterface: superClass.getGenericInterfaces() )
+				if( !interfaces.contains( implementedInterface ) )
+					interfaces.offerLast( SimpleClassBinding.from( implementedInterface ) );
 		}
-		for(Type implementedInterface: clazz.getGenericInterfaces())
-			if( !interfaces.contains(implementedInterface))
-				interfaces.offerLast( SimpleClassBinding.from(implementedInterface) );
+		for( Type implementedInterface: clazz.getGenericInterfaces() )
+			if( !interfaces.contains( implementedInterface ) )
+				interfaces.offerLast( SimpleClassBinding.from( implementedInterface ) );
 		return interfaces;
+	}
+	
+	private static void appendDocumentation( Tag tags[], StringBuilder builder ){
+		if( tags == null || tags.length == 0 )
+			return;
+		for( Tag iTag: tags ){
+			String text = iTag.text();
+			if( text != null ){
+				Taglet t = taglets.get( iTag.name() );
+				if( t != null)
+					t.apply( text, builder );
+				else
+					builder.append( text );
+			}
+		}
+	}
+	
+	static String getDocumentation( Doc doc ){
+		if( doc == null )
+			return null;
+		
+		StringBuilder builder = new StringBuilder();
+		appendDocumentation( doc.inlineTags(), builder );
+		return builder.toString();
+	}
+	
+	static String getDocumentation( Tag tag ){
+		if( tag == null )
+			return null;
+		StringBuilder builder = new StringBuilder();
+		appendDocumentation( tag.inlineTags(), builder );
+		return builder.toString();
+	}
+	
+	static String getDocumentation( Tag[] tags ){
+		if( tags == null || tags.length == 0 )
+			return null;
+
+		StringBuilder builder = new StringBuilder();
+		for( Tag tag: tags )
+			appendDocumentation( tag.inlineTags(), builder );
+		return builder.toString();
 	}
 	
 	/**
@@ -328,7 +413,7 @@ final class Utils{
 	 * @param doc Doc
 	 * @return Collection<LinkBinding>
 	 */
-	static Collection<LinkBinding> getLinks(Doc doc){
+	static Collection<LinkBinding> getLinks( Doc doc ){
 		if(doc == null)
 			return null;
 		SeeTag[] tags = doc.seeTags();
@@ -340,15 +425,15 @@ final class Utils{
 		return links;
 	}
 	
-	private static ParamTag[] fileterTypeParameters(Tag[] tags){
+	private static ParamTag[] fileterTypeParameters( Tag[] tags ){
 		Collection<Tag> typeParameters = new ArrayDeque<Tag>();
-		for(Tag tag: tags )
-			if( (tag instanceof ParamTag) && ((ParamTag)tag).isTypeParameter())
-				typeParameters.add(tag);
+		for( Tag tag: tags )
+			if( ( tag instanceof ParamTag ) && ( (ParamTag)tag ).isTypeParameter() )
+				typeParameters.add( tag );
 		int size = typeParameters.size();
 		if( size == 0 )
 			return new ParamTag[0];
-		return typeParameters.toArray(new ParamTag[size]);
+		return typeParameters.toArray( new ParamTag[size] );
 	}
 
 	/**
@@ -357,17 +442,17 @@ final class Utils{
 	 * @param doc Doc
 	 * @return Collection<TypeParamBinding>
 	 */
-	static Collection<TypeParamBinding> getTypeParams( GenericDeclaration generic, Doc doc){
+	static Collection<TypeParamBinding> getTypeParams( GenericDeclaration generic, Doc doc ){
 		TypeVariable<?>[] types = generic.getTypeParameters();
-		if(types.length == 0)
+		if( types.length == 0 )
 			return null;
-		Collection<TypeParamBinding>  parameters= new ArrayDeque<TypeParamBinding>();
-		ParamTag[] tags = doc != null ? fileterTypeParameters(doc.tags("@param")): null;
+		Collection<TypeParamBinding> parameters = new ArrayDeque<TypeParamBinding>();
+		ParamTag[] tags = doc != null ? fileterTypeParameters( doc.tags( "@param" ) ): null;
 		if( tags == null || tags.length != types.length )
-			for(TypeVariable<?> type: types)
+			for( TypeVariable<?> type: types )
 				parameters.add( new TypeParamBinding( type ) );
 		else{
-			for( int i= 0, len = types.length; i < len; i++ )
+			for( int i = 0, len = types.length; i < len; i++ )
 				parameters.add( new TypeParamBinding( types[i], tags[i] ) );
 		}
 		return parameters;
@@ -379,20 +464,20 @@ final class Utils{
 	 * @param classDoc ClassDoc
 	 * @return Collection<ConstantBinding>
 	 */
-	static Collection<ConstantBinding> getConstants( Class<?> clazz, ClassDoc classDoc ) {
+	static Collection<ConstantBinding> getConstants( Class<?> clazz, ClassDoc classDoc ){
 		Deque<ConstantBinding> constants = new ArrayDeque<ConstantBinding>();
-		if(classDoc == null) {
-			for(Object constant: clazz.getEnumConstants())
-				constants.offerLast( new ConstantBinding(constant.toString() ) );
-		} else {
-			Map<String, FieldDoc> map = new TreeMap<String, FieldDoc>(Strings.CaseSensitiveComparator);
-			for(FieldDoc field: classDoc.fields())
+		if( classDoc == null ){
+			for( Object constant: clazz.getEnumConstants() )
+				constants.offerLast( new ConstantBinding( constant.toString() ) );
+		}else{
+			Map<String, FieldDoc> map = new TreeMap<String, FieldDoc>( Strings.CaseSensitiveComparator );
+			for( FieldDoc field: classDoc.fields() )
 				map.put( field.name(), field );
-			for(Object constant: clazz.getEnumConstants()){
-				FieldDoc field = map.remove(constant.toString());
+			for( Object constant: clazz.getEnumConstants() ){
+				FieldDoc field = map.remove( constant.toString() );
 				if( field != null )
-					constants.offerLast( new ConstantBinding(constant.toString(), field ) );
-				assert( field != null ): "!!!Documentacion no encontrada para: " + constant.toString();
+					constants.offerLast( new ConstantBinding( constant.toString(), field ) );
+				assert ( field != null ): "!!!Documentacion no encontrada para: " + constant.toString();
 			}
 		}
 		return constants;
@@ -404,28 +489,28 @@ final class Utils{
 	 * @param classDoc ClassDoc
 	 * @return Collection<FieldBinding>
 	 */
-	static Collection<FieldBinding> getFields( Class<?> clazz, ClassDoc classDoc ) {
+	static Collection<FieldBinding> getFields( Class<?> clazz, ClassDoc classDoc ){
 		//TODO Ordenar
 		Deque<FieldBinding> fields = new ArrayDeque<FieldBinding>();
-		if(classDoc == null) {
-			for(Field field: clazz.getDeclaredFields())
-				if( FieldsFilter.validate(field) )
+		if( classDoc == null ){
+			for( Field field: clazz.getDeclaredFields() )
+				if( FieldsFilter.validate( field ) )
 					fields.offer( new FieldBinding( field, null ) );
-		} else {
-			Map<String, FieldDoc> map = new TreeMap<String,FieldDoc>(Strings.CaseSensitiveComparator);
+		}else{
+			Map<String, FieldDoc> map = new TreeMap<String, FieldDoc>( Strings.CaseSensitiveComparator );
 			DocsFilter.classPosition = classDoc.position();
-			for(FieldDoc field: classDoc.fields()){
-				if( DocsFilter.validate(field) )
+			for( FieldDoc field: classDoc.fields() ){
+				if( DocsFilter.validate( field ) )
 					map.put( field.name(), field );
 			}
-			for(Field field: clazz.getDeclaredFields()){
-				if( FieldsFilter.validate(field) ){
-					FieldDoc doc = map.remove(field.getName());
-					assert( doc != null ): "!!!Documentacion no encontrada para: " + field.getName();
+			for( Field field: clazz.getDeclaredFields() ){
+				if( FieldsFilter.validate( field ) ){
+					FieldDoc doc = map.remove( field.getName() );
+					assert ( doc != null ): "!!!Documentacion no encontrada para: " + field.getName();
 					fields.offer( new FieldBinding( field, doc ) );
 				}
 			}
-//			assert( map.size() == 0 ): mostrar("!!!Documentacion sobrante:", map);
+			//			assert( map.size() == 0 ): mostrar("!!!Documentacion sobrante:", map);
 		}
 		return fields;
 	}
@@ -436,35 +521,35 @@ final class Utils{
 	 * @param classDoc ClassDoc
 	 * @return Collection<ConstructorBinding>
 	 */
-	static Collection<ConstructorBinding> getConstructors( Class<?> clazz, ClassDoc classDoc ) {
+	static Collection<ConstructorBinding> getConstructors( Class<?> clazz, ClassDoc classDoc ){
 		//TODO Ordenar
 		Deque<ConstructorBinding> constructors = new ArrayDeque<ConstructorBinding>();
-		if(classDoc == null) {
-			for(Constructor<?> constructor: clazz.getDeclaredConstructors())
-				if( ConstructorsFilter.validate(constructor) )
-					constructors.add( new ConstructorBinding( constructor, null) );
-		} else {
+		if( classDoc == null ){
+			for( Constructor<?> constructor: clazz.getDeclaredConstructors() )
+				if( ConstructorsFilter.validate( constructor ) )
+					constructors.add( new ConstructorBinding( constructor, null ) );
+		}else{
 			DocsFilter.classPosition = classDoc.position();
-			Map<String, ConstructorDoc> map = new TreeMap<String, ConstructorDoc>(Strings.CaseSensitiveComparator);
-			for(ConstructorDoc doc: classDoc.constructors()){
-				if( DocsFilter.validate(doc) )
+			Map<String, ConstructorDoc> map = new TreeMap<String, ConstructorDoc>( Strings.CaseSensitiveComparator );
+			for( ConstructorDoc doc: classDoc.constructors() ){
+				if( DocsFilter.validate( doc ) )
 					map.put( Adapter.toString( doc ), doc );
 			}
 			Collection<String> undocumented = new ArrayDeque<String>();
-			for(Constructor<?> constructor: clazz.getDeclaredConstructors()){
-				if( ConstructorsFilter.validate(constructor) ){
+			for( Constructor<?> constructor: clazz.getDeclaredConstructors() ){
+				if( ConstructorsFilter.validate( constructor ) ){
 					ConstructorDoc doc = map.remove( Adapter.toString( constructor ) );
 					if( doc == null )
 						doc = map.remove( Adapter.toString( constructor, true ) );
 					if( doc != null )
 						constructors.offer( new ConstructorBinding( constructor, doc ) );
-					else 
+					else
 						undocumented.add( Adapter.toString( constructor ) );
 				}
 			}
-			assert( map.size() == 0 ): "!!!Error en "+classDoc.name() + ":\n" + 
-				AssertHelper.mostrar("Elementos indocumentados:",undocumented) + "\n" +
-				AssertHelper.mostrar("Documentacion sobrante :", map);
+			assert ( map.size() == 0 ): "!!!Error en " + classDoc.name() + ":\n"
+					+ AssertHelper.mostrar( "Elementos indocumentados:", undocumented ) + "\n"
+					+ AssertHelper.mostrar( "Documentacion sobrante :", map );
 		}
 		return constructors;
 	}
@@ -475,16 +560,16 @@ final class Utils{
 	 * @param classDoc ClassDoc
 	 * @return Collection<MethodBinding>
 	 */
-	static Collection<MethodBinding> getMethods( Class<?> clazz, ClassDoc classDoc ) {
+	static Collection<MethodBinding> getMethods( Class<?> clazz, ClassDoc classDoc ){
 		//TODO Ordenar
-		final Filter<Method> filter = clazz.isEnum() ? EnumMethodsFilter : MethodsFilter;
-	
+		final Filter<Method> filter = clazz.isEnum() ? EnumMethodsFilter: MethodsFilter;
+
 		Deque<MethodBinding> methods = new ArrayDeque<MethodBinding>();
-		if(classDoc == null) {
-			for(Method method: clazz.getDeclaredMethods())
-				if( filter.validate(method) )
-					methods.offer( new MethodBinding( method, null) );
-		} else {
+		if( classDoc == null ){
+			for( Method method: clazz.getDeclaredMethods() )
+				if( filter.validate( method ) )
+					methods.offer( new MethodBinding( method, null ) );
+		}else{
 			final DocFilter<? super MethodDoc> filterDoc;
 			if( clazz.isEnum() )
 				filterDoc = EnumMethodsDocFilter;
@@ -492,57 +577,35 @@ final class Utils{
 				filterDoc = DocsFilter;
 
 			filterDoc.classPosition = classDoc.position();
-			
-			Map<String, MethodDoc> map = 
-				new TreeMap<String, MethodDoc>(Strings.CaseSensitiveComparator);
-			for(MethodDoc doc: classDoc.methods()){
-				if( filterDoc.validate(doc) )
+
+			Map<String, MethodDoc> map = new TreeMap<String, MethodDoc>( Strings.CaseSensitiveComparator );
+			for( MethodDoc doc: classDoc.methods() ){
+				if( filterDoc.validate( doc ) )
 					map.put( Adapter.toString( doc ), doc );
 			}
 			Collection<String> undocumented = new ArrayDeque<String>();
-			for(Method method: clazz.getDeclaredMethods()){
-				if( filter.validate(method) ){
+			for( Method method: clazz.getDeclaredMethods() ){
+				if( filter.validate( method ) ){
 					MethodDoc doc = map.remove( Adapter.toString( method ) );
 					if( doc != null )
 						methods.offer( new MethodBinding( method, doc ) );
-					else 
+					else
 						undocumented.add( Adapter.toString( method ) );
 				}
 			}
-			assert( map.size() == 0 ):
-				"!!!Error en " + classDoc.name() + ":\n" +
-				AssertHelper.mostrar("Elementos indocumentados:",undocumented) + "\n" +
-				AssertHelper.mostrar("Documentacion sobrante :", map);
+			assert ( map.size() == 0 ): "!!!Error en " + classDoc.name() + ":\n"
+					+ AssertHelper.mostrar( "Elementos indocumentados:", undocumented ) + "\n"
+					+ AssertHelper.mostrar( "Documentacion sobrante :", map );
 		}
 		return methods;
 	}
 	
-	private static <T extends Tag> T getTag(T[] tags, int index){
+	private static <T extends Tag>T getTag( T[] tags, int index ){
 		try{
 			return tags[index];
-		}catch(ArrayIndexOutOfBoundsException e){
+		}catch( ArrayIndexOutOfBoundsException e ){
 			return null;
 		}
-	}
-	
-	/**
-	 * Method concatComments.
-	 * @param tags Tag[]
-	 * @return String
-	 */
-	static String concatComments(Tag[] tags){
-		if (tags == null || tags.length == 0)
-			return null;
-
-		StringBuilder builder = new StringBuilder();
-		for (Tag returnTag : tags) {
-			String returnTagText = returnTag.text();
-			if (returnTagText != null) {
-				builder.append(returnTagText);
-				builder.append('\n');
-			}
-		}
-		return builder.substring(0, builder.length() - 1);
 	}
 	
 	/**
@@ -551,28 +614,28 @@ final class Utils{
 	 * @param doc ExecutableMemberDoc
 	 * @return Collection<ParameterBinding>
 	 */
-	static <T extends AccessibleObject & GenericDeclaration> 
-	Collection<ParameterBinding> getParams(T command, ExecutableMemberDoc doc){
+	static <T extends AccessibleObject & GenericDeclaration>
+	Collection<ParameterBinding> getParams( T command, ExecutableMemberDoc doc ){
 		
 		Type[] types = null;
-		if(command instanceof Constructor<?>)
-			types = ((Constructor<?>)command).getGenericParameterTypes();
-		else if (command instanceof Method)
-			types =	((Method)command).getGenericParameterTypes();
-		
-		if(types == null || types.length == 0)
+		if( command instanceof Constructor<?> )
+			types = ( (Constructor<?>)command ).getGenericParameterTypes();
+		else if( command instanceof Method )
+			types = ( (Method)command ).getGenericParameterTypes();
+
+		if( types == null || types.length == 0 )
 			return null;
-		
-		Collection<ParameterBinding>  parameters= new ArrayDeque<ParameterBinding>();
-		
-		if(doc == null)
-			for(Type type: types)
+
+		Collection<ParameterBinding> parameters = new ArrayDeque<ParameterBinding>();
+
+		if( doc == null )
+			for( Type type: types )
 				parameters.add( new ParameterBinding( type ) );
 		else{
 			ParamTag[] tags = doc.paramTags();
 			int offset = types.length - doc.parameters().length; //Offset ignora Synthetic accesor 
-			assert(offset >= 0): "!!writtenBytes:"+offset;
-			for(int i= offset, j=0, len = types.length; i < len; i++, j++)
+			assert ( offset >= 0 ): "!!writtenBytes:" + offset;
+			for( int i = offset, j = 0, len = types.length; i < len; i++, j++ )
 				parameters.add( new ParameterBinding( types[i], getTag( tags, j ) ) );
 		}
 		return parameters;
@@ -761,9 +824,14 @@ abstract class DocumentedType {
 	 * @param type String
 	 * @param documentation String
 	 */
-	DocumentedType(String type, String documentation){
+	DocumentedType( String type, Tag tag ){
 		this.type = type;
-		this.documentation = documentation;
+		this.documentation =  Utils.getDocumentation( tag );
+	}
+	
+	DocumentedType( String type, Tag[] tags ){
+		this.type = type;
+		this.documentation =  Utils.getDocumentation( tags );
 	}
 }
 
@@ -785,55 +853,55 @@ class TypeParamBinding extends DocumentedType{
 	 * @param tag ParamTag
 	 */
 	TypeParamBinding(TypeVariable<?> type, ParamTag tag){
-		super( Adapter.toString(type), tag != null ? tag.parameterComment(): null );
+		super( Adapter.toString(type), tag );
 	}
 }
 
 /**
  */
 class ParameterBinding extends DocumentedType{
-	
+
 	final String name;
-	
+
 	/**
 	 * Constructor for ParameterBinding.
 	 * @param type Type
 	 */
-	ParameterBinding(Type type){
-		super( Adapter.toString(type) );
+	ParameterBinding( Type type ){
+		super( Adapter.toString( type ) );
 		this.name = null;
 	}
-	
+
 	/**
 	 * Constructor for ParameterBinding.
 	 * @param type Type
 	 * @param tag ParamTag
 	 */
-	ParameterBinding(Type type, ParamTag tag){
-		super(Adapter.toString(type), tag != null ? tag.parameterComment(): null );
-		this.name =	tag != null ? tag.parameterName(): null;
+	ParameterBinding( Type type, ParamTag tag ){
+		super( Adapter.toString( type ), tag );
+		this.name = tag != null ? tag.parameterName(): null;
 	}
 }
 
 /**
  */
 class ReturnTypeBinding extends DocumentedType{
-	
+
 	/**
 	 * Constructor for ReturnTypeBinding.
 	 * @param type Type
 	 */
-	ReturnTypeBinding(Type type){
-		super( Adapter.toString(type) );
+	ReturnTypeBinding( Type type ){
+		super( Adapter.toString( type ) );
 	}
-	
+
 	/**
 	 * Constructor for ReturnTypeBinding.
 	 * @param type Type
 	 * @param tags Tag[]
 	 */
-	ReturnTypeBinding(Type type, Tag[] tags){
-		super(	Adapter.toString(type), Utils.concatComments(tags) );
+	ReturnTypeBinding( Type type, Tag[] tags ){
+		super( Adapter.toString( type ), tags );
 	}
 }
 
@@ -845,17 +913,17 @@ class ExceptionBinding extends DocumentedType{
 	 * Constructor for ExceptionBinding.
 	 * @param type Type
 	 */
-	ExceptionBinding(Type type){
-		super( Adapter.toString(type) );
+	ExceptionBinding( Type type ){
+		super( Adapter.toString( type ) );
 	}
-	
+
 	/**
 	 * Constructor for ExceptionBinding.
 	 * @param type Type
 	 * @param tag ThrowsTag
 	 */
-	ExceptionBinding(Type type, ThrowsTag tag){
-		super(	Adapter.toString(type), tag != null ? tag.exceptionComment(): null );
+	ExceptionBinding( Type type, ThrowsTag tag ){
+		super( Adapter.toString( type ), tag );
 	}
 }
 
@@ -869,7 +937,7 @@ class LinkBinding{
 	 * Constructor for LinkBinding.
 	 * @param link String
 	 */
-	LinkBinding(String link){
+	LinkBinding( String link ){
 		this.link = link;
 	}
 }
@@ -881,24 +949,24 @@ abstract class DocumentedElement {
 	final String name;
 	final String documentation;
 	final Collection<LinkBinding> links;
-	
+
 	/**
 	 * Constructor for DocumentedElement.
 	 * @param name String
 	 * @param doc Doc
 	 */
-	DocumentedElement(String name, Doc doc){
+	DocumentedElement( String name, Doc doc ){
 		this.name = name;
-		this.documentation = doc != null ? doc.commentText(): null;
-		this.links = Utils.getLinks(doc);
+		this.documentation = Utils.getDocumentation( doc );
+		this.links = Utils.getLinks( doc );
 	}
-	
+
 	/**
 	 * Constructor for DocumentedElement.
 	 * @param name String
 	 */
-	DocumentedElement(String name){
-		this(name, null);
+	DocumentedElement( String name ){
+		this( name, null );
 	}
 }
 
@@ -910,8 +978,8 @@ class ConstantBinding extends DocumentedElement{
 	 * Constructor for ConstantBinding.
 	 * @param name String
 	 */
-	ConstantBinding(String name) {
-		super(name);
+	ConstantBinding( String name ){
+		super( name );
 	}
 
 	/**
@@ -919,7 +987,7 @@ class ConstantBinding extends DocumentedElement{
 	 * @param name String
 	 * @param doc FieldDoc
 	 */
-	ConstantBinding(String name, FieldDoc doc) {
+	ConstantBinding( String name, FieldDoc doc ){
 		super( name, doc );
 	}
 }
@@ -931,28 +999,27 @@ class FieldBinding extends DocumentedElement{
 	final Visibility visibility;
 	final int modifiers;
 	final String type;
-	
+
 	/**
 	 * Constructor for FieldBinding.
 	 * @param field Field
 	 * @param doc FieldDoc
 	 */
 	FieldBinding( Field field, FieldDoc doc ){
-		super( 	field.getName(), doc );
+		super( field.getName(), doc );
 		this.modifiers = field.getModifiers();
-		this.visibility = Visibility.fromModifiers(modifiers);
-		this.type = Adapter.toString(field.getGenericType());
+		this.visibility = Visibility.fromModifiers( modifiers );
+		this.type = Adapter.toString( field.getGenericType() );
 	}
-	
 }
 
 /**
  */
 abstract class CommandBinding extends DocumentedElement{
 
-	private static String getName(Member d){
+	private static String getName( Member d ){
 		return d instanceof Constructor<?> ?
-				((Constructor<?>)d).getDeclaringClass().getSimpleName():
+				( (Constructor<?>)d ).getDeclaringClass().getSimpleName():
 				d.getName();
 	}
 	
@@ -967,13 +1034,13 @@ abstract class CommandBinding extends DocumentedElement{
 	 * @param doc ExecutableMemberDoc
 	 */
 	<T extends AccessibleObject & Member & GenericDeclaration>
-	CommandBinding(T command, ExecutableMemberDoc doc){
-		super( getName(command), doc );
+	CommandBinding( T command, ExecutableMemberDoc doc ){
+		super( getName( command ), doc );
 		this.visibility = Visibility.fromModifiers( command.getModifiers() );
-		
-		typeParams = Utils.getTypeParams(command, doc);
-		params = Utils.getParams(command, doc);
-		exceptions = Utils.getExceptions(command, doc);
+
+		typeParams = Utils.getTypeParams( command, doc );
+		params = Utils.getParams( command, doc );
+		exceptions = Utils.getExceptions( command, doc );
 	}
 }
 
@@ -995,8 +1062,8 @@ class ConstructorBinding extends CommandBinding{
 class MethodBinding extends CommandBinding{
 
 	private static MethodDoc checkOverride( MethodDoc doc ){
-		if( doc != null && doc.overriddenMethod() != null && doc.getRawCommentText().length() == 0)
-			doc.setRawCommentText("@see " + doc.overriddenClass().qualifiedTypeName() +"#"+Adapter.toString(doc));
+		if( doc != null && doc.overriddenMethod() != null && doc.getRawCommentText().length() == 0 )
+			doc.setRawCommentText( "@see " + doc.overriddenClass().qualifiedTypeName() + "#" + Adapter.toString( doc ) );
 		return doc;
 	}
 	

@@ -123,10 +123,8 @@ public class GenerateImages {
 		String rootPath = root.getCanonicalPath();
 
 		ClassLoader classLoader = ClassLoaderTools.getLoader(
-				"/media/DATA/Samuel/Proyectos/jspacewars/",
-				"lib/ext/vecmath.jar:lib/gluegen-rt.jar:lib/jogl.jar:" +
-				"lib/FengGUI.jar:lib/xstream-1.3.jar:lib/ibxm-alpha51.jar:" +
-				"lib/jogg-0.0.7.jar:lib/jorbis-0.0.15.jar:bin"
+				"/media/DATA/Samuel/Proyectos/jspacewars/bin",
+				"/media/DATA/Samuel/Proyectos/jspacewars/lib"
 		);
 	
 		SortedSet<Class<?>> packageInterfacesSet = new TreeSet<Class<?>>( COMPARADOR_DE_INTERFACES );

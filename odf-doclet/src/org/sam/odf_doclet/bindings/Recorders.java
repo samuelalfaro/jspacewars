@@ -21,13 +21,14 @@
  */
 package org.sam.odf_doclet.bindings;
 
-import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.Map;
 
 import org.htmlcleaner.CleanerProperties;
+import org.htmlcleaner.ContentNode;
 import org.htmlcleaner.HtmlCleaner;
-import org.htmlcleaner.PrettyXmlSerializer;
+import org.htmlcleaner.TagNode;
 import org.sam.xml.Recorder;
 import org.sam.xml.RecordersMapper;
 import org.sam.xml.XMLConverter;
@@ -68,8 +69,7 @@ public class Recorders {
 		}
 	}
 	
-	private static final HtmlCleaner cleaner;
-	private static final PrettyXmlSerializer serializer;
+	private static final HtmlCleaner HTML_CLEANER;
 	    
 	static{
 		CleanerProperties  props = new CleanerProperties();
@@ -78,23 +78,54 @@ public class Recorders {
 		props.setTransResCharsToNCR(true);
 		props.setOmitComments(true);
 		
-		cleaner = new HtmlCleaner(props);
-		serializer = new PrettyXmlSerializer(props);
+		HTML_CLEANER = new HtmlCleaner(props);
 	}
 	
-	/**
-	 * Method clean.
-	 * @param s String
-	 * @return String
-	 */
+	static void toStringRecursive( TagNode node, StringBuffer buff ){
+		for( Object item: node.getChildren() ){
+			if( item instanceof ContentNode ){
+				buff.append( item.toString() );
+			}else if( item instanceof TagNode ){
+				TagNode tagNode = (TagNode)item;
+				String nodeName = tagNode.getName();
+				buff.append( '<' );
+				buff.append( nodeName );
+				Map<String, String> att = tagNode.getAttributes();
+				for( String name: att.keySet() ){
+					buff.append( ' ' );
+					buff.append( name );
+					buff.append( "=\"" );
+					buff.append( att.get( name ) );
+					buff.append( "\"" );
+				}
+				if( !tagNode.hasChildren() )
+					buff.append( " />" );
+				else{
+					buff.append( '>' );
+					toStringRecursive( tagNode, buff );
+					buff.append( "</" );
+					buff.append( nodeName );
+					buff.append( '>' );
+				}
+			}
+		}
+	}
+	
+	private static String toString( TagNode node ){
+		StringBuffer buff = new StringBuffer();
+		for( Object item: node.getChildren() ){
+			if( item instanceof TagNode ){
+				if( ((TagNode)item).getName().equals( "body" ) )
+					toStringRecursive( (TagNode)item, buff );
+			}
+		}
+		return buff.toString();
+	}
+	
 	static String clean(String s){
 		if(s == null || s.length() == 0)
-			return s;
-		try {
-			return serializer.getAsString( cleaner.clean(s), true );
-		} catch (IOException e) {
-			return null;
-		}
+			return "";
+		return toString( HTML_CLEANER.clean(s) );
 	}
 	
 	private Recorders(){}

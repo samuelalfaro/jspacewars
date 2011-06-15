@@ -51,10 +51,11 @@ import com.sun.javadoc.RootDoc;
 
 /**
  */
-public class ODFDoclet {
+public final class ODFDoclet{
 	
 	static final Charset UTF8 = Charset.forName( "UTF-8" );
-	static final double scaleFactor = 1.0 / 120;
+	static final int dpi = 120;
+	static final double scaleFactor = 1.0;
 	
 	private static class ManifestGenerator{
 		
@@ -161,49 +162,6 @@ public class ODFDoclet {
 	}
 	
 	/**
-	 * Method optionLength.
-	 * @param option String
-	 * @return int
-	 */
-	public static int optionLength(String option) {
-		if (option.equalsIgnoreCase("-projectRootpath")) 
-			return 2;
-		if (option.equalsIgnoreCase("-projectClasspath"))
-			return 2;
-		return 0;
-	}
-	
-	/**
-	 * Method validOptions.
-	 * @param options String[][]
-	 * @param reporter DocErrorReporter
-	 * @return boolean
-	 */
-	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
-		
-		String projectRootpath  = null;
-		String projectClasspath = null;
-		
-		for(String[] option: options){
-			if(option[0].equalsIgnoreCase("-projectRootpath")){
-				if(projectRootpath != null){
-					reporter.printError("Only one -projectRootpath option allowed.");
-					return false;
-				}
-				projectRootpath = option[1];
-			}else if(option[0].equalsIgnoreCase("-projectClasspath")){
-				if(projectClasspath != null){
-					reporter.printError("Only one -projectClasspath option allowed.");
-					return false;
-				}
-				projectClasspath = option[1];
-			}
-		}
-		ClassBindingFactory.setClassLoader(ClassLoaderTools.getLoader( projectRootpath, projectClasspath ) );
-		return true;
-	}
-	
-	/**
 	 * Method generarODT.
 	 * @param platillaODT File
 	 * @param root RootDoc
@@ -211,8 +169,6 @@ public class ODFDoclet {
 	 */
 	public static void generarODT( InputStream plantilla, File resultFile, RootDoc root ) throws IOException{
 		
-		final int dpi = 120;
-
 		byte[] buf = new byte[4096];
 
 		ZipInputStream  zin = new ZipInputStream( new BufferedInputStream( plantilla ) );
@@ -248,7 +204,7 @@ public class ODFDoclet {
 			try{
 				content.addGraphic( 
 						pictName, pictPath,
-						PipeLine.toPNG( ClassBindingFactory.createBinding( classDoc ), scaleFactor * dpi, out ),
+						PipeLine.toPNG( ClassBindingFactory.createBinding( classDoc ), scaleFactor, out ),
 						dpi
 				);
 			}catch( ClassNotFoundException e ){
@@ -265,6 +221,25 @@ public class ODFDoclet {
 		out.write( manifest.getBytes() );
 		out.close();
 
+	}
+	
+	/**
+	 * Method optionLength.
+	 * @param option String
+	 * @return int
+	 */
+	public static int optionLength(String option) {
+		return DocletValidator.optionLength( option );
+	}
+	
+	/**
+	 * Method validOptions.
+	 * @param options String[][]
+	 * @param reporter DocErrorReporter
+	 * @return boolean
+	 */
+	public static boolean validOptions(String options[][], DocErrorReporter reporter) {
+		return DocletValidator.validOptions( options, reporter );
 	}
 	
 	/**

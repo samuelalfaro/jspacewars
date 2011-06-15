@@ -37,29 +37,52 @@ public class ClassLoaderTools {
 	
 	private ClassLoaderTools(){}
 
+	private static void addRecursiveJars( File dir, Collection<File> filePaths ){
+		for( File file: dir.listFiles() )
+			if( file.exists() ){
+				if( file.isDirectory() )
+					addRecursiveJars( file, filePaths );
+				else if( file.getName().endsWith( ".jar" ) && !filePaths.contains(file) )
+					filePaths.add( file );
+			}
+	}
+	
+	private static boolean isEmpty( String str ){
+		return ( str == null || str.length() == 0 );
+	}
+	
 	/**
-	 * Method getLoader.
-	 * @param rootpath String
-	 * @param classpath String
+	 * @param classpath
+	 * @param libpath
 	 * @return ClassLoader
 	 */
-	public static ClassLoader getLoader(String rootpath, String classpath){
+	public static ClassLoader getLoader( String classpath, String libpath ){
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		
-		if(classpath == null || classpath.length() == 0)
+		if( isEmpty( classpath ) && isEmpty( libpath ) )
 			return classLoader;
-		
-		if(rootpath == null)
-			rootpath = "";
-		
-		StringTokenizer paths = new StringTokenizer(classpath, ":;");
 
+		StringTokenizer paths;
 		Collection<File> filePaths = new ArrayDeque<File>();
-		while(paths.hasMoreTokens()){
-			File file = new File(rootpath+paths.nextToken());
-			if( file.exists() && !filePaths.contains(file)){
-				filePaths.add(file);
+		
+		if( !isEmpty( classpath ) ){
+			paths = new StringTokenizer(classpath, ":;");
+			while(paths.hasMoreTokens()){
+				File file = new File(paths.nextToken());
+				if( file.exists() && !filePaths.contains(file)){
+					filePaths.add(file);
+				}
+			}
+		}
+		
+		if( !isEmpty( libpath ) ){
+			paths = new StringTokenizer( libpath, ":;" );
+			while( paths.hasMoreTokens() ){
+				File file = new File( paths.nextToken() );
+				if( file.exists() && file.isDirectory() ){
+					addRecursiveJars( file, filePaths );
+				}
 			}
 		}
 

@@ -83,14 +83,13 @@ public class ClaseDePrueba<E> {
 		
 		/**
 		 * Documentacion del constructor {@code InerClass()}.
-		
-		
-		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla * @throws IOException exepción IO bla bla bla */
+		 * @throws IllegalArgumentException exepción lanzada cuando bla bla bla
+		 * @throws IOException exepción IO bla bla bla
+		 */
 		InerClass() throws IllegalArgumentException, IOException{
 			this(null,false);
 		}
 		
-
 		/* (non-Javadoc)
 		 * @see pruebas.ClaseDePrueba.InerClassAbs#metodo1(int)
 		 */
@@ -182,9 +181,11 @@ public class ClaseDePrueba<E> {
 	public InerClass a4[];
 	
 	/**
-	 * Documentación del constructor.
+	 * Documentación del constructor {@link java.lang.Math#sqrt(double) Math.sqrt}.
+	 * Con varias líneas de 
+	 * comentarios. Bla bla bla {@value 4} bla {@linkplain www.wikipedia.es} bla {@code a, b, c}.
 	 * @param parametro1 primer {@code a, b, c} argumento.<br/>
-	 * sigue el comentario en otra lista {@linkplain #metodo2(int)}.
+	 * sigue el comentario en otra lista {@linkplain #metodo2(pruebas.ClaseDePrueba.InerClassAbs.InerInerClass)}.
 	 * @param parametro2 segundo argumento.
 	 * @see #metodo1(int, float, Collection)
 	 */
@@ -196,8 +197,6 @@ public class ClaseDePrueba<E> {
 	 * @param a1 primer argumento.
 	 * @param a2 segundo argumento.
 	 * @param a3 tercer argumento.
-	
-	
 	 * @return
 	 * <ul><li>{@code true} si se cumple la condición.</li>
 	 * <li>{@code false} en caso contrario.</li></ul> */
