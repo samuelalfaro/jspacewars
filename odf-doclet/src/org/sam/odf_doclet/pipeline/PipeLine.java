@@ -65,7 +65,7 @@ class ToXML implements Pump{
 
 	ToXML(){
 		converter = new XMLConverter();
-		Recorders.register( converter );
+		Recorders.register( Recorders.Mode.XML, converter );
 	}
 	
 	/**

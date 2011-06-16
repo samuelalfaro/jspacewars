@@ -64,7 +64,7 @@ public final class XMLDoclet{
 		ClassDoc[] classes = root.classes();
 
 		XMLConverter converter = new XMLConverter();
-		Recorders.register( converter );
+		Recorders.register( Recorders.Mode.XML, converter );
 		converter.setWriter( new XMLWriter( System.out, true ) );
 
 		for( ClassDoc classDoc: classes )

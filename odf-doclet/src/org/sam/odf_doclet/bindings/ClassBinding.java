@@ -1186,7 +1186,7 @@ public abstract class ClassBinding extends DocumentedElement{
 	 * @param clazz Class<?>
 	 * @param classDoc ClassDoc
 	 */
-	ClassBinding( Class<?> clazz, ClassDoc classDoc ) {
-		super( Adapter.toString(clazz), classDoc );
+	ClassBinding( Class<?> clazz, ClassDoc classDoc ){
+		super( Adapter.toString( clazz ), classDoc );
 	}
 }
