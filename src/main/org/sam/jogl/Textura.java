@@ -132,20 +132,14 @@ public class Textura{
 	}
 
 	/**
-	 * Enumeración que contiene los valores que describen los distintos de modos <i>MagFilter</i> soportados.
+	 * Enumeración que contiene los valores que describen los distintos de modos <i>MinFilter</i> soportados.
 	 */
 	public enum MinFilter{
-		/**
-		 * Encapsula el valor GL_NEAREST.
-		 */
+		/** Encapsula el valor GL_NEAREST. */
 		NEAREST( GL.GL_NEAREST ),
-		/**
-		 * Encapsula el valor GL_LINEAR.
-		 */
+		/** Encapsula el valor GL_LINEAR.*/
 		LINEAR( GL.GL_LINEAR ),
-		/**
-		 * Encapsula el valor GL_LINEAR_MIPMAP_NEAREST.
-		 */
+		/** Encapsula el valor GL_LINEAR_MIPMAP_NEAREST. */
 		MIPMAP( GL.GL_LINEAR_MIPMAP_NEAREST );
 
 		/** Entero que almacena el valor encapsulado.*/
@@ -181,23 +175,18 @@ public class Textura{
 	 * Enumeración que contiene los valores que describen los distintos de modos <i>Wrap</i> soportados.
 	 */
 	public enum Wrap{
-		/**
-		 * Encapsula el valor GL_CLAMP.
-		 */
-		CLAMP( GL2.GL_CLAMP ),
-		/**
-		 * Encapsula el valor GL_REPEAT.
-		 */
-		REPEAT( GL.GL_REPEAT ),
-		/**
-		 * Encapsula el valor GL_CLAMP_TO_EDGE.
-		 */
-		CLAMP_TO_EDGE( GL.GL_CLAMP_TO_EDGE ),
-		/**
-		 * Encapsula el valor GL_CLAMP_TO_BORDER.
-		 */
-		CLAMP_TO_BORDER( GL2GL3.GL_CLAMP_TO_BORDER );
 
+		/** Encapsula el valor GL_REPEAT. */
+		REPEAT( GL.GL_REPEAT ),
+		/** Encapsula el valor GL_MIRRORED_REPEAT. */
+		MIRRORED_REPEAT( GL.GL_MIRRORED_REPEAT),
+		/** Encapsula el valor GL_CLAMP_TO_EDGE. */
+		CLAMP_TO_EDGE( GL.GL_CLAMP_TO_EDGE ),
+		/** Encapsula el valor GL_CLAMP. */
+		CLAMP( GL2.GL_CLAMP ),
+		/** Encapsula el valor GL_CLAMP_TO_BORDER. */
+		CLAMP_TO_BORDER( GL2GL3.GL_CLAMP_TO_BORDER );
+		
 		/** Entero que almacena el valor encapsulado.*/
 		final int value;
 

@@ -40,6 +40,7 @@ import java.util.Map;
 
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 
 import org.sam.elementos.Cache;
@@ -110,7 +111,6 @@ public class ExampleGameMenuJOGL {
 	}
 	
 	private static class ClientServer{
-		
 		Cliente cliente;
 		ServidorJuego server;
 		
@@ -122,7 +122,7 @@ public class ExampleGameMenuJOGL {
 		final ClientServer clientServer= new ClientServer();
 		
 		final DataGame dataGame = new DataGame();
-		GLCanvas splashCanvas = new GLCanvas(new GLCapabilities());
+		GLCanvas splashCanvas = new GLCanvas( new GLCapabilities( GLProfile.get( GLProfile.GL2 ) ) );
 
 		SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
 		splashWindow.setVisible(true);
