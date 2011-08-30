@@ -22,17 +22,11 @@
  */
 package org.sam.jspacewars;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.fenggui.Button;
 import org.fenggui.appearance.LabelAppearance;
 import org.fenggui.binding.render.Graphics;
-import org.fenggui.binding.render.IOpenGL;
 import org.fenggui.binding.render.ITexture;
-import org.fenggui.binding.render.ImageFont;
 import org.fenggui.binding.render.Pixmap;
-import org.fenggui.binding.render.text.DirectTextRenderer;
 import org.fenggui.binding.render.text.ITextRenderer;
 import org.fenggui.decorator.background.Background;
 import org.fenggui.decorator.background.PixmapBackground;
@@ -41,119 +35,91 @@ import org.fenggui.decorator.border.Border;
 import org.fenggui.decorator.border.PixmapBorder;
 import org.fenggui.decorator.border.PlainBorder;
 import org.fenggui.event.IButtonPressedListener;
+import org.fenggui.event.StateChangedEvent;
 import org.fenggui.text.ITextContentManager;
 import org.fenggui.util.Color;
 import org.fenggui.util.Dimension;
 import org.fenggui.util.Spacing;
 
-public class MyGameMenuButton extends Button {
-	
-	private static ImageFont font = null;
-	static{
-		try{
-			font = new ImageFont("font1.png", "font.xml");
-		}catch( FileNotFoundException e ){
-		}catch( IOException e ){
-		}
-	}
-	private static final ITextRenderer renderer1 = new DirectTextRenderer(font);
+public class MyGameMenuButton extends Button{
 
-	static{
-		try{
-			font = new ImageFont("font2.png", "font.xml");
-		}catch( FileNotFoundException e ){
-		}catch( IOException e ){
-		}
-	}
-	private static final ITextRenderer renderer2 = new DirectTextRenderer(font);
+	//	private static Border generatePixmapBorder(Pixmap pixmap) {
+	//		if( pixmap == null )
+	//			return new PlainBorder();
+	//
+	//		ITexture sixteenSlicesTex = pixmap.getTexture();
+	//		Pixmap[] pixmaps = new Pixmap[16];
+	//
+	//		pixmaps[0] = new Pixmap(sixteenSlicesTex, 0, 0, 9, 12); // upperLeftCorner
+	//		pixmaps[1] = new Pixmap(sixteenSlicesTex, 9, 0, 9, 12); // topLeftJunction
+	//		pixmaps[2] = new Pixmap(sixteenSlicesTex, 18, 0, 100, 12); // topEdge
+	//		pixmaps[3] = new Pixmap(sixteenSlicesTex, 118, 0, 9, 12); // topRightJunction
+	//		pixmaps[4] = new Pixmap(sixteenSlicesTex, 127, 0, 9, 12); // upperRightCorner
+	//
+	//		pixmaps[5] = new Pixmap(sixteenSlicesTex, 0, 12, 9, 4); // upperLeftJunction
+	//		pixmaps[6] = new Pixmap(sixteenSlicesTex, 127, 12, 9, 4); // upperRightJunction
+	//
+	//		pixmaps[7] = new Pixmap(sixteenSlicesTex, 0, 16, 9, 8); // leftEdge
+	//		pixmaps[8] = new Pixmap(sixteenSlicesTex, 127, 16, 9, 8); // rightEdge
+	//
+	//		pixmaps[9] = new Pixmap(sixteenSlicesTex, 0, 24, 9, 4); // lowerLeftJunction
+	//		pixmaps[10] = new Pixmap(sixteenSlicesTex, 127, 24, 9, 4); // lowerRightJunction
+	//
+	//		pixmaps[11] = new Pixmap(sixteenSlicesTex, 0, 28, 9, 35); // lowerLeftCorner
+	//		pixmaps[12] = new Pixmap(sixteenSlicesTex, 9, 28, 9, 35); // bottomLeftJunction
+	//		pixmaps[13] = new Pixmap(sixteenSlicesTex, 18, 28, 100, 35); // bottomEdge
+	//		pixmaps[14] = new Pixmap(sixteenSlicesTex, 118, 28, 9, 35); // bottomRightJunction
+	//		pixmaps[15] = new Pixmap(sixteenSlicesTex, 127, 28, 9, 35); // lowerRightCorner
+	//
+	//		return new PixmapBorder16(pixmaps);
+	//	}
 
-	static{
-		try{
-			font = new ImageFont("font3.png", "font.xml");
-		}catch( FileNotFoundException e ){
-		}catch( IOException e ){
-		}
-	}
-	private static final ITextRenderer renderer3 = new DirectTextRenderer(font);
-
-//	private static Border generatePixmapBorder(Pixmap pixmap) {
-//		if( pixmap == null )
-//			return new PlainBorder();
-//
-//		ITexture sixteenSlicesTex = pixmap.getTexture();
-//		Pixmap[] pixmaps = new Pixmap[16];
-//
-//		pixmaps[0] = new Pixmap(sixteenSlicesTex, 0, 0, 9, 12); // upperLeftCorner
-//		pixmaps[1] = new Pixmap(sixteenSlicesTex, 9, 0, 9, 12); // topLeftJunction
-//		pixmaps[2] = new Pixmap(sixteenSlicesTex, 18, 0, 100, 12); // topEdge
-//		pixmaps[3] = new Pixmap(sixteenSlicesTex, 118, 0, 9, 12); // topRightJunction
-//		pixmaps[4] = new Pixmap(sixteenSlicesTex, 127, 0, 9, 12); // upperRightCorner
-//
-//		pixmaps[5] = new Pixmap(sixteenSlicesTex, 0, 12, 9, 4); // upperLeftJunction
-//		pixmaps[6] = new Pixmap(sixteenSlicesTex, 127, 12, 9, 4); // upperRightJunction
-//
-//		pixmaps[7] = new Pixmap(sixteenSlicesTex, 0, 16, 9, 8); // leftEdge
-//		pixmaps[8] = new Pixmap(sixteenSlicesTex, 127, 16, 9, 8); // rightEdge
-//
-//		pixmaps[9] = new Pixmap(sixteenSlicesTex, 0, 24, 9, 4); // lowerLeftJunction
-//		pixmaps[10] = new Pixmap(sixteenSlicesTex, 127, 24, 9, 4); // lowerRightJunction
-//
-//		pixmaps[11] = new Pixmap(sixteenSlicesTex, 0, 28, 9, 35); // lowerLeftCorner
-//		pixmaps[12] = new Pixmap(sixteenSlicesTex, 9, 28, 9, 35); // bottomLeftJunction
-//		pixmaps[13] = new Pixmap(sixteenSlicesTex, 18, 28, 100, 35); // bottomEdge
-//		pixmaps[14] = new Pixmap(sixteenSlicesTex, 118, 28, 9, 35); // bottomRightJunction
-//		pixmaps[15] = new Pixmap(sixteenSlicesTex, 127, 28, 9, 35); // lowerRightCorner
-//
-//		return new PixmapBorder16(pixmaps);
-//	}
-	
-	private static Border generatePixmapBorder(Pixmap pixmap) {
+	private static Border generatePixmapBorder( Pixmap pixmap ){
 		if( pixmap == null )
 			return new PlainBorder();
 
 		ITexture texture = pixmap.getTexture();
 		Pixmap[] pixmaps = new Pixmap[8];
 
-		pixmaps[PixmapBorder.TOP_LEFT]     = new Pixmap(texture,   0,  0,  18, 12);
-		pixmaps[PixmapBorder.TOP]          = new Pixmap(texture,  18,  0, 100, 12);
-		pixmaps[PixmapBorder.TOP_RIGHT]    = new Pixmap(texture, 118,  0,  18, 12);
+		pixmaps[PixmapBorder.TOP_LEFT] = new Pixmap( texture, 0, 0, 18, 12 );
+		pixmaps[PixmapBorder.TOP] = new Pixmap( texture, 18, 0, 100, 12 );
+		pixmaps[PixmapBorder.TOP_RIGHT] = new Pixmap( texture, 118, 0, 18, 12 );
 
-		pixmaps[PixmapBorder.LEFT]         = new Pixmap(texture,   0, 12,  18, 16);
-		pixmaps[PixmapBorder.RIGHT]        = new Pixmap(texture, 118, 12,  18, 16);
-		
-		pixmaps[PixmapBorder.BOTTOM_LEFT]  = new Pixmap(texture,   0, 28,  18, 35);
-		pixmaps[PixmapBorder.BOTTOM]       = new Pixmap(texture,  18, 28, 100, 35);
-		pixmaps[PixmapBorder.BOTTOM_RIGHT] = new Pixmap(texture, 118, 28,  18, 35);
+		pixmaps[PixmapBorder.LEFT] = new Pixmap( texture, 0, 12, 18, 16 );
+		pixmaps[PixmapBorder.RIGHT] = new Pixmap( texture, 118, 12, 18, 16 );
 
-		return new PixmapBorder(pixmaps);
+		pixmaps[PixmapBorder.BOTTOM_LEFT] = new Pixmap( texture, 0, 28, 18, 35 );
+		pixmaps[PixmapBorder.BOTTOM] = new Pixmap( texture, 18, 28, 100, 35 );
+		pixmaps[PixmapBorder.BOTTOM_RIGHT] = new Pixmap( texture, 118, 28, 18, 35 );
+
+		return new PixmapBorder( pixmaps );
 	}
 
-	private static Background generatePixmapBackground(Pixmap pixmap) {
+	private static Background generatePixmapBackground( Pixmap pixmap ){
 		if( pixmap == null )
 			return new PlainBackground();
-		return new PixmapBackground(new Pixmap(pixmap.getTexture(), 18, 12, 100, 16), true);
+		return new PixmapBackground( new Pixmap( pixmap.getTexture(), 18, 12, 100, 16 ), true );
 	}
-	
+
 	private static MyGameMenuButton prototipo;
 
-	public static boolean hasPrototipo() {
+	public static boolean hasPrototipo(){
 		return MyGameMenuButton.prototipo != null;
 	}
 
-	public static void setPrototipo(MyGameMenuButton prototipo) {
+	public static void setPrototipo( MyGameMenuButton prototipo ){
 		MyGameMenuButton.prototipo = prototipo;
 	}
 
-	public static MyGameMenuButton derive(String name, IButtonPressedListener listener) {
-		MyGameMenuButton result = new MyGameMenuButton(name);
-		result.addButtonPressedListener(listener);
-		result.setAppearance(prototipo.getAppearance().clone(result));
-		result.updateState();
+	public static MyGameMenuButton derive( String name, IButtonPressedListener listener ){
+		MyGameMenuButton result = new MyGameMenuButton( name );
+		result.addButtonPressedListener( listener );
+		result.setAppearance( prototipo.getAppearance().clone( result ) );
 		return result;
 	}
 
 	private final String name;
-	
+
 	/**
 	 * Constructs a new MyGameMenuButton.
 	 * 
@@ -162,8 +128,8 @@ public class MyGameMenuButton extends Button {
 	 * @param hoverState
 	 * @param pressedState
 	 */
-	public MyGameMenuButton(String name, Pixmap defaultState, Pixmap hoverState, Pixmap pressedState) {
-		this(name, defaultState, hoverState, null, pressedState, null);
+	public MyGameMenuButton( String name, Pixmap defaultState, Pixmap hoverState, Pixmap pressedState ){
+		this( name, defaultState, hoverState, null, pressedState, null );
 	}
 
 	/**
@@ -176,121 +142,160 @@ public class MyGameMenuButton extends Button {
 	 * @param pressedState
 	 * @param disabledState
 	 */
-	public MyGameMenuButton(String name, Pixmap defaultState, Pixmap hoverState, Pixmap focusState,
-			Pixmap pressedState, Pixmap disabledState) {
-		this(name);
-		initButton(defaultState, hoverState, focusState, pressedState, disabledState);
+	public MyGameMenuButton( String name, Pixmap defaultState, Pixmap hoverState, Pixmap focusState,
+			Pixmap pressedState, Pixmap disabledState ){
+		this( name );
+		initButton( defaultState, hoverState, focusState, pressedState, disabledState );
 	}
-	
-	private MyGameMenuButton(String name){
+
+	private MyGameMenuButton( String name ){
 		this.name = name;
-		setText(name);
+		setText( name );
 	}
 
 	/**
 	 * @return el nombre solicitado.
 	 */
-	public String getName() {
+	public String getName(){
 		return name;
 	}
 
 	private Dimension minSize;
 
-	public Dimension getMinSize() {
+	public Dimension getMinSize(){
 		// TODO Mirar
 		if( minSize == null )
-			minSize = new Dimension(312, 86);
+			minSize = new Dimension( 312, 86 );
 		return minSize;
 	}
 
-	private void initButton(
-			Pixmap defaultState,
-			Pixmap hoverState,
-			Pixmap focusState,
-			Pixmap pressedState,
-			Pixmap disabledState
-		) {
+	private void initButton( Pixmap defaultState, Pixmap hoverState, Pixmap focusState, Pixmap pressedState,
+			Pixmap disabledState ){
 		LabelAppearance appearance = this.getAppearance();
 
 		appearance.removeAll();
 		appearance.clearSpacings();
 
-		appearance.setMargin(new Spacing(3, 3));
-		appearance.setBorder(new Spacing(0, 0));
+		appearance.setMargin( new Spacing( 3, 3 ) );
+		appearance.setBorder( new Spacing( 0, 0 ) );
 		// appearance.setBorder( new Spacing(12, 9, 9, 35) );
 		// Spacing spacing = generatePixmapBorder(defaultState) ;
 		// System.out.println("Top:   " + spacing.getTop());
 		// System.out.println("Left:  " + spacing.getLeft());
 		// System.out.println("Right: " + spacing.getRight());
 		// System.out.println("Bottom:" + spacing.getBottom());
-		appearance.setPadding(new Spacing(12, 15, 15, 37));
+		appearance.setPadding( new Spacing( 12, 15, 15, 37 ) );
 
-		appearance.addRenderer(ITextRenderer.DEFAULTTEXTRENDERERKEY, renderer1);
+		appearance.addRenderer( ITextRenderer.DEFAULTTEXTRENDERERKEY, TextRenderers.renderer1 );
 
-		appearance.add(STATE_NONE, generatePixmapBackground(defaultState));
-		appearance.add(STATE_NONE, generatePixmapBorder(defaultState));
-		appearance.add(STATE_HOVERED, generatePixmapBackground(hoverState));
-		appearance.add(STATE_HOVERED, generatePixmapBorder(hoverState));
-		appearance.add(STATE_FOCUSED, generatePixmapBackground(focusState));
-		appearance.add(STATE_FOCUSED, generatePixmapBorder(focusState));
-		appearance.add(STATE_PRESSED, generatePixmapBackground(pressedState));
-		appearance.add(STATE_PRESSED, generatePixmapBorder(pressedState));
-		appearance.add(STATE_DISABLED, generatePixmapBackground(disabledState));
-		appearance.add(STATE_DISABLED, generatePixmapBorder(disabledState));
+		appearance.add( STATE_DEFAULT.getName(), generatePixmapBackground( defaultState ) );
+		appearance.add( STATE_DEFAULT.getName(), generatePixmapBorder( defaultState ) );
+		appearance.add( STATE_HOVERED.getName(), generatePixmapBackground( hoverState ) );
+		appearance.add( STATE_HOVERED.getName(), generatePixmapBorder( hoverState ) );
+		appearance.add( STATE_FOCUSED.getName(), generatePixmapBackground( focusState ) );
+		appearance.add( STATE_FOCUSED.getName(), generatePixmapBorder( focusState ) );
+		appearance.add( STATE_PRESSED.getName(), generatePixmapBackground( pressedState ) );
+		appearance.add( STATE_PRESSED.getName(), generatePixmapBorder( pressedState ) );
+		appearance.add( STATE_DISABLED.getName(), generatePixmapBackground( disabledState ) );
+		appearance.add( STATE_DISABLED.getName(), generatePixmapBorder( disabledState ) );
 
-		updateState();
-		// updateMinSize();
+		//updateState();
+		//getStateManager().removeStateChangedListener( this.)
+		
+		updateMinSize();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fenggui.Button#updateState(java.lang.String)
-	 */
-	@Override
-	protected void updateState(String newActiveState) {
+    /* (non-Javadoc)
+     * @see org.fenggui.event.IStateChangedListener#stateChanged(org.fenggui.event.StateChangedEvent)
+     */
+    public void stateChanged(StateChangedEvent e){
 		LabelAppearance appearance = this.getAppearance();
 
 		// change update state to only activate one state at a time
 		// only default state is active as usual
 		// re-enable default state so switches get called
-		appearance.setEnabled(STATE_ERROR, false);
-		appearance.setEnabled(STATE_DISABLED, false);
-		appearance.setEnabled(STATE_PRESSED, false);
-		appearance.setEnabled(STATE_FOCUSED, false);
-		appearance.setEnabled(STATE_HOVERED, false);
-		appearance.setEnabled(STATE_NONE, false);
-		appearance.setEnabled(STATE_DEFAULT, true);
+		appearance.setEnabled( STATE_ERROR.getName(),    false );
+		appearance.setEnabled( STATE_DISABLED.getName(), false );
+		appearance.setEnabled( STATE_PRESSED.getName(),  false );
+		appearance.setEnabled( STATE_FOCUSED.getName(),  false );
+		appearance.setEnabled( STATE_HOVERED.getName(),  false );
+		appearance.setEnabled( STATE_DEFAULT.getName(),  false );
 
-		if( newActiveState != null ){
-			appearance.setEnabled(newActiveState, true);
-		}else if( hasError() ){
-			appearance.setEnabled(STATE_ERROR, true);
-		}else if( !isEnabled() ){
-			appearance.setEnabled(STATE_DISABLED, true);
+		if( !isEnabled() ){
+			appearance.setEnabled( STATE_DISABLED.getName(), true );
 		}else if( isPressed() ){
-			appearance.setEnabled(STATE_PRESSED, true);
+			appearance.setEnabled( STATE_PRESSED.getName(), true );
 		}else if( isFocused() ){
 			// appearance.setEnabled(STATE_FOCUSED, true);
 			if( isHovered() )
-				appearance.setEnabled(STATE_HOVERED, true);
+				appearance.setEnabled( STATE_HOVERED.getName(), true );
 			else
-				appearance.setEnabled(STATE_NONE, true);
+				appearance.setEnabled( STATE_DEFAULT.getName(), true );
 		}else if( isHovered() ){
-			appearance.setEnabled(STATE_HOVERED, true);
+			appearance.setEnabled( STATE_HOVERED.getName(), true );
 		}else
-			appearance.setEnabled(STATE_NONE, true);
+			appearance.setEnabled( STATE_DEFAULT.getName(), true );
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.fenggui.ObservableLabelWidget#paintContent(org.fenggui.binding.render
-	 * .Graphics, org.fenggui.binding.render.IOpenGL)
+	/* (non-Javadoc)
+	 * @see org.fenggui.ObservableLabelWidget#paintContent(org.fenggui.binding.render.Graphics)
 	 */
 	@Override
-	public void paintContent(Graphics g, IOpenGL gl) {
+//	public void paintContent( Graphics g ){
+//		int x = 0;
+//		int y = 0;
+//		int width = 0;
+//		int height = 0;
+//		
+//		int contentWidth = getAppearance().getContentWidth();
+//		int contentHeight = getAppearance().getContentHeight();
+//
+//		Pixmap pixmap = getPixmap();
+//		ITextContentManager textData = getTextRendererData();
+//		
+//		System.out.println( textData.getContent() );
+//
+//		if( pixmap != null ){
+//			width = pixmap.getWidth();
+//			height = pixmap.getHeight();
+//			if( !textData.isEmpty() )
+//				width += getAppearance().getGap();
+//		}else if( textData.isEmpty() )
+//			return;
+//
+//		if( !textData.isEmpty() ){
+//			width += textData.getSize().getWidth();
+//			height = Math.max( height, textData.getSize().getHeight() );
+//		}
+//
+//		x = x + getAppearance().getAlignment().alignX( contentWidth, width );
+//
+//		if( pixmap != null ){
+//			g.setColor( Color.WHITE );
+//			y = getAppearance().getAlignment().alignY( contentHeight, pixmap.getHeight() );
+//			g.drawImage( pixmap, x, y );
+//			x += pixmap.getWidth() + getAppearance().getGap();
+//		}
+//
+//		if( !textData.isEmpty() ){
+//			y = getAppearance().getBottomMargins() + ( contentHeight - textData.getSize().getHeight() ) / 2;
+//
+//			ITextRenderer renderer = null;
+//			if( this.isPressed() )
+//				renderer = TextRenderers.renderer3;
+//			else if( this.isHovered() )
+//				renderer = TextRenderers.renderer2;
+//			else
+//				renderer = TextRenderers.renderer1;
+//
+//			if( renderer != null )
+//				renderer.render( x, y, textData.getContent(), Color.WHITE, g );
+//			else
+//				textData.render( x, y, g, getAppearance() );
+//		}
+//	}
+	
+	public void paintContent( Graphics g ){
 		int x = 0;
 		int y = 0;
 		int width = 0;
@@ -301,7 +306,6 @@ public class MyGameMenuButton extends Button {
 
 		Pixmap pixmap = getPixmap();
 		ITextContentManager textData = getTextRendererData();
-
 		if( pixmap != null ){
 			width = pixmap.getWidth();
 			height = pixmap.getHeight();
@@ -312,33 +316,34 @@ public class MyGameMenuButton extends Button {
 
 		if( !textData.isEmpty() ){
 			width += textData.getSize().getWidth();
-			height = Math.max(height, textData.getSize().getHeight());
+			height = Math.max( height, textData.getSize().getHeight() );
 		}
 
-		x = x + getAppearance().getAlignment().alignX(contentWidth, width);
+		x = x + getAppearance().getAlignment().alignX( contentWidth, width );
 
 		if( pixmap != null ){
-			g.setColor(Color.WHITE);
-			y = getAppearance().getAlignment().alignY(contentHeight, pixmap.getHeight());
-			g.drawImage(pixmap, x, y);
+			g.setColor( Color.WHITE );
+			y = getAppearance().getAlignment().alignY( contentHeight, pixmap.getHeight() );
+			g.drawImage( pixmap, x, y );
 			x += pixmap.getWidth() + getAppearance().getGap();
 		}
 
 		if( !textData.isEmpty() ){
-			y = getAppearance().getBottomMargins() + (contentHeight - textData.getSize().getHeight()) / 2;
-
+			y = getAppearance().getAlignment().alignY( contentHeight, textData.getSize().getHeight() )
+					+ textData.getSize().getHeight();
+			
 			ITextRenderer renderer = null;
 			if( this.isPressed() )
-				renderer = renderer3;
+				renderer = TextRenderers.renderer3;
 			else if( this.isHovered() )
-				renderer = renderer2;
+				renderer = TextRenderers.renderer2;
 			else
-				renderer = renderer1;
+				renderer = TextRenderers.renderer1;
 
 			if( renderer != null )
-				renderer.render(x, y, textData.getContent(), Color.WHITE, g);
+				renderer.render( x, y, textData.getContent(), Color.WHITE, g );
 			else
-				textData.render(x, y, g, getAppearance());
+				textData.render( x, y, g, getAppearance() );
 		}
 	}
 }

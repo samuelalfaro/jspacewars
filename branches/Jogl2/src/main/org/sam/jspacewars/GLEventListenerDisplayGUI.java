@@ -26,82 +26,75 @@ import java.util.Map;
 
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.awt.GLCanvas;
+
+import org.fenggui.Display;
+import org.fenggui.binding.render.jogl.EventBinding;
+import org.fenggui.binding.render.jogl.JOGLBinding;
 
 /**
  * 
  * @author Samuel Alfaro
  */
-class GLEventListenerDisplayGUI implements GLEventListener {
+class GLEventListenerDisplayGUI implements GLEventListener{
 
-//	private transient Display display;
+	private transient Display display;
 	private final transient GameMenu gameMenu;
 	private transient boolean menu_isVisible;
 
-	GLEventListenerDisplayGUI(Map<String, ButtonAction> actions) {
-		this.gameMenu = new GameMenu(actions);
+	GLEventListenerDisplayGUI( Map<String, ButtonAction> actions ){
+		this.gameMenu = new GameMenu( actions );
 		menu_isVisible = false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
-	 * )
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
 	 */
-	public void init(GLAutoDrawable drawable) {
-//		display = new Display(new JOGLBinding((GLCanvas) drawable));
+	public void init( GLAutoDrawable drawable ){
+		display = new Display( new JOGLBinding( (GLCanvas)drawable ) );
 		// try{
 		// FengGUI.setTheme( new XMLTheme("data/themes/QtCurve/QtCurve.xml") );
 		// }catch( IOException ignorada ){
 		// }catch( IXMLStreamableException ignorada ){
 		// }
-//		new EventBinding((GLCanvas) drawable, display);
-//		showMenu();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable
-	 * )
-	 */
-	public void display(GLAutoDrawable drawable) {
-//		display.display();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable
-	 * , int, int, int, int)
-	 */
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		new EventBinding( (GLCanvas)drawable, display );
+		showMenu();
 	}
 
 	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+	 */
+	public void display( GLAutoDrawable drawable ){
+		display.display();
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+	 */
+	public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ){
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
 	 */
 	@Override
 	public void dispose( GLAutoDrawable drawable ){
 	}
 
-	
-//	public void showMenu(){
-//		if(!menu_isVisible){
-//			menu_isVisible = true;
-//			display.addWidget(gameMenu);
-//		}
-//	}
-//	
-//	public void hideMenu(){
-//		if(menu_isVisible){
-//			menu_isVisible = false;
-//			display.removeAllWidgets();
-//			//display.removeWidget(gameMenu);
-//		}
-//	}
-	
+	public void showMenu(){
+		if( !menu_isVisible ){
+			menu_isVisible = true;
+			display.addWidget( gameMenu );
+		}
+	}
+
+	public void hideMenu(){
+		if( menu_isVisible ){
+			menu_isVisible = false;
+			display.removeAllWidgets();
+			//display.removeWidget(gameMenu);
+		}
+	}
+
 }

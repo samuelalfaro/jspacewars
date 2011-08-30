@@ -22,12 +22,15 @@
  */
 package org.sam.jspacewars;
 
+import java.awt.image.BufferedImage;
 import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 
+import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -36,6 +39,13 @@ import javax.media.opengl.GLException;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
+import org.fenggui.binding.clipboard.IClipboard;
+import org.fenggui.binding.render.Binding;
+import org.fenggui.binding.render.CursorFactory;
+import org.fenggui.binding.render.ITexture;
+import org.fenggui.binding.render.Pixmap;
+import org.fenggui.binding.render.jogl.JOGLOpenGL;
+import org.fenggui.binding.render.jogl.JOGLTexture;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.ObjLoader;
 import org.sam.jogl.fondos.CieloEstrellado;
@@ -65,79 +75,73 @@ class GLEventListenerLoader implements GLEventListener {
 	 * memoria de video las texturas empleadas por el GUI.
 	 * </p>
 	 */
-//	private static class LoaderBinding extends Binding {
-//
-//		private final transient GL gl;
-//
-//		LoaderBinding(GL gl) {
-//			super(new JOGLOpenGL(gl));
-//			this.gl = gl;
-//		}
-//
-//		/*
-//		 * (non-Javadoc)
-//		 * 
-//		 * @see org.fenggui.binding.render.Binding#getCanvasHeight()
-//		 */
-//		@Override
-//		public int getCanvasHeight() {
-//			return 0;
-//		}
-//
-//		/*
-//		 * (non-Javadoc)
-//		 * 
-//		 * @see org.fenggui.binding.render.Binding#getCanvasWidth()
-//		 */
-//		@Override
-//		public int getCanvasWidth() {
-//			return 0;
-//		}
-//
-//		/*
-//		 * (non-Javadoc)
-//		 * 
-//		 * @see org.fenggui.binding.render.Binding#getClipboard()
-//		 */
-//		@Override
-//		public IClipboard getClipboard() {
-//			return null;
-//		}
-//
-//		/*
-//		 * (non-Javadoc)
-//		 * 
-//		 * @see org.fenggui.binding.render.Binding#getCursorFactory()
-//		 */
-//		@Override
-//		public CursorFactory getCursorFactory() {
-//			return null;
-//		}
-//
-//		/*
-//		 * (non-Javadoc)
-//		 * 
-//		 * @see joglui.binding.Binding#getTexture(java.lang.String)
-//		 */
-//		@Override
-//		public ITexture getTexture(InputStream stream) throws IOException {
+	private static class LoaderBinding extends Binding{
+
+		private final transient GL gl;
+
+		LoaderBinding( GL gl ){
+			super( new JOGLOpenGL( gl.getGL2() ) );
+			this.gl = gl;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.fenggui.binding.render.Binding#getCanvasHeight()
+		 */
+		@Override
+		public int getCanvasHeight(){
+			return 0;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.fenggui.binding.render.Binding#getCanvasWidth()
+		 */
+		@Override
+		public int getCanvasWidth(){
+			return 0;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.fenggui.binding.render.Binding#getClipboard()
+		 */
+		@Override
+		public IClipboard getClipboard(){
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see org.fenggui.binding.render.Binding#getCursorFactory()
+		 */
+		@Override
+		public CursorFactory getCursorFactory(){
+			return null;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see joglui.binding.Binding#getTexture(java.lang.String)
+		 */
+		@Override
+		public ITexture getTexture( InputStream stream ) throws IOException{
 //			if( !this.getOpenGL().isOpenGLThread() )
-//				throw new RuntimeException("getTexture called not in OpenGL Thread!");
-//			return JOGLTexture.uploadTextureToVideoRAM(gl, ImageIO.read(stream));
-//		}
-//
-//		/*
-//		 * (non-Javadoc)
-//		 * 
-//		 * @see joglui.binding.Binding#getTexture(java.awt.image.BufferedImage)
-//		 */
-//		@Override
-//		public ITexture getTexture(BufferedImage bi) {
+//				throw new RuntimeException( "getTexture called not in OpenGL Thread!" );
+			return JOGLTexture.uploadTextureToVideoRAM( gl, ImageIO.read( stream ) );
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see joglui.binding.Binding#getTexture(java.awt.image.BufferedImage)
+		 */
+		@Override
+		public ITexture getTexture( BufferedImage bi ){
 //			if( !this.getOpenGL().isOpenGLThread() )
-//				throw new RuntimeException("getTexture called not in OpenGL Thread!");
-//			return JOGLTexture.uploadTextureToVideoRAM(gl, bi);
-//		}
-//	}
+//				throw new RuntimeException( "getTexture called not in OpenGL Thread!" );
+			return JOGLTexture.uploadTextureToVideoRAM( gl, bi );
+		}
+	}
 
 	private final DataGame dataGame;
 	private final ModificableBoolean loading;
@@ -166,7 +170,7 @@ class GLEventListenerLoader implements GLEventListener {
 	 */
 	public void init( final GLAutoDrawable drawable ){
 		dataGame.setGLContext( drawable.getContext() );
-		// new LoaderBinding(drawable.getGL());
+		new LoaderBinding( drawable.getGL() );
 
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glDepthMask( false );
@@ -189,17 +193,18 @@ class GLEventListenerLoader implements GLEventListener {
 		GL2 gl = drawable.getGL().getGL2();
 		if( ciclo == 0 ){
 
-//		}else if( !MyGameMenuButton.hasPrototipo() ){
-//			Pixmap defaultState = null;
-//			Pixmap hoverState = null;
-//			Pixmap pressedState = null;
-//			try{
-//				defaultState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton0.jpg"));
-//				hoverState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton1.jpg"));
-//				pressedState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton2.jpg"));
-//			}catch( IOException ignorada ){
-//			}
-//			MyGameMenuButton.setPrototipo(new MyGameMenuButton("Prototipo", defaultState, hoverState, pressedState));
+		}else if( !MyGameMenuButton.hasPrototipo() ){
+			TextRenderers.init();
+			Pixmap defaultState = null;
+			Pixmap hoverState = null;
+			Pixmap pressedState = null;
+			try{
+				defaultState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton0.jpg"));
+				hoverState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton1.jpg"));
+				pressedState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton2.jpg"));
+			}catch( IOException ignorada ){
+			}
+			MyGameMenuButton.setPrototipo(new MyGameMenuButton("Prototipo", defaultState, hoverState, pressedState));
 		}else if( dataGame.getGui() == null ){
 			dataGame.setGui( MarcoDeIndicadores.getMarco( 0 ) );
 		}else if( !dataGame.getGui().isLoadComplete() ){

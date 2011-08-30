@@ -212,7 +212,7 @@ public class Launcher{
 	 *            </ul>
 	 */
 	public static void main( String... args ){
-		GLProfile.initSingleton( true );
+		//GLProfile.initSingleton( true );
 		if( args.length == 0 )
 			lanzarUnJugador();
 		else if( args[0].equals( "server" ) && args.length == 2 )
