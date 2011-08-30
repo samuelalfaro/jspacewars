@@ -38,14 +38,13 @@ import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import javax.vecmath.Color4f;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point4f;
 import javax.vecmath.Tuple4f;
 
-import org.sam.jogl.Generator;
+import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
-
-import pruebas.jogl.generators.HelixGenerator;
 
 import com.jogamp.opengl.util.Animator;
 
@@ -71,7 +70,7 @@ public class Prueba012_SinglePassWireframe{
 			orbitBehavior.addMouseListeners( (GLCanvas)drawable );
 
 			gl.glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-			//*
+			/*
 			forma = HelixGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 0.0f, 12, 1.25f, 0.05f, 36, 1.2f*2.8f, 9 );
 			//forma = SphereGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 12, 36 );
 			/*/
@@ -98,8 +97,8 @@ public class Prueba012_SinglePassWireframe{
 			System.out.println( "vertice3:" + shader.getAttribLocation( gl, "vertice3" ) );
 
 			shader.addUniform( gl, "viewport", viewport );
-			shader.addUniform( gl, "solid_width", 2.5f );
-			shader.addUniform( gl, "translucid_width", 4.0f );
+			shader.addUniform( gl, "solid_width", 0.5f );
+			shader.addUniform( gl, "translucid_width", 2.0f );
 			shader.addUniform( gl, "empty_color", new Color4f( 0.0f, 0.0f, 0.0f, 1.0f ) );
 
 			forma.getApariencia().setShader( shader );

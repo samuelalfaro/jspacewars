@@ -26,227 +26,445 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.IntBuffer;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
-import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
+import org.sam.jogl.Apariencia;
+import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
 
 import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.util.Animator;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
-// TODO terminar
 public class PruebaTexto{
-
-	private static class Renderer implements GLEventListener{
-		private int base; // Base Display List For The Font
-		private int[] textures = new int[2]; // Storage For Our Font Texture
-
-		private float cnt1; // 1st Counter Used To Move Text & For Coloring
-		private float cnt2; // 2nd Counter Used To Move Text & For Coloring
-
-		private GLU glu = new GLU();
-		private ByteBuffer stringBuffer = Buffers.newDirectByteBuffer( 256 );
-
-		public Renderer(){
-		}
-
-		public void loadGLTextures( GL gl ){
-
-			String tileNames[] = { "demos/data/images/font.png", "demos/data/images/bumps.png" };
-
-			gl.glGenTextures( 2, textures, 0 );
-
-			for( int i = 0; i < 2; i++ ){
-				BufferedImage texture = Imagen.cargarToBufferedImage( tileNames[i] );
-				// Create Nearest Filtered Texture
-				gl.glBindTexture( GL.GL_TEXTURE_2D, textures[i] );
-
-				gl.glTexParameteri( GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR );
-				gl.glTexParameteri( GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR );
-
-				gl.glTexImage2D( GL.GL_TEXTURE_2D, 0, 3, texture.getWidth(), texture.getHeight(), 0, GL.GL_RGB,
-						GL.GL_UNSIGNED_BYTE, Textura.Util.toByteBuffer( texture, Textura.Format.RGB, true ) );
+	
+	static float readAttribute( HierarchicalStreamReader reader, String name, float defaultValue ){
+		String att = reader.getAttribute( name );
+		if( att != null && att.length() > 0 )
+			try{
+				return (float)Double.parseDouble( att );
+			}catch( NumberFormatException e ){
 			}
+		return defaultValue;
+	}
+	
+	static int readAttribute( HierarchicalStreamReader reader, String name, int defaultValue ){
+		String att = reader.getAttribute( name );
+		if( att != null && att.length() > 0 )
+			try{
+				return Integer.parseInt( att );
+			}catch( NumberFormatException e ){
+			}
+		return defaultValue;
+	}
+	
+	private static class CharacterPixmapData{
+		
+		static class Comparator implements java.util.Comparator<CharacterPixmapData>{
+		    public int compare(CharacterPixmapData o1, CharacterPixmapData o2){
+		    	return o1.c - o2.c;
+		    }
 		}
+		
+		final Character c;
+		final float x;
+		final float y;
+		final float width;
+		final float height;
+		final float charWidth;
+		final float charHeight;
+		
+		CharacterPixmapData( Character c, float x, float y, float width, float height, float charWidth, float charHeight ){
+			this.c = c;
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.height = height;
+			this.charWidth = charWidth;
+			this.charHeight = charHeight;
+		}
+		
+		void buidCharacterPixmap( GL2 gl, int listId, int textureWidth, int textureHeight, float gap, float scaleX, float scaleY ){
+			float u1 = x / textureWidth;
+			float v1 = y / textureHeight;
+			float u2 = ( x + width ) / textureWidth;
+			float v2 = ( y + height ) / textureHeight;
+			
+			float x1 = ( charWidth - width )/2 * scaleX;
+			float x2 = x1 + width * scaleX;
+			
+			float y1 = ( charHeight - height )/2 * scaleY;
+			float y2 = y1 + height * scaleY;
 
-		private void buildFont( GL2 gl ){
-			float cx; // Holds Our X Character Coord
-			float cy; // Holds Our Y Character Coord
-
-			base = gl.glGenLists( 256 ); // Creating 256 Display Lists
-			gl.glBindTexture( GL.GL_TEXTURE_2D, textures[0] );
-
-			for( int loop = 0; loop < 256; loop++ ){
-				cx = (float)( loop % 16 ) / 16; // X Position Of Current Character
-				cy = (float)( loop / 16 ) / 16; // Y Position Of Current Character
-
-				gl.glNewList( base + loop, GL2.GL_COMPILE );
-				gl.glBegin( GL2.GL_QUADS ); // Use A Quad For Each Character
-				gl.glTexCoord2f( cx, 1 - cy - 0.0625f );
-				gl.glVertex2i( 0, 0 );
-				gl.glTexCoord2f( cx + 0.0625f, 1 - cy - 0.0625f );
-				gl.glVertex2i( 16, 0 );
-				gl.glTexCoord2f( cx + 0.0625f, 1 - cy );
-				gl.glVertex2i( 16, 16 );
-				gl.glTexCoord2f( cx, 1 - cy );
-				gl.glVertex2i( 0, 16 );
+			gl.glNewList( listId, GL2.GL_COMPILE );
+				gl.glBegin( GL2.GL_QUADS );
+					gl.glTexCoord2f( u1, v1 );
+					gl.glVertex2f( x1, y1 );
+					gl.glTexCoord2f( u2, v1 );
+					gl.glVertex2f( x2, y1 );
+					gl.glTexCoord2f( u2, v2 );
+					gl.glVertex2f( x2, y2 );
+					gl.glTexCoord2f( u1, v2 );
+					gl.glVertex2f( x1, y2 );
 				gl.glEnd();
-				gl.glTranslated( 10, 0, 0 ); // Move To The Right Of The Character
-				gl.glEndList();
-			}
+				gl.glTranslated( ( charWidth + gap ) * scaleX, 0, 0 );
+			gl.glEndList();
+		}
+		
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals( Object otro ){
+			return
+				( otro != null ) &&
+				( otro instanceof CharacterPixmapData) &&
+				( (CharacterPixmapData)otro ).c.equals( this.c );
 		}
 
-		// Where The Printing Happens
-		private void glPrint( GL2 gl, int x, int y, String string, int set ){
-			if( set > 1 ){
-				set = 1;
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode(){
+			return c.hashCode();
+		}
+	}
+	
+	private static class CharacterPixmapConverter implements Converter{
+
+		CharacterPixmapConverter(){
+		}
+
+		@SuppressWarnings( "rawtypes" )
+		public boolean canConvert( Class clazz ){
+			return CharacterPixmapData.class == clazz;
+		}
+
+		public void marshal( Object value, HierarchicalStreamWriter writer, MarshallingContext context ){
+		}
+		
+		public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ){
+			char c = 0;
+			float x = readAttribute( reader, "x", 0.0f );
+			float y = readAttribute( reader, "y", 0.0f );
+			float width  = readAttribute( reader, "width", 0.0f );
+			float height = readAttribute( reader, "height", 0.0f );
+			float charWidth  = readAttribute( reader, "charWidth", width );
+			float charHeight = readAttribute( reader, "charHeight", height );
+			if( reader.hasMoreChildren() ){
+				reader.moveDown();
+				c = reader.getValue().charAt( 0 );
+				reader.moveUp();
 			}
-			gl.glBindTexture( GL.GL_TEXTURE_2D, textures[0] ); // Select Our Font Texture
-			gl.glDisable( GL.GL_DEPTH_TEST ); // Disables Depth Testing
-			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION ); // Select The Projection Matrix
-			gl.glPushMatrix(); // Store The Projection Matrix
-			gl.glLoadIdentity(); // Reset The Projection Matrix
-			gl.glOrtho( 0, 640, 0, 480, -1, 1 ); // Set Up An Ortho Screen
-			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW ); // Select The Modelview Matrix
-			gl.glPushMatrix(); // Store The Modelview Matrix
-			gl.glLoadIdentity(); // Reset The Modelview Matrix
-			gl.glTranslated( x, y, 0 ); // Position The Text (0,0 - Bottom Left)
-			gl.glListBase( base - 32 + ( 128 * set ) ); // Choose The Font Set (0 or 1)
+			return new CharacterPixmapData( c, x, y, width, height, charWidth, charHeight );
+		}
+	}
+	
+	private static class CharactersPixmapsData{
+		final float scaleX;
+		final float scaleY;
+		final int textureWidth;
+		final int textureHeight;
+		final SortedSet<CharacterPixmapData> charactersData;
+		
+		CharactersPixmapsData( float scaleX, float scaleY, int textureWidth, int textureHeight ){
+			this.scaleX = scaleX;
+			this.scaleY = scaleY;
+			this.textureWidth = textureWidth;
+			this.textureHeight = textureHeight;
+			this.charactersData = new TreeSet<CharacterPixmapData>( new CharacterPixmapData.Comparator() );
+		}
+	}
+	
+	private static class CharactersPixmapsConverter implements Converter {
+		
+		CharactersPixmapsConverter(){
+		}
+		
+		@SuppressWarnings("rawtypes")
+		public boolean canConvert(Class clazz) {
+			return CharactersPixmapsData.class == clazz;
+		}
+
+		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+			CharactersPixmapsData fontData = new CharactersPixmapsData(
+				readAttribute( reader, "scaleX", 1.0f ),
+				readAttribute( reader, "scaleY", 1.0f ),
+				readAttribute( reader, "textureWidth", 256 ),
+				readAttribute( reader, "textureHeight", 256 )
+			);
+			CharacterPixmapData charData;
+			while (reader.hasMoreChildren()){
+				reader.moveDown();
+					charData = (CharacterPixmapData)context.convertAnother( fontData, CharacterPixmapData.class );
+					fontData.charactersData.add( charData );
+				reader.moveUp();
+			}
+			return fontData;
+		}
+	}
+	
+	private static XStream xStream = null;
+	
+	static final XStream getXStream(){
+		if( xStream == null ){
+			xStream = new XStream(new DomDriver());
+			xStream.alias( "CharacterPixmap", CharacterPixmapData.class );
+			xStream.registerConverter( new CharacterPixmapConverter() );
+			xStream.alias( "Font", CharactersPixmapsData.class );
+			xStream.registerConverter( new CharactersPixmapsConverter() );
+		}
+		return xStream;
+	}
+	
+	private static class CharactersPixmaps{
+		
+		final SortedMap<Character, Integer> characters; 
+		final int unknown;
+
+		CharactersPixmaps( GL2 gl, CharactersPixmapsData data ){
+			this.characters = new TreeMap<Character, Integer>();
+			int spaceId = 0;
+			
+			int base = gl.glGenLists( data.charactersData.size() );
+			while( !data.charactersData.isEmpty() ){
+				CharacterPixmapData cData = data.charactersData.first();
+				data.charactersData.remove( cData );
+				cData.buidCharacterPixmap( gl, base, data.textureWidth, data.textureHeight, 10.0f, 1.0f/data.scaleX, 1.0f/data.scaleY );
+				characters.put( cData.c, base );
+				if( cData.c == ' ' )
+					spaceId = base;
+				base++;
+			}
+			unknown = spaceId;
+		}
+	}
+	
+	private static class Font{
+
+		final CharactersPixmaps pixmaps;
+		final Apariencia apariencia;
+
+		Font( CharactersPixmaps pixmaps, Apariencia apariencia ){
+			this.pixmaps = pixmaps;
+			this.apariencia = apariencia;
+		}
+	}
+	
+	@SuppressWarnings( "static-access" )
+	private static class Renderer implements GLEventListener{
+		
+		/*
+		private final static String fontDef = "resources/arbeka.xml";
+		private final static String font1Texture = "resources/arbeka.png";
+		private final static String font2Texture = "resources/arbeka-blur.png";
+		/*/
+		private final static String fontDef = "resources/saved.xml";
+		private final static String font1Texture = "resources/saved.png";
+		private final static String font2Texture = "resources/saved-blur.png";
+		//*/
+		
+		private IntBuffer stringBuffer;
+
+		private CharactersPixmapsData charactersPixmapsData;
+		
+		private Font font1;
+		private Font font2;
+		
+		public Renderer(){
+			stringBuffer = Buffers.newDirectIntBuffer( 256 );
+			try{
+				charactersPixmapsData = (CharactersPixmapsData)getXStream().fromXML( new FileInputStream( fontDef ) );
+			}catch( FileNotFoundException e ){
+				e.printStackTrace();
+			}
+		}
+		
+		private void glPrint( GL2 gl, float x, float y, String string, Font font ){
+			glPrint( gl, x, y, 1.0f, 1.0f, string, 1.0f, 1.0f,  1.0f, 1.0f, font );
+		}
+		
+		private void glPrint( GL2 gl, float x, float y, String string, float r, float g, float b, float a, Font font ){
+			glPrint( gl, x, y, 1.0f, 1.0f, string, r, g, b, a, font );
+		}
+		
+		private void glPrint( GL2 gl, float x, float y, float scaleX, float scaleY, String string, Font font ){
+			glPrint( gl, x, y, scaleX, scaleY, string, 1.0f, 1.0f,  1.0f, 1.0f, font );
+		}
+		
+		private void glPrint( GL2 gl, float x, float y, float scaleX, float scaleY, String string, float r, float g, float b, float a, Font font ){
+
+			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
+			gl.glPushMatrix();
+			gl.glLoadIdentity();
+			gl.glScalef( scaleX, scaleY, 1.0f );
+			gl.glTranslatef( x / scaleX, y / scaleY, 0 );
 
 			if( stringBuffer.capacity() < string.length() ){
-				stringBuffer = Buffers.newDirectByteBuffer( string.length() );
+				stringBuffer = Buffers.newDirectIntBuffer( string.length() );
 			}
 
 			stringBuffer.clear();
-			stringBuffer.put( string.getBytes() );
+			for(int i= 0; i< string.length(); i++ ){
+				Integer listId = font.pixmaps.characters.get( string.charAt( i ) );
+				stringBuffer.put( listId != null ? listId.intValue() : font.pixmaps.unknown );
+			}
 			stringBuffer.flip();
 
-			// Write The Text To The Screen
-			gl.glCallLists( string.length(), GL.GL_BYTE, stringBuffer );
+			font.apariencia.usar( gl );
+			gl.glColor4f( r, g, b, a );
+			gl.glCallLists( string.length(), GL2.GL_INT, stringBuffer );
 
-			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION ); // Select The Projection Matrix
-			gl.glPopMatrix(); // Restore The Old Projection Matrix
-			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW ); // Select The Modelview Matrix
-			gl.glPopMatrix(); // Restore The Old Projection Matrix
-			gl.glEnable( GL.GL_DEPTH_TEST ); // Enables Depth Testing
+			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
+			gl.glPopMatrix();
 		}
 
 		public void init( GLAutoDrawable glDrawable ){
 			GL2 gl = glDrawable.getGL().getGL2();
-
-			loadGLTextures( gl );
-
-			buildFont( gl );
-
-			gl.glShadeModel( GLLightingFunc.GL_SMOOTH ); // Enables Smooth Color Shading
-
-			// This Will Clear The Background Color To Black
-			gl.glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-
-			// Enables Clearing Of The Depth Buffer
-			gl.glClearDepth( 1.0 );
-
-			gl.glEnable( GL.GL_DEPTH_TEST ); // Enables Depth Testing
-			gl.glBlendFunc( GL.GL_SRC_ALPHA, GL.GL_ONE ); // Select The Type Of Blending
-			gl.glDepthFunc( GL.GL_LEQUAL ); // The Type Of Depth Test To Do
-
-			// Really Nice Perspective Calculations
-			gl.glHint( GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST );
-			gl.glEnable( GL.GL_TEXTURE_2D ); // Enable 2D Texture Mapping
+			
+			CharactersPixmaps charactersPixmaps = new CharactersPixmaps( gl, charactersPixmapsData );
+		
+			BufferedImage img = Imagen.cargarToBufferedImage( font1Texture );
+			
+			Apariencia apFont = new Apariencia();
+			
+			//*
+			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_EDGE );
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_EDGE );
+			
+			apFont.setAtributosTextura( new AtributosTextura() );
+			
+			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineRgbSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineAlphaSource0(
+					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			/*/
+			apFont.setTextura( new Textura( gl, Textura.Format.RGBA, img, false ) );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_EDGE );
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_EDGE );
+			
+			apFont.setAtributosTextura( new AtributosTextura() );
+			
+			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.ADD_SIGNED );
+			apFont.getAtributosTextura().setCombineRgbSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineRgbSource1(
+					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineAlphaSource0(
+					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			//*/
+			
+			apFont.setAtributosTransparencia( 
+					new AtributosTransparencia( 
+							AtributosTransparencia.Equation.ADD,
+							AtributosTransparencia.SrcFunc.SRC_ALPHA,
+							AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
+					) 
+			);
+			font1 = new Font( charactersPixmaps, apFont );
+			
+			img = Imagen.cargarToBufferedImage( font2Texture );
+			apFont = new Apariencia();
+			
+			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_EDGE );
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_EDGE );
+			
+			apFont.setAtributosTextura( new AtributosTextura() );
+			
+			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineRgbSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineAlphaSource0(
+					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			
+			apFont.setAtributosTransparencia( 
+					new AtributosTransparencia( 
+							AtributosTransparencia.Equation.ADD,
+							AtributosTransparencia.SrcFunc.SRC_ALPHA,
+							AtributosTransparencia.DstFunc.ONE
+					) 
+			);
+			font2 = new Font( charactersPixmaps, apFont );
+			
+			gl.glShadeModel( GLLightingFunc.GL_SMOOTH );
+			gl.glClearColor( 0.2f, 0.2f, 0.3f, 0.0f );
 		}
 
 		public void display( GLAutoDrawable glDrawable ){
 			GL2 gl = glDrawable.getGL().getGL2();
 
-			// Clear The Screen And The Depth Buffer
-			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-			gl.glLoadIdentity(); // Reset The View
-
-			// Select Our Second Texture
-			gl.glBindTexture( GL.GL_TEXTURE_2D, textures[1] );
-			gl.glTranslatef( 0.0f, 0.0f, -5.0f ); // Move Into The Screen 5 Units
-
-			// Rotate On The Z Axis 45 Degrees (Clockwise)
-			gl.glRotatef( 45.0f, 0.0f, 0.0f, 1.0f );
-
-			// Rotate On The X & Y Axis By cnt1 (Left To Right)
-			gl.glRotatef( cnt1 * 30.0f, 1.0f, 1.0f, 0.0f );
-			gl.glDisable( GL.GL_BLEND ); // Disable Blending Before We Draw In 3D
-			gl.glColor3f( 1.0f, 1.0f, 1.0f ); // Bright White
-			gl.glBegin( GL2.GL_QUADS );
-			gl.glTexCoord2d( 0.0f, 0.0f );
-			gl.glVertex2f( -1.0f, 1.0f );
-			gl.glTexCoord2d( 1.0f, 0.0f );
-			gl.glVertex2f( 1.0f, 1.0f );
-			gl.glTexCoord2d( 1.0f, 1.0f );
-			gl.glVertex2f( 1.0f, -1.0f );
-			gl.glTexCoord2d( 0.0f, 1.0f );
-			gl.glVertex2f( -1.0f, -1.0f );
-			gl.glEnd();
-
-			// Rotate On The X & Y Axis By 90 Degrees (Left To Right)
-			gl.glRotatef( 90.0f, 1.0f, 1.0f, 0.0f );
-			gl.glBegin( GL2.GL_QUADS );
-			gl.glTexCoord2d( 0.0f, 0.0f );
-			gl.glVertex2f( -1.0f, 1.0f );
-			gl.glTexCoord2d( 1.0f, 0.0f );
-			gl.glVertex2f( 1.0f, 1.0f );
-			gl.glTexCoord2d( 1.0f, 1.0f );
-			gl.glVertex2f( 1.0f, -1.0f );
-			gl.glTexCoord2d( 0.0f, 1.0f );
-			gl.glVertex2f( -1.0f, -1.0f );
-			gl.glEnd();
-			gl.glEnable( GL.GL_BLEND ); // Enable Blending
-
-			gl.glLoadIdentity(); // Reset The View
-
-			// Pulsing Colors Based On Text Position
-			gl.glColor3f( (float)( Math.cos( cnt1 ) ), (float)( Math.sin( cnt2 ) ),
-					1.0f - 0.5f * (float)( Math.cos( cnt1 + cnt2 ) ) );
-
-			// Print GL Text To The Screen
-			glPrint( gl, (int)( ( 280 + 250 * Math.cos( cnt1 ) ) ), (int)( 235 + 200 * Math.sin( cnt2 ) ), "NeHe", 0 );
-
-			gl.glColor3f( (float)( Math.sin( cnt2 ) ), 1.0f - 0.5f * (float)( Math.cos( cnt1 + cnt2 ) ),
-					(float)( Math.cos( cnt1 ) ) );
-
-			// Print GL Text To The Screen
-			glPrint( gl, (int)( ( 280 + 230 * Math.cos( cnt2 ) ) ), (int)( 235 + 200 * Math.sin( cnt1 ) ), "OpenGL", 1 );
-
-			gl.glColor3f( 0.0f, 0.0f, 1.0f );
-			glPrint( gl, (int)( 240 + 200 * Math.cos( ( cnt2 + cnt1 ) / 5 ) ), 2, "Giuseppe D'Agata", 0 );
-
-			gl.glColor3f( 1.0f, 1.0f, 1.0f );
-			glPrint( gl, (int)( 242 + 200 * Math.cos( ( cnt2 + cnt1 ) / 5 ) ), 2, "Giuseppe D'Agata", 0 );
-
-			cnt1 += 0.01f; // Increase The First Counter
-			cnt2 += 0.0081f; // Increase The Second Counter
+			gl.glClear( GL.GL_COLOR_BUFFER_BIT );
+			
+			glPrint( gl, 5, 0, "Prueba Texto áéíóú ÁÉÍÓÚ cigüeña", 0.5f, 0.5f, 0.5f, 1.0f, font1 );
+			glPrint( gl, 5, 0, "Prueba Texto áéíóú ÁÉÍÓÚ cigüeña", 0.2f, 0.2f, 0.2f, 1.0f, font2 );
+			
+			glPrint( gl, 5, 51, "Bla: bla@bla ¿bla? ¡bla!", 0.5f, 0.5f, 0.5f, 1.0f, font1 );
+			glPrint( gl, 5, 51, "Bla: bla@bla ¿bla? ¡bla!", 0.5f, 0.5f, 0.5f, 1.0f, font2 );
+			
+			glPrint( gl, 5, 102, "12345,67890.12345;67890", 0.5f, 0.5f, 0.5f, 1.0f, font1 );
+			glPrint( gl, 5, 102, "12345,67890.12345;67890", 0.15f, 0.15f, 0.15f, 1.0f, font2 );
+			
+			glPrint( gl, 5, 300, "ABCDEFGHIJKLMNOPQRSTUVXYZ", 0.5f, 0.25f, 0.5f, 1.0f, font1 );
+			glPrint( gl, 5, 300, "ABCDEFGHIJKLMNOPQRSTUVXYZ", 0.5f, 0.5f, 0.25f, 1.0f, font2 );
+			
+			glPrint( gl, 5, 400, "abcdefghijklmnopqrstuvxyz", 0.0f, 0.0f, 0.5f, 1.0f, font1 );
+			glPrint( gl, 5, 400, "abcdefghijklmnopqrstuvxyz", 0.5f, 0.25f, 0.5f, 1.0f, font2 );
 		}
 
 		public void reshape( GLAutoDrawable glDrawable, int x, int y, int w, int h ){
 			if( h == 0 )
 				h = 1;
 			GL2 gl = glDrawable.getGL().getGL2();
-
-			// Reset The Current Viewport And Perspective Transformation
+			
 			gl.glViewport( 0, 0, w, h );
-			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION ); // Select The Projection Matrix
-			gl.glLoadIdentity(); // Reset The Projection Matrix
-
-			// Calculate The Aspect Ratio Of The Window
-			glu.gluPerspective( 45.0f, (float)w / (float)h, 0.1f, 100.0f );
-			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW ); // Select The Modelview Matrix
-			gl.glLoadIdentity(); // Reset The ModalView Matrix
+			
+			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
+			gl.glPushMatrix();
+			gl.glLoadIdentity();
+			gl.glOrtho( 0, w, h, 0, -1, 1 );
 		}
 
 		/*
@@ -269,11 +487,16 @@ public class PruebaTexto{
 		canvas.addGLEventListener( new Renderer() );
 		frame.getContentPane().add( canvas, BorderLayout.CENTER );
 
-		frame.getContentPane().setPreferredSize( new Dimension( 500, 250 ) );
+		frame.getContentPane().setPreferredSize( new Dimension( 640, 480 ) );
 		frame.pack();
 		frame.setLocationRelativeTo( null ); // center
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		frame.setVisible( true );
+		
+		Animator animator = new Animator();
+		animator.setRunAsFastAsPossible( true );
+		animator.add( canvas );
+		
 		canvas.requestFocusInWindow();
 	}
 }
