@@ -53,7 +53,7 @@ public interface GeneradorDeFunciones {
 				try{
 					return _generaFuncion(p[0], p[1], p[2], p[3]);
 				}catch(ArrayIndexOutOfBoundsException faltanParametros){
-					throw INSUFICIENTES_PARAMETROS;
+					throw new IllegalArgumentException( INSUFICIENTES_PARAMETROS );
 				}
 			}
 		},
@@ -102,7 +102,7 @@ public interface GeneradorDeFunciones {
 				try{
 					return _generaFuncion(p[0],p[1],p[2],p[3],p[4]);
 				}catch(ArrayIndexOutOfBoundsException faltanParametros){
-					throw INSUFICIENTES_PARAMETROS;
+					throw new IllegalArgumentException( INSUFICIENTES_PARAMETROS );
 				}
 			}
 		},
@@ -152,7 +152,7 @@ public interface GeneradorDeFunciones {
 				try{
 					return _generaFuncion(p[0],p[1],p[2],p[3],p[4]);
 				}catch(ArrayIndexOutOfBoundsException faltanParametros){
-					throw INSUFICIENTES_PARAMETROS;
+					throw new IllegalArgumentException( INSUFICIENTES_PARAMETROS );
 				}
 			}
 		},
@@ -207,7 +207,7 @@ public interface GeneradorDeFunciones {
 				try{
 					return _generaFuncion(p[0],p[1],p[2],p[3],p[4],p[5]);
 				}catch(ArrayIndexOutOfBoundsException faltanParametros){
-					throw INSUFICIENTES_PARAMETROS;
+					throw new IllegalArgumentException( INSUFICIENTES_PARAMETROS );
 				}
 			}
 		},
@@ -237,7 +237,7 @@ public interface GeneradorDeFunciones {
 				try{
 					return _generaFuncion(p[0],p[1],p[2],p[3]);
 				}catch(ArrayIndexOutOfBoundsException faltanParametros){
-					throw INSUFICIENTES_PARAMETROS;
+					throw new IllegalArgumentException( INSUFICIENTES_PARAMETROS );
 				}
 			}
 		},
@@ -266,13 +266,13 @@ public interface GeneradorDeFunciones {
 				try{
 					return _generaFuncion(p[0],p[1],p[2],p[3]);
 				}catch(ArrayIndexOutOfBoundsException faltanParametros){
-					throw INSUFICIENTES_PARAMETROS;
+					throw new IllegalArgumentException( INSUFICIENTES_PARAMETROS );
 				}
 			}
 		};
 		
-		private final static IllegalArgumentException INSUFICIENTES_PARAMETROS =
-			new IllegalArgumentException("Faltan parámetros para poder generar la función");
+		/** Descripción de la excepción lanzada cuando faltan parámetros*/
+		static final String INSUFICIENTES_PARAMETROS = "Faltan parámetros para poder generar la función";
 	}
 	
 	/**

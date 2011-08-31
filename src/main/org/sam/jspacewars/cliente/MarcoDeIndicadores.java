@@ -26,6 +26,8 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
 import org.sam.interpoladores.Funcion;
 import org.sam.interpoladores.GeneradorDeFunciones;
@@ -273,7 +275,7 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void loadTexturas(GL gl){
+		public void loadTexturas(GL2 gl){
 			
 			if(cont >= apariencias.length)
 				return;
@@ -378,49 +380,49 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 			ledIndicadorGrado .setBounds( x1, y2, w1, h2 );
 		}
 		
-		/**
-		 * {@inheritDoc}
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 		 */
 		@Override
-		public void draw(GL gl){
-			gl.glViewport( 0, 0, (int)( x2 - x1), (int)( y2 - y1 ) );
-			
-			gl.glMatrixMode( GL.GL_MODELVIEW );
+		public void draw( GL2 gl ){
+			gl.glViewport( 0, 0, (int)( x2 - x1 ), (int)( y2 - y1 ) );
+
+			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 
-			gl.glMatrixMode(GL.GL_PROJECTION);
+			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
-			gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0, 1);
-			
-			apariencias[0].usar(gl);
-			inferior.draw(gl);
-			superior.draw(gl);
-			
-			apariencias[1].usar(gl);
-			izqInf.draw(gl);
-			derInf.draw(gl);
-			
-			apariencias[2].usar(gl);
-			izqSup.draw(gl);
-			derSup.draw(gl);
-			
-			apariencias[3].usar(gl);
-			
-			vidas.draw(gl);
-			bombas.draw(gl);
-			puntos.draw(gl);
-			
-			apariencias[4].usar(gl);
-			
-			for(GLComponent component: ledsNiveles)
-				component.draw(gl);
-			ledsGrado.draw(gl);
-			
-			for(GLComponent component: ledsIndicadores)
-				component.draw(gl);
-			ledIndicadorGrado.draw(gl);
-			
+			gl.glOrtho( 0.0, proporcionesPantalla, 0.0, 1.0, 0, 1 );
+
+			apariencias[0].usar( gl );
+			inferior.draw( gl );
+			superior.draw( gl );
+
+			apariencias[1].usar( gl );
+			izqInf.draw( gl );
+			derInf.draw( gl );
+
+			apariencias[2].usar( gl );
+			izqSup.draw( gl );
+			derSup.draw( gl );
+
+			apariencias[3].usar( gl );
+
+			vidas.draw( gl );
+			bombas.draw( gl );
+			puntos.draw( gl );
+
+			apariencias[4].usar( gl );
+
+			for( GLComponent component: ledsNiveles )
+				component.draw( gl );
+			ledsGrado.draw( gl );
+
+			for( GLComponent component: ledsIndicadores )
+				component.draw( gl );
+			ledIndicadorGrado.draw( gl );
+
 			gl.glPopMatrix();
 		}
 	}
@@ -456,7 +458,7 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 	 * 
 	 * @param gl El {@code GL} que proporciona acceso a las funciones necesarias.
 	 */
-	public abstract void loadTexturas(GL gl);
+	public abstract void loadTexturas(GL2 gl);
 	
 	/**
 	 * Método que actualiza los valores de las distintas {@code BarraImagenes} internas del {@code Marco},

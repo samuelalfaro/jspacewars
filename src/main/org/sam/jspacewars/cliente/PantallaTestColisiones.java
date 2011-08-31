@@ -25,9 +25,11 @@ package org.sam.jspacewars.cliente;
 import java.awt.Color;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 
 import org.sam.colisiones.LimiteRectangular;
@@ -91,7 +93,7 @@ public class PantallaTestColisiones extends GLCanvas{
 		}
 		
 		@Override
-		public void draw(GL gl) {
+		public void draw(GL2 gl) {
 			if(p != null){
 				LimiteRectangular l = p.getLimites();
 				gl.glBegin(GL.GL_LINE_STRIP);
@@ -134,7 +136,7 @@ public class PantallaTestColisiones extends GLCanvas{
 		private boolean iniciado = false;
 
 		public void init( GLAutoDrawable drawable ){
-			GL gl = drawable.getGL();
+			GL2 gl = drawable.getGL().getGL2();
 			while( !marco.isLoadComplete() )
 				marco.loadTexturas( gl );
 			iniciado = true;
@@ -145,12 +147,12 @@ public class PantallaTestColisiones extends GLCanvas{
 				reshape( drawable, 0, 0, drawable.getWidth(), drawable.getHeight() );
 				init( drawable );
 			}
-			GL gl = drawable.getGL();
+			GL2 gl = drawable.getGL().getGL2();
 
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 
 			marco.setViewportAreaInterna( gl );
-			gl.glMatrixMode( GL.GL_MODELVIEW );
+			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			glu.gluLookAt( 0.0, 0.0, 11, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
 			apLineas.usar( gl );
@@ -163,17 +165,14 @@ public class PantallaTestColisiones extends GLCanvas{
 			gl.glFlush();
 		}
 
-		public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
-		}
-
 		//private transient final Rectangle areaInterna = new Rectangle();
 		
 		public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ){
-			GL gl = drawable.getGL();
+			GL2 gl = drawable.getGL().getGL2();
 			gl.glViewport( 0, 0, width, height );
 			marco.setBounds( 0, 0, width, height );
 			
-			gl.glMatrixMode( GL.GL_PROJECTION );
+			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glLoadIdentity();
 			double near = 0.5;
 			double far = 240.0;
@@ -188,7 +187,14 @@ public class PantallaTestColisiones extends GLCanvas{
 
 			gl.glFrustum( -ratio_4_3 * d, ( ( 2.0 * aWidth ) / aHeight - ratio_4_3 ) * d, -d, d, near, far );
 
-			gl.glMatrixMode( GL.GL_MODELVIEW );
+			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
+		 */
+		@Override
+		public void dispose( GLAutoDrawable drawable ){
 		}
 	}
 	

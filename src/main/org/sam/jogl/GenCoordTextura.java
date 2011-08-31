@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que contiene los atributos que indican como se generarán automáticamente
@@ -34,29 +34,31 @@ public class GenCoordTextura {
 	 * Enumeración que contiene los distintos modos de generación
 	 * automática, de coordenadas de textura.
 	 */
+	@SuppressWarnings( "static-access" )
 	public enum Mode{
 		/**
 		 * Encapsula el valor GL_OBJECT_LINEAR.
 		 */
-		OBJECT_LINEAR	  (GL.GL_OBJECT_LINEAR),
+		OBJECT_LINEAR	  (GL2.GL_OBJECT_LINEAR),
 		/**
 		 * Encapsula el valor GL_EYE_LINEAR.
 		 */
-		EYE_LINEAR    	  (GL.GL_EYE_LINEAR),
+		EYE_LINEAR    	  (GL2.GL_EYE_LINEAR),
 		/**
 		 * Encapsula el valor GL_SPHERE_MAP.
 		 */
-		SPHERE_MAP		  (GL.GL_SPHERE_MAP),
+		SPHERE_MAP		  (GL2.GL_SPHERE_MAP),
 		/**
 		 * Encapsula el valor GL_NORMAL_MAP.
 		 */
-		NORMAL_MAP    	  (GL.GL_NORMAL_MAP),
+		NORMAL_MAP    	  (GL2.GL_NORMAL_MAP),
 		/**
 		 * Encapsula el valor GL_REFLECTION_MAP.
 		 */
-		REFLECTION_MAP	  (GL.GL_REFLECTION_MAP);
+		REFLECTION_MAP	  (GL2.GL_REFLECTION_MAP);
 
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
 
 		private Mode(int value){
 			this.value = value;
@@ -107,65 +109,66 @@ public class GenCoordTextura {
 	 * @param gl Contexto gráfico en el que se realiza a acción.
      * @param anterior {@code GenCoordTextura} anteriormente usado.
      */
-    public void activar(GL gl, GenCoordTextura anterior ){
+    @SuppressWarnings( "static-access" )
+    public void activar(GL2 gl, GenCoordTextura anterior ){
     	switch(coordinates){
     	case TEXTURE_COORDINATE_2:
-            gl.glTexGeni(GL.GL_S, GL.GL_TEXTURE_GEN_MODE, mode.value);
-            gl.glTexGeni(GL.GL_T, GL.GL_TEXTURE_GEN_MODE, mode.value);
+            gl.glTexGeni(GL2.GL_S, GL2.GL_TEXTURE_GEN_MODE, mode.value);
+            gl.glTexGeni(GL2.GL_T, GL2.GL_TEXTURE_GEN_MODE, mode.value);
             if(anterior == null){
-            	gl.glEnable(GL.GL_TEXTURE_GEN_S);
-            	gl.glEnable(GL.GL_TEXTURE_GEN_T);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_S);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_T);
             }else{
             	switch(anterior.coordinates){
             	case TEXTURE_COORDINATE_2: break;
             	case TEXTURE_COORDINATE_3:
-            		gl.glDisable(GL.GL_TEXTURE_GEN_R);
+            		gl.glDisable(GL2.GL_TEXTURE_GEN_R);
             		break;
             	case TEXTURE_COORDINATE_4:
-            		gl.glDisable(GL.GL_TEXTURE_GEN_Q);
-            		gl.glDisable(GL.GL_TEXTURE_GEN_R);
+            		gl.glDisable(GL2.GL_TEXTURE_GEN_Q);
+            		gl.glDisable(GL2.GL_TEXTURE_GEN_R);
             		break;
             	}
             }
             break;
     	case TEXTURE_COORDINATE_3:
-    		gl.glTexGeni(GL.GL_R, GL.GL_TEXTURE_GEN_MODE, mode.value);
-    		gl.glTexGeni(GL.GL_S, GL.GL_TEXTURE_GEN_MODE, mode.value);
-            gl.glTexGeni(GL.GL_T, GL.GL_TEXTURE_GEN_MODE, mode.value);
+    		gl.glTexGeni(GL2.GL_R, GL2.GL_TEXTURE_GEN_MODE, mode.value);
+    		gl.glTexGeni(GL2.GL_S, GL2.GL_TEXTURE_GEN_MODE, mode.value);
+            gl.glTexGeni(GL2.GL_T, GL2.GL_TEXTURE_GEN_MODE, mode.value);
             if(anterior == null){
-            	gl.glEnable(GL.GL_TEXTURE_GEN_R);
-            	gl.glEnable(GL.GL_TEXTURE_GEN_S);
-            	gl.glEnable(GL.GL_TEXTURE_GEN_T);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_R);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_S);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_T);
             }else{
             	switch(anterior.coordinates){
             	case TEXTURE_COORDINATE_2:
-            		gl.glEnable(GL.GL_TEXTURE_GEN_R);
+            		gl.glEnable(GL2.GL_TEXTURE_GEN_R);
             		break;
             	case TEXTURE_COORDINATE_3: break;
             	case TEXTURE_COORDINATE_4:
-            		gl.glDisable(GL.GL_TEXTURE_GEN_Q);
+            		gl.glDisable(GL2.GL_TEXTURE_GEN_Q);
             		break;
             	}
             }
             break;
     	case TEXTURE_COORDINATE_4:
-    		gl.glTexGeni(GL.GL_Q, GL.GL_TEXTURE_GEN_MODE, mode.value);
-    		gl.glTexGeni(GL.GL_R, GL.GL_TEXTURE_GEN_MODE, mode.value);
-    		gl.glTexGeni(GL.GL_S, GL.GL_TEXTURE_GEN_MODE, mode.value);
-            gl.glTexGeni(GL.GL_T, GL.GL_TEXTURE_GEN_MODE, mode.value);
+    		gl.glTexGeni(GL2.GL_Q, GL2.GL_TEXTURE_GEN_MODE, mode.value);
+    		gl.glTexGeni(GL2.GL_R, GL2.GL_TEXTURE_GEN_MODE, mode.value);
+    		gl.glTexGeni(GL2.GL_S, GL2.GL_TEXTURE_GEN_MODE, mode.value);
+            gl.glTexGeni(GL2.GL_T, GL2.GL_TEXTURE_GEN_MODE, mode.value);
             if(anterior == null){
-            	gl.glEnable(GL.GL_TEXTURE_GEN_Q);
-            	gl.glEnable(GL.GL_TEXTURE_GEN_R);
-            	gl.glEnable(GL.GL_TEXTURE_GEN_S);
-            	gl.glEnable(GL.GL_TEXTURE_GEN_T);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_Q);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_R);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_S);
+            	gl.glEnable(GL2.GL_TEXTURE_GEN_T);
             }else{
             	switch(anterior.coordinates){
             	case TEXTURE_COORDINATE_2:
-            		gl.glEnable(GL.GL_TEXTURE_GEN_Q);
-            		gl.glEnable(GL.GL_TEXTURE_GEN_R);
+            		gl.glEnable(GL2.GL_TEXTURE_GEN_Q);
+            		gl.glEnable(GL2.GL_TEXTURE_GEN_R);
             		break;
             	case TEXTURE_COORDINATE_3:
-            		gl.glEnable(GL.GL_TEXTURE_GEN_Q);
+            		gl.glEnable(GL2.GL_TEXTURE_GEN_Q);
             		break;
             	case TEXTURE_COORDINATE_4:
             		break;
@@ -178,20 +181,20 @@ public class GenCoordTextura {
 	 * Método que desactiva la generación automática de las coordenadas de textura.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void desactivar(GL gl){
+    public void desactivar(GL2 gl){
     	switch(coordinates){
     	case TEXTURE_COORDINATE_2:
-    		gl.glDisable(GL.GL_TEXTURE_GEN_S);
-            gl.glDisable(GL.GL_TEXTURE_GEN_T);
+    		gl.glDisable(GL2.GL_TEXTURE_GEN_S);
+            gl.glDisable(GL2.GL_TEXTURE_GEN_T);
     	case TEXTURE_COORDINATE_3:
-    		gl.glDisable(GL.GL_TEXTURE_GEN_R);
-    		gl.glDisable(GL.GL_TEXTURE_GEN_S);
-            gl.glDisable(GL.GL_TEXTURE_GEN_T);
+    		gl.glDisable(GL2.GL_TEXTURE_GEN_R);
+    		gl.glDisable(GL2.GL_TEXTURE_GEN_S);
+            gl.glDisable(GL2.GL_TEXTURE_GEN_T);
     	case TEXTURE_COORDINATE_4:
-    		gl.glDisable(GL.GL_TEXTURE_GEN_Q);
-    		gl.glDisable(GL.GL_TEXTURE_GEN_R);
-            gl.glDisable(GL.GL_TEXTURE_GEN_S);
-            gl.glDisable(GL.GL_TEXTURE_GEN_T);
+    		gl.glDisable(GL2.GL_TEXTURE_GEN_Q);
+    		gl.glDisable(GL2.GL_TEXTURE_GEN_R);
+            gl.glDisable(GL2.GL_TEXTURE_GEN_S);
+            gl.glDisable(GL2.GL_TEXTURE_GEN_T);
     	}
 	}
 }

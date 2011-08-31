@@ -26,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Matrix4d;
@@ -40,8 +41,8 @@ import org.sam.jogl.AtributosPunto;
 import org.sam.jogl.AtributosRender;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
-import org.sam.jogl.Geometria;
 import org.sam.jogl.GenCoordTextura;
+import org.sam.jogl.Geometria;
 import org.sam.jogl.Grupo;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.Material;
@@ -477,11 +478,11 @@ public final class GrafoEscenaConverters {
 			float v2;
 		}
 		
-		private static OglList createTexturedQuad(GL gl, Data data){
+		private static OglList createTexturedQuad(GL2 gl, Data data){
 			
 			OglList oglList = new OglList(gl);
 			
-			gl.glBegin(GL.GL_QUADS);
+			gl.glBegin(GL2.GL_QUADS);
 				gl.glTexCoord2f(data.u1,data.v1);
 				gl.glVertex3f(data.x1,data.y1,0);
 				gl.glTexCoord2f(data.u2,data.v1);
@@ -536,7 +537,7 @@ public final class GrafoEscenaConverters {
 			data.v1 = Float.parseFloat(reader.getAttribute(S.v1));
 			data.u2 = Float.parseFloat(reader.getAttribute(S.u2));
 			data.v2 = Float.parseFloat(reader.getAttribute(S.v2));
-			return createTexturedQuad(GLU.getCurrentGL(), data);
+			return createTexturedQuad(GLU.getCurrentGL().getGL2(), data);
 		}
 	}
 	
@@ -964,14 +965,15 @@ public final class GrafoEscenaConverters {
 		 */
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 //			System.err.println(reader.getAttribute(S.format) + " " +reader.getAttribute(S.image));
-			Textura.MinFilter minFilter = Enum.valueOf(Textura.MinFilter.class, reader.getAttribute(S.minFilter));
-			Textura.MagFilter magFilter = Enum.valueOf(Textura.MagFilter.class, reader.getAttribute(S.magFilter));
-			Textura.Format format = Enum.valueOf(Textura.Format.class, reader.getAttribute(S.format));
-			BufferedImage image = Imagen.cargarToBufferedImage(reader.getAttribute(S.image));
-			boolean flipY = reader.getAttribute(S.flipY) != null && S.TRUE.equalsIgnoreCase(reader.getAttribute(S.flipY));
-			Textura textura = new Textura(GLU.getCurrentGL(), minFilter, magFilter, format, image, flipY);
-			textura.setWrap_s(Enum.valueOf(Textura.Wrap.class, reader.getAttribute(S.wrapS)));
-			textura.setWrap_t(Enum.valueOf(Textura.Wrap.class, reader.getAttribute(S.wrapT)));
+			Textura.MinFilter minFilter = Enum.valueOf( Textura.MinFilter.class, reader.getAttribute( S.minFilter ) );
+			Textura.MagFilter magFilter = Enum.valueOf( Textura.MagFilter.class, reader.getAttribute( S.magFilter ) );
+			Textura.Format format = Enum.valueOf( Textura.Format.class, reader.getAttribute( S.format ) );
+			BufferedImage image = Imagen.cargarToBufferedImage( reader.getAttribute( S.image ) );
+			boolean flipY = reader.getAttribute( S.flipY ) != null &&
+				S.TRUE.equalsIgnoreCase( reader.getAttribute( S.flipY ) );
+			Textura textura = new Textura( GLU.getCurrentGL().getGL2(), minFilter, magFilter, format, image, flipY );
+			textura.setWrap_s( Enum.valueOf( Textura.Wrap.class, reader.getAttribute( S.wrapS ) ) );
+			textura.setWrap_t( Enum.valueOf( Textura.Wrap.class, reader.getAttribute( S.wrapT ) ) );
 			return textura;
 		}
 	}
@@ -1221,7 +1223,7 @@ public final class GrafoEscenaConverters {
 		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 			String vertexFile = reader.getAttribute(S.vertex);
 			String fragmentFile = reader.getAttribute(S.fragment);
-			GL gl = GLU.getCurrentGL();
+			GL2 gl = GLU.getCurrentGL().getGL2();
 			Shader shader = new Shader(gl, vertexFile, fragmentFile);
 			while (reader.hasMoreChildren()) {
 				reader.moveDown();

@@ -23,6 +23,8 @@
 package org.sam.jogl;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLLightingFunc;
 
 /**
  * Clase que conteniene los atributos relaccionados la iluminación de elementos,
@@ -186,17 +188,17 @@ public class Material {
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void activar(GL gl){
+	public void activar(GL2 gl){
 		if( anterior == this )
 			return;
 		if( anterior == null )
-			gl.glEnable(GL.GL_LIGHTING);
+			gl.glEnable( GLLightingFunc.GL_LIGHTING );
 
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, ambient, 0);
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, diffuse, 0);
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_EMISSION, emission, 0);
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_SHININESS, shininess, 0);
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_SPECULAR, specular, 0);
+		gl.glMaterialfv( GL.GL_FRONT, GLLightingFunc.GL_AMBIENT, ambient, 0 );
+		gl.glMaterialfv( GL.GL_FRONT, GLLightingFunc.GL_DIFFUSE, diffuse, 0 );
+		gl.glMaterialfv( GL.GL_FRONT, GLLightingFunc.GL_EMISSION, emission, 0 );
+		gl.glMaterialfv( GL.GL_FRONT, GLLightingFunc.GL_SHININESS, shininess, 0 );
+		gl.glMaterialfv( GL.GL_FRONT, GLLightingFunc.GL_SPECULAR, specular, 0 );
 
 		anterior = this;
 	}
@@ -206,10 +208,10 @@ public class Material {
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public static  void desactivar(GL gl){
+	public static void desactivar( GL2 gl ){
 		if( anterior == null )
 			return;
-		gl.glDisable(GL.GL_LIGHTING);
+		gl.glDisable( GLLightingFunc.GL_LIGHTING );
 		anterior = null;
 	}
 }

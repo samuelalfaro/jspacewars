@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que se encarga de agrupar todos los atributos relativos a la apariencia de los
@@ -354,7 +354,7 @@ public class Apariencia {
 	 * </p>
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void usar(GL gl){
+	public void usar(GL2 gl){
  		if( anterior == this )
  			return;
 

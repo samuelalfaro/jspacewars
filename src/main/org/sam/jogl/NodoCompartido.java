@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que representa un {@code Nodo} que tiene varios antecesores.
@@ -41,11 +41,11 @@ public class NodoCompartido implements Nodo {
 		this.child = child;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
+	public void draw(GL2 gl) {
 		child.draw(gl);
 	}
 	
@@ -72,8 +72,8 @@ public class NodoCompartido implements Nodo {
 	
 	private transient Nodo[] nodos; 
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#getChilds()
 	 */
 	@Override
 	public Nodo[] getChilds(){
@@ -83,8 +83,8 @@ public class NodoCompartido implements Nodo {
 		return nodos;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
 	 */
 	@Override
 	public NodoCompartido clone(){

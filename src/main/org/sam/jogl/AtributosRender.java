@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que contendrá todos los atributos relaccionados con el formato de <i>render</i>,
@@ -35,6 +35,6 @@ public class AtributosRender {
 	 * Método que se encarga de usar estos {@code AtributosRender}.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void usar(GL gl){
+	public void usar(GL2 gl){
 	}
 }

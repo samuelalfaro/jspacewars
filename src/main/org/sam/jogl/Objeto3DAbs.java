@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase base sobre la que crear, clases descendientes de
@@ -72,11 +72,11 @@ public abstract class Objeto3DAbs extends Hoja {
 		this.apariencia = apariencia;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL gl) {
+	public void draw(GL2 gl) {
 		if( apariencia != null )
 			apariencia.usar(gl);
 	}

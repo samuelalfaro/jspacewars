@@ -22,7 +22,7 @@
  */
 package org.sam.jogl.gui;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 public class BarraImagenes extends GLComponent{
 		
@@ -54,9 +54,11 @@ public class BarraImagenes extends GLComponent{
 			valores[index] = value;
 		}
 		
-		/** {@inheritDoc} */
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
+		 */
 		@Override
-		public void draw(GL gl){
+		public void draw(GL2 gl){
 			int nImgs = valores.length;
 			float ancho = x2 - x1;
 			float anchoBorde = bordeH * ancho;

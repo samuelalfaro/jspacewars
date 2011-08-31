@@ -22,7 +22,7 @@
  */
 package org.sam.jogl;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Interface indica que los objeto, de las clases que lo implementan,
@@ -35,5 +35,5 @@ public interface Dibujable {
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void draw(GL gl);
+	public void draw(GL2 gl);
 }
