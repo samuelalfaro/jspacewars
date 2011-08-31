@@ -24,7 +24,6 @@ package org.sam.jspacewars;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.Frame;
@@ -39,10 +38,10 @@ import java.nio.channels.DatagramChannel;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
-import javax.swing.JFrame;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
 
 import org.sam.elementos.Cache;
 import org.sam.jspacewars.cliente.Cliente;
@@ -50,7 +49,7 @@ import org.sam.jspacewars.serialization.Loader;
 import org.sam.jspacewars.servidor.ServidorJuego;
 import org.sam.jspacewars.servidor.elementos.Elemento;
 
-import com.sun.opengl.util.Animator;
+import com.jogamp.opengl.util.Animator;
 
 public class ExampleGameMenuJOGL {
 
@@ -112,7 +111,6 @@ public class ExampleGameMenuJOGL {
 	}
 	
 	private static class ClientServer{
-		
 		Cliente cliente;
 		ServidorJuego server;
 		
@@ -124,7 +122,7 @@ public class ExampleGameMenuJOGL {
 		final ClientServer clientServer= new ClientServer();
 		
 		final DataGame dataGame = new DataGame();
-		GLCanvas splashCanvas = new GLCanvas(new GLCapabilities());
+		GLCanvas splashCanvas = new GLCanvas( new GLCapabilities( GLProfile.get( GLProfile.GL2 ) ) );
 
 		SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
 		splashWindow.setVisible(true);

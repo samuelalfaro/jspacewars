@@ -23,6 +23,7 @@
 package org.sam.jogl;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que contiene los atributos de combinación y correcion de perspectiva empleados
@@ -33,29 +34,32 @@ public class AtributosTextura {
 	/**
 	 * Enumeración que contiene los distintos modos de aplicar la textura.
 	 */
+	@SuppressWarnings( "static-access" )
 	public enum Mode{
 		/**
 		 * Encapsula el valor GL_MODULATE.
 		 */
-		MODULATE	      (GL.GL_MODULATE),
+		MODULATE	      (GL2.GL_MODULATE),
 		/**
 		 * Encapsula el valor GL_DECAL.
 		 */
-		DECAL		      (GL.GL_DECAL),
+		DECAL		      (GL2.GL_DECAL),
 		/**
 		 * Encapsula el valor GL_BLEND.
 		 */
-		BLEND		      (GL.GL_BLEND),
+		BLEND		      (GL2.GL_BLEND),
 		/**
 		 * Encapsula el valor GL_REPLACE.
 		 */
-		REPLACE		      (GL.GL_REPLACE),
+		REPLACE		      (GL2.GL_REPLACE),
 		/**
 		 * Encapsula el valor GL_COMBINE.
 		 */
-		COMBINE		      (GL.GL_COMBINE);
+		COMBINE		      (GL2.GL_COMBINE);
 
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
+		
 		private Mode(int value){
 			this.value = value;
 		}
@@ -67,37 +71,40 @@ public class AtributosTextura {
 	 * Estos métodos de combinación son empleados cuando el modo de aplicación
 	 * de textura elegido es {@link AtributosTextura.Mode#COMBINE}.
 	 */
+	@SuppressWarnings( "static-access" )
 	public enum CombineMode{
 		/**
 		 * Encapsula el valor GL_REPLACE.
 		 */
-		REPLACE		      (GL.GL_REPLACE),
+		REPLACE		      (GL2.GL_REPLACE),
 		/**
 		 * Encapsula el valor GL_MODULATE.
 		 */
-		MODULATE	      (GL.GL_MODULATE),
+		MODULATE	      (GL2.GL_MODULATE),
 		/**
 		 * Encapsula el valor GL_ADD.
 		 */
-		ADD			      (GL.GL_ADD),
+		ADD			      (GL2.GL_ADD),
 		/**
 		 * Encapsula el valor GL_ADD_SIGNED.
 		 */
-		ADD_SIGNED	      (GL.GL_ADD_SIGNED),
+		ADD_SIGNED	      (GL2.GL_ADD_SIGNED),
 		/**
 		 * Encapsula el valor GL_SUBTRACT.
 		 */
-		SUBTRACT	      (GL.GL_SUBTRACT),
+		SUBTRACT	      (GL2.GL_SUBTRACT),
 		/**
 		 * Encapsula el valor GL_INTERPOLATE.
 		 */
-		INTERPOLATE	      (GL.GL_INTERPOLATE),
+		INTERPOLATE	      (GL2.GL_INTERPOLATE),
 		/**
 		 * Encapsula el valor GL_DOT3_RGB.
 		 */
-		DOT3		      (GL.GL_DOT3_RGB);
+		DOT3		      (GL2.GL_DOT3_RGB);
 
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
+		
 		private CombineMode(int value){
 			this.value = value;
 		}
@@ -110,58 +117,61 @@ public class AtributosTextura {
 	 * Estos orígenes son empleados cuando el modo de aplicación
 	 * elegido es {@link AtributosTextura.Mode#COMBINE}.
 	 */
+	@SuppressWarnings( "static-access" )
 	public enum CombineSrc{
 		/**
 		 * Encapsula el valor GL_CONSTANT.
 		 */
-		CONSTANT	      (GL.GL_CONSTANT),
+		CONSTANT	      ( GL2.GL_CONSTANT ),
 		/**
 		 * Encapsula el valor GL_PRIMARY_COLOR.
 		 */
-		OBJECT		      (GL.GL_PRIMARY_COLOR),
+		OBJECT		      ( GL2.GL_PRIMARY_COLOR ),
 		/**
 		 * Encapsula el valor GL_PREVIOUS.
 		 */
-		PREVIOUS	      (GL.GL_PREVIOUS),
+		PREVIOUS	      ( GL2.GL_PREVIOUS ),
 		/**
 		 * Encapsula el valor GL_TEXTURE.
 		 */
-		TEXTURE		      (GL.GL_TEXTURE),
+		TEXTURE		      ( GL2.GL_TEXTURE ),
 		/**
 		 * Encapsula el valor GL_TEXTURE0.
 		 */
-		TEXTURE0	      (GL.GL_TEXTURE0),
+		TEXTURE0	      ( GL2.GL_TEXTURE0 ),
 		/**
 		 * Encapsula el valor GL_TEXTURE1.
 		 */
-		TEXTURE1	      (GL.GL_TEXTURE1),
+		TEXTURE1	      ( GL2.GL_TEXTURE1 ),
 		/**
 		 * Encapsula el valor GL_TEXTURE2.
 		 */
-		TEXTURE2	      (GL.GL_TEXTURE2),
+		TEXTURE2	      ( GL2.GL_TEXTURE2 ),
 		/**
 		 * Encapsula el valor GL_TEXTURE3.
 		 */
-		TEXTURE3	      (GL.GL_TEXTURE3),
+		TEXTURE3	      ( GL2.GL_TEXTURE3 ),
 		/**
 		 * Encapsula el valor GL_TEXTURE4.
 		 */
-		TEXTURE4	      (GL.GL_TEXTURE4),
+		TEXTURE4	      ( GL2.GL_TEXTURE4 ),
 		/**
 		 * Encapsula el valor GL_TEXTURE5.
 		 */
-		TEXTURE5	      (GL.GL_TEXTURE5),
+		TEXTURE5	      ( GL2.GL_TEXTURE5 ),
 		/**
 		 * Encapsula el valor GL_TEXTURE6.
 		 */
-		TEXTURE6	      (GL.GL_TEXTURE6),
+		TEXTURE6	      ( GL2.GL_TEXTURE6 ),
 		/**
 		 * Encapsula el valor GL_TEXTURE7.
 		 */
-		TEXTURE7	      (GL.GL_TEXTURE7);
+		TEXTURE7	      ( GL2.GL_TEXTURE7 );
 		
-		private final int value;
-		private CombineSrc(int value){
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
+		
+		CombineSrc(int value){
 			this.value = value;
 		}
 	}
@@ -191,7 +201,9 @@ public class AtributosTextura {
 		 */
 		ONE_MINUS_SRC_ALPHA	(GL.GL_ONE_MINUS_SRC_ALPHA);
 
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
+		
 		private CombineOperand(int value){
 			this.value = value;
 		}
@@ -211,7 +223,9 @@ public class AtributosTextura {
 		 */
 		NICEST 	          (GL.GL_NICEST);
 
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
+		
 		private PerspectiveCorrection(int value){
 			this.value = value;
 		}
@@ -501,36 +515,37 @@ public class AtributosTextura {
 	 * Método que se encarga de usar estos {@code AtributosTextura}.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void usar(GL gl) {
+	@SuppressWarnings( "static-access" )
+	public void usar(GL2 gl) {
 
 		if (envColor != null)
-			gl.glTexEnvfv(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_COLOR, envColor, 0);
+			gl.glTexEnvfv(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_COLOR, envColor, 0);
 
-		gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, mode.value);
+		gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_MODE, mode.value);
 		if (mode == Mode.COMBINE) {
-			gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_RGB, combineRgbMode.value);
-			gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_SRC0_RGB, combineRgbSrcs[0].value);
-			gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_RGB,	combineRgbOperands[0].value);
+			gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_COMBINE_RGB, combineRgbMode.value);
+			gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_SRC0_RGB, combineRgbSrcs[0].value);
+			gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND0_RGB,	combineRgbOperands[0].value);
 			if (combineRgbMode != CombineMode.REPLACE) {
-				gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_SRC1_RGB, combineRgbSrcs[1].value);
-				gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_RGB, combineRgbOperands[1].value);
+				gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_SRC1_RGB, combineRgbSrcs[1].value);
+				gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND1_RGB, combineRgbOperands[1].value);
 				if (combineRgbMode == CombineMode.INTERPOLATE) {
-					gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_SRC2_RGB, combineRgbSrcs[2].value);
-					gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_OPERAND2_RGB, combineRgbOperands[2].value);
+					gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_SRC2_RGB, combineRgbSrcs[2].value);
+					gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND2_RGB, combineRgbOperands[2].value);
 				}
 			}
-			gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_COMBINE_ALPHA, combineAlphaMode.value);
-			gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_SRC0_ALPHA, combineAlphaSrcs[0].value);
-			gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_OPERAND0_ALPHA, combineAlphaOperands[0].value);
+			gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_COMBINE_ALPHA, combineAlphaMode.value);
+			gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_SRC0_ALPHA, combineAlphaSrcs[0].value);
+			gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND0_ALPHA, combineAlphaOperands[0].value);
 			if (combineAlphaMode != CombineMode.REPLACE) {
-				gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_SRC1_ALPHA, combineAlphaSrcs[1].value);
-				gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_OPERAND1_ALPHA, combineAlphaOperands[1].value);
+				gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_SRC1_ALPHA, combineAlphaSrcs[1].value);
+				gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND1_ALPHA, combineAlphaOperands[1].value);
 				if (combineAlphaMode == CombineMode.INTERPOLATE) {
-					gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_SRC2_ALPHA, combineAlphaSrcs[2].value);
-					gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_OPERAND2_ALPHA, combineAlphaOperands[2].value);
+					gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_SRC2_ALPHA, combineAlphaSrcs[2].value);
+					gl.glTexEnvi(GL2.GL_TEXTURE_ENV, GL2.GL_OPERAND2_ALPHA, combineAlphaOperands[2].value);
 				}
 			}
 		}
-		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, perspectiveCorrection.value);
+		gl.glHint( GL2.GL_PERSPECTIVE_CORRECTION_HINT, perspectiveCorrection.value);
 	}
 }

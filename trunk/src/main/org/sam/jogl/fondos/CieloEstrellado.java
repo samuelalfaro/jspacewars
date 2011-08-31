@@ -23,13 +23,21 @@
 package org.sam.jogl.fondos;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
 import org.sam.elementos.Modificador;
-import org.sam.jogl.*;
-import org.sam.jogl.particulas.*;
-import org.sam.util.*;
+import org.sam.jogl.Apariencia;
+import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.AtributosTransparencia;
+import org.sam.jogl.MatrixSingleton;
+import org.sam.jogl.Textura;
+import org.sam.jogl.particulas.Emisor;
+import org.sam.jogl.particulas.FactoriaDeParticulas;
+import org.sam.jogl.particulas.Particulas;
+import org.sam.util.Imagen;
 
 public class CieloEstrellado implements Fondo, Modificador{
 	
@@ -38,7 +46,7 @@ public class CieloEstrellado implements Fondo, Modificador{
 	private transient final Particulas[] estrellas;
 	private transient float proporcionesPantalla, s1, s2;
 	
-	public CieloEstrellado(GL gl, String texturePath, String starstexturePath){
+	public CieloEstrellado(GL2 gl, String texturePath, String starstexturePath){
 		apFondo = new Apariencia(); 
 		apFondo.setTextura(
 				new Textura(gl, Textura.Format.RGB, Imagen.cargarToBufferedImage(texturePath), true)
@@ -92,56 +100,66 @@ public class CieloEstrellado implements Fondo, Modificador{
 		FactoriaDeParticulas.setOptimizedFor2D(false);
 	}
 
-	/** {@inheritDoc} */
+
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.fondos.Fondo#setProporcionesPantalla(float)
+	 */
 	@Override
 	public void setProporcionesPantalla(float proporcionesPantalla) {
 		this.proporcionesPantalla = proporcionesPantalla;
 		this.s2 = proporcionesPantalla / proporcionesTextura;
 	}
 
-	/** {@inheritDoc} */
+
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
+	 */
 	@Override
-	public void draw(GL gl) {
-		
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+	public void draw(GL2 gl) {
+
+		gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		gl.glLoadIdentity();
 		MatrixSingleton.loadModelViewMatrix();
 
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
-		gl.glOrtho(0.0, proporcionesPantalla, 0.0, 1.0, 0.0, 1.0);
-		
-		apFondo.usar(gl);
-		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
-		gl.glDepthMask(false);
-		gl.glBegin(GL.GL_QUADS);
-			gl.glTexCoord2f(s1,0.0f);
-			gl.glVertex2f(0.0f,0.0f);
-			gl.glTexCoord2f(s2 + s1,0.0f);
-			gl.glVertex2f(proporcionesPantalla,0.0f);
-			gl.glTexCoord2f(s2 + s1,1.0f);
-			gl.glVertex2f(proporcionesPantalla,1.0f);
-			gl.glTexCoord2f(s1,1.0f);
-			gl.glVertex2f(0.0f,1.0f);
+		gl.glOrtho( 0.0, proporcionesPantalla, 0.0, 1.0, 0.0, 1.0 );
+
+		apFondo.usar( gl );
+		gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
+		gl.glDepthMask( false );
+		gl.glBegin( GL2.GL_QUADS );
+			gl.glTexCoord2f( s1, 0.0f );
+			gl.glVertex2f( 0.0f, 0.0f );
+			gl.glTexCoord2f( s2 + s1, 0.0f );
+			gl.glVertex2f( proporcionesPantalla, 0.0f );
+			gl.glTexCoord2f( s2 + s1, 1.0f );
+			gl.glVertex2f( proporcionesPantalla, 1.0f );
+			gl.glTexCoord2f( s1, 1.0f );
+			gl.glVertex2f( 0.0f, 1.0f );
 		gl.glEnd();
 
-		for(Particulas p:estrellas )
-			p.draw(gl);
-		
-		gl.glMatrixMode(GL.GL_PROJECTION);
+		for( Particulas p: estrellas )
+			p.draw( gl );
+
+		gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 		gl.glPopMatrix();
 		MatrixSingleton.loadProjectionMatrix();
 		
 	}
 
-	/** {@inheritDoc} */
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Modificable#getModificador()
+	 */
 	@Override
 	public Modificador getModificador() {
 		return this;
 	}
 
-	/** {@inheritDoc} */
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Modificador#modificar(float)
+	 */
 	@Override
 	public boolean modificar(float steep) {
 		s1 += 0.02f * steep;

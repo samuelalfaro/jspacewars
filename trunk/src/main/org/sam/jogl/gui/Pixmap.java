@@ -25,7 +25,7 @@
  */
 package org.sam.jogl.gui;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 public class Pixmap{
 	/**
@@ -44,16 +44,16 @@ public class Pixmap{
 		v2 = y + h;
 	}
 	
-	public void draw(GL gl, float x1, float y1, float x2, float y2){
-		gl.glBegin(GL.GL_QUADS);
-		gl.glTexCoord2f( u1, v1 );
-		gl.glVertex2f  ( x1, y1 );
-		gl.glTexCoord2f( u2, v1 );
-		gl.glVertex2f  ( x2, y1 );
-		gl.glTexCoord2f( u2, v2 );
-		gl.glVertex2f  ( x2, y2 );
-		gl.glTexCoord2f( u1, v2 );
-		gl.glVertex2f  ( x1, y2 );
+	public void draw(GL2 gl, float x1, float y1, float x2, float y2){
+		gl.glBegin(GL2.GL_QUADS);
+			gl.glTexCoord2f( u1, v1 );
+			gl.glVertex2f  ( x1, y1 );
+			gl.glTexCoord2f( u2, v1 );
+			gl.glVertex2f  ( x2, y1 );
+			gl.glTexCoord2f( u2, v2 );
+			gl.glVertex2f  ( x2, y2 );
+			gl.glTexCoord2f( u1, v2 );
+			gl.glVertex2f  ( x1, y2 );
 		gl.glEnd();
 	}
 }

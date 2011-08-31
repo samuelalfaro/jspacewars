@@ -36,16 +36,20 @@ import org.fenggui.util.Spacing;
 public class GameMenu extends Container {
 
 	private static class MyListener implements IButtonPressedListener{
-		final Map<String,ButtonAction> actions;
-		
-		MyListener(Map<String,ButtonAction> actions){
+		final Map<String, ButtonAction> actions;
+
+		MyListener( Map<String, ButtonAction> actions ){
 			this.actions = actions;
 		}
-		
-		/** {@inheritDoc} */
+
+		/* (non-Javadoc)
+		 * @see org.fenggui.event.IButtonPressedListener#buttonPressed(java.lang.Object, org.fenggui.event.ButtonPressedEvent)
+		 */
 		@Override
-		public void buttonPressed(ButtonPressedEvent e) {
-			actions.get(((MyGameMenuButton)e.getSource()).getName() ).run();
+		public void buttonPressed( Object source, ButtonPressedEvent e ){
+			System.out.println( ((MyGameMenuButton)source ).getName());
+			System.out.println( actions.get( ( (MyGameMenuButton)source ).getName() ) );
+			actions.get( ( (MyGameMenuButton)source ).getName() ).run();
 		}
 	}
 
@@ -105,7 +109,7 @@ public class GameMenu extends Container {
 		});
 
 		quit = MyGameMenuButton.derive( "quit", listener );
-		actions.put("server", new ButtonAction() {
+		actions.put("quit", new ButtonAction() {
 			public void run() {
 				GameMenu.this.getDisplay().removeWidget(GameMenu.this);
 				System.exit(0);

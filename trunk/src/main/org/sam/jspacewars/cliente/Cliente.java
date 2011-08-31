@@ -29,7 +29,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.ListIterator;
 
-import javax.media.opengl.GLCanvas;
+import javax.media.opengl.awt.GLCanvas;
 
 import org.sam.elementos.Cache;
 import org.sam.jogl.Instancia3D;
@@ -205,7 +205,6 @@ public class Cliente extends Thread {
 			buff.flip();
 			recibir(buff, data, cache );
 			
-//			System.out.println("canvas.display()");
 			canvas.display();
 		}
 	}

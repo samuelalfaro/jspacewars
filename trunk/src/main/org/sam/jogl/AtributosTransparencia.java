@@ -23,6 +23,7 @@
 package org.sam.jogl;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que conteniene todos los atributos relaccionados con el formato de fusión de elementos
@@ -49,7 +50,8 @@ public class AtributosTransparencia {
 		 */
 		SUBTRACT					(GL.GL_FUNC_SUBTRACT);
 		
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
 		
 		private Equation(int value){
 			this.value = value;
@@ -60,6 +62,7 @@ public class AtributosTransparencia {
 	 * Enumeración que contiene los distintas operaciones que se pueden
 	 * aplicar al orígen que emplea la funcion de fusión.
 	 */
+	@SuppressWarnings( "static-access" )
 	public enum SrcFunc{
 		/**
 		 * Encapsula el valor           GL_ZERO.
@@ -104,25 +107,26 @@ public class AtributosTransparencia {
 		/**
 		 * Encapsula el valor           GL_CONSTANT_COLOR.
 		 */
-		CONSTANT_COLOR				(GL.GL_CONSTANT_COLOR),
+		CONSTANT_COLOR				(GL2.GL_CONSTANT_COLOR),
 		/**
 		 * Encapsula el valor           GL_ONE_MINUS_CONSTANT_COLOR.
 		 */
-		ONE_MINUS_CONSTANT_COLOR	(GL.GL_ONE_MINUS_CONSTANT_COLOR),
+		ONE_MINUS_CONSTANT_COLOR	(GL2.GL_ONE_MINUS_CONSTANT_COLOR),
 		/**
 		 * Encapsula el valor           GL_CONSTANT_ALPHA.
 		 */
-		CONSTANT_ALPHA				(GL.GL_CONSTANT_ALPHA),
+		CONSTANT_ALPHA				(GL2.GL_CONSTANT_ALPHA),
 		/**
 		 * Encapsula el valor           GL_ONE_MINUS_CONSTANT_ALPHA.
 		 */
-		ONE_MINUS_CONSTANT_ALPHA	(GL.GL_ONE_MINUS_CONSTANT_ALPHA),
+		ONE_MINUS_CONSTANT_ALPHA	(GL2.GL_ONE_MINUS_CONSTANT_ALPHA),
 		/**
 		 * Encapsula el valor           GL_SRC_ALPHA_SATURATE.
 		 */
 		ALPHA_SATURATE				(GL.GL_SRC_ALPHA_SATURATE);
 		
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
 		
 		private SrcFunc(int value){
 			this.value = value;
@@ -133,6 +137,7 @@ public class AtributosTransparencia {
 	 * Enumeración que contiene los distintas operaciones que se pueden
 	 * aplicar al destino que emplea la funcion de fusión.
 	 */
+	@SuppressWarnings( "static-access" )
 	public enum DstFunc{
 		/**
 		 * Encapsula el valor           GL_ZERO.
@@ -177,21 +182,22 @@ public class AtributosTransparencia {
 		/**
 		 * Encapsula el valor           GL_CONSTANT_COLOR.
 		 */
-		CONSTANT_COLOR				(GL.GL_CONSTANT_COLOR),
+		CONSTANT_COLOR				(GL2.GL_CONSTANT_COLOR),
 		/**
 		 * Encapsula el valor           GL_ONE_MINUS_CONSTANT_COLOR.
 		 */
-		ONE_MINUS_CONSTANT_COLOR	(GL.GL_ONE_MINUS_CONSTANT_COLOR),
+		ONE_MINUS_CONSTANT_COLOR	(GL2.GL_ONE_MINUS_CONSTANT_COLOR),
 		/**
 		 * Encapsula el valor           GL_CONSTANT_ALPHA.
 		 */
-		CONSTANT_ALPHA				(GL.GL_CONSTANT_ALPHA),
+		CONSTANT_ALPHA				(GL2.GL_CONSTANT_ALPHA),
 		/**
 		 * Encapsula el valor           GL_ONE_MINUS_CONSTANT_ALPHA.
 		 */
-		ONE_MINUS_CONSTANT_ALPHA	(GL.GL_ONE_MINUS_CONSTANT_ALPHA);
+		ONE_MINUS_CONSTANT_ALPHA	(GL2.GL_ONE_MINUS_CONSTANT_ALPHA);
 		
-		private final int value;
+		/** Entero que almacena el valor encapsulado.*/
+		final int value;
 		
 		private DstFunc(int value){
 			this.value = value;
@@ -199,51 +205,52 @@ public class AtributosTransparencia {
 	}
 
 	private static AtributosTransparencia anterior;
-	
-	private final Equation	equation;
-	private final SrcFunc	srcFunc;
-	private final DstFunc	dstFunc;
-	
+
+	private final Equation equation;
+	private final SrcFunc srcFunc;
+	private final DstFunc dstFunc;
+
 	/**
-	 *  Constructor que crea los {@code AtributosTransparencia} con los parámetros que recibe.
-	 *  
-	 * @param equation {@code Equation} de estos {@code AtributosTransparencia}.
-	 * @param srcFunc  {@code SrcFunc}  de estos {@code AtributosTransparencia}.
-	 * @param dstFunc  {@code DstFunc}  de estos {@code AtributosTransparencia}.
-	 */
-	public AtributosTransparencia(Equation	equation, SrcFunc srcFunc, DstFunc dstFunc){
-		this.equation = equation;
-		this.srcFunc  = srcFunc;
-		this.dstFunc  = dstFunc;
-	}
-	
-	/**
-	 * Método que activa la fusión de elementos semitransparentes con los valores de
-	 * estos {@code AtributosTransparencia}.
+	 * Constructor que crea los {@code AtributosTransparencia} con los parámetros que recibe.
 	 * 
-	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * @param equation {@code Equation} de estos {@code AtributosTransparencia}.
+	 * @param srcFunc  {@code SrcFunc} de estos {@code AtributosTransparencia}.
+	 * @param dstFunc  {@code DstFunc} de estos {@code AtributosTransparencia}.
 	 */
-	public void activar(GL gl){
+	public AtributosTransparencia( Equation equation, SrcFunc srcFunc, DstFunc dstFunc ){
+		this.equation = equation;
+		this.srcFunc = srcFunc;
+		this.dstFunc = dstFunc;
+	}
+
+	/**
+	 * Método que activa la fusión de elementos semitransparentes con los valores de estos
+	 * {@code AtributosTransparencia}.
+	 * 
+	 * @param gl  Contexto gráfico en el que se realiza a acción.
+	 */
+	public void activar( GL2 gl ){
 		if( anterior == this )
 			return;
-		gl.glEnable(GL.GL_BLEND);
-		gl.glBlendEquation(equation.value);
-		gl.glBlendFunc(srcFunc.value, dstFunc.value);
-//		gl.glDisable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
-		gl.glDepthMask(false);
+		gl.glEnable( GL.GL_BLEND );
+		gl.glBlendEquation( equation.value );
+		gl.glBlendFunc( srcFunc.value, dstFunc.value );
+		// gl.glDisable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
+		gl.glDepthMask( false );
 		anterior = this;
 	}
-	
+
 	/**
 	 * Método estático que desactiva la fusión de elementos semitransparentes.
-	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * 
+	 * @param gl  Contexto gráfico en el que se realiza a acción.
 	 */
-	public static void desactivar(GL gl){
+	public static void desactivar( GL2 gl ){
 		if( anterior == null )
 			return;
-		gl.glDepthMask(true);
-//		gl.glEnable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
-		gl.glDisable(GL.GL_BLEND);
+		gl.glDepthMask( true );
+		// gl.glEnable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
+		gl.glDisable( GL.GL_BLEND );
 		anterior = null;
 	}
 }

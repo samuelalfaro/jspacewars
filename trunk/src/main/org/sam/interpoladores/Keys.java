@@ -44,7 +44,7 @@ public final class Keys{
 	/**
 	 * Método que escala un vector de claves multiplicandolo por un valor escalar.
 	 * @param keys Vector de claves que será escalado.
-	 * @param length Valor escalar.
+	 * @param scale Valor escalar.
 	 */
 	static void scale(double[] keys, double scale) {
 		for (int i = 0; i < keys.length; i++)

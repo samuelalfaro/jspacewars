@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3f;
@@ -222,14 +223,14 @@ public class ObjLoader {
 		abstract void generateTangents(final List<Point3f> coordList, Vector3f[][] tangents);
 		
 		abstract void generate(
-				GL gl, Generator generator,
+				GL2 gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final List<TexCoord2f> texList
 		);
 		
 		abstract void generate(
-				GL gl, Generator generator,
+				GL2 gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final Vector3f[][] tangents,
@@ -291,8 +292,12 @@ public class ObjLoader {
 			tangents[1][indexN3].add(bitangent);
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.ObjLoader.Primitive#generate(javax.media.opengl.GL2, org.sam.jogl.Generator, java.util.List, java.util.List, java.util.List)
+		 */
+		@Override
 		void generate(
-				GL gl, Generator generator,
+				GL2 gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final List<TexCoord2f> texList
@@ -321,8 +326,12 @@ public class ObjLoader {
 			);
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.ObjLoader.Primitive#generate(javax.media.opengl.GL2, org.sam.jogl.Generator, java.util.List, java.util.List, javax.vecmath.Vector3f[][], java.util.List)
+		 */
+		@Override
 		void generate(
-				GL gl, Generator generator,
+				GL2 gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final Vector3f[][] tangents,
@@ -443,8 +452,13 @@ public class ObjLoader {
 			tangents[1][indexN4].add(bitangent);
 		}
 		
+		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.ObjLoader.Primitive#generate(javax.media.opengl.GL2, org.sam.jogl.Generator, java.util.List, java.util.List, java.util.List)
+		 */
+		@Override
 		void generate(
-				GL gl, Generator generator,
+				GL2 gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final List<TexCoord2f> texList
@@ -477,8 +491,12 @@ public class ObjLoader {
 			);
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.ObjLoader.Primitive#generate(javax.media.opengl.GL2, org.sam.jogl.Generator, java.util.List, java.util.List, javax.vecmath.Vector3f[][], java.util.List)
+		 */
+		@Override
 		void generate(
-				GL gl, Generator generator,
+				GL2 gl, Generator generator,
 				final List<Point3f> coordList,
 				final List<Vector3f> normList,
 				final Vector3f[][] tangents,
@@ -532,17 +550,19 @@ public class ObjLoader {
 		}
 	}
 	
-	private static float clearDist;
+	static float clearDist;
 
 	@SuppressWarnings("serial")
-	private static Point3f readVertex(ObjParser st) throws ParsingErrorException {
+	private static Point3f readVertex( ObjParser st ) throws ParsingErrorException{
 		Point3f v = new Point3f(){
-			public boolean equals(Object t){
-		        try {
-		            return VectorUtils.distance(this, (Tuple3f)t) <= clearDist;
-		         }
-		         catch (NullPointerException e2) {return false;}
-		         catch (ClassCastException   e1) {return false;}
+			public boolean equals( Object t ){
+				try{
+					return VectorUtils.distance( this, (Tuple3f)t ) <= clearDist;
+				}catch( NullPointerException e2 ){
+					return false;
+				}catch( ClassCastException e1 ){
+					return false;
+				}
 			}
 		};
 		v.x = st.getFloat();
@@ -922,7 +942,7 @@ public class ObjLoader {
 	}
 	
 	@SuppressWarnings("unused")
-	private static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector4f t4f){
+	static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector4f t4f){
 		
 		Vector3f sDir = new Vector3f(
 				Math.abs(normal.z),
@@ -1118,13 +1138,13 @@ public class ObjLoader {
 		if((flags & ObjLoader.GENERATE_NTB) != 0)
 			return GL.GL_LINES;
 		if((flags & ObjLoader.WIREFRAME) != 0)
-			return GL.GL_QUADS;
+			return GL2.GL_QUADS;
 		if( (flags & ObjLoader.TRIANGULATE) != 0 || primitive instanceof Triangle )
 			return GL.GL_TRIANGLES;
-		return GL.GL_QUADS;
+		return GL2.GL_QUADS;
 	}
 	
-	private OglList almacenarGeometria(GL gl, Matrix4d mt){
+	private OglList almacenarGeometria(GL2 gl, Matrix4d mt){
 		
 		boolean textCoord = texList.size() > 0;
 		boolean normal = normList.size() > 0;
@@ -1162,8 +1182,8 @@ public class ObjLoader {
 			}
 			
 			Generator generator = (flags & ObjLoader.GENERATE_NTB) != 0 ? 
-					Generator.Predefined.NTB.lineLength(0.25f):
-					Generator.Predefined.VerticesTangents;
+					new Generator.NTBGenerator(0.25f):
+					Generator.VerticesTangents;
 					
 			if( (flags & ObjLoader.TRIANGULATE) != 0){
 				gl.glBegin(	getGLPrimitive( primitives.element(), flags) );
@@ -1187,15 +1207,15 @@ public class ObjLoader {
 			Generator generator;
 			
 			if( (flags & WIREFRAME) != 0 )
-				generator = Generator.Predefined.VerticesWireFrame;
+				generator = Generator.VerticesWireFrame;
 			else if( normal  && textCoord )
-				generator = Generator.Predefined.VerticesNormalsTexCoords;
+				generator = Generator.VerticesNormalsTexCoords;
 			else if( textCoord )
-				generator = Generator.Predefined.VerticesTexCoords;
+				generator = Generator.VerticesTexCoords;
 			else if( normal )
-				generator = Generator.Predefined.VerticesNormals;
+				generator = Generator.VerticesNormals;
 			else
-				generator = Generator.Predefined.Vertices;
+				generator = Generator.Vertices;
 			
 			if( (flags & ObjLoader.TRIANGULATE) != 0){
 				gl.glBegin(	getGLPrimitive( primitives.element(), flags) );
@@ -1236,7 +1256,7 @@ public class ObjLoader {
 			ap.setMaterial(Material.DEFAULT);
 		if( (flags & TO_GEOMETRY) != 0)
 			return new Objeto3D( loader.generarGeometria(mt), ap );
-		return new Objeto3D( loader.almacenarGeometria( GLU.getCurrentGL(), mt), ap );
+		return new Objeto3D( loader.almacenarGeometria( GLU.getCurrentGL().getGL2(), mt), ap );
 	}
 
 	/**

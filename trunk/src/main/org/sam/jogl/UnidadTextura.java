@@ -23,6 +23,7 @@
 package org.sam.jogl;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * Clase que contiene los miembros relativos al manejo de texturas.
@@ -120,27 +121,27 @@ public class UnidadTextura {
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 * @param unit Índice de la unidad de textura correspondiente.
 	 */
-	public void activar(GL gl, int unit){
-		if(textura == null)
+	public void activar( GL2 gl, int unit ){
+		if( textura == null )
 			return;
-		
-		if(lastUnit != unit)
-			gl.glActiveTexture(units[unit]);
-		
-		if(tAnteriores[unit] != textura){
-			textura.activar(gl, tAnteriores[unit]);
+
+		if( lastUnit != unit )
+			gl.glActiveTexture( units[unit] );
+
+		if( tAnteriores[unit] != textura ){
+			textura.activar( gl, tAnteriores[unit] );
 			tAnteriores[unit] = textura;
 		}
-		if(aAnteriores[unit] != atributosTextura && atributosTextura != null){
-			atributosTextura.usar(gl);
+		if( aAnteriores[unit] != atributosTextura && atributosTextura != null ){
+			atributosTextura.usar( gl );
 			aAnteriores[unit] = atributosTextura;
 		}
-		if(gAnteriores[unit] != null && genCoordTextura == null){
-			gAnteriores[unit].desactivar(gl);
+		if( gAnteriores[unit] != null && genCoordTextura == null ){
+			gAnteriores[unit].desactivar( gl );
 			gAnteriores[unit] = null;
 		}
-		if(gAnteriores[unit] != genCoordTextura && genCoordTextura != null){
-			genCoordTextura.activar(gl,gAnteriores[unit]);
+		if( gAnteriores[unit] != genCoordTextura && genCoordTextura != null ){
+			genCoordTextura.activar( gl, gAnteriores[unit] );
 			gAnteriores[unit] = genCoordTextura;
 		}
 		lastUnit = unit;
@@ -152,18 +153,18 @@ public class UnidadTextura {
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 * @param unit Índice de la unidad de textura correspondiente.
 	 */
-	public static void desactivar(GL gl, int unit){
-		if(tAnteriores[unit] == null)
-	        return;
-		
-		if(lastUnit != unit)
-			gl.glActiveTexture(units[unit]);
-        
-		tAnteriores[unit].desactivar(gl);
+	public static void desactivar( GL2 gl, int unit ){
+		if( tAnteriores[unit] == null )
+			return;
+
+		if( lastUnit != unit )
+			gl.glActiveTexture( units[unit] );
+
+		tAnteriores[unit].desactivar( gl );
 		tAnteriores[unit] = null;
 		aAnteriores[unit] = null;
-		if(gAnteriores[unit] != null){
-			gAnteriores[unit].desactivar(gl);
+		if( gAnteriores[unit] != null ){
+			gAnteriores[unit].desactivar( gl );
 			gAnteriores[unit] = null;
 		}
 		lastUnit = unit;
