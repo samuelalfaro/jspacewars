@@ -45,7 +45,7 @@ import org.sam.util.Tipografias;
 public class TextureFontGenerator {
 
 	private static final char[] basicAlphabetCharArray = (
-		" !\"#$%&'()*+,-./" +
+		"!\"#$%&'()*+,-./" +
 		"0123456789:;<=>?" +
 		"@ABCDEFGHIJKLMNO" +
 		"PQRSTUVWXYZ[\\]^_" +
@@ -97,12 +97,54 @@ public class TextureFontGenerator {
 	public BufferedImage generate( PrintStream out, int width, int height ){
 		return generate( out, width, height, 1, 0, 0, 1.0 );
 	}
+	
+	private transient volatile BufferedImage imgAux;
 
+	private int pixelsCharWidth( Font font, FontMetrics fontMetrics, char c, int borde, int[] offsetX ){
+		
+		int imgWidth  = fontMetrics.charWidth( c ) + borde * 2;
+		int imgHeight = fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent();
+		
+		if( imgAux == null || imgAux.getWidth() < imgWidth || imgAux.getHeight() < imgHeight )
+			imgAux = new BufferedImage( imgWidth, imgWidth, BufferedImage.TYPE_BYTE_GRAY);
+		
+		imgWidth  = imgAux.getWidth();
+		imgHeight = imgAux.getHeight();
+		
+		Graphics2D	g = imgAux.createGraphics();
+		g.setBackground( Color.BLACK );
+		g.setColor( Color.WHITE );
+		g.setRenderingHint( RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON );
+		g.setRenderingHint( RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+		g.setFont( font );
+		
+		g.clearRect( 0, 0, imgWidth, imgHeight );
+		g.drawChars( new char[]{c}, 0, 1, borde, fontMetrics.getMaxAscent() );
+		
+		int firstColumn = imgWidth;
+		int lastColumn  = 0;
+		
+		for( int x = 0; x < imgWidth; x ++ ){
+			boolean emptyColumn = true;
+			for( int y = 0; y < imgHeight && emptyColumn; y ++ ){
+				emptyColumn = ( imgAux.getRGB( x, y ) & 0x00FFFFFF ) == 0;
+				if( !emptyColumn ){
+					if( x < firstColumn )
+						firstColumn = x;
+					if( x > lastColumn )
+						lastColumn = x;
+				}
+			}
+		}
+		offsetX[0] = firstColumn - borde;
+		return lastColumn - firstColumn;
+	}
+	
 	public BufferedImage generate( PrintStream out, int width, int height, int nFilas, int bordeH, int bordeV, double ajustScaleX ){
 		BufferedImage img = new BufferedImage( width, height, BufferedImage.TYPE_BYTE_GRAY);
 		//BufferedImage img = new BufferedImage( width, height, BufferedImage.TYPE_INT_ARGB );
 		Graphics2D g2d = img.createGraphics();
-		g2d.setBackground( new Color(0,0,0,0) );
+		//g2d.setBackground( new Color(0,0,0,0) );
 		g2d.setBackground( Color.BLACK );
 		g2d.clearRect( 0, 0, width, height );
 		g2d.setColor( Color.WHITE );
@@ -119,10 +161,13 @@ public class TextureFontGenerator {
 		FontMetrics fontMetrics = g2d.getFontMetrics( font );
 
 		double defaultWidth = 0;
+		
+		int[] offsetX = new int[1];
+
 		for( int i = 0; i < alfabeto.length; i++ ){
 			char c = alfabeto[i];
 			if( ignorados == null || Arrays.binarySearch( ignorados, c ) < 0 ){
-				defaultWidth += fontMetrics.charWidth( c );
+				defaultWidth += pixelsCharWidth( font, fontMetrics, c, bordeH, offsetX );
 			}
 		}
 
@@ -142,36 +187,45 @@ public class TextureFontGenerator {
 		int fila = 0;
 		int y    = 0;
 		
-		out.printf("<?xml version='1.0' encoding='utf-8'?>\n");
-		out.printf("<Font scaleX='%s' scaleY='%s' textureWidth='%d' textureHeight='%d'>\n", 
-				Double.toString( scaleX * ajustScaleX ), Double.toString( scaleY ),
-				img.getWidth(), img.getHeight()
+		out.printf( "<?xml version='1.0' encoding='utf-8'?>\n" );
+		out.printf(
+				"<Font maxAscent='%d' maxDescent='%d' textureWidth='%d' textureHeight='%d' scaleX='%s' scaleY='%s' >\n",
+				fontMetrics.getMaxAscent(), fontMetrics.getMaxDescent(),
+				img.getWidth(), img.getHeight(),
+				Double.toString( scaleX * ajustScaleX ), Double.toString( scaleY )
 		);
+		out.printf( "\t<CharacterPixmap charWidth='%d'>\n", fontMetrics.charWidth( ' ' ) );
+		out.printf( "\t\t<character><![CDATA[ ]]></character>\n" );
+		out.printf( "\t</CharacterPixmap>\n" );
 		
 		for( int i = 0; i < alfabeto.length; i++ ){
 			char c = alfabeto[i];
 			if( ignorados == null || Arrays.binarySearch( ignorados, c ) < 0 ){
-				int nextX = offX + fontMetrics.charWidth( c ) + 2 * bordeH;
+				int pixelsCharWidth = pixelsCharWidth( font1, fontMetrics, c, bordeH * 2, offsetX );
+				
+				int nextX = offX + pixelsCharWidth + 2 * bordeH;
 				if( nextX > width ){
 					offX = bordeH;
 					fila++;
 					y = fila * ( 2* bordeV + fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() );
 				}
-//				g2d.setColor(Color.YELLOW);
-//				g2d.drawRect( offX-bordeH, y, fontMetrics.charWidth(c)+2*bordeH, fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() + 2*bordeV );	
-//				g2d.setColor(Color.DARK_GRAY);
-//				g2d.drawRect( offX, y + bordeV, fontMetrics.charWidth(c), fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() );
-//				g2d.setColor( Color.WHITE );
 				
-				out.printf("\t<CharacterPixmap x='%d' y='%d' width='%d' height='%d' charWidth='%d' charHeight='%d'>\n", 
+				if( test ){
+					g2d.setColor(Color.YELLOW);
+					g2d.drawRect( offX-bordeH, y, pixelsCharWidth+2*bordeH, fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() + 2*bordeV );	
+					g2d.setColor(Color.DARK_GRAY);
+					g2d.drawRect( offX, y + bordeV, pixelsCharWidth, fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() );
+					g2d.setColor( Color.WHITE );
+				}
+				out.printf( "\t<CharacterPixmap x='%d' y='%d' width='%d' height='%d' offsetX='%d' charWidth='%d'>\n",
 						offX-bordeH, y, 
-						fontMetrics.charWidth(c)+2*bordeH, fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() + 2*bordeV,
-						fontMetrics.charWidth(c), fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() );
-				out.printf("\t\t<character><![CDATA[%c]]></character>\n",c);
-				out.printf("\t</CharacterPixmap>\n");
+						pixelsCharWidth+2*bordeH, fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() + 2*bordeV,
+						offsetX[0] - bordeH , fontMetrics.charWidth( c ) );
+				out.printf( "\t\t<character><![CDATA[%c]]></character>\n", c );
+				out.printf( "\t</CharacterPixmap>\n" );
 				
-				g2d.drawChars( alfabeto, i, 1, offX , y + offY );
-				offX += fontMetrics.charWidth( c ) + 2 * bordeH;
+				g2d.drawChars( alfabeto, i, 1, offX - offsetX[0], y + offY );
+				offX += pixelsCharWidth + 2 * bordeH;
 			}
 		}
 		
@@ -198,25 +252,28 @@ public class TextureFontGenerator {
 		ImageIO.write( img, type, new File( filename ) );
 	}
 
+	private static boolean test = true;
+	
 	public static void main( String[] args ) throws IOException{
-		//String fontName = "arbeka"; double scaleXAjust = 0.94;
+
+		//String fontName = "abduction"; double scaleXAjust = 0.91;
+		//char[] ignorados = new char[] { '#', '&', '(', ')', '*', '@', '^', '_', '`', '{', '}', '¡', '¿' };
+		//TextureFontGenerator g = new TextureFontGenerator( basicAlphabetCharArray, ignorados );
+		
+		//String fontName = "arbeka"; double scaleXAjust = 0.938;
 		String fontName = "saved"; double scaleXAjust = 0.958;
+		char[] ignorados = new char[] { 'Æ', 'Ð', '×', 'Ý', 'Þ', 'ß', 'æ', 'ð', 'ý', 'þ', 'ÿ' };
+		TextureFontGenerator g = new TextureFontGenerator( latinAlphabetCharArray, ignorados );
 		
 		String fontFile = "resources/fonts/" + fontName + ".ttf";
-		String fontImg = "resources/" + fontName + ".png";
-		String fontXML = "resources/" + fontName + ".xml";
+		String fontImg = "resources/" + fontName + ( test ? "-test" : "" ) + ".png";
+		String fontXML = "resources/" + fontName + ( test ? "-test" : "" ) + ".xml";
 		
-//		System.out.println( latinAlphabetCharArray.length );
-//		for( int i = 0; i < latinAlphabetCharArray.length; ){
-//			for( int j = 0; j < 16 && i < latinAlphabetCharArray.length; j++, i++ )
-//				System.out.print( " " + latinAlphabetCharArray[i] );
-//			System.out.println();
-//		}
-		
-		TextureFontGenerator g = new TextureFontGenerator( latinAlphabetCharArray );
-		g.ignorados = new char[] { 'Æ', 'Ð', '×', 'Ý', 'Þ', 'ß', 'æ', 'ð', 'ý', 'þ', 'ÿ' };
 		g.font = Tipografias.load( fontFile, Font.PLAIN, 64.0f );
-		PrintStream outXML = new PrintStream( new FileOutputStream( new File( fontXML ) ) );
+		PrintStream outXML = new PrintStream( new FileOutputStream( new File( fontXML ) ), false, "UTF-8" );
 		export( g.generate( outXML, 1024, 512, 8, 7, 7, scaleXAjust ), fontImg );
+		//export( g.generate( outXML, 8192, 4096, 8, 56, 56, scaleXAjust ), fontImg );
+		outXML.flush();
+		outXML.close();
 	}
 }

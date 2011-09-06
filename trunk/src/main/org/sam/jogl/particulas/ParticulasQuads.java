@@ -43,8 +43,6 @@ import com.jogamp.common.nio.Buffers;
 
 class ParticulasQuads extends Particulas{
 
-	private static final Random aleatorio = new Random();
-	
 	private class ModificadorDeParticulas implements Modificador{
 
 		private void setPos(

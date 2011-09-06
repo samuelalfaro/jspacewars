@@ -40,6 +40,11 @@ public final class MatrixSingleton {
 	private static final float		projection_array[] = new float[16];
 	private static final Matrix4f	projection_matrix  = new Matrix4f();
 	
+	static{
+		model_view_matrix.setIdentity();
+		projection_matrix.setIdentity();
+	}
+	
 	/**
 	 * Método que almacena la matriz <i>MODELVIEW</i> que están actualmente en uso.
 	 */

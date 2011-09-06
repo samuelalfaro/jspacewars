@@ -1,5 +1,5 @@
 /* 
- * Estrellas.java
+ * Particulas2D.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -29,15 +29,14 @@ import java.util.Random;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.media.opengl.fixedfunc.GLPointerFunc;
 
 import org.sam.elementos.Modificador;
 import org.sam.interpoladores.Getter;
 
 import com.jogamp.common.nio.Buffers;
 
-class Estrellas extends Particulas{
-
-	private static final Random aleatorio = new Random();
+class Particulas2D extends Particulas{
 
 	private class ModificadorDeParticulas implements Modificador{
 
@@ -110,7 +109,7 @@ class Estrellas extends Particulas{
 
 	private float radio;
 
-	protected Estrellas( int nParticulas ){
+	protected Particulas2D( int nParticulas ){
 		super( nParticulas );
 
 		vidas = new float[nParticulas];
@@ -129,7 +128,7 @@ class Estrellas extends Particulas{
 		modificador = new ModificadorDeParticulas();
 	}
 
-	protected Estrellas( Estrellas me ){
+	protected Particulas2D( Particulas2D me ){
 		super( me );
 		vidas = new float[me.nParticulas];
 		posIni = new float[me.nParticulas * 2];
@@ -147,10 +146,8 @@ class Estrellas extends Particulas{
 		modificador = new ModificadorDeParticulas();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.sam.util.Cacheable#reset()
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Reseteable#reset()
 	 */
 	public void reset(){
 		particulasActivas = nParticulas;
@@ -237,9 +234,7 @@ class Estrellas extends Particulas{
 		tex.rewind();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.sam.jogl.particulas.Particulas#setRadio(float)
 	 */
 	@Override
@@ -247,9 +242,7 @@ class Estrellas extends Particulas{
 		this.radio = radio;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.sam.jogl.particulas.Particulas#setRadio(org.sam.interpoladores.Getter.Float)
 	 */
 	@Override
@@ -257,9 +250,7 @@ class Estrellas extends Particulas{
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.sam.jogl.particulas.Particulas#setSemiEje(float)
 	 */
 	@Override
@@ -267,9 +258,7 @@ class Estrellas extends Particulas{
 		throw new UnsupportedOperationException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.sam.jogl.particulas.Particulas#setSemiEje(org.sam.interpoladores.Getter.Float)
 	 */
 	@Override
@@ -277,21 +266,24 @@ class Estrellas extends Particulas{
 		throw new UnsupportedOperationException();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.particulas.Particulas#clone()
+	 */
+	@Override
 	public Particulas clone(){
-		return new Estrellas( this );
+		return new Particulas2D( this );
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see org.sam.jogl.Objeto3DAbs#draw(javax.media.opengl.GL2)
 	 */
 	@Override
 	public void draw( GL2 gl ){
 		super.draw( gl );
 
-		gl.glEnableClientState( GL2.GL_VERTEX_ARRAY );
-		gl.glEnableClientState( GL2.GL_COLOR_ARRAY );
-		gl.glEnableClientState( GL2.GL_TEXTURE_COORD_ARRAY );
+		gl.glEnableClientState( GLPointerFunc.GL_VERTEX_ARRAY );
+		gl.glEnableClientState( GLPointerFunc.GL_COLOR_ARRAY );
+		gl.glEnableClientState( GLPointerFunc.GL_TEXTURE_COORD_ARRAY );
 
 		pos.rewind();
 		gl.glVertexPointer( 2, GL.GL_FLOAT, 0, pos );
@@ -302,8 +294,8 @@ class Estrellas extends Particulas{
 
 		gl.glDrawArrays( GL2.GL_QUADS, 0, nParticulas * 4 );
 
-		gl.glDisableClientState( GL2.GL_TEXTURE_COORD_ARRAY );
-		gl.glDisableClientState( GL2.GL_COLOR_ARRAY );
-		gl.glDisableClientState( GL2.GL_VERTEX_ARRAY );
+		gl.glDisableClientState( GLPointerFunc.GL_TEXTURE_COORD_ARRAY );
+		gl.glDisableClientState( GLPointerFunc.GL_COLOR_ARRAY );
+		gl.glDisableClientState( GLPointerFunc.GL_VERTEX_ARRAY );
 	}
 }
