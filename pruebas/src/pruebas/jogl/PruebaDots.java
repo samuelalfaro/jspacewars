@@ -58,9 +58,9 @@ import com.jogamp.opengl.util.Animator;
 
 public class PruebaDots{
 
-	private static final int screenHeight = 600;
-	private static final int screenWidth = 800;
-
+	private static final int AREA_WIDTH  = 1024;
+	private static final int AREA_HEIGHT =  768;
+	
 	static float sClamp( float value, float min, float max ){
 		return value < min ? min: ( value > max ? max: value );
 	}
@@ -288,6 +288,7 @@ public class PruebaDots{
 
 	private static class Renderer implements GLEventListener{
 
+		private transient float scale = 1.0f;
 		private UnidadTextura fondo;
 		Dots[] dots;
 
@@ -315,25 +316,25 @@ public class PruebaDots{
 
 			Image img;
 			ImageGenerator generator = new ImageGenerator(
-					Tipografias.load( "resources/fonts/smelo.ttf", Font.PLAIN, 64.0f )
+					Tipografias.load( "resources/fonts/abduction.ttf", Font.PLAIN, 64.0f )
 			);
 
-			img = generator.generate( "Hola   ", 300, 100, 5, 5 );
+			img = generator.generate( "Samuel", 300, 100, 5, 5 );
 			dots[0].init( img, START_X1, START_Y1, 50, 50, 2.0f, new Inverso( new DistanciaEuclidea( new Point() ) ) );
-			img = generator.generate( "Alberto", 300, 100, 5, 5 );
-			dots[1].init( img, START_X2, START_Y2, 150, 400, 2.0f, new DistanciaEuclidea( new Point() ) );
-			img = generator.generate( "Hola ", 300, 100, 5, 5 );
+			img = generator.generate( "Alfaro", 300, 100, 5, 5 );
+			dots[1].init( img, START_X2, START_Y2, 374, 568, 2.0f, new DistanciaEuclidea( new Point() ) );
+			img = generator.generate( " ", 300, 100, 5, 5 );
 			dots[2].init( img, START_X1, START_Y1, 50, 50, 2.0f, Comparadores.IZQUIERDA_DERECHA );
-			img = generator.generate( "soy sam", 300, 100, 5, 5 );
-			dots[3].init( img, START_X2, START_Y2, 150, 400, 2.0f, Comparadores.DERECHA_IZQUIERDA );
-			img = generator.generate( "Soy", 300, 100, 5, 5 );
+			img = generator.generate( "Presenta:", 300, 100, 5, 5 );
+			dots[3].init( img, START_X2, START_Y2, 374, 568, 2.0f, Comparadores.DERECHA_IZQUIERDA );
+			img = generator.generate( "Una aventura", 300, 100, 5, 5 );
 			dots[4].init( img, START_X1, START_Y1, 50, 50, 2.0f, Comparadores.ARRIBA_ABAJO );
-			img = generator.generate( "Sam", 300, 100, 5, 5 );
-			dots[5].init( img, START_X2, START_Y2, 150, 400, 2.0f, Comparadores.ABAJO_ARRIBA );
-			img = generator.generate( "Y en esto he", 300, 100, 5, 5 );
+			img = generator.generate( "espacial", 300, 100, 5, 5 );
+			dots[5].init( img, START_X2, START_Y2, 374, 568, 2.0f, Comparadores.ABAJO_ARRIBA );
+			img = generator.generate( "comienza ...", 300, 100, 5, 5 );
 			dots[6].init( img, START_X1, START_Y1, 50, 50, 2.0f, new DistanciaManhatan( new Point() ) );
-			img = generator.generate( "perdido la tarde", 300, 100, 5, 5 );
-			dots[7].init( img, START_X2, START_Y2, 150, 400, 2.0f, new DistanciaManhatan( new Point( 300, 100 ) ) );
+			img = generator.generate( "Space Wars", 300, 100, 5, 5 );
+			dots[7].init( img, START_X2, START_Y2, 374, 568, 2.0f, new DistanciaManhatan( new Point( 300, 100 ) ) );
 
 			gl.glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 		}
@@ -377,9 +378,9 @@ public class PruebaDots{
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
 
-			float s = (float)( screenWidth - imgW ) / ( 2 * imgW );
-			float t = (float)( screenHeight - imgH ) / ( 2 * imgH );
-			gl.glOrtho( 0, screenWidth, 0, screenHeight, 0, 1 );
+			float s = (float)( AREA_WIDTH - imgW ) / ( 2 * imgW );
+			float t = (float)( AREA_HEIGHT - imgH ) / ( 2 * imgH );
+			gl.glOrtho( 0, AREA_WIDTH, 0, AREA_HEIGHT, 0, 1 );
 
 			fondo.activar( gl, 0 );
 
@@ -388,11 +389,11 @@ public class PruebaDots{
 			gl.glTexCoord2f( -s, -t );
 			gl.glVertex2f( 0, 0 );
 			gl.glTexCoord2f( 1 + s, -t );
-			gl.glVertex2f( screenWidth, 0 );
+			gl.glVertex2f( AREA_WIDTH, 0 );
 			gl.glTexCoord2f( 1 + s, 1 + t );
-			gl.glVertex2f( screenWidth, screenHeight );
+			gl.glVertex2f( AREA_WIDTH, AREA_HEIGHT );
 			gl.glTexCoord2f( -s, 1 + t );
-			gl.glVertex2f( 0, screenHeight );
+			gl.glVertex2f( 0, AREA_HEIGHT );
 			gl.glEnd();
 			gl.glDepthMask( true );
 
@@ -415,35 +416,36 @@ public class PruebaDots{
 			gl.glBlendFunc( GL.GL_SRC_ALPHA, GL.GL_ONE );
 			gl.glDepthMask( false );
 
-			gl.glPointSize( 8 );
+			gl.glPointSize( 11 * scale );
 			gl.glBegin( GL.GL_POINTS );
 
 			Dots d = credit;
 			for( int a = 0; a < d.n; ++a ){
 				float ct = time * 0.001f + 5.0f * a / d.n + random( 0, 0.1f );
 				float t = sSmoothStep( ct, 1, 7 );
-				float t1 = 1 - t;
+				float t1 = 1.0f - t;
 				float x = d.x1[a] * t1 + d.x2[a] * t;
 				float y = d.y1[a] * t1 + d.y2[a] * t;
 				float fxm = sBoxPulse( ct, 1, 3, 5, 7 );
 				float fxt = ct * 4.5f;
 				x += fxm * cos( fxt ) * 150;
 				y += fxm * sin( fxt * 2 ) * 50;
-				gl.glColor4f( 0.16f * t, 0.1f, 0.25f * ( 1.0f - t ), t * 0.5f );
+				gl.glColor4f( 0.1f, 0.16f * t, 0.25f * ( 1.0f - t ), t * 0.5f );
 				gl.glVertex2f( x, y );
 			}
 			d = name;
 			for( int a = 0; a < d.n; ++a ){
 				float ct = time * 0.001f + random( 4.5f, 5.0f ) * a / d.n;
 				float t = sSmoothStep( ct, 4, 10 );
-				float t1 = 1 - t;
+				float t1 = 1.0f - t;
 				float x = d.x1[a] * t1 + d.x2[a] * t;
 				float y = d.y1[a] * t1 + d.y2[a] * t;
 				float fxm = sBoxPulse( ct, 4, 6, 8, 10 );
 				float fxt = ct * 1.5f;
 				x += fxm * cos( fxt * 2 ) * 50;
 				y += fxm * sin( fxt ) * 50;
-				gl.glColor4f( 1 - .84f * t, .5f - 0.4f * t, 0.25f * ( 1.0f - t ), t * 0.5f );
+				//gl.glColor4f( 1 - .84f * t, .5f - 0.4f * t, 0.25f * ( 1.0f - t ), t * 0.5f );
+				gl.glColor4f( 0.1f, 0.16f * t, 0.25f * ( 1.0f - t ), t * 0.5f );
 				gl.glVertex2f( x, y );
 			}
 			gl.glEnd();
@@ -467,9 +469,9 @@ public class PruebaDots{
 			gl.glBegin( GL2.GL_QUADS );
 			gl.glColor4f( 0, 0, 0, alpha );
 			gl.glVertex2f( 0, 0 );
-			gl.glVertex2f( 0, screenHeight );
-			gl.glVertex2f( screenWidth, screenHeight );
-			gl.glVertex2f( screenWidth, 0 );
+			gl.glVertex2f( 0, AREA_HEIGHT );
+			gl.glVertex2f( AREA_WIDTH, AREA_HEIGHT );
+			gl.glVertex2f( AREA_WIDTH, 0 );
 			gl.glEnd();
 
 			gl.glDepthMask( true );
@@ -481,13 +483,27 @@ public class PruebaDots{
 		@Override
 		public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ){
 			if( width != 0 && height != 0 ){
+				scale = (float)height / AREA_HEIGHT;
+				
 				GL2 gl = drawable.getGL().getGL2();
-				gl.glViewport( ( width - screenWidth ) / 2, ( height - screenHeight ) / 2, screenWidth, screenHeight );
-
+				/* 
+				 * Centra el área, conservando el tamaño fijo:
+				 * Añadiendo bordes / recortando extremos, dejando el centro del área en el centro
+				 * de la ventana.
+				 */
+				//gl.glViewport( ( width - AREA_WIDTH ) / 2, ( height - AREA_HEIGHT ) / 2, AREA_WIDTH, AREA_HEIGHT );
+				/* 
+				 * Centra y escala el área, conservando las proporciones:
+				 * La altura que se ajusta a la altura de la ventana y en función de la anchura correspondiente,
+				 * se añanden bordes laterales o se recortan los extremos laterales.
+				 */
+				gl.glViewport(
+						( AREA_HEIGHT * width - AREA_WIDTH * height ) / ( 2 * AREA_HEIGHT ), 0,
+						AREA_WIDTH * height / AREA_HEIGHT, height 
+				);
 				gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 				gl.glLoadIdentity();
-				gl.glOrtho( 0, screenWidth, screenHeight, 0, -1, 1 );
-				gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
+				gl.glOrtho( 0, AREA_WIDTH, AREA_HEIGHT, 0, -1, 1 );
 			}
 		}
 

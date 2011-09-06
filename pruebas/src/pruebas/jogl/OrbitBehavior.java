@@ -21,6 +21,7 @@
  * along with jSpaceWars. If not, see <http://www.gnu.org/licenses/>.
  */
 package pruebas.jogl;
+
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -136,8 +137,8 @@ public class OrbitBehavior{
 
 			ptCurrentMousePosit = e.getPoint();
 
-			rotH.set( upDir, (double)( ptCurrentMousePosit.x - ptLastMousePosit.x ) / 200 );
-			rotV.set( sideDir, (double)( ptCurrentMousePosit.y - ptLastMousePosit.y ) / 200 );
+			rotH.set( upDir, (double)( ptLastMousePosit.x - ptCurrentMousePosit.x ) / 200 );
+			rotV.set( sideDir, (double)( ptLastMousePosit.y - ptCurrentMousePosit.y ) / 200 );
 
 			t1.setRotation( rotH );
 			t2.setRotation( rotV );

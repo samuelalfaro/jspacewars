@@ -28,11 +28,6 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.nio.IntBuffer;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -47,309 +42,51 @@ import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.Textura;
+import org.sam.jogl.gui.Font;
+import org.sam.jogl.gui.TextRenderer;
+import org.sam.jogl.gui.TextRenderer.HorizontalAlignment;
+import org.sam.jogl.gui.TextRenderer.VerticalAlignment;
 import org.sam.util.Imagen;
 
-import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.Animator;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class PruebaTexto{
 	
-	static float readAttribute( HierarchicalStreamReader reader, String name, float defaultValue ){
-		String att = reader.getAttribute( name );
-		if( att != null && att.length() > 0 )
-			try{
-				return (float)Double.parseDouble( att );
-			}catch( NumberFormatException e ){
-			}
-		return defaultValue;
-	}
+	private static final int AREA_WIDTH  = 1024;
+	private static final int AREA_HEIGHT =  768;
 	
-	static int readAttribute( HierarchicalStreamReader reader, String name, int defaultValue ){
-		String att = reader.getAttribute( name );
-		if( att != null && att.length() > 0 )
-			try{
-				return Integer.parseInt( att );
-			}catch( NumberFormatException e ){
-			}
-		return defaultValue;
-	}
-	
-	private static class CharacterPixmapData{
+	private static class GUIRenderer implements GLEventListener{
 		
-		static class Comparator implements java.util.Comparator<CharacterPixmapData>{
-		    public int compare(CharacterPixmapData o1, CharacterPixmapData o2){
-		    	return o1.c - o2.c;
-		    }
-		}
-		
-		final Character c;
-		final float x;
-		final float y;
-		final float width;
-		final float height;
-		final float charWidth;
-		final float charHeight;
-		
-		CharacterPixmapData( Character c, float x, float y, float width, float height, float charWidth, float charHeight ){
-			this.c = c;
-			this.x = x;
-			this.y = y;
-			this.width = width;
-			this.height = height;
-			this.charWidth = charWidth;
-			this.charHeight = charHeight;
-		}
-		
-		void buidCharacterPixmap( GL2 gl, int listId, int textureWidth, int textureHeight, float gap, float scaleX, float scaleY ){
-			float u1 = x / textureWidth;
-			float v1 = y / textureHeight;
-			float u2 = ( x + width ) / textureWidth;
-			float v2 = ( y + height ) / textureHeight;
-			
-			float x1 = ( charWidth - width )/2 * scaleX;
-			float x2 = x1 + width * scaleX;
-			
-			float y1 = ( charHeight - height )/2 * scaleY;
-			float y2 = y1 + height * scaleY;
-
-			gl.glNewList( listId, GL2.GL_COMPILE );
-				gl.glBegin( GL2.GL_QUADS );
-					gl.glTexCoord2f( u1, v1 );
-					gl.glVertex2f( x1, y1 );
-					gl.glTexCoord2f( u2, v1 );
-					gl.glVertex2f( x2, y1 );
-					gl.glTexCoord2f( u2, v2 );
-					gl.glVertex2f( x2, y2 );
-					gl.glTexCoord2f( u1, v2 );
-					gl.glVertex2f( x1, y2 );
-				gl.glEnd();
-				gl.glTranslated( ( charWidth + gap ) * scaleX, 0, 0 );
-			gl.glEndList();
-		}
-		
-		/* (non-Javadoc)
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
-		@Override
-		public boolean equals( Object otro ){
-			return
-				( otro != null ) &&
-				( otro instanceof CharacterPixmapData) &&
-				( (CharacterPixmapData)otro ).c.equals( this.c );
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Object#hashCode()
-		 */
-		@Override
-		public int hashCode(){
-			return c.hashCode();
-		}
-	}
-	
-	private static class CharacterPixmapConverter implements Converter{
-
-		CharacterPixmapConverter(){
-		}
-
-		@SuppressWarnings( "rawtypes" )
-		public boolean canConvert( Class clazz ){
-			return CharacterPixmapData.class == clazz;
-		}
-
-		public void marshal( Object value, HierarchicalStreamWriter writer, MarshallingContext context ){
-		}
-		
-		public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ){
-			char c = 0;
-			float x = readAttribute( reader, "x", 0.0f );
-			float y = readAttribute( reader, "y", 0.0f );
-			float width  = readAttribute( reader, "width", 0.0f );
-			float height = readAttribute( reader, "height", 0.0f );
-			float charWidth  = readAttribute( reader, "charWidth", width );
-			float charHeight = readAttribute( reader, "charHeight", height );
-			if( reader.hasMoreChildren() ){
-				reader.moveDown();
-				c = reader.getValue().charAt( 0 );
-				reader.moveUp();
-			}
-			return new CharacterPixmapData( c, x, y, width, height, charWidth, charHeight );
-		}
-	}
-	
-	private static class CharactersPixmapsData{
-		final float scaleX;
-		final float scaleY;
-		final int textureWidth;
-		final int textureHeight;
-		final SortedSet<CharacterPixmapData> charactersData;
-		
-		CharactersPixmapsData( float scaleX, float scaleY, int textureWidth, int textureHeight ){
-			this.scaleX = scaleX;
-			this.scaleY = scaleY;
-			this.textureWidth = textureWidth;
-			this.textureHeight = textureHeight;
-			this.charactersData = new TreeSet<CharacterPixmapData>( new CharacterPixmapData.Comparator() );
-		}
-	}
-	
-	private static class CharactersPixmapsConverter implements Converter {
-		
-		CharactersPixmapsConverter(){
-		}
-		
-		@SuppressWarnings("rawtypes")
-		public boolean canConvert(Class clazz) {
-			return CharactersPixmapsData.class == clazz;
-		}
-
-		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
-		}
-
-		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			CharactersPixmapsData fontData = new CharactersPixmapsData(
-				readAttribute( reader, "scaleX", 1.0f ),
-				readAttribute( reader, "scaleY", 1.0f ),
-				readAttribute( reader, "textureWidth", 256 ),
-				readAttribute( reader, "textureHeight", 256 )
-			);
-			CharacterPixmapData charData;
-			while (reader.hasMoreChildren()){
-				reader.moveDown();
-					charData = (CharacterPixmapData)context.convertAnother( fontData, CharacterPixmapData.class );
-					fontData.charactersData.add( charData );
-				reader.moveUp();
-			}
-			return fontData;
-		}
-	}
-	
-	private static XStream xStream = null;
-	
-	static final XStream getXStream(){
-		if( xStream == null ){
-			xStream = new XStream(new DomDriver());
-			xStream.alias( "CharacterPixmap", CharacterPixmapData.class );
-			xStream.registerConverter( new CharacterPixmapConverter() );
-			xStream.alias( "Font", CharactersPixmapsData.class );
-			xStream.registerConverter( new CharactersPixmapsConverter() );
-		}
-		return xStream;
-	}
-	
-	private static class CharactersPixmaps{
-		
-		final SortedMap<Character, Integer> characters; 
-		final int unknown;
-
-		CharactersPixmaps( GL2 gl, CharactersPixmapsData data ){
-			this.characters = new TreeMap<Character, Integer>();
-			int spaceId = 0;
-			
-			int base = gl.glGenLists( data.charactersData.size() );
-			while( !data.charactersData.isEmpty() ){
-				CharacterPixmapData cData = data.charactersData.first();
-				data.charactersData.remove( cData );
-				cData.buidCharacterPixmap( gl, base, data.textureWidth, data.textureHeight, 10.0f, 1.0f/data.scaleX, 1.0f/data.scaleY );
-				characters.put( cData.c, base );
-				if( cData.c == ' ' )
-					spaceId = base;
-				base++;
-			}
-			unknown = spaceId;
-		}
-	}
-	
-	private static class Font{
-
-		final CharactersPixmaps pixmaps;
-		final Apariencia apariencia;
-
-		Font( CharactersPixmaps pixmaps, Apariencia apariencia ){
-			this.pixmaps = pixmaps;
-			this.apariencia = apariencia;
-		}
-	}
-	
-	@SuppressWarnings( "static-access" )
-	private static class Renderer implements GLEventListener{
-		
-		/*
+		//*
 		private final static String fontDef = "resources/arbeka.xml";
 		private final static String font1Texture = "resources/arbeka.png";
-		private final static String font2Texture = "resources/arbeka-blur.png";
+		private final static String font2Texture = "resources/arbeka-neon.png";
 		/*/
 		private final static String fontDef = "resources/saved.xml";
 		private final static String font1Texture = "resources/saved.png";
-		private final static String font2Texture = "resources/saved-blur.png";
+		private final static String font2Texture = "resources/saved-neon.png";
 		//*/
+		private TextRenderer renderer1;
+		private TextRenderer renderer2;
+		private TextRenderer renderer3;
 		
-		private IntBuffer stringBuffer;
+		public GUIRenderer(){
+			renderer1 = new TextRenderer();
+			renderer2 = new TextRenderer();
+			renderer3 = new TextRenderer();
+		}
+		
+		public void init( GLAutoDrawable glDrawable ){
+			GL2 gl = glDrawable.getGL().getGL2();
 
-		private CharactersPixmapsData charactersPixmapsData;
-		
-		private Font font1;
-		private Font font2;
-		
-		public Renderer(){
-			stringBuffer = Buffers.newDirectIntBuffer( 256 );
 			try{
-				charactersPixmapsData = (CharactersPixmapsData)getXStream().fromXML( new FileInputStream( fontDef ) );
+				Font font = new Font( gl, new FileInputStream( fontDef ) );
+				renderer1.setFont( font.deriveFont( 0.35f, 0.666f ) );
+				renderer2.setFont( font );
+				renderer3.setFont( font.deriveFont( 0.25f ).deriveFont( 4.0f ) );
 			}catch( FileNotFoundException e ){
 				e.printStackTrace();
 			}
-		}
-		
-		private void glPrint( GL2 gl, float x, float y, String string, Font font ){
-			glPrint( gl, x, y, 1.0f, 1.0f, string, 1.0f, 1.0f,  1.0f, 1.0f, font );
-		}
-		
-		private void glPrint( GL2 gl, float x, float y, String string, float r, float g, float b, float a, Font font ){
-			glPrint( gl, x, y, 1.0f, 1.0f, string, r, g, b, a, font );
-		}
-		
-		private void glPrint( GL2 gl, float x, float y, float scaleX, float scaleY, String string, Font font ){
-			glPrint( gl, x, y, scaleX, scaleY, string, 1.0f, 1.0f,  1.0f, 1.0f, font );
-		}
-		
-		private void glPrint( GL2 gl, float x, float y, float scaleX, float scaleY, String string, float r, float g, float b, float a, Font font ){
-
-			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
-			gl.glPushMatrix();
-			gl.glLoadIdentity();
-			gl.glScalef( scaleX, scaleY, 1.0f );
-			gl.glTranslatef( x / scaleX, y / scaleY, 0 );
-
-			if( stringBuffer.capacity() < string.length() ){
-				stringBuffer = Buffers.newDirectIntBuffer( string.length() );
-			}
-
-			stringBuffer.clear();
-			for(int i= 0; i< string.length(); i++ ){
-				Integer listId = font.pixmaps.characters.get( string.charAt( i ) );
-				stringBuffer.put( listId != null ? listId.intValue() : font.pixmaps.unknown );
-			}
-			stringBuffer.flip();
-
-			font.apariencia.usar( gl );
-			gl.glColor4f( r, g, b, a );
-			gl.glCallLists( string.length(), GL2.GL_INT, stringBuffer );
-
-			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
-			gl.glPopMatrix();
-		}
-
-		public void init( GLAutoDrawable glDrawable ){
-			GL2 gl = glDrawable.getGL().getGL2();
-			
-			CharactersPixmaps charactersPixmaps = new CharactersPixmaps( gl, charactersPixmapsData );
 		
 			BufferedImage img = Imagen.cargarToBufferedImage( font1Texture );
 			
@@ -357,8 +94,8 @@ public class PruebaTexto{
 			
 			//*
 			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
-			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_EDGE );
-			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_EDGE );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER);
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
 			
 			apFont.setAtributosTextura( new AtributosTextura() );
 			
@@ -367,14 +104,17 @@ public class PruebaTexto{
 			apFont.getAtributosTextura().setCombineRgbSource0(
 					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
 			);
-			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
 			apFont.getAtributosTextura().setCombineAlphaSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			apFont.getAtributosTextura().setCombineAlphaSource1(
 					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
 			);
 			/*/
 			apFont.setTextura( new Textura( gl, Textura.Format.RGBA, img, false ) );
-			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_EDGE );
-			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_EDGE );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP );
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP );
 			
 			apFont.setAtributosTextura( new AtributosTextura() );
 			
@@ -399,14 +139,15 @@ public class PruebaTexto{
 							AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
 					) 
 			);
-			font1 = new Font( charactersPixmaps, apFont );
+			renderer1.setApariencia( apFont );
+			renderer2.setApariencia( apFont );
 			
 			img = Imagen.cargarToBufferedImage( font2Texture );
 			apFont = new Apariencia();
 			
 			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
-			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_EDGE );
-			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_EDGE );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
 			
 			apFont.setAtributosTextura( new AtributosTextura() );
 			
@@ -415,8 +156,11 @@ public class PruebaTexto{
 			apFont.getAtributosTextura().setCombineRgbSource0(
 					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
 			);
-			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
 			apFont.getAtributosTextura().setCombineAlphaSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			apFont.getAtributosTextura().setCombineAlphaSource1(
 					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
 			);
 			
@@ -427,7 +171,7 @@ public class PruebaTexto{
 							AtributosTransparencia.DstFunc.ONE
 					) 
 			);
-			font2 = new Font( charactersPixmaps, apFont );
+			renderer3.setApariencia( apFont );
 			
 			gl.glShadeModel( GLLightingFunc.GL_SMOOTH );
 			gl.glClearColor( 0.2f, 0.2f, 0.3f, 0.0f );
@@ -438,33 +182,102 @@ public class PruebaTexto{
 
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT );
 			
-			glPrint( gl, 5, 0, "Prueba Texto áéíóú ÁÉÍÓÚ cigüeña", 0.5f, 0.5f, 0.5f, 1.0f, font1 );
-			glPrint( gl, 5, 0, "Prueba Texto áéíóú ÁÉÍÓÚ cigüeña", 0.2f, 0.2f, 0.2f, 1.0f, font2 );
 			
-			glPrint( gl, 5, 51, "Bla: bla@bla ¿bla? ¡bla!", 0.5f, 0.5f, 0.5f, 1.0f, font1 );
-			glPrint( gl, 5, 51, "Bla: bla@bla ¿bla? ¡bla!", 0.5f, 0.5f, 0.5f, 1.0f, font2 );
+			new Apariencia().usar( gl );
+			gl.glBegin( GL.GL_LINES );
+				gl.glColor4f( 1.0f,1.0f,1.0f,1.0f );
+				gl.glVertex2f( 0, 200 );
+				gl.glVertex2f( 1024, 200 );
+				gl.glVertex2f( 0, 350 );
+				gl.glVertex2f( 1024, 350 );
+				gl.glVertex2f( 0, 450 );
+				gl.glVertex2f( 1024, 450 );
+				gl.glVertex2f( 0, 550 );
+				gl.glVertex2f( 1024, 550 );
+			gl.glEnd();
 			
-			glPrint( gl, 5, 102, "12345,67890.12345;67890", 0.5f, 0.5f, 0.5f, 1.0f, font1 );
-			glPrint( gl, 5, 102, "12345,67890.12345;67890", 0.15f, 0.15f, 0.15f, 1.0f, font2 );
+			renderer1.setHorizontalAlignment( HorizontalAlignment.CENTER );
+			renderer1.setVerticalAlignment( VerticalAlignment.TOP );
+			renderer1.setColor( 1.0f, 1.0f, 1.0f, 1.0f );
+			renderer1.glPrint( gl, 512, 5, "Prueba Texto" );
 			
-			glPrint( gl, 5, 300, "ABCDEFGHIJKLMNOPQRSTUVXYZ", 0.5f, 0.25f, 0.5f, 1.0f, font1 );
-			glPrint( gl, 5, 300, "ABCDEFGHIJKLMNOPQRSTUVXYZ", 0.5f, 0.5f, 0.25f, 1.0f, font2 );
+			// Horizontal Alignment Test
+			renderer1.setColor( 0.5f, 1.0f, 0.5f, 1.0f );
 			
-			glPrint( gl, 5, 400, "abcdefghijklmnopqrstuvxyz", 0.0f, 0.0f, 0.5f, 1.0f, font1 );
-			glPrint( gl, 5, 400, "abcdefghijklmnopqrstuvxyz", 0.5f, 0.25f, 0.5f, 1.0f, font2 );
+			renderer1.setHorizontalAlignment( HorizontalAlignment.LEFT );
+			renderer1.glPrint( gl, 5, 80, "Izquierda" );
+			
+			renderer1.setHorizontalAlignment( HorizontalAlignment.CENTER );
+			renderer1.glPrint( gl, 512, 80, "Centro" );
+			
+			renderer1.setHorizontalAlignment( HorizontalAlignment.RIGHT );
+			renderer1.glPrint( gl, 1019, 80, "Derecha" );
+			
+			// Vertical Alignment Test
+			renderer1.setColor( 1.0f, 0.5f, 1.0f, 1.0f );
+			
+			renderer1.setHorizontalAlignment( HorizontalAlignment.CENTER );
+			renderer1.setVerticalAlignment( VerticalAlignment.BASE_LINE );
+			renderer1.glPrint( gl, 128, 200, "Lìnea base [j]" );
+
+			renderer1.setVerticalAlignment( VerticalAlignment.TOP );
+			renderer1.glPrint( gl, 384, 200, "Arriba [j]" );
+			
+			renderer1.setVerticalAlignment( VerticalAlignment.CENTER );
+			renderer1.glPrint( gl, 640, 200, "Centro [j]" );
+			
+			renderer1.setVerticalAlignment( VerticalAlignment.BOTTOM );
+			renderer1.glPrint( gl, 896, 200, "Abajo [j]" );
+			
+			renderer2.setHorizontalAlignment( HorizontalAlignment.CENTER );
+			renderer3.setHorizontalAlignment( HorizontalAlignment.CENTER );
+			
+			renderer2.setColor( 0.5f, 0.25f, 0.5f, 1.0f );
+			renderer2.glPrint( gl, 512, 350, "ABCDEFGHIJKLMNOPQRSTUVXYZ" );
+			renderer3.setColor( 1.0f, 1.0f, 0.0f, 0.75f );
+			renderer3.glPrint( gl, 512, 350, "ABCDEFGHIJKLMNOPQRSTUVXYZ" );
+
+			renderer2.setColor( 0.0f, 0.5f, 0.5f, 1.0f );
+			renderer2.glPrint( gl, 512, 450, "abcdefghijklmnopqrstuvxyz" );
+			renderer3.setColor( 1.0f, 0.5f, 1.0f, 0.75f );
+			renderer3.glPrint( gl, 512, 450, "abcdefghijklmnopqrstuvxyz" );
+			
+			renderer2.setColor( 0.0f, 0.0f, 0.5f, 1.0f );
+			renderer2.glPrint( gl, 512, 550, "12345,67890.12345;67890" );
+			renderer3.setColor( 1.0f, 0.5f, 1.0f, 0.75f );
+			renderer3.glPrint( gl, 512, 550, "12345,67890.12345;67890" );
+			
+			renderer2.setColor( 0.0f, 0.0f, 0.5f, 1.0f );
+			renderer2.glPrint( gl, 512, 650, "áèïóú âêîôû" );
+			renderer3.setColor( 1.0f, 0.5f, 1.0f, 0.5f );
+			renderer3.glPrint( gl, 512, 650, "áèïóú âêîôû" );
 		}
 
-		public void reshape( GLAutoDrawable glDrawable, int x, int y, int w, int h ){
-			if( h == 0 )
-				h = 1;
-			GL2 gl = glDrawable.getGL().getGL2();
-			
-			gl.glViewport( 0, 0, w, h );
-			
-			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
-			gl.glPushMatrix();
-			gl.glLoadIdentity();
-			gl.glOrtho( 0, w, h, 0, -1, 1 );
+		public void reshape( GLAutoDrawable glDrawable, int x, int y, int width, int height ){
+			if( width != 0 && height != 0 ){
+				GL2 gl = glDrawable.getGL().getGL2();
+				/* 
+				 * Centra el área, conservando el tamaño fijo:
+				 * Añadiendo bordes / recortando extremos, dejando el centro del área en el centro
+				 * de la ventana.
+				 */
+				//gl.glViewport( ( width - AREA_WIDTH ) / 2, ( height - AREA_HEIGHT ) / 2, AREA_WIDTH, AREA_HEIGHT );
+				//gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
+				//gl.glLoadIdentity();
+				//gl.glOrtho( 0, width, height, 0, -1, 1 );
+				/* 
+				 * Centra y escala el área, conservando las proporciones:
+				 * La altura que se ajusta a la altura de la ventana y en función de la anchura correspondiente,
+				 * se añanden bordes laterales o se recortan los extremos laterales.
+				 */
+				gl.glViewport(
+						( AREA_HEIGHT * width - AREA_WIDTH * height ) / ( 2 * AREA_HEIGHT ), 0,
+						AREA_WIDTH * height / AREA_HEIGHT, height 
+				);
+				gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
+				gl.glLoadIdentity();
+				gl.glOrtho( 0, AREA_WIDTH, AREA_HEIGHT, 0, -1, 1 );
+			}
 		}
 
 		/*
@@ -484,7 +297,7 @@ public class PruebaTexto{
 		frame.getContentPane().setBackground( Color.BLACK );
 
 		GLCanvas canvas = new GLCanvas();
-		canvas.addGLEventListener( new Renderer() );
+		canvas.addGLEventListener( new GUIRenderer() );
 		frame.getContentPane().add( canvas, BorderLayout.CENTER );
 
 		frame.getContentPane().setPreferredSize( new Dimension( 640, 480 ) );
@@ -496,6 +309,7 @@ public class PruebaTexto{
 		Animator animator = new Animator();
 		animator.setRunAsFastAsPossible( true );
 		animator.add( canvas );
+		animator.start();
 		
 		canvas.requestFocusInWindow();
 	}
