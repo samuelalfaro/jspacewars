@@ -1,0 +1,252 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Font maxAscent='325' maxDescent='73' textureWidth='4096' textureHeight='4096' scaleX='5.10500475737393' scaleY='5.633802816901408' >
+	<CharacterPixmap charWidth='82'>
+		<character><![CDATA[ ]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='0' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[!]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='412' y='0' width='275' height='510' offsetX='-56' charWidth='189'>
+		<character><![CDATA["]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='687' y='0' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[$]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1099' y='0' width='277' height='510' offsetX='-56' charWidth='191'>
+		<character><![CDATA[%]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1376' y='0' width='177' height='510' offsetX='-56' charWidth='91'>
+		<character><![CDATA[']]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1553' y='0' width='281' height='510' offsetX='-56' charWidth='196'>
+		<character><![CDATA[+]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1834' y='0' width='177' height='510' offsetX='-56' charWidth='91'>
+		<character><![CDATA[,]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2011' y='0' width='281' height='510' offsetX='-56' charWidth='196'>
+		<character><![CDATA[-]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2292' y='0' width='177' height='510' offsetX='-56' charWidth='91'>
+		<character><![CDATA[.]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2469' y='0' width='276' height='510' offsetX='-56' charWidth='191'>
+		<character><![CDATA[/]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2745' y='0' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[0]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3157' y='0' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[1]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3569' y='0' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[2]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='510' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[3]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='412' y='510' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[4]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='824' y='510' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[5]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1236' y='510' width='413' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[6]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1649' y='510' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[7]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2061' y='510' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[8]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2473' y='510' width='413' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[9]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2886' y='510' width='177' height='510' offsetX='-56' charWidth='91'>
+		<character><![CDATA[:]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3063' y='510' width='177' height='510' offsetX='-56' charWidth='91'>
+		<character><![CDATA[;]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3240' y='510' width='262' height='510' offsetX='-56' charWidth='176'>
+		<character><![CDATA[<]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3502' y='510' width='281' height='510' offsetX='-56' charWidth='196'>
+		<character><![CDATA[=]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='1020' width='262' height='510' offsetX='-56' charWidth='176'>
+		<character><![CDATA[>]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='262' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[?]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='674' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[A]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1086' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[B]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1498' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[C]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1910' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[D]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2322' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[E]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2734' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[F]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3146' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[G]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3558' y='1020' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[H]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[I]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='412' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[J]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='824' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[K]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1236' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[L]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1648' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[M]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2060' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[N]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2472' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[O]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2884' y='1530' width='413' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[P]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3297' y='1530' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[Q]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='2040' width='413' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[R]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='413' y='2040' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[S]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='825' y='2040' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[T]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1237' y='2040' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[U]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1649' y='2040' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[V]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2061' y='2040' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[W]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2473' y='2040' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[X]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2885' y='2040' width='414' height='510' offsetX='-57' charWidth='327'>
+		<character><![CDATA[Y]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3299' y='2040' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[Z]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3711' y='2040' width='308' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[[]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='2550' width='276' height='510' offsetX='-56' charWidth='191'>
+		<character><![CDATA[\]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='276' y='2550' width='308' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[]]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='584' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[a]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='996' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[b]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1408' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[c]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1820' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[d]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2232' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[e]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2644' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[f]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3056' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[g]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3468' y='2550' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[h]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[i]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='412' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[j]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='824' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[k]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1236' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[l]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1648' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[m]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2060' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[n]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2472' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[o]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2884' y='3060' width='413' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[p]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3297' y='3060' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[q]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='0' y='3570' width='413' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[r]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='413' y='3570' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[s]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='825' y='3570' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[t]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1237' y='3570' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[u]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='1649' y='3570' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[v]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2061' y='3570' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[w]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2473' y='3570' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[x]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='2885' y='3570' width='414' height='510' offsetX='-57' charWidth='327'>
+		<character><![CDATA[y]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3299' y='3570' width='412' height='510' offsetX='-56' charWidth='327'>
+		<character><![CDATA[z]]></character>
+	</CharacterPixmap>
+	<CharacterPixmap x='3711' y='3570' width='177' height='510' offsetX='-56' charWidth='91'>
+		<character><![CDATA[|]]></character>
+	</CharacterPixmap>
+</Font>

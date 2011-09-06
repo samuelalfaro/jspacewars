@@ -188,14 +188,14 @@ public class MyGameMenuButton extends Button{
 
 		appearance.addRenderer( ITextRenderer.DEFAULTTEXTRENDERERKEY, TextRenderers.renderer1 );
 
-		appearance.add( STATE_DEFAULT.getName(), generatePixmapBackground( defaultState ) );
-		appearance.add( STATE_DEFAULT.getName(), generatePixmapBorder( defaultState ) );
-		appearance.add( STATE_HOVERED.getName(), generatePixmapBackground( hoverState ) );
-		appearance.add( STATE_HOVERED.getName(), generatePixmapBorder( hoverState ) );
-		appearance.add( STATE_FOCUSED.getName(), generatePixmapBackground( focusState ) );
-		appearance.add( STATE_FOCUSED.getName(), generatePixmapBorder( focusState ) );
-		appearance.add( STATE_PRESSED.getName(), generatePixmapBackground( pressedState ) );
-		appearance.add( STATE_PRESSED.getName(), generatePixmapBorder( pressedState ) );
+		appearance.add( STATE_DEFAULT.getName(),  generatePixmapBackground( defaultState ) );
+		appearance.add( STATE_DEFAULT.getName(),  generatePixmapBorder( defaultState ) );
+		appearance.add( STATE_HOVERED.getName(),  generatePixmapBackground( hoverState ) );
+		appearance.add( STATE_HOVERED.getName(),  generatePixmapBorder( hoverState ) );
+		appearance.add( STATE_FOCUSED.getName(),  generatePixmapBackground( focusState ) );
+		appearance.add( STATE_FOCUSED.getName(),  generatePixmapBorder( focusState ) );
+		appearance.add( STATE_PRESSED.getName(),  generatePixmapBackground( pressedState ) );
+		appearance.add( STATE_PRESSED.getName(),  generatePixmapBorder( pressedState ) );
 		appearance.add( STATE_DISABLED.getName(), generatePixmapBackground( disabledState ) );
 		appearance.add( STATE_DISABLED.getName(), generatePixmapBorder( disabledState ) );
 

@@ -24,6 +24,7 @@ package org.sam.jogl.particulas;
 
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Random;
 
 import javax.vecmath.*;
 
@@ -33,6 +34,8 @@ import org.sam.jogl.*;
 
 public abstract class Particulas extends Objeto3DAbs implements Modificable, PrototipoCacheable<Particulas>{
 
+	protected static final Random aleatorio = new Random();
+	
 	/**
 	 * Enumeración que contiene los distintos modos de emisión aceptados.
 	 */
@@ -221,43 +224,43 @@ public abstract class Particulas extends Objeto3DAbs implements Modificable, Pro
 		this.tCompuesta.setIdentity();
 	}
 	
-	public final void setEmisor(Emisor emisor) {
-		if(emisor == null)
+	public final void setEmisor( Emisor emisor ){
+		if( emisor == null )
 			throw new NullPointerException();
 		this.emisor = emisor;
 	}
 	
-	public void setEmision(Emision emision) {
+	public void setEmision( Emision emision ){
 		this.emision = emision;
 	}
 	
-	public final void setRangoDeEmision(float rangoDeEmision) {
-		if(rangoDeEmision < 0.0f || rangoDeEmision > 1.0f)
-			throw new IllegalArgumentException("El rango de emision debe estar comprendido entre 0.0 y 1.0");
+	public final void setRangoDeEmision( float rangoDeEmision ){
+		if( rangoDeEmision < 0.0f || rangoDeEmision > 1.0f )
+			throw new IllegalArgumentException( "El rango de emision debe estar comprendido entre 0.0 y 1.0" );
 		this.rangoDeEmision = rangoDeEmision;
 	}
 	
-	public void setTiempoVida(float tVida){
-		if(tVida <= 0.0f)
-			throw new IllegalArgumentException("El tiempo de vida debe de ser mayor de 0");
+	public void setTiempoVida( float tVida ){
+		if( tVida <= 0.0f )
+			throw new IllegalArgumentException( "El tiempo de vida debe de ser mayor de 0" );
 		/*
 		Pasamos todos los valores que estaban en funcion de la vida otra vez a funcion
 		del tiempo y los volvemos a poner en funcion del nuevo tiempo de vida.
 		*/
-		velocidad  = velocidad  * iVida * tVida;
+		velocidad  = velocidad * iVida * tVida;
 		pVelocidad = pVelocidad * iVida * tVida;
-		velGiro = velGiro * iVida * tVida;
-		pVelGiro = pVelGiro * iVida * tVida;
-		fuerza.scale((iVida*iVida)*(tVida*tVida));
-		iVida = 1.0f/tVida;
+		velGiro    = velGiro * iVida * tVida;
+		pVelGiro   = pVelGiro * iVida * tVida;
+		fuerza.scale( ( iVida * iVida ) * ( tVida * tVida ) );
+		iVida      = 1.0f / tVida;
 	}
 	
-	public final void setVelocidad(float velocidad){
+	public final void setVelocidad( float velocidad ){
 		// Pasamos del dominino del tiempo al dominio de la vida.
 		this.velocidad = velocidad / iVida;
 	}
 
-	public final void setVelocidad(float velocidad, float pVelocidad, boolean sentidoVelocidadAleatorio){
+	public final void setVelocidad( float velocidad, float pVelocidad, boolean sentidoVelocidadAleatorio ){
 		// Pasamos del dominino del tiempo al dominio de la vida.
 		this.velocidad  = velocidad  / iVida;
 		// premultiplicamos la perturbacion por 2, para optimizar el calculo
@@ -266,28 +269,28 @@ public abstract class Particulas extends Objeto3DAbs implements Modificable, Pro
 		this.sentidoVelocidadAleatorio = sentidoVelocidadAleatorio;
 	}
 	
-	public void setFuerza(Tuple3f fuerza){
-		this.fuerza.set(fuerza);
+	public void setFuerza( Tuple3f fuerza ){
+		this.fuerza.set( fuerza );
 		// Pasamos del dominino del tiempo al dominio de la vida.
-		this.fuerza.scale(1.0f/(iVida*iVida));
+		this.fuerza.scale( 1.0f / ( iVida * iVida ) );
 	}
 	
-	public void setFuerza(float x, float y, float z){
-		this.fuerza.set(x,y,z);
+	public void setFuerza( float x, float y, float z ){
+		this.fuerza.set( x, y, z );
 		// Pasamos del dominino del tiempo al dominio de la vida.
-		this.fuerza.scale(1.0f/(iVida*iVida));
+		this.fuerza.scale( 1.0f / ( iVida * iVida ) );
 	}
 	
 	
-	public final void setGiroInicial(float giroInicial){
-		this.giroInicial = (float)(giroInicial*Math.PI/180);
+	public final void setGiroInicial( float giroInicial ){
+		this.giroInicial = (float)( giroInicial * Math.PI / 180 );
 	}
 
-	public final void setGiroInicial(float giroInicial, float pGiroInicial, boolean sentidoGiroInicialAleatorio){
-		this.giroInicial = (float)(giroInicial*Math.PI/180);
+	public final void setGiroInicial( float giroInicial, float pGiroInicial, boolean sentidoGiroInicialAleatorio ){
+		this.giroInicial = (float)( giroInicial * Math.PI / 180 );
 		// premultiplicamos la perturbacion por 2, para optimizar el calculo
 		// ( aleatorio(0,1) - 0.5 ) * pertubacion -> rango [ -pertubacion/2 , pertubacion/2]
-		this.pGiroInicial = (float)(pGiroInicial*Math.PI/90);
+		this.pGiroInicial = (float)( pGiroInicial * Math.PI / 90 );
 		this.sentidoGiroInicialAleatorio = sentidoGiroInicialAleatorio;
 	}
 	

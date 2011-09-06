@@ -50,70 +50,67 @@ public class PantallaTestColisiones extends GLCanvas{
 	
 	private static class PoligonoDibujable extends Hoja{
 		
-		private static Poligono getPoligono(Elemento e){
-			java.lang.reflect.Field f = Reflexion.findField(Elemento.class, "forma");
-			if (f == null)
-				return null;
-			try {
+		private static float[] getArray( Poligono p, String name ){
+			java.lang.reflect.Field f = Reflexion.findField( Poligono.class, name );
+			try{
 				boolean accesible = f.isAccessible();
-				f.setAccessible(true);
-				Poligono p = (Poligono)f.get(e);
-				f.setAccessible(accesible);
-				return p;
-			} catch (IllegalAccessException ignorada) {
+				f.setAccessible( true );
+				float[] array = (float[])f.get( p );
+				f.setAccessible( accesible );
+				return array;
+			}catch( IllegalAccessException ignorada ){
 				return null;
 			}
 		}
 		
-		private static float[] getArray(Poligono p, String name){
-			java.lang.reflect.Field f = Reflexion.findField(Poligono.class, name);
-			try {
+		private static Poligono getPoligono( Elemento e ){
+			java.lang.reflect.Field f = Reflexion.findField( Elemento.class, "forma" );
+			if( f == null )
+				return null;
+			try{
 				boolean accesible = f.isAccessible();
-				f.setAccessible(true);
-				float[] array = (float[])f.get(p);
-				f.setAccessible(accesible);
-				return array;
-			} catch (IllegalAccessException ignorada) {
+				f.setAccessible( true );
+				Poligono p = (Poligono)f.get( e );
+				f.setAccessible( accesible );
+				return p;
+			}catch( IllegalAccessException ignorada ){
 				return null;
 			}
 		}
 		
 		private final Poligono p;
-		
-		PoligonoDibujable(Elemento e){
-			this.p = getPoligono(e);
+
+		PoligonoDibujable( Elemento e ){
+			this.p = getPoligono( e );
 		}
-		
-		/**
-		 * {@inheritDoc}
-		 */
+
 		@Override
 		public PoligonoDibujable clone(){
 			return this;
 		}
 		
 		@Override
-		public void draw(GL2 gl) {
-			if(p != null){
+		public void draw( GL2 gl ){
+			if( p != null ){
 				LimiteRectangular l = p.getLimites();
-				gl.glBegin(GL.GL_LINE_STRIP);
-				gl.glColor3f( 0.25f, 0.25f, 0.25f );
-					gl.glVertex3f(l.getXMin(),l.getYMin(),0);
-					gl.glVertex3f(l.getXMin(),l.getYMax(),0);
-					gl.glVertex3f(l.getXMax(),l.getYMax(),0);
-					gl.glVertex3f(l.getXMax(),l.getYMin(),0);
-					gl.glVertex3f(l.getXMin(),l.getYMin(),0);
+				gl.glBegin( GL.GL_LINE_STRIP );
+					gl.glColor3f( 0.25f, 0.25f, 0.25f );
+					gl.glVertex3f( l.getXMin(), l.getYMin(), 0 );
+					gl.glVertex3f( l.getXMin(), l.getYMax(), 0 );
+					gl.glVertex3f( l.getXMax(), l.getYMax(), 0 );
+					gl.glVertex3f( l.getXMax(), l.getYMin(), 0 );
+					gl.glVertex3f( l.getXMin(), l.getYMin(), 0 );
 				gl.glEnd();
 				int nLados = p.getNLados();
-				float coordX[] = getArray(p, "coordX");
-				float coordY[] = getArray(p, "coordY");
-				
-				gl.glBegin(GL.GL_LINE_STRIP);
-				gl.glColor3f( 0.25f, 1.0f, 0.25f );
-				for(int i=0; i< nLados; i++){
-					gl.glVertex3f(coordX[i],coordY[i],0);
-				}
-				gl.glVertex3f(coordX[0],coordY[0],0);
+				float coordX[] = getArray( p, "coordX" );
+				float coordY[] = getArray( p, "coordY" );
+
+				gl.glBegin( GL.GL_LINE_STRIP );
+					gl.glColor3f( 0.25f, 1.0f, 0.25f );
+					for( int i = 0; i < nLados; i++ ){
+						gl.glVertex3f( coordX[i], coordY[i], 0 );
+					}
+					gl.glVertex3f( coordX[0], coordY[0], 0 );
 				gl.glEnd();
 			}
 		}
