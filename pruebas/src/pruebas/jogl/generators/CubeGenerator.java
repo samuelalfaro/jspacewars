@@ -344,14 +344,14 @@ public class CubeGenerator {
 		return oglList;
 	}
 	
-	public static Objeto3D generate(GL2 gl, float lado) {
+	public static Objeto3D generate( GL2 gl, float lado ){
 		Apariencia ap = new Apariencia();
-		ap.setMaterial(Material.DEFAULT);
-		return new Objeto3D( generate(gl, lado, QuadsGenerator), ap );
+		ap.setMaterial( Material.DEFAULT );
+		return new Objeto3D( generate( gl, lado, QuadsGenerator ), ap );
 	}
-	
-	public static Objeto3D generateNTB(GL2 gl, float lado, float scale) {
+
+	public static Objeto3D generateNTB( GL2 gl, float lado, float scale ){
 		MyNTBGenerator.scale = scale;
-		return new Objeto3D( generate(gl, lado, MyNTBGenerator), new Apariencia() );
+		return new Objeto3D( generate( gl, lado, MyNTBGenerator ), new Apariencia() );
 	}
 }

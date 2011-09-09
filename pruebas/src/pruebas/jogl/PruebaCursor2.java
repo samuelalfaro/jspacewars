@@ -36,7 +36,7 @@ import com.jogamp.newt.event.WindowListener;
 import com.jogamp.newt.event.WindowUpdateEvent;
 import com.jogamp.newt.opengl.GLWindow;
 
-public class PruebaBotones2 implements WindowListener, KeyListener{
+public class PruebaCursor2 implements WindowListener, KeyListener{
 	
 	static{
 		System.setProperty( "java.awt.headless", "true" );
@@ -315,7 +315,7 @@ public class PruebaBotones2 implements WindowListener, KeyListener{
 			Screen screen = NewtFactory.createScreen( display, 0 );
 			GLWindow window = GLWindow.create( screen, caps );
 			
-			window.setTitle( "Prueba Botones" );
+			window.setTitle( "Prueba Cursor" );
 			window.setUndecorated( false );
 			window.setSize( 256, 256 );
 			window.addKeyListener( this );
@@ -349,6 +349,6 @@ public class PruebaBotones2 implements WindowListener, KeyListener{
 	}
 	
 	public static void main( String[] args ){
-		new PruebaBotones2().run();
+		new PruebaCursor2().run();
 	}
 }

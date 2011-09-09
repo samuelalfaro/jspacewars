@@ -58,13 +58,13 @@ public class PruebaTexto{
 	private static class GUIRenderer implements GLEventListener{
 		
 		//*
-		private final static String fontDef = "resources/arbeka.xml";
-		private final static String font1Texture = "resources/arbeka.png";
-		private final static String font2Texture = "resources/arbeka-neon.png";
+		private final static String fontDef      = "resources/texturas/fonts/arbeka.xml";
+		private final static String font1Texture = "resources/texturas/fonts/arbeka.png";
+		private final static String font2Texture = "resources/texturas/fonts/arbeka-neon.png";
 		/*/
-		private final static String fontDef = "resources/saved.xml";
-		private final static String font1Texture = "resources/saved.png";
-		private final static String font2Texture = "resources/saved-neon.png";
+		private final static String fontDef      = "resources/texturas/fonts/saved.xml";
+		private final static String font1Texture = "resources/texturas/fonts/saved.png";
+		private final static String font2Texture = "resources/texturas/fonts/saved-neon.png";
 		//*/
 		private TextRenderer renderer1;
 		private TextRenderer renderer2;

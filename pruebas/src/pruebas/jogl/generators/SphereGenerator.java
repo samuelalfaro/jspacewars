@@ -43,7 +43,7 @@ public class SphereGenerator {
 
 	private static final float TOW_PI  = (float)( 2 * Math.PI );
 	
-	private static void generateVertices(Point3f[][] vertices, float r, int steps1, int steps2 ) {
+	private static void generateVertices( Point3f[][] vertices, float r, int steps1, int steps2 ){
 		
 		float incTheta = TOW_PI / steps2;
 		float incPhi   = (float)( Math.PI ) /steps1;
@@ -66,7 +66,7 @@ public class SphereGenerator {
 		}
 	}
 	
-	private static void generateNormals(Vector3f[][] normals, int steps1, int steps2 ) {
+	private static void generateNormals( Vector3f[][] normals, int steps1, int steps2 ){
 		
 		float incTheta = TOW_PI / steps2;
 		float incPhi   = (float)( Math.PI ) /steps1;

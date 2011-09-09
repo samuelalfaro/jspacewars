@@ -70,14 +70,23 @@ public class OrbitBehavior{
 		OrbitListener(){
 			eyePos =    new Point3d ( 0, 0, 5 );
 			targetPos = new Point3d ( 0, 0, 0 );
+			
 			upDir =     new Vector3d( 0, 1, 0 );
 
 			eyeDir = new Vector3d();
+			sideDir = new Vector3d();
+			
+			recalculateVectors();
+		}
+		
+		private void recalculateVectors(){
+			
 			eyeDir.set( targetPos );
 			eyeDir.sub( eyePos );
 			eyeDir.normalize();
-
-			sideDir = new Vector3d();
+			
+			upDir.normalize();
+			
 			sideDir.cross( eyeDir, upDir );
 			sideDir.normalize();
 		}
@@ -111,15 +120,8 @@ public class OrbitBehavior{
 		@Override
 		public void mousePressed( MouseEvent e ){
 			ptLastMousePosit = e.getPoint();
-
 			dist = eyePos.distance( targetPos );
-
-			eyeDir.set( targetPos );
-			eyeDir.sub( eyePos );
-			eyeDir.normalize();
-			upDir.normalize();
-			sideDir.cross( eyeDir, upDir );
-			sideDir.normalize();
+			recalculateVectors();
 		}
 
 		/**

@@ -39,11 +39,13 @@ import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 import javax.vecmath.Color4f;
 import javax.vecmath.Matrix4d;
-import javax.vecmath.Point4f;
-import javax.vecmath.Tuple4f;
+import javax.vecmath.Point2f;
+import javax.vecmath.Tuple2f;
 
+import org.sam.jogl.Apariencia;
 import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
+import org.sam.jogl.OglList;
 import org.sam.jogl.Shader;
 
 import com.jogamp.opengl.util.Animator;
@@ -56,8 +58,52 @@ public class Prueba012_SinglePassWireframe{
 		private OrbitBehavior orbitBehavior;
 
 		private Objeto3D forma;
-		private final Tuple4f viewport = new Point4f();
-
+		private final Tuple2f viewport = new Point2f();
+		
+		
+		private static Objeto3D generateQuad(GL2 gl, float lado ){
+			OglList oglList = new OglList( gl );
+			gl.glBegin( GL2.GL_QUADS );
+			
+			float x0 = -lado/2;
+			float y0 = -lado/2;
+			float x1 =  lado/2;
+			float y1 =  lado/2;
+			
+	   		gl.glNormal3f(           0,  0,  1);
+			gl.glVertexAttrib3f( 1, x0, y0,  0);
+			gl.glVertexAttrib3f( 2, x1, y0,  0);
+			gl.glVertexAttrib3f( 3, x1, y1,  0);
+			gl.glVertexAttrib3f( 4, x0, y1,  0);
+			gl.glVertex3f(          x0, y0,  0);
+			
+	   		gl.glNormal3f(           0,  0,  1);
+			gl.glVertexAttrib3f( 1, x0, y0,  0);
+			gl.glVertexAttrib3f( 2, x1, y0,  0);
+			gl.glVertexAttrib3f( 3, x1, y1,  0);
+			gl.glVertexAttrib3f( 4, x0, y1,  0);
+			gl.glVertex3f(          x1, y0,  0);
+			
+	   		gl.glNormal3f(           0,  0,  1);
+			gl.glVertexAttrib3f( 1, x0, y0,  0);
+			gl.glVertexAttrib3f( 2, x1, y0,  0);
+			gl.glVertexAttrib3f( 3, x1, y1,  0);
+			gl.glVertexAttrib3f( 4, x0, y1,  0);
+			gl.glVertex3f(          x1, y1,  0);
+			
+	   		gl.glNormal3f(           0,  0,  1);
+			gl.glVertexAttrib3f( 1, x0, y0,  0);
+			gl.glVertexAttrib3f( 2, x1, y0,  0);
+			gl.glVertexAttrib3f( 3, x1, y1,  0);
+			gl.glVertexAttrib3f( 4, x0, y1,  0);
+			gl.glVertex3f(          x0, y1,  0);
+			
+			gl.glEnd();
+			OglList.endList( gl );
+			
+			return new Objeto3D( oglList, new Apariencia() );
+		}
+		
 		Renderer(){
 		}
 
@@ -69,17 +115,18 @@ public class Prueba012_SinglePassWireframe{
 			orbitBehavior.setTargetPos( 0.0f, 0.0f, 0.0f );
 			orbitBehavior.addMouseListeners( (GLCanvas)drawable );
 
-			gl.glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+			gl.glClearColor( 0.0f, 0.0f, 0.5f, 0.0f );
 			/*
-			forma = HelixGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 0.0f, 12, 1.25f, 0.05f, 36, 1.2f*2.8f, 9 );
-			//forma = SphereGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 12, 36 );
+			//forma = HelixGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 0.0f, 12, 1.25f, 0.05f, 36, 1.2f*2.8f, 9 );
+			forma = HelixGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 3.0f, 6 );
+			//forma = generateQuad( gl, 6.0f );
 			/*/
 			Matrix4d mtd = new Matrix4d();
 			mtd.rotY( Math.PI / 2 );
 			mtd.setScale( 18.0 );
 			try{
 				forma = ObjLoader
-						.load( "resources/obj3d/nave06/forma.obj", ObjLoader.RESIZE | ObjLoader.WIREFRAME, mtd );
+						.load( "resources/obj3d/nave02/forma.obj", ObjLoader.RESIZE | ObjLoader.WIREFRAME, mtd );
 			}catch( Exception e ){
 				e.printStackTrace();
 			}
@@ -98,8 +145,8 @@ public class Prueba012_SinglePassWireframe{
 
 			shader.addUniform( gl, "viewport", viewport );
 			shader.addUniform( gl, "solid_width", 0.5f );
-			shader.addUniform( gl, "translucid_width", 2.0f );
-			shader.addUniform( gl, "empty_color", new Color4f( 0.0f, 0.0f, 0.0f, 1.0f ) );
+			shader.addUniform( gl, "translucid_width", 1.5f );
+			shader.addUniform( gl, "empty_color", new Color4f( 0.0f, 0.0f, 0.55f, 1.0f ) );
 
 			forma.getApariencia().setShader( shader );
 
@@ -110,7 +157,7 @@ public class Prueba012_SinglePassWireframe{
 			gl.glLightfv( GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_POSITION,
 					new float[] { 0.0f, 0.0f, 1.0f, 1.0f }, 0 );
 			gl.glLightfv( GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_DIFFUSE,
-					new float[] { 1.0f, 0.0f, 1.0f, 1.0f }, 0 );
+					new float[] { 1.0f, 1.0f, 1.0f, 1.0f }, 0 );
 			gl.glLightfv( GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR,
 					new float[] { 1.0f, 1.0f, 1.0f, 1.0f }, 0 );
 
@@ -123,11 +170,11 @@ public class Prueba012_SinglePassWireframe{
 			GL2 gl = drawable.getGL().getGL2();
 
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-
+			
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 			orbitBehavior.setLookAt( glu );
-
+			
 			forma.draw( gl );
 
 			gl.glFlush();
@@ -136,9 +183,12 @@ public class Prueba012_SinglePassWireframe{
 		public void reshape( GLAutoDrawable drawable, int x, int y, int w, int h ){
 			GL2 gl = drawable.getGL().getGL2();
 			gl.glViewport( 0, 0, w, h );
-			viewport.set( 0, 0, w, h );
+			viewport.set( w / 2.0f, h / 2.0f );
+			
+			Shader.desactivar( gl );
 			forma.getApariencia().getShader().setUniform( "viewport", viewport );
-
+			forma.getApariencia().getShader().activar( gl );
+			
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glLoadIdentity();
 			double near = 0.01;
@@ -153,8 +203,6 @@ public class Prueba012_SinglePassWireframe{
 				gl.glFrustum( -d, d, -d / ratio, d / ratio, near, far );
 			else
 				gl.glFrustum( -d * ratio, d * ratio, -d, d, near, far );
-
-			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		}
 
 		/*

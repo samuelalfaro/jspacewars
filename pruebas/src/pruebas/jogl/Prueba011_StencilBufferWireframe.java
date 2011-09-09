@@ -41,7 +41,7 @@ import javax.swing.JFrame;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
-import org.sam.jogl.MatrixSingleton;
+import org.sam.jogl.Dibujable;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
@@ -83,7 +83,7 @@ public class Prueba011_StencilBufferWireframe{
 			apFondo.getAtributosTextura().setMode( AtributosTextura.Mode.REPLACE );
 
 			//*
-			forma = HelixGenerator.generate(gl, 1.2f, 3.0f, 6);
+			forma = HelixGenerator.generate( gl, 1.2f, 3.0f, 6 );
 			/*/
 			Matrix4d mtd = new Matrix4d();
 			mtd.rotY( Math.PI / 2 );
@@ -112,24 +112,45 @@ public class Prueba011_StencilBufferWireframe{
 			gl.glClearStencil( 0 );
 			gl.glStencilMask( ~0 );
 		}
+		
+		private static void wireframeToStencilBuffer( GL2 gl, Dibujable forma ){
+			
+			gl.glDepthFunc( GL.GL_LESS );
+			gl.glDepthMask( true );
+			gl.glPolygonMode( GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL );
+			gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
+			gl.glPolygonOffset( 1.0f, 1.0f/10000.0f );
+				forma.draw( gl );
+			gl.glPolygonOffset( 0.f, 0.f );
+			gl.glDisable( GL.GL_POLYGON_OFFSET_FILL );
+
+			gl.glDepthFunc( GL.GL_LEQUAL );
+			gl.glEnable( GL.GL_STENCIL_TEST );
+			gl.glStencilFunc( GL.GL_ALWAYS, 1, ~0 );
+			gl.glStencilOp( GL.GL_KEEP, GL.GL_KEEP, GL.GL_INCR );
+			gl.glDepthMask( false );
+			gl.glPolygonMode( GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE );
+			gl.glLineWidth( 2.0f );
+				forma.draw( gl );
+			gl.glDisable( GL.GL_STENCIL_TEST );
+		}
 
 		public void display( GLAutoDrawable drawable ){
 
 			GL2 gl = drawable.getGL().getGL2();
+			gl.glStencilMask( ~0 );
+			//gl.glClear( GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT );
+			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
 
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
-			MatrixSingleton.loadModelViewMatrix();
 
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
 			gl.glOrtho( 0.0, proporcionesPantalla, 0.0, 1.0, 0, 1 );
-			MatrixSingleton.loadProjectionMatrix();
 
 			apFondo.usar( gl );
-			gl.glStencilMask( ~0 );
-			gl.glClear( GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT );
 
 			gl.glDepthMask( false );
 			float s1 = 0.75f;
@@ -144,67 +165,56 @@ public class Prueba011_StencilBufferWireframe{
 			gl.glTexCoord2f( s1, 1 );
 			gl.glVertex3f( 0, 1, 0 );
 			gl.glEnd();
-			gl.glDepthMask( true );
-
+			
 			gl.glPopMatrix();
 
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 
 			orbitBehavior.setLookAt( glu );
-
+			
 			gl.glColorMask( false, false, false, false );
-			gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
-			gl.glPolygonOffset( 1.1f, 0.1f );
-			forma.getGeometria().draw( gl );
-			gl.glDisable( GL.GL_POLYGON_OFFSET_FILL );
-			gl.glPolygonOffset( 0.f, 0.f );
-
-			gl.glDepthMask( false );
-			gl.glDepthFunc( GL.GL_LEQUAL );
-			gl.glEnable( GL.GL_STENCIL_TEST );
-			gl.glStencilFunc( GL.GL_ALWAYS, 1, ~0 );
-			gl.glStencilOp( GL.GL_KEEP, GL.GL_KEEP, GL.GL_REPLACE );
-			gl.glFlush();
-
-			gl.glPolygonMode( GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE );
-			gl.glLineWidth( 0.25f );
-			forma.getGeometria().draw( gl );
-
+			
+			wireframeToStencilBuffer( gl, forma.getGeometria() );
+//			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
+//			wireframeToStencilBuffer( gl, forma.getGeometria() );
+//			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
+//			wireframeToStencilBuffer( gl, forma.getGeometria() );
+//			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
+//			wireframeToStencilBuffer( gl, forma.getGeometria() );
+			
 			gl.glColorMask( true, true, true, true );
 			gl.glPolygonMode( GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL );
-			gl.glStencilFunc( GL.GL_EQUAL, 1, ~0 );
+			
+			gl.glEnable( GL.GL_STENCIL_TEST );
+			gl.glStencilFunc( GL.GL_LEQUAL, 1, ~0 );
 			gl.glStencilOp( GL.GL_KEEP, GL.GL_KEEP, GL.GL_ZERO );
-			// gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);
+			//gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);
 
-			/*
-			 * gl.glClear(GL.GL_DEPTH_BUFFER_BIT); gl.glDepthMask(true); gl.glDepthFunc(GL.GL_LESS);
-			 * //gl.glDisable(GL.GL_STENCIL_TEST); forma.draw(gl); //gl.glEnable(GL.GL_STENCIL_TEST);
-			 * 
-			 * /
-			 */
 			gl.glDisable( GL.GL_DEPTH_TEST );
 			gl.glDepthMask( false );
 
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
-			gl.glPushMatrix();
 			gl.glLoadIdentity();
+			
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
+			
 			gl.glOrtho( 0.0, proporcionesPantalla, 0.0, 1.0, 0, 1 );
 			gl.glDisable( GLLightingFunc.GL_LIGHTING );
 			gl.glDisable( GL.GL_TEXTURE_2D );
 			gl.glBegin( GL2.GL_QUADS );
 			gl.glColor3f( 1.0f, 0.0f, 1.0f );
 			gl.glVertex3f( 0, 0, 0 );
+			gl.glColor3f( 1.0f, 0.0f, 1.0f );
 			gl.glVertex3f( proporcionesPantalla, 0, 0 );
+			gl.glColor3f( 0.0f, 1.0f, 0.0f );
 			gl.glVertex3f( proporcionesPantalla, 1, 0 );
+			gl.glColor3f( 0.0f, 1.0f, 1.0f );
 			gl.glVertex3f( 0, 1, 0 );
 			gl.glEnd();
 			gl.glEnable( GL.GL_TEXTURE_2D );
 			gl.glEnable( GLLightingFunc.GL_LIGHTING );
-			gl.glPopMatrix();
-			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glPopMatrix();
 
 			gl.glDepthMask( true );
