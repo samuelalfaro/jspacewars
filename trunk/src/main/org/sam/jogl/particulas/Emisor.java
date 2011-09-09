@@ -204,13 +204,13 @@ public interface Emisor {
 		private final transient VectorLibre v;
 
 		public Puntual(){
-			this(1.0f, -1.0f, 360.0f);
+			this( 1.0f, -1.0f, 360.0f );
 		}
 
-		public Puntual(float rangoSup, float rangoInf, float rangoGiro){
-			this.rangoEje = rangoSup -rangoInf;
+		public Puntual( float rangoSup, float rangoInf, float rangoGiro ){
+			this.rangoEje = rangoSup - rangoInf;
 			this.rangoInf = rangoInf;
-			this.rangoGiro = (float)(rangoGiro * Math.PI /180.0);
+			this.rangoGiro = (float)( rangoGiro * Math.PI / 180.0 );
 			v = new VectorLibre();
 		}
 
@@ -219,14 +219,14 @@ public interface Emisor {
 		 */
 		@Override
 		public VectorLibre emite(){
-			v.posicion.set(0.0f,0.0f,0.0f);
+			v.posicion.set( 0.0f, 0.0f, 0.0f );
 
 			Vector3f direccion = v.direccion;
-			direccion.y = rangoEje * ALEATORIO.nextFloat() + rangoInf; 
-			float r = (float)Math.sqrt(1 - direccion.y * direccion.y);
-			float a = (ALEATORIO.nextFloat() - 0.5f)*rangoGiro;
-			direccion.x = r * (float)Math.cos(a);
-			direccion.z = r * (float)Math.sin(a);
+			direccion.y = rangoEje * ALEATORIO.nextFloat() + rangoInf;
+			float r = (float)Math.sqrt( 1 - direccion.y * direccion.y );
+			float a = ( ALEATORIO.nextFloat() - 0.5f ) * rangoGiro;
+			direccion.x = r * (float)Math.cos( a );
+			direccion.z = r * (float)Math.sin( a );
 			return v;
 		}
 	}

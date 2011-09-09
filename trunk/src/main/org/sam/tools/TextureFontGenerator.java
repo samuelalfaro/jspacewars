@@ -43,6 +43,8 @@ import org.sam.util.Tipografias;
  * @author Samuel Alfaro <samuelalfaro at gmail dot com>
  */
 public class TextureFontGenerator {
+	
+	private static boolean TEST = true;
 
 	private static final char[] basicAlphabetCharArray = (
 		"!\"#$%&'()*+,-./" +
@@ -210,7 +212,7 @@ public class TextureFontGenerator {
 					y = fila * ( 2* bordeV + fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() );
 				}
 				
-				if( test ){
+				if( TEST ){
 					g2d.setColor(Color.YELLOW);
 					g2d.drawRect( offX-bordeH, y, pixelsCharWidth+2*bordeH, fontMetrics.getMaxAscent() + fontMetrics.getMaxDescent() + 2*bordeV );	
 					g2d.setColor(Color.DARK_GRAY);
@@ -252,28 +254,64 @@ public class TextureFontGenerator {
 		ImageIO.write( img, type, new File( filename ) );
 	}
 
-	private static boolean test = true;
-	
+	public static BufferedImage toSingleRow( BufferedImage img, int rows ){
+		BufferedImage singleRowImg = new BufferedImage( img.getWidth() * rows, img.getHeight() / rows, img.getType() );
+		
+		Graphics2D g = singleRowImg.createGraphics();
+		
+		int dx1 = 0;
+		int dy1 = 0;
+		int dx2 = img.getWidth() - 1;
+		int dy2 = singleRowImg.getHeight() - 1;
+		
+		int sx1 = 0;
+		int sy1 = 0;
+		int sx2 = img.getWidth() - 1;
+		int sy2 = singleRowImg.getHeight() - 1;
+		
+		for( int i = 0; i < rows; i++){
+			g.drawImage( img, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null );
+			dx1  = dx2 + 1;
+			dx2 += img.getWidth();
+			sy1  = sy2 + 1;
+			sy2 += singleRowImg.getHeight();
+		}
+		return singleRowImg;
+	}
+
 	public static void main( String[] args ) throws IOException{
 
-		//String fontName = "abduction"; double scaleXAjust = 0.91;
+		int rows = 8;
+		boolean exportSingleRow = true;
+		
+		//String fontName  = "abduction"; double scaleXAjust = 0.91;
+		//char[] alphabet  = basicAlphabetCharArray;
 		//char[] ignorados = new char[] { '#', '&', '(', ')', '*', '@', '^', '_', '`', '{', '}', '¡', '¿' };
-		//TextureFontGenerator g = new TextureFontGenerator( basicAlphabetCharArray, ignorados );
 		
 		//String fontName = "arbeka"; double scaleXAjust = 0.938;
-		String fontName = "saved"; double scaleXAjust = 0.958;
+		String fontName  = "saved"; double scaleXAjust = 0.958;
+		char[] alphabet  = latinAlphabetCharArray;
 		char[] ignorados = new char[] { 'Æ', 'Ð', '×', 'Ý', 'Þ', 'ß', 'æ', 'ð', 'ý', 'þ', 'ÿ' };
-		TextureFontGenerator g = new TextureFontGenerator( latinAlphabetCharArray, ignorados );
 		
-		String fontFile = "resources/fonts/" + fontName + ".ttf";
-		String fontImg = "resources/" + fontName + ( test ? "-test" : "" ) + ".png";
-		String fontXML = "resources/" + fontName + ( test ? "-test" : "" ) + ".xml";
+		String fontFile    = "resources/fonts/" + fontName + ".ttf";
+		String fontXML     = "resources/" + fontName + ( TEST ? "-test" : "" ) + ".xml";
+		String fontTexture = "resources/" + fontName + ( TEST ? "-test" : "" ) + ".png";
 		
+		TextureFontGenerator g = new TextureFontGenerator( alphabet, ignorados );
 		g.font = Tipografias.load( fontFile, Font.PLAIN, 64.0f );
+		
 		PrintStream outXML = new PrintStream( new FileOutputStream( new File( fontXML ) ), false, "UTF-8" );
-		export( g.generate( outXML, 1024, 512, 8, 7, 7, scaleXAjust ), fontImg );
-		//export( g.generate( outXML, 8192, 4096, 8, 56, 56, scaleXAjust ), fontImg );
+		
+		BufferedImage img = g.generate( outXML, 1024, 512, rows, 7, 7, scaleXAjust );
 		outXML.flush();
 		outXML.close();
+		
+		//BufferedImage fontTexture = g.generate( outXML, 8192, 4096, rows, 56, 56, scaleXAjust );
+		export( img, fontTexture );
+		
+		if( rows > 1 && exportSingleRow ){
+			String fontImgSR = "resources/" + fontName + "-SingleRow" + ( TEST ? "-test" : "" ) + ".png";
+			export( toSingleRow( img, rows ), fontImgSR );
+		}
 	}
 }

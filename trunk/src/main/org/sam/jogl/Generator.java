@@ -311,7 +311,7 @@ public abstract class Generator {
 			gl.glVertexAttrib3f( posAtt1, vert1.x, vert1.y, vert1.z );
 			gl.glVertexAttrib3f( posAtt2, vert2.x, vert2.y, vert2.z );
 			gl.glVertexAttrib3f( posAtt3, vert3.x, vert3.y, vert3.z );
-			gl.glVertexAttrib3f( posAtt3, vert4.x, vert4.y, vert4.z );
+			gl.glVertexAttrib3f( posAtt4, vert4.x, vert4.y, vert4.z );
 			gl.glVertex3f( vert4.x, vert4.y, vert4.z );
 		}
 	}
@@ -320,7 +320,7 @@ public abstract class Generator {
 	 * Instancia estática de un {@code VerticesWireFrameGenerator} 
 	 * que evita la necesidad de crear más instancias.
 	 */
-	public static final Generator VerticesWireFrame = new VerticesWireFrameGenerator( 1, 2, 3, 4 );
+	public static final Generator VerticesWireFrame = new VerticesWireFrameGenerator( 4, 3, 2, 1 );
 
 	/**
 	 * Implementación de un {@code Generator}, que genera primitivas
