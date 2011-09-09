@@ -42,16 +42,16 @@ public class OglList implements Geometria {
 	 * lista.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public OglList(GL2 gl){
-		this.idList = gl.glGenLists(1);
-		gl.glNewList(this.idList, GL2.GL_COMPILE);
+	public OglList( GL2 gl ){
+		this.idList = gl.glGenLists( 1 );
+		gl.glNewList( this.idList, GL2.GL_COMPILE );
 	}
 	
 	/**
 	 * Método que indica se ha finalizado de almacenar la lista.
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public static void endList(GL2 gl) {
+	public static void endList( GL2 gl ){
 		gl.glEndList();
 	}
 	
@@ -59,7 +59,7 @@ public class OglList implements Geometria {
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL2 gl) {
-		gl.glCallList(idList);
+	public void draw( GL2 gl ){
+		gl.glCallList( idList );
 	}
 }
