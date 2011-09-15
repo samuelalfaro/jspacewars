@@ -133,59 +133,59 @@ public class HelixGenerator {
 	}
 	
 	/*
-	private static void generateTextCoords(Point2f[][] tCoords, float scaleU, float scaleV) {
-		float incU = scaleU / (tCoords[0].length - 1);
-		float incV = scaleV / (tCoords.length - 1);
-		
+	private static void generateTextCoords( TexCoord2f[][] tCoords, float scaleU, float scaleV ){
+		float incU = scaleU / ( tCoords[0].length - 1 );
+		float incV = scaleV / ( tCoords.length - 1 );
+
 		float v = 0.0f;
-		for( int i= 0; i < tCoords.length; i++ ) {
-			incU = Math.abs(incU) * Math.signum( scaleU );
+		for( int i = 0; i < tCoords.length; i++ ){
+			incU = Math.abs( incU ) * Math.signum( scaleU );
 			float u = 0.0f;
-			for( int j = 0; j < tCoords[0].length; j++) {
-				tCoords [i][j] = new Point2f ( u, v );
+			for( int j = 0; j < tCoords[0].length; j++ ){
+				tCoords[i][j] = new TexCoord2f( u, v );
 				u += incU;
-				if(u > 1){
+				if( u > 1 ){
 					u = 2 - u;
-					incU = - incU;
-				}else if(u < 0){
-					u = - u;
-					incU = - incU;
+					incU = -incU;
+				}else if( u < 0 ){
+					u = -u;
+					incU = -incU;
 				}
 			}
 			v += incV;
-			if(v > 1){
+			if( v > 1 ){
 				v = 2 - v;
-				incV = - incV;
-			}else if(v < 0){
-				v = - v;
-				incV = - incV;
+				incV = -incV;
+			}else if( v < 0 ){
+				v = -v;
+				incV = -incV;
 			}
 		}
 	}
 	/*/
-	private static void generateTextCoords(TexCoord2f[][] tCoords, float scaleU, float scaleV) {
-		float incU = scaleU / (tCoords[0].length - 1);
-		float incV = scaleV / (tCoords.length - 1);
-		
+	private static void generateTextCoords( TexCoord2f[][] tCoords, float scaleU, float scaleV ){
+		float incU = scaleU / ( tCoords[0].length - 1 );
+		float incV = scaleV / ( tCoords.length - 1 );
+
 		float u = 0.0f;
-		incU = Math.abs(incU) * Math.signum( scaleU );
-		for( int i = 0; i < tCoords[0].length; i++) {
+		incU = Math.abs( incU ) * Math.signum( scaleU );
+		for( int i = 0; i < tCoords[0].length; i++ ){
 			float v = 0.1f * i;
-			for( int j= 0; j < tCoords.length/2; j++ ) {
-				tCoords [j][i] = new TexCoord2f ( u, v );
+			for( int j = 0; j < tCoords.length / 2; j++ ){
+				tCoords[j][i] = new TexCoord2f( u, v );
 				v += incV;
 			}
-			tCoords [tCoords.length/2][i] = new TexCoord2f ( u, v );
-			for( int j= 0; j < tCoords.length/2; j++ ) {
-				tCoords [ (tCoords.length-1) -j][i] = new TexCoord2f ( tCoords [j][i] );
+			tCoords[tCoords.length / 2][i] = new TexCoord2f( u, v );
+			for( int j = 0; j < tCoords.length / 2; j++ ){
+				tCoords[( tCoords.length - 1 ) - j][i] = new TexCoord2f( tCoords[j][i] );
 			}
 			u += incU;
-			if(u > 1){
+			if( u > 1 ){
 				u = 2 - u;
-				incU = - incU;
-			}else if(u < 0){
-				u = - u;
-				incU = - incU;
+				incU = -incU;
+			}else if( u < 0 ){
+				u = -u;
+				incU = -incU;
 			}
 		}
 	}

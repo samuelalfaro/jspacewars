@@ -55,10 +55,10 @@ import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.NodoTransformador;
 import org.sam.jogl.Textura;
-import org.sam.jogl.gui.Font;
-import org.sam.jogl.gui.TextRenderer;
-import org.sam.jogl.gui.TextRenderer.HorizontalAlignment;
-import org.sam.jogl.gui.TextRenderer.VerticalAlignment;
+import org.sam.jogl.gui.TextureFont;
+import org.sam.jogl.gui.TextureTextRenderer;
+import org.sam.jogl.gui.TextureTextRenderer.HorizontalAlignment;
+import org.sam.jogl.gui.TextureTextRenderer.VerticalAlignment;
 import org.sam.jogl.particulas.Emisor;
 import org.sam.jogl.particulas.FactoriaDeParticulas;
 import org.sam.jogl.particulas.Particulas;
@@ -162,15 +162,15 @@ public class PruebaBotones{
 		private final static String font1Texture = "resources/texturas/fonts/arbeka.png";
 		private final static String font2Texture = "resources/texturas/fonts/arbeka-blur.png";
 
-		private TextRenderer renderer1;
-		private TextRenderer renderer2;
+		private TextureTextRenderer renderer1;
+		private TextureTextRenderer renderer2;
 		
 		public GUIRenderer(){
-			renderer1 = new TextRenderer();
+			renderer1 = new TextureTextRenderer();
 			renderer1.setHorizontalAlignment( HorizontalAlignment.CENTER );
 			renderer1.setVerticalAlignment( VerticalAlignment.TOP );
 			
-			renderer2 = new TextRenderer();
+			renderer2 = new TextureTextRenderer();
 			renderer2.setHorizontalAlignment( HorizontalAlignment.CENTER );
 			renderer2.setVerticalAlignment( VerticalAlignment.TOP );
 		}
@@ -179,7 +179,7 @@ public class PruebaBotones{
 			GL2 gl = glDrawable.getGL().getGL2();
 			
 			try{
-				Font font = new Font( gl, new FileInputStream( fontDef ) ).deriveFont( 0.9f );
+				TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) ).deriveFont( 0.9f );
 				renderer1.setFont( font );
 				renderer2.setFont( font );
 			}catch( FileNotFoundException e ){

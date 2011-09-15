@@ -41,10 +41,13 @@ import javax.swing.JFrame;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.Generator;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
 import org.sam.util.Imagen;
+
+import pruebas.jogl.generators.HelixGenerator;
 
 import com.jogamp.opengl.util.Animator;
 
@@ -82,13 +85,14 @@ public class Prueba013_NormalMap{
 			apFondo.setAtributosTextura( new AtributosTextura() );
 			apFondo.getAtributosTextura().setMode( AtributosTextura.Mode.REPLACE );
 
-			/*
-			 * // forma = HelixGenerator.generate(gl, HelixGenerator.GENERATE_TANGENTS, 1.2f, 3.0f, 6); // if(showNTB)
-			 * // ntb = HelixGenerator.generateNTB (gl, 1.2f, 3.0f, 6, 0.25f);
-			 * 
-			 * forma = SphereGenerator.generate( gl, SphereGenerator.GENERATE_TANGENTS, 9.0f, 36, 72 ); if(showNTB) ntb
-			 * = SphereGenerator.generateNTB (gl, 9.0f, 0.25f); /
-			 */
+			//*
+			forma = HelixGenerator.generate(gl, Generator.GENERATE_TANGENTS, 1.2f, 3.0f, 6);
+			if( showNTB )
+				ntb = HelixGenerator.generateNTB( gl, 1.2f, 3.0f, 6, 0.25f );
+//			forma = SphereGenerator.generate( gl, Generator.GENERATE_TANGENTS, 9.0f, 36, 72 );
+//			if(showNTB)
+//				ntb = SphereGenerator.generateNTB (gl, 9.0f, 0.25f);
+			/*/
 			javax.vecmath.Matrix4d mtd = new javax.vecmath.Matrix4d();
 			mtd.rotY( Math.PI / 2 );
 			mtd.setScale( 18.0 );
@@ -99,7 +103,6 @@ public class Prueba013_NormalMap{
 				if( showNTB ){
 					ntb = org.sam.jogl.ObjLoader.load( path, org.sam.jogl.ObjLoader.RESIZE
 							| org.sam.jogl.ObjLoader.GENERATE_TANGENTS | org.sam.jogl.ObjLoader.GENERATE_NTB, mtd );
-					formaOffset = new Objeto3D( forma.getGeometria(), new Apariencia() );
 				}
 			}catch( Exception e ){
 				e.printStackTrace();
@@ -118,6 +121,9 @@ public class Prueba013_NormalMap{
 
 			forma.getApariencia().setShader( shader );
 
+			if( showNTB )
+				formaOffset = new Objeto3D( forma.getGeometria(), new Apariencia() );
+			
 			gl.glEnable( GL.GL_DEPTH_TEST );
 			gl.glDepthFunc( GL.GL_LESS );
 
@@ -171,9 +177,9 @@ public class Prueba013_NormalMap{
 
 			orbitBehavior.setLookAt( glu );
 
+			forma.draw( gl );
+			
 			if( ntb != null ){
-				forma.draw( gl );
-
 				gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
 				gl.glColorMask( false, false, false, false );
 				gl.glEnable( GL.GL_POLYGON_OFFSET_FILL );
@@ -184,8 +190,6 @@ public class Prueba013_NormalMap{
 				gl.glColorMask( true, true, true, true );
 
 				ntb.draw( gl );
-			}else{
-				forma.draw( gl );
 			}
 
 			gl.glFlush();
