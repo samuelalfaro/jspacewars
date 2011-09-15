@@ -26,7 +26,7 @@ package org.sam.tools.textureGenerator;
  *
  * @author Samuel Alfaro
  */
-public class Coulds {
+public class Coulds{
 
 	int width;
 	int height;
@@ -35,73 +35,73 @@ public class Coulds {
 	 * @param width
 	 * @param height
 	 */
-	public void setDimensions(int width, int height) {
+	public void setDimensions( int width, int height ){
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	int octaves;
 
-	public void setOctaves(int octaves) {
+	public void setOctaves( int octaves ){
 		this.octaves = octaves;
 	}
 
 	double frequency;
 
-	public void setFrequency(double frequency) {
+	public void setFrequency( double frequency ){
 		this.frequency = frequency;
 	}
 
 	double harmonicScale;
 
-	public void setHarmonicScale(double harmonicScale) {
+	public void setHarmonicScale( double harmonicScale ){
 		this.harmonicScale = harmonicScale;
 	}
 
 	double amplitude;
 
-	public void setAmplitude(double amplitude) {
+	public void setAmplitude( double amplitude ){
 		this.amplitude = amplitude;
 	}
 
 	double persistence;
 
-	public void setPersistence(double persistence) {
+	public void setPersistence( double persistence ){
 		this.persistence = persistence;
 	}
 
 	boolean absPartial;
 
-	public void setAbsPartial(boolean absPartial) {
+	public void setAbsPartial( boolean absPartial ){
 		this.absPartial = absPartial;
 	}
 
 	double z;
 
-	public void setZ(double z) {
+	public void setZ( double z ){
 		this.z = z;
 	}
-	
+
 	public Coulds(){
 		width = height = 256;
 		octaves = 6;
 		frequency = 4.0;
-//		harmonicScale = Math.pow(1.0/frequency, 1.0/(octaves-1));
+		//		harmonicScale = Math.pow(1.0/frequency, 1.0/(octaves-1));
 		harmonicScale = 2.0;
 		amplitude = 1.0;
-		persistence = Math.pow(.02, 1.0/(octaves-1));
-//		persistence = .5;
+		persistence = Math.pow( .02, 1.0 / ( octaves - 1 ) );
+		//		persistence = .5;
 		absPartial = false;
 		z = 0;
 	}
 	
-	public double calculate(int x, int y) {
-		double freq = frequency/width;
+	public double calculate( int x, int y ){
+		double freq = frequency / width;
 		double ampl = amplitude;
 		double total = 0.0;
 		for( int lcv = 0; lcv < octaves; lcv++ ){
-			double partial = SimplexNoise.noise( x * freq, y * freq, z)  * ampl;
-			total += (partial < 0.0 && absPartial) ? -partial: partial;
+			double partial = SimplexNoise.noise( x * freq, y * freq, z ) * ampl;
+			total += ( partial < 0.0 && absPartial ) ? -partial: partial;
 			freq *= harmonicScale;
 			ampl *= persistence;
 		}

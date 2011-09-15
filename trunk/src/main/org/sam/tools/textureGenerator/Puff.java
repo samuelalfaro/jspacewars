@@ -36,8 +36,8 @@ public class Puff extends Coulds {
 	 * @inheritDoc
 	 */
 	@Override
-	public void setDimensions(int width, int height) {
-		super.setDimensions(width, height);
+	public void setDimensions( int width, int height ){
+		super.setDimensions( width, height );
 		caluculateRadiuses();
 		calculateIncRadius();
 	}
@@ -46,23 +46,24 @@ public class Puff extends Coulds {
 	 * @inheritDoc
 	 */
 	@Override
-	public void setOctaves(int octaves) {
-		super.setOctaves(octaves);
+	public void setOctaves( int octaves ){
+		super.setOctaves( octaves );
 		calculateIncRadius();
 	}
-	
+
 	private void caluculateRadiuses(){
-		radius2 = x0 = y0 = width/2;
-		radius1 = 3*radius2/4;
+		radius2 = x0 = y0 = width / 2;
+		radius1 = 3 * radius2 / 4;
 	}
 	
 	private double incRadius;
+
 	private void calculateIncRadius(){
-		if( this.octaves < 2){
+		if( this.octaves < 2 ){
 			incRadius = 0;
 			radius1 = radius2;
 		}else
-			incRadius = ((double)(radius2 - radius1))/(this.octaves -1);
+			incRadius = ( (double)( radius2 - radius1 ) ) / ( this.octaves - 1 );
 	}
 	
 	/* (non-Javadoc)
@@ -78,16 +79,16 @@ public class Puff extends Coulds {
 		double len = Math.sqrt( Math.pow( x - x0, 2 ) + Math.pow( y - y0, 2 ) );
 		
 		for( int i = 0; i < this.octaves; i++ ){
-			double radius =  incRadius * i + radius1;
-			double partial = (len > radius) ? 
+			double radius = incRadius * i + radius1;
+			double partial = ( len > radius ) ?
 					0 :
-					(radius - len )/radius *
-					( SimplexNoise.noise( x * freq, y * freq, this.z) ) *
+					( radius - len )/radius *
+					( SimplexNoise.noise( x * freq, y * freq, this.z ) ) *
 					ampl;
-			total +=  ( partial < 0.0 && this.absPartial ) ? -partial: partial;
+			total += ( partial < 0.0 && this.absPartial ) ? -partial: partial;
 			freq *= this.harmonicScale;
 			ampl *= this.persistence;
 		}
-		return Math.abs(total);
+		return Math.abs( total );
 	}
 }

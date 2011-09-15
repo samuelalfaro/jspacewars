@@ -1,5 +1,5 @@
 /* 
- * TextRenderer.java
+ * TextureTextRenderer.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -32,80 +32,79 @@ import org.sam.jogl.Apariencia;
 
 import com.jogamp.common.nio.Buffers;
 
-public class TextRenderer{
-	
+public class TextureTextRenderer{
+
 	public static enum HorizontalAlignment{
 		LEFT, CENTER, RIGHT
 	}
-	
+
 	public static enum VerticalAlignment{
-		BASE_LINE, TOP, CENTER, BOTTOM 
+		BASE_LINE, TOP, CENTER, BOTTOM
 	}
-	
+
 	private static IntBuffer stringBuffer = Buffers.newDirectIntBuffer( 256 );
-	
-	private Font font;
+
+	private TextureFont font;
 	private HorizontalAlignment horizontalAlignment;
-	private VerticalAlignment   verticalAlignment;
+	private VerticalAlignment verticalAlignment;
 	private float r, g, b, a;
 	private Apariencia apariencia;
 
-	
-	public TextRenderer(){
+	public TextureTextRenderer(){
 		horizontalAlignment = HorizontalAlignment.LEFT;
 		verticalAlignment = VerticalAlignment.BASE_LINE;
 	}
-	
-	public void setFont( Font font ){
+
+	public void setFont( TextureFont font ){
 		this.font = font;
 	}
-	
-	public void setHorizontalAlignment(  HorizontalAlignment horizontalAlignment ){
+
+	public void setHorizontalAlignment( HorizontalAlignment horizontalAlignment ){
 		this.horizontalAlignment = horizontalAlignment;
 	}
-	
+
 	public void setVerticalAlignment( VerticalAlignment verticalAlignment ){
 		this.verticalAlignment = verticalAlignment;
 	}
-	
+
 	public void setColor( float r, float g, float b, float a ){
 		this.r = r;
 		this.g = g;
 		this.b = b;
 		this.a = a;
 	}
-	
+
 	public void setApariencia( Apariencia apariencia ){
 		this.apariencia = apariencia;
-	}	
+	}
 
 	public void glPrint( GL2 gl, float x, float y, String string ){
-		
+
 		if( font == null )
 			return;
-		
+
 		if( stringBuffer.capacity() < string.length() ){
 			stringBuffer = Buffers.newDirectIntBuffer( string.length() );
 		}
-		
+
 		stringBuffer.clear();
 		float stringWidth = 0;
-		for(int i= 0; i< string.length(); i++ ){
+		for( int i = 0; i < string.length(); i++ ){
 			char c = string.charAt( i );
-			int  charIndex = Arrays.binarySearch( font.characters, c );
-			stringBuffer.put( charIndex < 0 ? font.unknownId: font.charactersIds[ charIndex ] );
-			stringWidth += charIndex < 0 ? font.defaultWidth: font.charactersWidths[ charIndex ];
+			int charIndex = Arrays.binarySearch( font.characters, c );
+			stringBuffer.put( charIndex < 0 ? font.unknownId: font.charactersIds[charIndex] );
+			stringWidth += charIndex < 0 ? font.defaultWidth: font.charactersWidths[charIndex];
 		}
 		stringBuffer.flip();
 
 		gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
-		
+
 		gl.glScalef( font.scaleX, font.scaleY, 1.0f );
-		
+
 		float posX = x / font.scaleX;
-		
+
 		switch( horizontalAlignment ){
 		case LEFT:
 			break;
@@ -116,7 +115,7 @@ public class TextRenderer{
 			posX -= stringWidth;
 			break;
 		}
-		
+
 		float posY = y / font.scaleY;
 		switch( verticalAlignment ){
 		case BASE_LINE:
@@ -132,7 +131,7 @@ public class TextRenderer{
 			break;
 		}
 		gl.glTranslatef( posX, posY, 0 );
-		
+
 		apariencia.usar( gl );
 		gl.glColor4f( r, g, b, a );
 		gl.glCallLists( string.length(), GL2ES2.GL_INT, stringBuffer );

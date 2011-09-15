@@ -92,7 +92,7 @@ public class SimplexNoise {
 		return g[0] * x + g[1] * y + g[2] * z + g[3] * w;
 	}
 
-	public static double noise(double x, double y) {
+	public static double noise( double x, double y ){
 		double n0, n1, n2; // Noise contributions from the three corners
 		// Skew the input space to determine which simplex cell we're in
 		final double F2 = 0.5 * (Math.sqrt(3.0) - 1.0);
@@ -160,7 +160,7 @@ public class SimplexNoise {
 		return 70.0 * (n0 + n1 + n2);
 	}
 
-	public static double noise(double x, double y, double z) {
+	public static double noise( double x, double y, double z ){
 		double n0, n1, n2, n3; // Noise contributions from the four corners
 		// Skew the input space to determine which simplex cell we're in
 		final double F3 = 1.0 / 3.0;
@@ -293,7 +293,7 @@ public class SimplexNoise {
 		return 32.0 * (n0 + n1 + n2 + n3);
 	}
 
-	public static double noise(double x, double y, double z, double w) {
+	public static double noise( double x, double y, double z, double w ){
 		// The skewing and unskewing factors are hairy again for the 4D case
 		final double F4 = (Math.sqrt(5.0) - 1.0) / 4.0;
 		final double G4 = (5.0 - Math.sqrt(5.0)) / 20.0;

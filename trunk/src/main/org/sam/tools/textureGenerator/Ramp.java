@@ -32,36 +32,36 @@ public interface Ramp {
 		
 		LINEAL{
 			@Override
-			public double compute(double alpha){
+			public double compute( double alpha ){
 				return alpha;
 			}
 		},
 		
 		ACELERADA{
 			@Override
-			public double compute(double alpha){
-				return 1.0 + Math.sin( Math.PI/2 * ( alpha - 1.0) );
+			public double compute( double alpha ){
+				return 1.0 + Math.sin( Math.PI / 2 * ( alpha - 1.0 ) );
 			}
 		},
 		
 		DECELERADA{
 			@Override
-			public double compute(double alpha){
-				return Math.sin( Math.PI/2 * alpha );
+			public double compute( double alpha ){
+				return Math.sin( Math.PI / 2 * alpha );
 			}
 		},
 		
 		ACELERADA_DECELERADA{
 			@Override
-			public double compute(double alpha){
-				return Math.sin( Math.PI * ( alpha - 0.5) )/2.0 + 0.5;
+			public double compute( double alpha ){
+				return Math.sin( Math.PI * ( alpha - 0.5 ) ) / 2.0 + 0.5;
 			}
 		},
 		
 		DECELERADA_ACELERADA{
 			@Override
-			public double compute(double alpha){
-				return Math.tan( Math.PI/2 * ( alpha - 0.5))/2.0 + 0.5;
+			public double compute( double alpha ){
+				return Math.tan( Math.PI / 2 * ( alpha - 0.5 ) ) / 2.0 + 0.5;
 			}
 		};
 
@@ -69,15 +69,15 @@ public interface Ramp {
 		 * @see org.sam.tools.textureGenerator.Ramp#compute(int, int)
 		 */
 		@Override
-		public final double compute(int i, int frames) {
-			return compute(  frames < 2 ? 0 : (double)i/(frames-1) );
+		public final double compute( int i, int frames ){
+			return compute( frames < 2 ? 0: (double)i / ( frames - 1 ) );
 		}
 		
 		/* (non-Javadoc)
 		 * @see org.sam.tools.textureGenerator.Ramp#compute(double, double, double)
 		 */
 		@Override
-		public final double compute(double min, double max, double alpha){
+		public final double compute( double min, double max, double alpha ){
 			return ( max - min ) * compute( alpha ) + min;
 		}
 		
@@ -85,16 +85,16 @@ public interface Ramp {
 		 * @see org.sam.tools.textureGenerator.Ramp#compute(double, double, int, int)
 		 */
 		@Override
-		public final double compute(double min, double max, int i, int frames){
-			return ( max - min ) * compute( frames < 2 ? 0 : (double)i/(frames-1) ) + min;
+		public final double compute( double min, double max, int i, int frames ){
+			return ( max - min ) * compute( frames < 2 ? 0: (double)i / ( frames - 1 ) ) + min;
 		}
 	}
 	
-	public double compute(double alpha);
-	
-	public double compute(int i, int frames);
-	
-	public double compute(double min, double max, double alpha);
-	
-	public double compute(double min, double max, int i, int frames);
+	public double compute( double alpha );
+
+	public double compute( int i, int frames );
+
+	public double compute( double min, double max, double alpha );
+
+	public double compute( double min, double max, int i, int frames );
 }
