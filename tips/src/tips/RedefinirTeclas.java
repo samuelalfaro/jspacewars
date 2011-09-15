@@ -17,38 +17,42 @@ public class RedefinirTeclas {
 
 	@SuppressWarnings("serial")
 	public static class LectorTecla extends JButton implements KeyListener{
-		public LectorTecla(Color background){
-			super("            ");
-			this.setBackground(new Color(background.getRed(), background.getGreen(),  background.getBlue(), 255));
-			this.setFocusPainted(true);
-			this.setRequestFocusEnabled(true);
-			this.setFocusable(true);
-			this.addKeyListener(this);
+		public LectorTecla( Color background ){
+			super( "            " );
+			this.setBackground( new Color( background.getRed(), background.getGreen(), background.getBlue(), 255 ) );
+			this.setFocusPainted( true );
+			this.setRequestFocusEnabled( true );
+			this.setFocusable( true );
+			this.addKeyListener( this );
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
 		 * @see java.awt.event.KeyListener#keyPressed(java.awt.event.KeyEvent)
 		 */
 		@Override
-		public void keyPressed(KeyEvent e) {
-			System.out.println( (Character.isDefined(e.getKeyChar())?e.getKeyChar():'?') +" 0x"+Integer.toHexString(e.getKeyCode()).toUpperCase()+" : "+e.getKeyCode());
-			this.setText(KeyEvent.getKeyText(e.getKeyCode()));
+		public void keyPressed( KeyEvent e ){
+			System.out.println( ( Character.isDefined( e.getKeyChar() ) ? e.getKeyChar(): '?' ) + " 0x"
+					+ Integer.toHexString( e.getKeyCode() ).toUpperCase() + " : " + e.getKeyCode() );
+			this.setText( KeyEvent.getKeyText( e.getKeyCode() ) );
 			this.transferFocus();
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
 		 * @see java.awt.event.KeyListener#keyReleased(java.awt.event.KeyEvent)
 		 */
 		@Override
-		public void keyReleased(KeyEvent e) {
+		public void keyReleased( KeyEvent e ){
 
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
 		 * @see java.awt.event.KeyListener#keyTyped(java.awt.event.KeyEvent)
 		 */
 		@Override
-		public void keyTyped(KeyEvent e) {
+		public void keyTyped( KeyEvent e ){
 		}
 	}
 	
