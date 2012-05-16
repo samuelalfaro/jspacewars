@@ -60,8 +60,8 @@ public class Prueba012_SinglePassWireframe{
 		private Objeto3D forma;
 		private final Tuple2f viewport = new Point2f();
 		
-		
-		private static Objeto3D generateQuad(GL2 gl, float lado ){
+		@SuppressWarnings( "unused" )
+		private static Objeto3D generateQuad( GL2 gl, float lado ){
 			OglList oglList = new OglList( gl );
 			gl.glBegin( GL2.GL_QUADS );
 			

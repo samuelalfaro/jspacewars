@@ -56,9 +56,9 @@ import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.NodoTransformador;
 import org.sam.jogl.Textura;
 import org.sam.jogl.gui.TextureFont;
-import org.sam.jogl.gui.TextureTextRenderer;
-import org.sam.jogl.gui.TextureTextRenderer.HorizontalAlignment;
-import org.sam.jogl.gui.TextureTextRenderer.VerticalAlignment;
+import org.sam.jogl.gui.GLTextRenderer;
+import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
+import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
 import org.sam.jogl.particulas.Emisor;
 import org.sam.jogl.particulas.FactoriaDeParticulas;
 import org.sam.jogl.particulas.Particulas;
@@ -74,7 +74,7 @@ public class PruebaBotones{
 	static int AREA_WIDTH;
 	static int AREA_HEIGHT;
 	
-	static int VIRTUAL_VIEWPORT_X;
+	static int VIRTUAL_VIEWPORT_X; 
 	static int VIRTUAL_VIEWPORT_Y;
 	static int VIRTUAL_VIEWPORT_WIDTH;
 	static int VIRTUAL_VIEWPORT_HEIGHT;
@@ -162,26 +162,22 @@ public class PruebaBotones{
 		private final static String font1Texture = "resources/texturas/fonts/arbeka.png";
 		private final static String font2Texture = "resources/texturas/fonts/arbeka-blur.png";
 
-		private TextureTextRenderer renderer1;
-		private TextureTextRenderer renderer2;
+		private final GLTextRenderer renderer;
+		private TextureFont font1;
+		private TextureFont font2;
 		
 		public GUIRenderer(){
-			renderer1 = new TextureTextRenderer();
-			renderer1.setHorizontalAlignment( HorizontalAlignment.CENTER );
-			renderer1.setVerticalAlignment( VerticalAlignment.TOP );
-			
-			renderer2 = new TextureTextRenderer();
-			renderer2.setHorizontalAlignment( HorizontalAlignment.CENTER );
-			renderer2.setVerticalAlignment( VerticalAlignment.TOP );
+			renderer = new GLTextRenderer();
+			renderer.setHorizontalAlignment( HorizontalAlignment.CENTER );
+			renderer.setVerticalAlignment( VerticalAlignment.TOP );
 		}
 		
 		public void init( GLAutoDrawable glDrawable ){
 			GL2 gl = glDrawable.getGL().getGL2();
 			
 			try{
-				TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) ).deriveFont( 0.9f );
-				renderer1.setFont( font );
-				renderer2.setFont( font );
+				font1 = new TextureFont( gl, new FileInputStream( fontDef ) ).deriveFont( 0.9f );
+				font2 = font1.deriveFont( 1.0f );
 			}catch( FileNotFoundException e ){
 				e.printStackTrace();
 			}
@@ -237,7 +233,7 @@ public class PruebaBotones{
 							AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
 					) 
 			);
-			renderer1.setApariencia( apFont );
+			font1.setApariencia( apFont );
 			
 			img = Imagen.cargarToBufferedImage( font2Texture );
 			apFont = new Apariencia();
@@ -268,7 +264,7 @@ public class PruebaBotones{
 							AtributosTransparencia.DstFunc.ONE
 					) 
 			);
-			renderer2.setApariencia( apFont );
+			font2.setApariencia( apFont );
 			
 			gl.glShadeModel( GLLightingFunc.GL_SMOOTH );
 			gl.glClearColor( 0.2f, 0.2f, 0.3f, 0.0f );
@@ -284,31 +280,46 @@ public class PruebaBotones{
 			
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT );
 			
+			renderer.setFont ( font1 );
+			renderer.setColor( 0.0f, 0.75f, 0.25f, 1.0f );
+			renderer.glPrint( gl, 512, 275, "1 Jugador" );
+			renderer.setFont ( font2 );
+			renderer.setColor( 1.0f, 1.0f, 0.5f, 0.25f );
+			renderer.glPrint( gl, 512, 275, "1 Jugador" );
 
-			renderer2.setColor( 1.0f, 1.0f, 0.5f, 0.25f );
-			renderer2.glPrint( gl, 512, 275, "1 Jugador" );
-			renderer1.setColor( 0.0f, 0.75f, 0.25f, 1.0f );
-			renderer1.glPrint( gl, 512, 275, "1 Jugador" );
+			renderer.setFont ( font2 );
+			renderer.setColor( 1.0f, 1.0f, 0.5f, 0.75f );
+			renderer.glPrint( gl, 512, 350, "2 Jugadores" );
+			renderer.setFont ( font1 );
+			renderer.setColor( 0.0f, 0.75f, 0.25f, 1.0f );
+			renderer.glPrint( gl, 512, 350, "2 Jugadores" );
 
-			renderer1.glPrint( gl, 512, 350, "2 Jugadores" );
-			renderer2.setColor( 1.0f, 1.0f, 0.5f, 0.75f );
-			renderer2.glPrint( gl, 512, 350, "2 Jugadores" );
-			renderer1.glPrint( gl, 512, 350, "2 Jugadores" );
-
-			renderer1.glPrint( gl, 512, 425, "Opciones" );
-			renderer2.setColor( 1.0f, 1.0f, 0.5f, 0.25f );
-			renderer2.glPrint( gl, 512, 425, "Opciones" );
+			renderer.setFont ( font1 );
+			renderer.setColor( 0.0f, 0.75f, 0.25f, 1.0f );
+			renderer.glPrint( gl, 512, 425, "Opciones" );
+			renderer.setFont ( font2 );
+			renderer.setColor( 1.0f, 1.0f, 0.5f, 0.25f );
+			renderer.glPrint( gl, 512, 425, "Opciones" );
 			
-			renderer1.glPrint( gl, 512, 500, "Records" );
-			renderer2.glPrint( gl, 512, 500, "Records" );
+			renderer.setFont ( font1 );
+			renderer.setColor( 0.0f, 0.75f, 0.25f, 1.0f );
+			renderer.glPrint( gl, 512, 500, "Records" );
+			renderer.setFont ( font2 );
+			renderer.setColor( 1.0f, 1.0f, 0.5f, 0.25f );
+			renderer.glPrint( gl, 512, 500, "Records" );
 			
-			renderer1.glPrint( gl, 512, 575, "Acerca de..." );
-			renderer2.glPrint( gl, 512, 575, "Acerca de..." );
+			renderer.setFont ( font1 );
+			renderer.setColor( 0.0f, 0.75f, 0.25f, 1.0f );
+			renderer.glPrint( gl, 512, 575, "Acerca de..." );
+			renderer.setFont ( font2 );
+			renderer.setColor( 1.0f, 1.0f, 0.5f, 0.25f );
+			renderer.glPrint( gl, 512, 575, "Acerca de..." );
 
-			renderer2.setColor( 1.0f, 1.0f, 0.0f, 0.75f );
-			renderer2.glPrint( gl, 512, 675,  "Salir" );
-			renderer1.setColor( 0.75f, 0.375f, 0.75f, 0.5f );
-			renderer1.glPrint( gl, 512, 675, "Salir" );
+			renderer.setColor( 1.0f, 1.0f, 0.0f, 0.75f );
+			renderer.glPrint( gl, 512, 675,  "Salir" );
+			renderer.setFont ( font1 );
+			renderer.setColor( 0.75f, 0.375f, 0.75f, 0.5f );
+			renderer.glPrint( gl, 512, 675, "Salir" );
 
 		}
 
