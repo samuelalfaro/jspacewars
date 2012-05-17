@@ -28,6 +28,7 @@ package org.sam.jogl.gui;
 import javax.media.opengl.GL2;
 
 public class PixmapComponent extends GLComponent{
+	
 	public final Pixmap pixmap;
 
 	public PixmapComponent( Pixmap pixmap ){

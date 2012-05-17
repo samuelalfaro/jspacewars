@@ -45,10 +45,10 @@ public class ElementosConverters {
 	
 private static class PoligonoConverter implements Converter {
 		
-		private static float getFloatAttribute(HierarchicalStreamReader reader, String att, float defecto){
+		private static float getFloatAttribute( HierarchicalStreamReader reader, String att, float defecto ){
 			try{
-				return Float.parseFloat(reader.getAttribute(att));
-			}catch(Exception e){
+				return Float.parseFloat( reader.getAttribute( att ) );
+			}catch( Exception e ){
 				return defecto;
 			}
 		}

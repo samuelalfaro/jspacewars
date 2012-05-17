@@ -55,6 +55,8 @@ public class Test06SerializePoligonos {
 	
 	private static class PoligonoConverter implements Converter {
 
+		PoligonoConverter(){}
+
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Poligono.class == clazz;

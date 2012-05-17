@@ -99,7 +99,6 @@ public class NodoTransformador implements Nodo {
 	
 	private transient final float[]  mt_array = new float[16];
 	
-
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
@@ -112,9 +111,9 @@ public class NodoTransformador implements Nodo {
 		mt_array[ 8] = transformMatrix.m02; mt_array[ 9] = transformMatrix.m12; mt_array[10] = transformMatrix.m22; mt_array[11] = transformMatrix.m32;
 		mt_array[12] = transformMatrix.m03; mt_array[13] = transformMatrix.m13; mt_array[14] = transformMatrix.m23; mt_array[15] = transformMatrix.m33;
 		
-		gl.glMultMatrixf(mt_array, 0);
+		gl.glMultMatrixf( mt_array, 0 );
 		//drawBox(gl);
-		child.draw(gl);
+		child.draw( gl );
 		gl.glPopMatrix();
 	}
 	

@@ -33,19 +33,19 @@ public class Ignorado implements Converter {
 //	private static String tabs ="";
 	
 	@SuppressWarnings("rawtypes")
-	public boolean canConvert(Class clazz) {
+	public boolean canConvert( Class clazz ){
 		return Ignorado.class == clazz;
 	}
 
-	public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+	public void marshal( Object value, HierarchicalStreamWriter writer, MarshallingContext context ){
 	}
 
 	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 //		System.out.println(tabs+'<'+reader.getNodeName()+'>');
-		while(reader.hasMoreChildren()){
+		while( reader.hasMoreChildren() ){
 //			tabs = tabs.concat("   ");
 			reader.moveDown();
-			unmarshal(reader, context);
+			unmarshal( reader, context );
 			reader.moveUp();
 //			tabs = tabs.substring(0, tabs.length()-3);
 		}

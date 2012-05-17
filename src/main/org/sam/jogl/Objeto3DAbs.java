@@ -33,13 +33,13 @@ public abstract class Objeto3DAbs extends Hoja {
 	private Apariencia apariencia;
 
 	/**
-	 * Construtor por defecto que crea un {@code Objeto3DAbs}.
+	 * Constructor por defecto que crea un {@code Objeto3DAbs}.
 	 */
 	protected Objeto3DAbs() {
 	}
 	
 	/**
-	 * Construtor que crea un {@code Objeto3DAbs} y le
+	 * Constructor que crea un {@code Objeto3DAbs} y le
 	 * asigna {@code Apariencia} indicada.
 	 * @param apariencia  La {@code Apariencia} asignada.
 	 */
@@ -48,7 +48,7 @@ public abstract class Objeto3DAbs extends Hoja {
 	}
 
 	/**
-	 * Construtor que crea un {@code Objeto3DAbs} copiando los
+	 * Constructor que crea un {@code Objeto3DAbs} copiando los
 	 * datos de otro {@code Objeto3DAbs} que sirve como prototipo.
 	 * @param me {@code Objeto3DAbs} prototipo.
 	 */

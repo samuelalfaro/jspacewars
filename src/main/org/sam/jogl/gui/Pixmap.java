@@ -32,20 +32,20 @@ public class Pixmap{
 	 * Esquinas de las coordenadas de textura.
 	 */
 	public float u1, v1, u2, v2;
-	
+
 	public Pixmap(){
 		this( 0, 0, 1, 1 );
 	}
-	
-	public Pixmap(float x, float y, float w, float h){
+
+	public Pixmap( float x, float y, float w, float h ){
 		u1 = x;
 		v1 = y;
 		u2 = x + w;
 		v2 = y + h;
 	}
-	
-	public void draw(GL2 gl, float x1, float y1, float x2, float y2){
-		gl.glBegin(GL2.GL_QUADS);
+
+	public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
+		gl.glBegin( GL2.GL_QUADS );
 			gl.glTexCoord2f( u1, v1 );
 			gl.glVertex2f  ( x1, y1 );
 			gl.glTexCoord2f( u2, v1 );

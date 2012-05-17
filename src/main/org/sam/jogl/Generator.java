@@ -29,11 +29,11 @@ import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
 /**
- * Interface que proporciona los métodos, a las clases que lo implementan,
- * para generar primitivas.<br/>
- * De este modo, se pueden gererar estas primitivas de distintas formas,
- * a partir de los mismos datos, simplemente usando un {@code Generator}
- * u otro.
+ * Interface que proporciona, a las clases que lo implementan,
+ * los métodos para generar primitivas.<br/>
+ * De este modo, a partir de los mismos datos, se pueden gererar
+ * las primitivas de distintas formas, simplemente usando un
+ * {@code Generator} u otro.
  */
 public abstract class Generator {
 	
@@ -320,7 +320,7 @@ public abstract class Generator {
 	 * Instancia estática de un {@code VerticesWireFrameGenerator} 
 	 * que evita la necesidad de crear más instancias.
 	 */
-	public static final Generator VerticesWireFrame = new VerticesWireFrameGenerator( 4, 3, 2, 1 );
+	public static final Generator VerticesWireFrame = new VerticesWireFrameGenerator( 1, 2, 3, 4 );
 
 	/**
 	 * Implementación de un {@code Generator}, que genera primitivas
