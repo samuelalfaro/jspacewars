@@ -24,7 +24,6 @@ package pruebas.jogl;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -41,6 +40,7 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.swing.JFrame;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point2f;
 
 import org.sam.jogl.Hoja;
 import org.sam.jogl.NodoTransformador;
@@ -62,6 +62,11 @@ public class PruebaBasicaBotones2{
 	static int VIRTUAL_VIEWPORT_Y;
 	static int VIRTUAL_VIEWPORT_WIDTH;
 	static int VIRTUAL_VIEWPORT_HEIGHT;
+	
+	static void toVirtualPosition( Point point, Point2f virtualPoint ){
+		virtualPoint.x = VIRTUAL_AREA_WIDTH * ( point.x - VIRTUAL_VIEWPORT_X ) / VIRTUAL_VIEWPORT_WIDTH;
+		virtualPoint.y = VIRTUAL_AREA_HEIGHT * ( point.y - VIRTUAL_VIEWPORT_Y) / VIRTUAL_VIEWPORT_HEIGHT;
+	}
 	
 	private static class GLGUI{
 		
@@ -105,105 +110,24 @@ public class PruebaBasicaBotones2{
 		}
 	}
 	
-	// TODO ñapa
-	private static class CointainerListener implements MouseListener, MouseMotionListener, MouseWheelListener{
-		
-		private void toVirtualPosition( Point point ){
-			virtualX = VIRTUAL_AREA_WIDTH * ( point.x - VIRTUAL_VIEWPORT_X ) / VIRTUAL_VIEWPORT_WIDTH;
-			virtualY = VIRTUAL_AREA_HEIGHT * ( point.y - VIRTUAL_VIEWPORT_Y) / VIRTUAL_VIEWPORT_HEIGHT;
-			
-			if( container.containsPoint( virtualX, virtualY ) ){
-				container.setHovered( true );
-				for( GLComponent c: container.childs() )
-					c.setHovered( c.containsPoint( virtualX, virtualY ) );
-			}else{
-				container.setHovered( false );
-				for( GLComponent c: container.childs() )
-					c.setHovered( false );
-			}
-		}
-		
-		final GLContainer container;
-		private float virtualX;
-		private float virtualY;
-		
-		CointainerListener( GLContainer container ){
-			this.container = container;
-		}
-		
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseClicked( MouseEvent e ){
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseEntered( MouseEvent e ){
-			toVirtualPosition( e.getPoint() );
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseExited( MouseEvent e ){
-			toVirtualPosition( e.getPoint() );
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mousePressed( MouseEvent e ){
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseReleased( MouseEvent e ){
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseDragged( MouseEvent e ){
-			toVirtualPosition( e.getPoint() );
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent)
-		 */
-		@Override
-		public void mouseMoved( MouseEvent e ){
-			toVirtualPosition( e.getPoint() );
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
-		 */
-		@Override
-		public void mouseWheelMoved( MouseWheelEvent e ){
-		}
-	}
-	
-	
 	private static class GUIListener implements MouseListener, MouseMotionListener, MouseWheelListener{
 		
-		private static void setPosition( Point point, Matrix4f transform ){
-			transform.m03 = VIRTUAL_AREA_WIDTH * ( point.x - VIRTUAL_VIEWPORT_X ) / VIRTUAL_VIEWPORT_WIDTH;
-			transform.m13 = VIRTUAL_AREA_HEIGHT * ( point.y - VIRTUAL_VIEWPORT_Y) / VIRTUAL_VIEWPORT_HEIGHT;
+		private static void setPosition( Matrix4f t, Point2f p ){
+			t.m03 = p.x;
+			t.m13 = p.y;
 		}
 		
-		final NodoTransformador cursor;
+		private final Point2f virtualPoint;
+		Matrix4f    cursorTransform;
+		GLContainer container;
 		
-		GUIListener( NodoTransformador cursor ){
-			this.cursor = cursor;
+		GUIListener( GLGUI gui ){
+			virtualPoint = new Point2f();
+			container = gui.getContentPane();
+		}
+		
+		public void setCursor( NodoTransformador cursor ){
+			this.cursorTransform = cursor.getTransform();
 		}
 		
 		/* (non-Javadoc)
@@ -218,7 +142,10 @@ public class PruebaBasicaBotones2{
 		 */
 		@Override
 		public void mouseEntered( MouseEvent e ){
-			setPosition( e.getPoint(), cursor.getTransform() );
+			toVirtualPosition( e.getPoint(), virtualPoint );
+			setPosition( cursorTransform, virtualPoint );
+			container.checkCursorPosition( virtualPoint );
+			
 		}
 	
 		/* (non-Javadoc)
@@ -226,10 +153,14 @@ public class PruebaBasicaBotones2{
 		 */
 		@Override
 		public void mouseExited( MouseEvent e ){
-			Point    point = e.getPoint();
-			Matrix4f transform = cursor.getTransform();
-			transform.m03 = ( point.x - transform.m03 ) * 80 + point.x; 
-			transform.m13 = ( point.y - transform.m13 ) * 80 + point.y; 
+			toVirtualPosition( e.getPoint(), virtualPoint );
+			setPosition( cursorTransform, virtualPoint );
+			container.checkCursorPosition( virtualPoint );
+			
+//			Point    point = e.getPoint();
+//			Matrix4f transform = cursor.getTransform();
+//			transform.m03 = ( point.x - transform.m03 ) * 80 + point.x; 
+//			transform.m13 = ( point.y - transform.m13 ) * 80 + point.y; 
 		}
 	
 		/* (non-Javadoc)
@@ -251,7 +182,9 @@ public class PruebaBasicaBotones2{
 		 */
 		@Override
 		public void mouseDragged( MouseEvent e ){
-			setPosition( e.getPoint(), cursor.getTransform() );
+			toVirtualPosition( e.getPoint(), virtualPoint );
+			setPosition( cursorTransform, virtualPoint );
+			container.checkCursorPosition( virtualPoint );
 		}
 	
 		/* (non-Javadoc)
@@ -259,7 +192,9 @@ public class PruebaBasicaBotones2{
 		 */
 		@Override
 		public void mouseMoved( MouseEvent e ){
-			setPosition( e.getPoint(), cursor.getTransform() );
+			toVirtualPosition( e.getPoint(), virtualPoint );
+			setPosition( cursorTransform, virtualPoint );
+			container.checkCursorPosition( virtualPoint );
 		}
 	
 		/* (non-Javadoc)
@@ -273,26 +208,12 @@ public class PruebaBasicaBotones2{
 	private static class GUIRenderer implements GLEventListener{
 		
 		final GLGUI gui;
-		final Cursor cursor;
 		
 		public GUIRenderer( GLGUI gui ){
 			this.gui = gui;
-			this.cursor = new Cursor();
 		}
 		
 		public void init( GLAutoDrawable glDrawable ){
-			GUIListener myListener = new GUIListener( cursor );
-			
-			Component component = ( (GLCanvas)glDrawable );
-			component.addMouseListener( myListener );
-			component.addMouseMotionListener( myListener );
-			component.addMouseWheelListener( myListener );
-			
-			CointainerListener myListener2 = new CointainerListener( gui.getContentPane() );
-			
-			component.addMouseListener( myListener2 );
-			component.addMouseMotionListener( myListener2 );
-			component.addMouseWheelListener( myListener2 );
 		}
 
 		public void display( GLAutoDrawable glDrawable ){
@@ -309,8 +230,6 @@ public class PruebaBasicaBotones2{
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT );
 			
 			gui.getContentPane().draw( gl );
-			cursor.draw( gl );
-			
 		}
 
 		public void reshape( GLAutoDrawable glDrawable, int x, int y, int width, int height ){
@@ -335,6 +254,53 @@ public class PruebaBasicaBotones2{
 		}
 	}
 
+	private static class CursorRenderer implements GLEventListener{
+		
+		final Cursor cursor;
+		
+		public CursorRenderer( Cursor cursor ){
+			this.cursor = cursor;
+		}
+		
+		public void init( GLAutoDrawable glDrawable ){
+		}
+
+		public void display( GLAutoDrawable glDrawable ){
+			GL2 gl = glDrawable.getGL().getGL2();
+			
+			gl.glViewport( VIRTUAL_VIEWPORT_X, VIRTUAL_VIEWPORT_Y, VIRTUAL_VIEWPORT_WIDTH, VIRTUAL_VIEWPORT_HEIGHT );
+			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
+			gl.glLoadIdentity();
+			gl.glOrtho( 0, VIRTUAL_AREA_WIDTH, VIRTUAL_AREA_HEIGHT, 0, -1, 1 );
+			
+			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
+			gl.glLoadIdentity();
+			
+			cursor.draw( gl );
+		}
+
+		public void reshape( GLAutoDrawable glDrawable, int x, int y, int width, int height ){
+			if( width != 0 && height != 0 ){
+				AREA_WIDTH              = width;
+				AREA_HEIGHT             = height;
+				VIRTUAL_VIEWPORT_X      = ( VIRTUAL_AREA_HEIGHT * width - VIRTUAL_AREA_WIDTH * height ) 
+				                          / ( 2 * VIRTUAL_AREA_HEIGHT );
+				VIRTUAL_VIEWPORT_Y      = 0;
+				VIRTUAL_VIEWPORT_WIDTH  = VIRTUAL_AREA_WIDTH * height / VIRTUAL_AREA_HEIGHT;
+				VIRTUAL_VIEWPORT_HEIGHT = height;
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
+		 */
+		@Override
+		public void dispose( GLAutoDrawable glDrawable ){
+		}
+	}
+	
 	public static void main( String[] args ){
 
 		JFrame frame = new JFrame( "Prueba botones" );
@@ -374,6 +340,20 @@ public class PruebaBasicaBotones2{
 		gui.setContentPane( container );
 		
 		canvas.addGLEventListener( new GUIRenderer( gui ) );
+		
+		
+		Cursor cursor = new Cursor();
+		
+		canvas.addGLEventListener( new CursorRenderer( cursor ) );
+		
+		
+		GUIListener guiListener = new GUIListener( gui );
+		guiListener.setCursor( cursor );
+
+		canvas.addMouseListener( guiListener );
+		canvas.addMouseMotionListener( guiListener );
+		canvas.addMouseWheelListener( guiListener );
+		
 		
 		frame.getContentPane().add( canvas, BorderLayout.CENTER );
 

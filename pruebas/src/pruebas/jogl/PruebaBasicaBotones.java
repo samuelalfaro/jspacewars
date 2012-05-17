@@ -112,10 +112,10 @@ public class PruebaBasicaBotones{
 			virtualX = VIRTUAL_AREA_WIDTH * ( point.x - VIRTUAL_VIEWPORT_X ) / VIRTUAL_VIEWPORT_WIDTH;
 			virtualY = VIRTUAL_AREA_HEIGHT * ( point.y - VIRTUAL_VIEWPORT_Y) / VIRTUAL_VIEWPORT_HEIGHT;
 			
-			if( container.containsPoint( virtualX, virtualY ) ){
+			if( container.contains( virtualX, virtualY ) ){
 				container.setHovered( true );
 				for( GLComponent c: container.childs() )
-					c.setHovered( c.containsPoint( virtualX, virtualY ) );
+					c.setHovered( c.contains( virtualX, virtualY ) );
 			}else{
 				container.setHovered( false );
 				for( GLComponent c: container.childs() )
