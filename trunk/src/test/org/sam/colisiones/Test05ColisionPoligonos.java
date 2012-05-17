@@ -44,39 +44,16 @@ public final class Test05ColisionPoligonos extends Test00Abs{
 	private Poligono poligono1, poligono2;
 	private List<Object> elementosEvaluados;
 	
-	private class Animador extends Thread{
-		public void run(){
-			float alfa = 0.0f;
-			float incAlfa = 0.001f;
-			float pi2 = (float)(Math.PI * 2);
-			while(true){
-				alfa += incAlfa;
-				if(alfa >1){
-					alfa = 1;
-					incAlfa = -incAlfa;
-				}else if(alfa < 0){
-					alfa = 0;
-					incAlfa = -incAlfa;
-				}
-				poligono1.transformar(pi2*alfa, 0.5f, 0.0f, 0.0f);
-				poligono1.actualizarLimiteRectangular();
-				repaint();
-				try{
-					Thread.sleep(40);
-				}catch(InterruptedException e){
-				}
-			}
-		}
-	}
-	
 	private Test05ColisionPoligonos(){
+		
 		super(new Dimension(500,500));
 		elementosEvaluados = new ArrayList<Object>(30);
 		poligono1 = crearPoligono(N_LADOS);
 		poligono1.actualizarLimiteRectangular();
 		
 		poligono2 = null;
-		new Animador().start();
+		new AnimadorPoligono( this, poligono1 ).start();
+		
 	}		
 	
 	public void paintComponent(Graphics g){

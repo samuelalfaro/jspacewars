@@ -25,7 +25,6 @@ package org.sam.jspacewars.serialization;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.AxisAngle4f;
@@ -1285,8 +1284,9 @@ public final class GrafoEscenaConverters {
 		ParticulasConverters.register(xStream);
 	}
 	
-	public static void setReusingReferenceByXPathMarshallingStrategy(XStream xStream) {
-		MarshallingStrategy strategy = new ReusingReferenceByXPathMarshallingStrategy(ReferenceByXPathMarshallingStrategy.ABSOLUTE);
-		xStream.setMarshallingStrategy(strategy);
+	public static void setReusingReferenceByXPathMarshallingStrategy( XStream xStream ){
+		MarshallingStrategy strategy =
+			new ReusingReferenceByXPathMarshallingStrategy( ReferenceByXPathMarshallingStrategy.ABSOLUTE );
+		xStream.setMarshallingStrategy( strategy );
 	}
 }

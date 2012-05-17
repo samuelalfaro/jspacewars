@@ -1,5 +1,5 @@
 /* 
- * TextureTextRenderer.java
+ * GLTextRenderer.java
  * 
  * Copyright (c) 2011 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -32,7 +32,7 @@ import org.sam.jogl.Apariencia;
 
 import com.jogamp.common.nio.Buffers;
 
-public class TextureTextRenderer{
+public class GLTextRenderer{
 
 	public static enum HorizontalAlignment{
 		LEFT, CENTER, RIGHT
@@ -42,15 +42,12 @@ public class TextureTextRenderer{
 		BASE_LINE, TOP, CENTER, BOTTOM
 	}
 
-	private static IntBuffer stringBuffer = Buffers.newDirectIntBuffer( 256 );
-
 	private TextureFont font;
 	private HorizontalAlignment horizontalAlignment;
 	private VerticalAlignment verticalAlignment;
 	private float r, g, b, a;
-	private Apariencia apariencia;
 
-	public TextureTextRenderer(){
+	public GLTextRenderer(){
 		horizontalAlignment = HorizontalAlignment.LEFT;
 		verticalAlignment = VerticalAlignment.BASE_LINE;
 	}
@@ -74,15 +71,14 @@ public class TextureTextRenderer{
 		this.a = a;
 	}
 
-	public void setApariencia( Apariencia apariencia ){
-		this.apariencia = apariencia;
-	}
-
-	public void glPrint( GL2 gl, float x, float y, String string ){
-
+	private static IntBuffer stringBuffer = Buffers.newDirectIntBuffer( 256 );
+	
+	private static float toBuffer( String string, TextureFont font ){
+		// TODO caché de cadenas usadas anteriormente
+		
 		if( font == null )
-			return;
-
+			return 0.0f;
+		
 		if( stringBuffer.capacity() < string.length() ){
 			stringBuffer = Buffers.newDirectIntBuffer( string.length() );
 		}
@@ -96,7 +92,14 @@ public class TextureTextRenderer{
 			stringWidth += charIndex < 0 ? font.defaultWidth: font.charactersWidths[charIndex];
 		}
 		stringBuffer.flip();
+		
+		return stringWidth;
+	}
+	
+	public void glPrint( GL2 gl, float x, float y, String string ){
 
+		float stringWidth = toBuffer( string, font );
+		
 		gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		gl.glPushMatrix();
 		gl.glLoadIdentity();
@@ -132,7 +135,7 @@ public class TextureTextRenderer{
 		}
 		gl.glTranslatef( posX, posY, 0 );
 
-		apariencia.usar( gl );
+		font.getApariencia().usar( gl );
 		gl.glColor4f( r, g, b, a );
 		gl.glCallLists( string.length(), GL2ES2.GL_INT, stringBuffer );
 
