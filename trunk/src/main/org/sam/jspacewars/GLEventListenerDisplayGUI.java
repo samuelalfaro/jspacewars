@@ -26,11 +26,6 @@ import java.util.Map;
 
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.awt.GLCanvas;
-
-import org.fenggui.Display;
-import org.fenggui.binding.render.jogl.EventBinding;
-import org.fenggui.binding.render.jogl.JOGLBinding;
 
 /**
  * 
@@ -38,7 +33,6 @@ import org.fenggui.binding.render.jogl.JOGLBinding;
  */
 class GLEventListenerDisplayGUI implements GLEventListener{
 
-	private transient Display display;
 	private final transient GameMenu gameMenu;
 	private transient boolean menu_isVisible;
 
@@ -51,21 +45,12 @@ class GLEventListenerDisplayGUI implements GLEventListener{
 	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
 	 */
 	public void init( GLAutoDrawable drawable ){
-		display = new Display( new JOGLBinding( (GLCanvas)drawable ) );
-		// try{
-		// FengGUI.setTheme( new XMLTheme("data/themes/QtCurve/QtCurve.xml") );
-		// }catch( IOException ignorada ){
-		// }catch( IXMLStreamableException ignorada ){
-		// }
-		new EventBinding( (GLCanvas)drawable, display );
-		showMenu();
 	}
 
 	/* (non-Javadoc)
 	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
 	 */
 	public void display( GLAutoDrawable drawable ){
-		display.display();
 	}
 
 	/* (non-Javadoc)
@@ -85,14 +70,12 @@ class GLEventListenerDisplayGUI implements GLEventListener{
 	public void showMenu(){
 		if( !menu_isVisible ){
 			menu_isVisible = true;
-			display.addWidget( gameMenu );
 		}
 	}
 
 	public void hideMenu(){
 		if( menu_isVisible ){
 			menu_isVisible = false;
-			display.removeAllWidgets();
 			//display.removeWidget(gameMenu);
 		}
 	}

@@ -38,59 +38,61 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class PruebaTareas {
 	
-	private static Tarea[] getSubTareas(Tarea t){
-		java.lang.reflect.Field f = Reflexion.findField(t.getClass(), "tareas");
+	static Tarea[] getSubTareas( Tarea t ){
+		java.lang.reflect.Field f = Reflexion.findField( t.getClass(), "tareas" );
 		Tarea[] array = null;
-		try {
+		try{
 			boolean accesible = f.isAccessible();
-			f.setAccessible(true);
-			array = (Tarea[])f.get(t);
-			f.setAccessible(accesible);
+			f.setAccessible( true );
+			array = (Tarea[])f.get( t );
+			f.setAccessible( accesible );
 			return array;
-		} catch (IllegalAccessException ignorada) {
+		}catch( IllegalAccessException ignorada ){
 			return null;
 		}
 	}
-	
-	private static Tarea[] getSubTareas(HierarchicalStreamReader reader, UnmarshallingContext context){
+
+	static Tarea[] getSubTareas( HierarchicalStreamReader reader, UnmarshallingContext context ){
 		Collection<Tarea> subTareas = new LinkedList<Tarea>();
-		while(reader.hasMoreChildren()){
+		while( reader.hasMoreChildren() ){
 			reader.moveDown();
 			Class<?> clazz;
 			String className = reader.getNodeName();
-			if(className.equalsIgnoreCase("TareasParalelas"))
+			if( className.equalsIgnoreCase( "TareasParalelas" ) )
 				clazz = TareasParalelas.class;
-			else if(className.equalsIgnoreCase("Secuencia"))
+			else if( className.equalsIgnoreCase( "Secuencia" ) )
 				clazz = Secuencia.class;
-			else if(className.equalsIgnoreCase("Esperar"))
+			else if( className.equalsIgnoreCase( "Esperar" ) )
 				clazz = Esperar.class;
-			else if(className.equalsIgnoreCase("Mover"))
+			else if( className.equalsIgnoreCase( "Mover" ) )
 				clazz = Mover.class;
-			else if(className.equalsIgnoreCase("SetAnguloCanion"))
+			else if( className.equalsIgnoreCase( "SetAnguloCanion" ) )
 				clazz = SetAnguloCanion.class;
-			else if(className.equalsIgnoreCase("OrientarCanion"))
+			else if( className.equalsIgnoreCase( "OrientarCanion" ) )
 				clazz = OrientarCanion.class;
-			else if(className.equalsIgnoreCase("Disparar"))
+			else if( className.equalsIgnoreCase( "Disparar" ) )
 				clazz = Disparar.class;
 			else
 				clazz = null;
-			subTareas.add((Tarea)context.convertAnother(null, clazz));
+			subTareas.add( (Tarea)context.convertAnother( null, clazz ) );
 			reader.moveUp();
 		}
-		Tarea[] result =subTareas.toArray(new Tarea[subTareas.size()]);
+		Tarea[] result = subTareas.toArray( new Tarea[subTareas.size()] );
 		subTareas.clear();
 		return result;
 	}
-	
-	private static long getLongAttribute(HierarchicalStreamReader reader, String att, long defecto){
+
+	static long getLongAttribute( HierarchicalStreamReader reader, String att, long defecto ){
 		try{
-			return Long.parseLong(reader.getAttribute(att));
-		}catch(Exception e){
+			return Long.parseLong( reader.getAttribute( att ) );
+		}catch( Exception e ){
 			return defecto;
 		}
 	}
 
 	private static class TareasParalelasConverter implements Converter {
+
+		public TareasParalelasConverter(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -108,6 +110,8 @@ public class PruebaTareas {
 	
 	private static class SecuenciaConverter implements Converter {
 
+		public SecuenciaConverter(){}
+
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Secuencia.class == clazz;
@@ -123,6 +127,8 @@ public class PruebaTareas {
 	}
 	
 	private static class EsperarConverter implements Converter {
+
+		public EsperarConverter(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -154,6 +160,8 @@ public class PruebaTareas {
 	
 	private static class MoverConverter implements Converter {
 
+		MoverConverter(){}
+
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Mover.class == clazz;
@@ -171,6 +179,8 @@ public class PruebaTareas {
 	
 	private static class SetAnguloCanionConverter implements Converter {
 
+		SetAnguloCanionConverter(){}
+
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return SetAnguloCanion.class == clazz;
@@ -185,6 +195,8 @@ public class PruebaTareas {
 	}
 	
 	private static class OrientarCanionConverter implements Converter {
+
+		OrientarCanionConverter(){}
 
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
@@ -203,6 +215,8 @@ public class PruebaTareas {
 	
 	private static class DispararConverter implements Converter {
 
+		DispararConverter(){}
+
 		@SuppressWarnings("rawtypes")
 		public boolean canConvert(Class clazz) {
 			return Disparar.class == clazz;
@@ -218,9 +232,6 @@ public class PruebaTareas {
 		}
 	}
 	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 	
 		/*
