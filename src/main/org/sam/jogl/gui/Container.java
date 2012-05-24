@@ -1,19 +1,9 @@
-/*
- * Container.java
- *
- * Created on November 6, 2007, 7:05 PM
- */
-
 package org.sam.jogl.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-/**
- * 
- * @author davedes
- */
 public class Container extends Component{
 
 	private ZComparator zCompare = new ZComparator();

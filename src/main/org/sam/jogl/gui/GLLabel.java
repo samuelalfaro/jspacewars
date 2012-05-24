@@ -27,7 +27,7 @@ import javax.media.opengl.GL2;
 /**
  * 
  */
-public class GLButton extends GLLabel{
+public class GLLabel extends GLComponent{
 	
 	private void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
 		gl.glBegin(GL2.GL_QUADS);
