@@ -30,24 +30,18 @@ public final class GettersFactory {
 
 	private GettersFactory(){}
 
-	private static final Conversor<double[], double[]> DoubleArrayPipe = new Conversor<double[], double[]>(){
-		@Override
-		public double[] convert( double[] v ){
-			return v;
-		}
-	};
-
-	private static final Conversor<float[], float[]> FloatArrayPipe = new Conversor<float[], float[]>(){
-		@Override
-		public float[] convert( float[] v ){
-			return v;
-		}
-	};
-	
     /**
      * <i>Factory</i> con los métodos estáticos para crear <i>Getters</i> precisión {@code double}.
      */
     public static class Double{
+    	
+    	private static final Conversor<double[], double[]> DoubleArrayPipe = new Conversor<double[], double[]>(){
+    		@Override
+    		public double[] convert( double[] v ){
+    			return v;
+    		}
+    	};
+    	
 		private Double(){}
 
 		/**
@@ -149,7 +143,7 @@ public final class GettersFactory {
 		 * <li>{@linkplain Keys#HOMOGENEAS}</li>
 		 * <li>{@linkplain Keys#PROPORCIONALES}</li>
 		 * </ul>
-		 * @param length Valor de escalado que se aplicará a las claves generadas.
+		 * @param scale Valor de escalado que se aplicará a las claves generadas.
 		 * @param translation Valor de desplazamiento que se aplicará a las claves generadas.
 		 * @param values Valores a interpolar.
 		 * @param mdi {@code MetodoDeInterpolacion} empleado para calcular las funciones.
@@ -209,6 +203,14 @@ public final class GettersFactory {
      * <i>Factory</i> con los métodos estáticos para crear <i>Getters</i> precisión {@code float}.
      */
     public static class Float{
+    	
+    	private static final Conversor<float[], float[]> FloatArrayPipe = new Conversor<float[], float[]>(){
+    		@Override
+    		public float[] convert( float[] v ){
+    			return v;
+    		}
+    	};
+    	
     	private Float(){}
 
 		/**
