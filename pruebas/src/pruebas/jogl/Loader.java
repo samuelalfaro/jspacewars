@@ -248,7 +248,5 @@ public class Loader implements GLEventListener{
 	 */
 	@Override
 	public void dispose( GLAutoDrawable drawable ){
-		// TODO Auto-generated method stub
-
 	}
 }

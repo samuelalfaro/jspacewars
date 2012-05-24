@@ -50,6 +50,9 @@ import org.sam.jogl.Apariencia;
 import org.sam.jogl.MatrixSingleton;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.OglList;
+import org.sam.jogl.gui.GLTextRenderer;
+import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
+import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
 import org.sam.jspacewars.serialization.ElementosConverters;
 import org.sam.jspacewars.servidor.elementos.Elemento;
 import org.sam.util.ModificableBoolean;
@@ -136,6 +139,9 @@ public class Prueba060_Loader{
 		private GLU glu;
 
 		private transient boolean iniciado = false;
+		private transient boolean showHelp = false;
+		private transient boolean showFPS  = true;
+		private GLTextRenderer    renderer;
 
 		/*
 		 * (non-Javadoc)
@@ -165,9 +171,63 @@ public class Prueba060_Loader{
 			}
 
 			data.instancias[index].reset();
+			
+			renderer = TextUtils.getDefaultTextRenderer(gl);
 
 			tActual = System.nanoTime();
 			iniciado = true;
+		}
+		
+		private void displayText( GLAutoDrawable drawable ){
+			
+			GL2 gl = drawable.getGL().getGL2();
+			
+			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
+			gl.glPushMatrix();
+			gl.glLoadIdentity();
+			gl.glOrtho( 0, drawable.getWidth(), drawable.getHeight(), 0, -1, 1 );
+			
+			renderer.setVerticalAlignment( VerticalAlignment.TOP );
+			renderer.setHorizontalAlignment( HorizontalAlignment.LEFT );
+			
+			if( !showHelp ){
+				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.5f );
+				renderer.glPrint( gl, 20,  20, "F1:" );
+				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.75f );
+				renderer.glPrint( gl, 50, 20, "Muestra/Oculta ayuda" );
+			}else{
+				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.5f );
+				renderer.glPrint( gl, 20,  20, "Arrastre el ratón:" );
+				renderer.glPrint( gl, 20,  45, "Rueda del ratón:" );
+				renderer.glPrint( gl, 20,  70, "Tecla +:" );
+				renderer.glPrint( gl, 20,  95, "Cursor Izquierdo:" );
+				renderer.glPrint( gl, 20, 120, "Cursor Derecho:" );
+				renderer.glPrint( gl, 20, 145, "Tecla S:" );
+				renderer.glPrint( gl, 20, 170, "Tecla F:" );
+				
+				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.75f );
+				renderer.glPrint( gl, 200,  20, "Girar" );
+				renderer.glPrint( gl, 200,  45, "Zoom" );
+				renderer.glPrint( gl, 200,  70, "Muestra/Oculta FPS" );
+				renderer.glPrint( gl, 200,  95, "Modelo anterior" );
+				renderer.glPrint( gl, 200, 120, "Modelo siguiente" );
+				renderer.glPrint( gl, 200, 145, "Muestra/Oculta la silueta" );
+				renderer.glPrint( gl, 200, 170, "Muestra/Oculta la forma" );
+			}
+			
+			
+			renderer.setVerticalAlignment( VerticalAlignment.BOTTOM );
+			renderer.setHorizontalAlignment( HorizontalAlignment.RIGHT );
+			
+			if( showFPS ){
+				renderer.setColor( 1.0f, 1.0f, 0.25f, 0.75f );
+				renderer.glPrint( gl, drawable.getWidth() - 20, drawable.getHeight() - 20,
+						String.format( "%.1f Fps",  1000000000.0f/ ( tActual - tAnterior ) )
+				);
+			}
+			
+			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
+			gl.glPopMatrix();
 		}
 
 		/*
@@ -228,6 +288,9 @@ public class Prueba060_Loader{
 			}
 			if( mostrarSilueta && siluetas != null && index < siluetas.length && siluetas[index] != null )
 				siluetas[index].draw( gl );
+			
+			displayText( drawable );
+			
 			gl.glFlush();
 		}
 
@@ -265,7 +328,6 @@ public class Prueba060_Loader{
 			/*
 			 * // formato recorte/panoramico derecha gl.glFrustum(-d,((2.0*w)/h -1.0)*d, -d, d, near, far); //
 			 */
-
 			MatrixSingleton.loadProjectionMatrix();
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		}
@@ -297,6 +359,15 @@ public class Prueba060_Loader{
 		public void keyReleased( KeyEvent keyEvent ){
 			int keyCode = keyEvent.getKeyCode();
 			switch( keyCode ){
+			case KeyEvent.VK_F1:
+				showHelp = !showHelp;
+				break;
+			case KeyEvent.VK_ADD :
+				showFPS = !showFPS;
+				break;
+			case KeyEvent.VK_PLUS :
+				showFPS = !showFPS;
+				break;
 			case KeyEvent.VK_RIGHT:
 				if( ++index == data.instancias.length )
 					index = 0;
@@ -317,6 +388,7 @@ public class Prueba060_Loader{
 				if( !mostrarSilueta )
 					mostrarForma = true;
 				break;
+				
 			}
 		}
 
