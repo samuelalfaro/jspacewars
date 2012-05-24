@@ -232,6 +232,9 @@ public class PruebaTareas {
 		}
 	}
 	
+	/**
+	 * @param args ignorados
+	 */
 	public static void main(String[] args) {
 	
 		/*
