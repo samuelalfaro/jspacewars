@@ -90,6 +90,7 @@ public class TestColisiones implements Runnable{
 		initData();
 	}
 
+	@SuppressWarnings( "deprecation" )
 	private void initData() {
 		
 		nave = (NaveUsuario) cache.newObject(0x03);
