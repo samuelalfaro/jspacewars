@@ -24,7 +24,7 @@ package org.sam.colisiones;
 import java.awt.Component;
 
 /**
- * 
+ * Clase encargada de animar un polígono e invocar al repintado del componente donde será mostrado.
  */
 class AnimadorPoligono extends Thread{
 
@@ -34,8 +34,10 @@ class AnimadorPoligono extends Thread{
 	private final Poligono poligono;
 	
 	/**
-	 * @param component
-	 * @param poligono
+	 * Constructor del animador.
+	 * 
+	 * @param component donde se dibujael poligónono.
+	 * @param poligono dibujado.
 	 */
 	AnimadorPoligono( Component component, Poligono poligono ){
 		this.component = component;
