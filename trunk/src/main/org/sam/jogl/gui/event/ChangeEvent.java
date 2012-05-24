@@ -11,11 +11,14 @@ package org.sam.jogl.gui.event;
  *
  * @author davedes
  */
+@SuppressWarnings( "serial" )
 public class ChangeEvent extends EventObject {
     
-    /**
-     * Creates a new instance of ChangeEvent
-     */
+	/**
+	 * Creates a new event using the specified params.
+	 * 
+	 * @param source the source that created the event
+	 */
     public ChangeEvent(Object source) {
         super(source);
     }

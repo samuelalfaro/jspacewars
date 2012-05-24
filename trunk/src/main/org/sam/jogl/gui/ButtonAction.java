@@ -20,11 +20,15 @@
  * You should have received a copy of the GNU General Public License
  * along with jSpaceWars. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sam.jspacewars;
+package org.sam.jogl.gui;
 
 /**
- * 
+ * Interfarce que define una acción que será invocada cuando es pulsado un botón.
  */
 public interface ButtonAction{
+	
+	/**
+	 * Acción invocada cuando se pulsa un botón.
+	 */
 	public void run();
 }

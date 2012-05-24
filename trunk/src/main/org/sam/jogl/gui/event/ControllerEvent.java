@@ -11,6 +11,7 @@ package org.sam.jogl.gui.event;
  * @author davedes
  * @since b.0.2
  */
+@SuppressWarnings( "serial" )
 public class ControllerEvent extends EventObject {
     
     /** An event ID which signals a button press. */

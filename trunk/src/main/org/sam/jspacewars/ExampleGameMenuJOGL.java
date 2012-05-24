@@ -44,6 +44,7 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 
 import org.sam.elementos.Cache;
+import org.sam.jogl.gui.ButtonAction;
 import org.sam.jspacewars.cliente.Cliente;
 import org.sam.jspacewars.serialization.Loader;
 import org.sam.jspacewars.servidor.ServidorJuego;

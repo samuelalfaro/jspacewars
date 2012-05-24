@@ -7,6 +7,7 @@ package org.sam.jogl.gui.event;
  * @author davedes
  * @since b.0.2
  */
+@SuppressWarnings( "serial" )
 public class EventObject implements java.io.Serializable {
     
     /** The source object that created this event. */
