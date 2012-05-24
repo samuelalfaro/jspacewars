@@ -59,12 +59,12 @@ public class TextureFont{
 		gl.glBegin( GL2.GL_QUADS );
 		gl.glTexCoord2f( u1, v1 );
 		gl.glVertex2f( x1, y1 );
-		gl.glTexCoord2f( u2, v1 );
-		gl.glVertex2f( x2, y1 );
-		gl.glTexCoord2f( u2, v2 );
-		gl.glVertex2f( x2, y2 );
 		gl.glTexCoord2f( u1, v2 );
 		gl.glVertex2f( x1, y2 );
+		gl.glTexCoord2f( u2, v2 );
+		gl.glVertex2f( x2, y2 );
+		gl.glTexCoord2f( u2, v1 );
+		gl.glVertex2f( x2, y1 );
 		gl.glEnd();
 		gl.glTranslated( ( cData.charWidth + fData.gap ) / fData.scaleX, 0, 0 );
 		gl.glEndList();

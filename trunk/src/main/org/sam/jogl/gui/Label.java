@@ -1,5 +1,9 @@
 package org.sam.jogl.gui;
 
+import javax.vecmath.Color4f;
+
+import jogamp.opengl.glu.mipmap.Image;
+
 /**
  * Label is the base class for displaying
  * a String and/or Image on a component. Text is
@@ -45,11 +49,11 @@ public class Label extends Container{
 	protected int vertAlignment = CENTER_ALIGNMENT;
 
 	/** The current disabled color, initially gray. */
-	protected Color disabledColor = Sui.getTheme().getDisabledMask().darker( .5f );
+	protected Color4f disabledColor = new Color4f( 0.25f, 0.25f, 0.25f, 0.25f );
 
 	//TODO: fix disabled foreground
 
-	protected Color filter = new Color( 1f, 1f, 1f, 1f );
+	protected Color4f filter = new Color4f( 1f, 1f, 1f, 1f );
 
 	/**
 	 * Creates a new label with the specified text and image.
@@ -236,16 +240,5 @@ public class Label extends Container{
 
 	public float getYOffset(){
 		return yoff;
-	}
-
-	public float getTextHeight(){
-		String str = getText() != null ? getText(): "";
-		return getFont().getHeight( str ) - yoff;
-		//return getFont().getLineHeight();
-	}
-
-	public float getTextWidth(){
-		String str = getText() != null ? getText(): "";
-		return getFont().getWidth( str );
 	}
 }

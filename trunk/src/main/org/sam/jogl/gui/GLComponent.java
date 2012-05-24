@@ -48,7 +48,7 @@ public abstract class GLComponent implements Dibujable{
 	 */
 	protected float x1, y1, x2, y2;
 	
-	GLComponent(){
+	public GLComponent(){
 		state = STATE_DEFAULT;
 	}
 	
@@ -64,7 +64,7 @@ public abstract class GLComponent implements Dibujable{
 		setCorners( x, y, x2 + x - x1, y2 + y - y1 );
 	}
 	
-	protected final void setCorners( float x1, float y1, float x2, float y2 ){
+	public final void setCorners( float x1, float y1, float x2, float y2 ){
 		this.x1 = x1;
 		this.y1 = y1;
 		this.x2 = x2;
