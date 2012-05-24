@@ -502,7 +502,7 @@ public class Poligono implements Prototipo<Poligono>{
 	/**
 	 * Método que devuelve el {@code Segmento} del polígono que está en la posición {@code index}.
 	 * <p><u>Atención:</u> Este método no genera nuevas instancias y siempre devuelve el 
-	 * {@code Segmento} {@linkplain #shared} con los valores correspondientes a la posición solicitada.</p>
+	 * {@code Segmento} shared con los valores correspondientes a la posición solicitada.</p>
 	 * @param index Posición del {@code Segmento} solicitado.
 	 * @return El {@code Segmento} solicitado.
 	 * @see #getSegmento(int, Segmento)
