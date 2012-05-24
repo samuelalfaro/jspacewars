@@ -7,6 +7,7 @@ package org.sam.jogl.gui.event;
  * @author davedes
  * @since b.0.2
  */
+@SuppressWarnings( "serial" )
 public class MouseWheelEvent extends EventObject {
     
     /** An event ID for the mouse wheel event. */

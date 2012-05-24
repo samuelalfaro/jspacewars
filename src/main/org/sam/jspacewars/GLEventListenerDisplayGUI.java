@@ -27,6 +27,8 @@ import java.util.Map;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
+import org.sam.jogl.gui.ButtonAction;
+
 /**
  * 
  * @author Samuel Alfaro

@@ -12,5 +12,10 @@ package org.sam.jogl.gui.event;
  */
 public interface ChangeListener extends Listener {
     
+	/**
+	 * Notification that the state changed has occurred.
+	 * 
+	 * @param e the event associated with this listener
+	 */
     public void stateChanged(ChangeEvent e);
 }
