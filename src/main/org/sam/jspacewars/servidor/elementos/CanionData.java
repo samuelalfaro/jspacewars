@@ -52,9 +52,9 @@ public class CanionData {
 
 	/**
 	 * Constructor que crea un {@code CanionData} y asigna los valores correspondientes.
-	 * @param vIdDisparos {@link #vIdDisparos} asignado.
-	 * @param vTRecarga {@link #vTRecarga} asignado.
-	 * @param vVelocidades {@link #vVelocidades} asignado.
+	 * @param vIdDisparos Identificadores de disparo asignados.
+	 * @param vTRecarga Tiempos de recarga asignados.
+	 * @param vVelocidades Velocidades de disparo asignadas.
 	 */
 	public CanionData(int[] vIdDisparos, long[] vTRecarga, float[] vVelocidades) {
 		if( vIdDisparos  == null || vTRecarga == null || vVelocidades == null )
