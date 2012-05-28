@@ -22,7 +22,6 @@
  */
 package org.sam.jspacewars;
 
-import java.awt.Color;
 import java.util.Map;
 
 import org.sam.jogl.gui.ButtonAction;
@@ -115,30 +114,30 @@ public class GameMenu extends GLContainer {
 	}
 
 	private void buildMainMenu() {
-//		this.removeAllWidgets();
-//		this.addWidget(player1);
-//		this.addWidget(player2);
-//		this.addWidget(options);
-//		this.addWidget(quit);
+		this.removeAll();
+		this.add(player1);
+		this.add(player2);
+		this.add(options);
+		this.add(quit);
 //		this.pack();
 //		StaticLayout.center(this, this.getDisplay());
 	}
 
 	private void buildTowPlayersMenu() {
-//		this.removeAllWidgets();
-//		this.addWidget(server);
-//		this.addWidget(client);
-//		this.addWidget(back);
+		this.removeAll();
+		this.add(server);
+		this.add(client);
+		this.add(back);
 //		this.pack();
 //		StaticLayout.center(this, this.getDisplay());
 	}
 	
 	private void buildOptionsMenu() {
-//		this.removeAllWidgets();
-//		this.addWidget(graphics);
-//		this.addWidget(sound);
-//		this.addWidget(network);
-//		this.addWidget(back);
+		this.removeAll();
+		this.add(graphics);
+		this.add(sound);
+		this.add(network);
+		this.add(back);
 //		this.pack();
 //		StaticLayout.center(this, this.getDisplay());
 	}
