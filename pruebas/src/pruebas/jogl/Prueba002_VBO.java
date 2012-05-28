@@ -113,7 +113,7 @@ public class Prueba002_VBO{
 			gl.glClearColor( 0.0f, 0.25f, 0.25f, 0.0f );
 
 			try{
-				texture1 = TextureIO.newTexture( new File( "resources/obj3d/nave03/t01.jpg" ), true );
+				texture1 = TextureIO.newTexture( new File( "resources/fondo.png" ), true );
 			}catch( GLException e ){
 				e.printStackTrace();
 			}catch( IOException e ){
