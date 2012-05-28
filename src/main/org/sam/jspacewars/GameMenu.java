@@ -22,135 +22,131 @@
  */
 package org.sam.jspacewars;
 
+import java.awt.Color;
 import java.util.Map;
 
-import org.fenggui.Container;
-import org.fenggui.decorator.background.GradientBackground;
-import org.fenggui.event.ButtonPressedEvent;
-import org.fenggui.event.IButtonPressedListener;
-import org.fenggui.layout.RowLayout;
-import org.fenggui.layout.StaticLayout;
-import org.fenggui.util.Color;
-import org.fenggui.util.Spacing;
 import org.sam.jogl.gui.ButtonAction;
+import org.sam.jogl.gui.GLContainer;
 
-public class GameMenu extends Container {
+public class GameMenu extends GLContainer {
 
-	private static class MyListener implements IButtonPressedListener{
-		final Map<String, ButtonAction> actions;
+//	private static class MyListener implements IButtonPressedListener{
+//		final Map<String, ButtonAction> actions;
+//
+//		MyListener( Map<String, ButtonAction> actions ){
+//			this.actions = actions;
+//		}
+//
+//		/* (non-Javadoc)
+//		 * @see org.fenggui.event.IButtonPressedListener#buttonPressed(java.lang.Object, org.fenggui.event.ButtonPressedEvent)
+//		 */
+//		@Override
+//		public void buttonPressed( Object source, ButtonPressedEvent e ){
+//			System.out.println( ((MyGameMenuButton)source ).getName());
+//			System.out.println( actions.get( ( (MyGameMenuButton)source ).getName() ) );
+//			actions.get( ( (MyGameMenuButton)source ).getName() ).run();
+//		}
+//	}
 
-		MyListener( Map<String, ButtonAction> actions ){
-			this.actions = actions;
-		}
-
-		/* (non-Javadoc)
-		 * @see org.fenggui.event.IButtonPressedListener#buttonPressed(java.lang.Object, org.fenggui.event.ButtonPressedEvent)
-		 */
-		@Override
-		public void buttonPressed( Object source, ButtonPressedEvent e ){
-			System.out.println( ((MyGameMenuButton)source ).getName());
-			System.out.println( actions.get( ( (MyGameMenuButton)source ).getName() ) );
-			actions.get( ( (MyGameMenuButton)source ).getName() ).run();
-		}
-	}
-
-	private final MyGameMenuButton player1, player2, server, client, options, quit;
-	private final MyGameMenuButton sound, graphics, network, back;
+//	private final MyGameMenuButton player1, player2, server, client, options, quit;
+//	private final MyGameMenuButton sound, graphics, network, back;
+	private MyGameMenuButton player1, player2, server, client, options, quit;
+	private MyGameMenuButton sound, graphics, network, back;
 	
-	public GameMenu(Map<String,ButtonAction> actions) {
-		MyListener listener = new MyListener(actions);
-
-		this.setLayoutManager(new RowLayout(false));
-		this.getAppearance().add(
-				new GradientBackground(new Color(0.0f, 1.0f, 1.0f, 0.25f), new Color(0.0f, 0.0f, 1.0f, 0.5f)));
-		this.getAppearance().setPadding(new Spacing(10, 10));
-
-		player1 = MyGameMenuButton.derive( "player1", listener );
-
-		player2 = MyGameMenuButton.derive( "player2", listener );
-		actions.put("player2", new ButtonAction() {
-			public void run() {
-				buildTowPlayersMenu();
-			}
-		});
-		
-		server = MyGameMenuButton.derive( "server", listener );
-		client = MyGameMenuButton.derive( "client", listener );
-
-		options = MyGameMenuButton.derive( "options", listener );
-		actions.put("options", new ButtonAction() {
-			public void run() {
-				GameMenu.this.buildOptionsMenu();
-			}
-		});
-
-		sound = MyGameMenuButton.derive( "sound", listener );
-		actions.put("sound", new ButtonAction() {
-			public void run() {
-			}
-		});
-
-		graphics = MyGameMenuButton.derive( "graphics", listener );
-		actions.put("graphics", new ButtonAction() {
-			public void run() {
-			}
-		});
-
-		network = MyGameMenuButton.derive( "network", listener );
-		actions.put("network", new ButtonAction() {
-			public void run() {
-			}
-		});
-
-		back = MyGameMenuButton.derive( "back", listener );
-		actions.put("back", new ButtonAction() {
-			public void run() {
-				GameMenu.this.buildMainMenu();
-			}
-		});
-
-		quit = MyGameMenuButton.derive( "quit", listener );
-		actions.put("quit", new ButtonAction() {
-			public void run() {
-				GameMenu.this.getDisplay().removeWidget(GameMenu.this);
-				System.exit(0);
-			}
-		});
+	public GameMenu( Map<String, ButtonAction> actions ){
+//		MyListener listener = new MyListener(actions);
+//
+//		this.setLayoutManager(new RowLayout(false));
+//		this.getAppearance().add(
+//				new GradientBackground(new Color(0.0f, 1.0f, 1.0f, 0.25f), new Color(0.0f, 0.0f, 1.0f, 0.5f)));
+//		this.getAppearance().setPadding(new Spacing(10, 10));
+//
+//		player1 = MyGameMenuButton.derive( "player1", listener );
+//
+//		player2 = MyGameMenuButton.derive( "player2", listener );
+//		actions.put("player2", new ButtonAction() {
+//			public void run() {
+//				buildTowPlayersMenu();
+//			}
+//		});
+//		
+//		server = MyGameMenuButton.derive( "server", listener );
+//		client = MyGameMenuButton.derive( "client", listener );
+//
+//		options = MyGameMenuButton.derive( "options", listener );
+//		actions.put("options", new ButtonAction() {
+//			public void run() {
+//				GameMenu.this.buildOptionsMenu();
+//			}
+//		});
+//
+//		sound = MyGameMenuButton.derive( "sound", listener );
+//		actions.put("sound", new ButtonAction() {
+//			public void run() {
+//			}
+//		});
+//
+//		graphics = MyGameMenuButton.derive( "graphics", listener );
+//		actions.put("graphics", new ButtonAction() {
+//			public void run() {
+//			}
+//		});
+//
+//		network = MyGameMenuButton.derive( "network", listener );
+//		actions.put("network", new ButtonAction() {
+//			public void run() {
+//			}
+//		});
+//
+//		back = MyGameMenuButton.derive( "back", listener );
+//		actions.put("back", new ButtonAction() {
+//			public void run() {
+//				GameMenu.this.buildMainMenu();
+//			}
+//		});
+//
+//		quit = MyGameMenuButton.derive( "quit", listener );
+//		actions.put("quit", new ButtonAction() {
+//			public void run() {
+//				GameMenu.this.getDisplay().removeWidget(GameMenu.this);
+//				System.exit(0);
+//			}
+//		});
 	}
 
 	private void buildMainMenu() {
-		this.removeAllWidgets();
-		this.addWidget(player1);
-		this.addWidget(player2);
-		this.addWidget(options);
-		this.addWidget(quit);
-		this.pack();
-		StaticLayout.center(this, this.getDisplay());
+//		this.removeAllWidgets();
+//		this.addWidget(player1);
+//		this.addWidget(player2);
+//		this.addWidget(options);
+//		this.addWidget(quit);
+//		this.pack();
+//		StaticLayout.center(this, this.getDisplay());
 	}
 
 	private void buildTowPlayersMenu() {
-		this.removeAllWidgets();
-		this.addWidget(server);
-		this.addWidget(client);
-		this.addWidget(back);
-		this.pack();
-		StaticLayout.center(this, this.getDisplay());
+//		this.removeAllWidgets();
+//		this.addWidget(server);
+//		this.addWidget(client);
+//		this.addWidget(back);
+//		this.pack();
+//		StaticLayout.center(this, this.getDisplay());
 	}
 	
 	private void buildOptionsMenu() {
-		this.removeAllWidgets();
-		this.addWidget(graphics);
-		this.addWidget(sound);
-		this.addWidget(network);
-		this.addWidget(back);
-		this.pack();
-		StaticLayout.center(this, this.getDisplay());
+//		this.removeAllWidgets();
+//		this.addWidget(graphics);
+//		this.addWidget(sound);
+//		this.addWidget(network);
+//		this.addWidget(back);
+//		this.pack();
+//		StaticLayout.center(this, this.getDisplay());
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void addedToWidgetTree() {
-		super.addedToWidgetTree();
-		buildMainMenu();
-	}
+//	/** {@inheritDoc} */
+//	@Override
+//	public void addedToWidgetTree() {
+//		super.addedToWidgetTree();
+//		buildMainMenu();
+//	}
 }

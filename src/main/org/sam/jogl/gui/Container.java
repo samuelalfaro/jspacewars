@@ -162,15 +162,16 @@ public class Container extends Component{
 	 * @param container the GUIContext we are rendering to
 	 * @param g the Graphics context we are rendering with
 	 */
-	protected void renderChildren( GUIContext container, Graphics g ){
-		ensureZOrder();
-		for( int i = 0; i < getChildCount(); i++ ){
-			Component child = getChild( i );
-
-			//TODO: fix clipping
-
-			child.render( container, g );
-		}
+	//protected void renderChildren( GUIContext container, Graphics g ){
+	protected void renderChildren( ){
+//		ensureZOrder();
+//		for( int i = 0; i < getChildCount(); i++ ){
+//			Component child = getChild( i );
+//
+//			//TODO: fix clipping
+//
+//			child.render( container, g );
+//		}
 	}
 
 	/**
@@ -179,35 +180,40 @@ public class Container extends Component{
 	 * @param container the GUIContext we are rendering to
 	 * @param delta the delta time (in ms)
 	 */
-	protected void updateChildren( GUIContext container, int delta ){
+	//protected void updateChildren( GUIContext container, int delta ){
+	protected void updateChildren( int delta ){
 		ensureZOrder();
 		for( int i = 0; i < getChildCount(); i++ )
-			getChild( i ).update( container, delta );
+			//getChild( i ).update( container, delta );
+			getChild( i ).update( delta );
 	}
 
-	protected void updateComponent( GUIContext container, int delta ){
-		super.updateComponent( container, delta );
-		updateChildren( container, delta );
+	//protected void updateComponent( GUIContext container, int delta ){
+	protected void updateComponent( int delta ){
+//		super.updateComponent( container, delta );
+//		updateChildren( container, delta );
+		super.updateComponent( delta );
+		updateChildren( delta );
 	}
 
-	protected void renderComponent( GUIContext container, Graphics g ){
-		super.renderComponent( container, g );
-		renderChildren( container, g );
+//	protected void renderComponent( GUIContext container, Graphics g ){
+//		super.renderComponent( container, g );
+//		renderChildren( container, g );
+//	}
+	protected void renderComponent(){
+		super.renderComponent();
+		renderChildren();
 	}
 
 	private class ZComparator implements Comparator{
 		public int compare( Object o1, Object o2 ){
 			Component c1 = (Component)o1;
 			Component c2 = (Component)o2;
-			int res;
 
-			if( c1 == null || c2 == null || c1.equals( c2 ) ){
-				res = 0;
-			}else{
-				res = ( c2.getZIndex() < c1.getZIndex() ? 1: -1 );
-			}
-
-			return res;
+			if( c1 == null || c2 == null || c1.equals( c2 ) )
+				return 0;
+//			return ( c2.getZIndex() < c1.getZIndex() ? 1: -1 );
+			return 0;
 		}
 	}
 

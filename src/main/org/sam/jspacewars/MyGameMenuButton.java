@@ -22,26 +22,17 @@
  */
 package org.sam.jspacewars;
 
-import org.fenggui.Button;
-import org.fenggui.appearance.LabelAppearance;
-import org.fenggui.binding.render.Graphics;
-import org.fenggui.binding.render.ITexture;
-import org.fenggui.binding.render.Pixmap;
-import org.fenggui.binding.render.text.ITextRenderer;
-import org.fenggui.decorator.background.Background;
-import org.fenggui.decorator.background.PixmapBackground;
-import org.fenggui.decorator.background.PlainBackground;
-import org.fenggui.decorator.border.Border;
-import org.fenggui.decorator.border.PixmapBorder;
-import org.fenggui.decorator.border.PlainBorder;
-import org.fenggui.event.IButtonPressedListener;
-import org.fenggui.event.StateChangedEvent;
-import org.fenggui.text.ITextContentManager;
-import org.fenggui.util.Color;
-import org.fenggui.util.Dimension;
-import org.fenggui.util.Spacing;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Event;
+import java.awt.Graphics;
 
-public class MyGameMenuButton extends Button{
+import javax.swing.border.Border;
+
+import org.sam.jogl.gui.GLButton;
+import org.sam.jogl.gui.Pixmap;
+
+public class MyGameMenuButton extends GLButton{
 
 	//	private static Border generatePixmapBorder(Pixmap pixmap) {
 	//		if( pixmap == null )
@@ -75,30 +66,33 @@ public class MyGameMenuButton extends Button{
 	//	}
 
 	private static Border generatePixmapBorder( Pixmap pixmap ){
-		if( pixmap == null )
-			return new PlainBorder();
-
-		ITexture texture = pixmap.getTexture();
-		Pixmap[] pixmaps = new Pixmap[8];
-
-		pixmaps[PixmapBorder.TOP_LEFT] = new Pixmap( texture, 0, 0, 18, 12 );
-		pixmaps[PixmapBorder.TOP] = new Pixmap( texture, 18, 0, 100, 12 );
-		pixmaps[PixmapBorder.TOP_RIGHT] = new Pixmap( texture, 118, 0, 18, 12 );
-
-		pixmaps[PixmapBorder.LEFT] = new Pixmap( texture, 0, 12, 18, 16 );
-		pixmaps[PixmapBorder.RIGHT] = new Pixmap( texture, 118, 12, 18, 16 );
-
-		pixmaps[PixmapBorder.BOTTOM_LEFT] = new Pixmap( texture, 0, 28, 18, 35 );
-		pixmaps[PixmapBorder.BOTTOM] = new Pixmap( texture, 18, 28, 100, 35 );
-		pixmaps[PixmapBorder.BOTTOM_RIGHT] = new Pixmap( texture, 118, 28, 18, 35 );
-
-		return new PixmapBorder( pixmaps );
+//		if( pixmap == null )
+//			return new PlainBorder();
+//
+//		ITexture texture = pixmap.getTexture();
+//		Pixmap[] pixmaps = new Pixmap[8];
+//
+//		pixmaps[PixmapBorder.TOP_LEFT] = new Pixmap( texture, 0, 0, 18, 12 );
+//		pixmaps[PixmapBorder.TOP] = new Pixmap( texture, 18, 0, 100, 12 );
+//		pixmaps[PixmapBorder.TOP_RIGHT] = new Pixmap( texture, 118, 0, 18, 12 );
+//
+//		pixmaps[PixmapBorder.LEFT] = new Pixmap( texture, 0, 12, 18, 16 );
+//		pixmaps[PixmapBorder.RIGHT] = new Pixmap( texture, 118, 12, 18, 16 );
+//
+//		pixmaps[PixmapBorder.BOTTOM_LEFT] = new Pixmap( texture, 0, 28, 18, 35 );
+//		pixmaps[PixmapBorder.BOTTOM] = new Pixmap( texture, 18, 28, 100, 35 );
+//		pixmaps[PixmapBorder.BOTTOM_RIGHT] = new Pixmap( texture, 118, 28, 18, 35 );
+//
+//		return new PixmapBorder( pixmaps );
+		return null;
 	}
 
-	private static Background generatePixmapBackground( Pixmap pixmap ){
-		if( pixmap == null )
-			return new PlainBackground();
-		return new PixmapBackground( new Pixmap( pixmap.getTexture(), 18, 12, 100, 16 ), true );
+	//private static Background generatePixmapBackground( Pixmap pixmap ){
+	private static Object generatePixmapBackground( Pixmap pixmap ){
+//		if( pixmap == null )
+//			return new PlainBackground();
+//		return new PixmapBackground( new Pixmap( pixmap.getTexture(), 18, 12, 100, 16 ), true );
+		return null;
 	}
 
 	private static MyGameMenuButton prototipo;
@@ -111,12 +105,12 @@ public class MyGameMenuButton extends Button{
 		MyGameMenuButton.prototipo = prototipo;
 	}
 
-	public static MyGameMenuButton derive( String name, IButtonPressedListener listener ){
-		MyGameMenuButton result = new MyGameMenuButton( name );
-		result.addButtonPressedListener( listener );
-		result.setAppearance( prototipo.getAppearance().clone( result ) );
-		return result;
-	}
+//	public static MyGameMenuButton derive( String name, IButtonPressedListener listener ){
+//		MyGameMenuButton result = new MyGameMenuButton( name );
+//		result.addButtonPressedListener( listener );
+//		result.setAppearance( prototipo.getAppearance().clone( result ) );
+//		return result;
+//	}
 
 	private final String name;
 
@@ -150,7 +144,7 @@ public class MyGameMenuButton extends Button{
 
 	private MyGameMenuButton( String name ){
 		this.name = name;
-		setText( name );
+		//setText( name );
 	}
 
 	/**
@@ -171,76 +165,76 @@ public class MyGameMenuButton extends Button{
 
 	private void initButton( Pixmap defaultState, Pixmap hoverState, Pixmap focusState, Pixmap pressedState,
 			Pixmap disabledState ){
-		LabelAppearance appearance = this.getAppearance();
+		//LabelAppearance appearance = this.getAppearance();
 
-		appearance.removeAll();
-		appearance.clearSpacings();
-
-		appearance.setMargin( new Spacing( 3, 3 ) );
-		appearance.setBorder( new Spacing( 0, 0 ) );
+//		appearance.removeAll();
+//		appearance.clearSpacings();
+//
+//		appearance.setMargin( new Spacing( 3, 3 ) );
+//		appearance.setBorder( new Spacing( 0, 0 ) );
 		// appearance.setBorder( new Spacing(12, 9, 9, 35) );
 		// Spacing spacing = generatePixmapBorder(defaultState) ;
 		// System.out.println("Top:   " + spacing.getTop());
 		// System.out.println("Left:  " + spacing.getLeft());
 		// System.out.println("Right: " + spacing.getRight());
 		// System.out.println("Bottom:" + spacing.getBottom());
-		appearance.setPadding( new Spacing( 12, 15, 15, 37 ) );
-
-		appearance.addRenderer( ITextRenderer.DEFAULTTEXTRENDERERKEY, TextRenderers.renderer1 );
-
-		appearance.add( STATE_DEFAULT.getName(),  generatePixmapBackground( defaultState ) );
-		appearance.add( STATE_DEFAULT.getName(),  generatePixmapBorder( defaultState ) );
-		appearance.add( STATE_HOVERED.getName(),  generatePixmapBackground( hoverState ) );
-		appearance.add( STATE_HOVERED.getName(),  generatePixmapBorder( hoverState ) );
-		appearance.add( STATE_FOCUSED.getName(),  generatePixmapBackground( focusState ) );
-		appearance.add( STATE_FOCUSED.getName(),  generatePixmapBorder( focusState ) );
-		appearance.add( STATE_PRESSED.getName(),  generatePixmapBackground( pressedState ) );
-		appearance.add( STATE_PRESSED.getName(),  generatePixmapBorder( pressedState ) );
-		appearance.add( STATE_DISABLED.getName(), generatePixmapBackground( disabledState ) );
-		appearance.add( STATE_DISABLED.getName(), generatePixmapBorder( disabledState ) );
+//		appearance.setPadding( new Spacing( 12, 15, 15, 37 ) );
+//
+//		appearance.addRenderer( ITextRenderer.DEFAULTTEXTRENDERERKEY, TextRenderers.renderer1 );
+//
+//		appearance.add( STATE_DEFAULT.getName(),  generatePixmapBackground( defaultState ) );
+//		appearance.add( STATE_DEFAULT.getName(),  generatePixmapBorder( defaultState ) );
+//		appearance.add( STATE_HOVERED.getName(),  generatePixmapBackground( hoverState ) );
+//		appearance.add( STATE_HOVERED.getName(),  generatePixmapBorder( hoverState ) );
+//		appearance.add( STATE_FOCUSED.getName(),  generatePixmapBackground( focusState ) );
+//		appearance.add( STATE_FOCUSED.getName(),  generatePixmapBorder( focusState ) );
+//		appearance.add( STATE_PRESSED.getName(),  generatePixmapBackground( pressedState ) );
+//		appearance.add( STATE_PRESSED.getName(),  generatePixmapBorder( pressedState ) );
+//		appearance.add( STATE_DISABLED.getName(), generatePixmapBackground( disabledState ) );
+//		appearance.add( STATE_DISABLED.getName(), generatePixmapBorder( disabledState ) );
 
 		//updateState();
 		//getStateManager().removeStateChangedListener( this.)
 		
-		updateMinSize();
+//		updateMinSize();
 	}
 
     /* (non-Javadoc)
      * @see org.fenggui.event.IStateChangedListener#stateChanged(org.fenggui.event.StateChangedEvent)
      */
-    public void stateChanged(StateChangedEvent e){
-		LabelAppearance appearance = this.getAppearance();
+    //public void stateChanged(StateChangedEvent e){
+    public void stateChanged(Event e){
+//		LabelAppearance appearance = this.getAppearance();
 
 		// change update state to only activate one state at a time
 		// only default state is active as usual
 		// re-enable default state so switches get called
-		appearance.setEnabled( STATE_ERROR.getName(),    false );
-		appearance.setEnabled( STATE_DISABLED.getName(), false );
-		appearance.setEnabled( STATE_PRESSED.getName(),  false );
-		appearance.setEnabled( STATE_FOCUSED.getName(),  false );
-		appearance.setEnabled( STATE_HOVERED.getName(),  false );
-		appearance.setEnabled( STATE_DEFAULT.getName(),  false );
-
-		if( !isEnabled() ){
-			appearance.setEnabled( STATE_DISABLED.getName(), true );
-		}else if( isPressed() ){
-			appearance.setEnabled( STATE_PRESSED.getName(), true );
-		}else if( isFocused() ){
-			// appearance.setEnabled(STATE_FOCUSED, true);
-			if( isHovered() )
-				appearance.setEnabled( STATE_HOVERED.getName(), true );
-			else
-				appearance.setEnabled( STATE_DEFAULT.getName(), true );
-		}else if( isHovered() ){
-			appearance.setEnabled( STATE_HOVERED.getName(), true );
-		}else
-			appearance.setEnabled( STATE_DEFAULT.getName(), true );
+//		appearance.setEnabled( STATE_ERROR.getName(),    false );
+//		appearance.setEnabled( STATE_DISABLED.getName(), false );
+//		appearance.setEnabled( STATE_PRESSED.getName(),  false );
+//		appearance.setEnabled( STATE_FOCUSED.getName(),  false );
+//		appearance.setEnabled( STATE_HOVERED.getName(),  false );
+//		appearance.setEnabled( STATE_DEFAULT.getName(),  false );
+//
+//		if( !isEnabled() ){
+//			appearance.setEnabled( STATE_DISABLED.getName(), true );
+//		}else if( isPressed() ){
+//			appearance.setEnabled( STATE_PRESSED.getName(), true );
+//		}else if( isFocused() ){
+//			// appearance.setEnabled(STATE_FOCUSED, true);
+//			if( isHovered() )
+//				appearance.setEnabled( STATE_HOVERED.getName(), true );
+//			else
+//				appearance.setEnabled( STATE_DEFAULT.getName(), true );
+//		}else if( isHovered() ){
+//			appearance.setEnabled( STATE_HOVERED.getName(), true );
+//		}else
+//			appearance.setEnabled( STATE_DEFAULT.getName(), true );
 	}
 
 	/* (non-Javadoc)
 	 * @see org.fenggui.ObservableLabelWidget#paintContent(org.fenggui.binding.render.Graphics)
 	 */
-	@Override
 //	public void paintContent( Graphics g ){
 //		int x = 0;
 //		int y = 0;
@@ -295,6 +289,7 @@ public class MyGameMenuButton extends Button{
 //		}
 //	}
 	
+	/*
 	public void paintContent( Graphics g ){
 		int x = 0;
 		int y = 0;
@@ -346,4 +341,5 @@ public class MyGameMenuButton extends Button{
 				textData.render( x, y, g, getAppearance() );
 		}
 	}
+	*/
 }
