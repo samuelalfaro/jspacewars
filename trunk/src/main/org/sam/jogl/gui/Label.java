@@ -2,8 +2,6 @@ package org.sam.jogl.gui;
 
 import javax.vecmath.Color4f;
 
-import jogamp.opengl.glu.mipmap.Image;
-
 /**
  * Label is the base class for displaying
  * a String and/or Image on a component. Text is
@@ -61,15 +59,15 @@ public class Label extends Container{
 	 * @param image the image to be displayed (rendered below text)
 	 * @param text the text to be displayed
 	 */
-	public Label( Image image, String text ){
-		this( true );
-		this.setImage( image );
-		this.setText( text );
-	}
+//	public Label( Image image, String text ){
+//		this( true );
+//		this.setImage( image );
+//		this.setText( text );
+//	}
 
 	/** Creates a new label with the specified text. */
 	public Label( String text ){
-		this( null, text );
+		this.setText( text );
 	}
 
 	/**
@@ -77,13 +75,13 @@ public class Label extends Container{
 	 * 
 	 * @param image the image to be displayed
 	 */
-	public Label( Image image ){
-		this( image, null );
-	}
+//	public Label( Image image ){
+//		this( image, null );
+//	}
 
 	/** Creates a new empty label. */
 	public Label(){
-		this( null, null );
+		this( null );
 	}
 
 	protected Label( boolean updateAppearance ){
@@ -93,52 +91,54 @@ public class Label extends Container{
 	}
 
 	public void updateAppearance(){
-		setAppearance( Sui.getSkin().getLabelAppearance( this ) );
-		setPreferredSize( getPackedSize() );
+//		setAppearance( Sui.getSkin().getLabelAppearance( this ) );
+//		setPreferredSize( getPackedSize() );
 	}
 
-	public void setImageFilter( Color filter ){
-		this.filter = filter;
-	}
-
-	public Color getImageFilter(){
-		return filter;
-	}
+//	public void setImageFilter( Color filter ){
+//		this.filter = filter;
+//	}
+//
+//	public Color getImageFilter(){
+//		return filter;
+//	}
 
 	/**
 	 * Packs this label based on current font & text,
 	 * leaving a space for padding.
 	 */
-	protected Dimension getPackedSize(){
-		Font font = getFont();
-		float objWidth = 0;
-		float objHeight = 0;
-		Dimension d = new Dimension();
-
-		if( getImage() != null ){
-			objWidth = getImage().getWidth();
-			objHeight = getImage().getHeight();
-		}
-
-		if( getText() != null && getText().length() != 0 && font != null ){
-			objWidth = Math.max( objWidth, getTextWidth() );
-			objHeight = Math.max( objHeight, getTextHeight() );
-		}
-
-		Padding padding = getPadding();
-		d.width = padding.left + objWidth + padding.right;
-		d.height = padding.top + objHeight + padding.bottom;
-		return d;
+	//protected Dimension getPackedSize(){
+	protected Object getPackedSize(){
+//		Font font = getFont();
+//		float objWidth = 0;
+//		float objHeight = 0;
+//		Dimension d = new Dimension();
+//
+//		if( getImage() != null ){
+//			objWidth = getImage().getWidth();
+//			objHeight = getImage().getHeight();
+//		}
+//
+//		if( getText() != null && getText().length() != 0 && font != null ){
+//			objWidth = Math.max( objWidth, getTextWidth() );
+//			objHeight = Math.max( objHeight, getTextHeight() );
+//		}
+//
+//		Padding padding = getPadding();
+//		d.width = padding.left + objWidth + padding.right;
+//		d.height = padding.top + objHeight + padding.bottom;
+//		return d;
+		return null;
 	}
 
 	public void pack(){
-		setSize( getPackedSize() );
+		//setSize( getPackedSize() );
 	}
 
-	public void setFont( Font f ){
-		super.setFont( f );
-		this.yoff = getYOffset( getText() );
-	}
+//	public void setFont( Font f ){
+//		super.setFont( f );
+//		this.yoff = getYOffset( getText() );
+//	}
 
 	/**
 	 * Sets the disabled foreground color to be
@@ -146,8 +146,9 @@ public class Label extends Container{
 	 * 
 	 * @param c the new foreground color
 	 */
-	public void setDisabledForeground( Color c ){
-		this.disabledColor = c;
+	//public void setDisabledForeground( Color c ){
+	public void setDisabledForeground(){
+		//this.disabledColor = c;
 	}
 
 	/**
@@ -155,7 +156,8 @@ public class Label extends Container{
 	 * 
 	 * @return the disabled foreground color
 	 */
-	public Color getDisabledForeground(){
+	//public Color getDisabledForeground(){
+	public Object getDisabledForeground(){
 		return disabledColor;
 	}
 
@@ -166,7 +168,7 @@ public class Label extends Container{
 	 */
 	public void setText( String text ){
 		this.text = text;
-		this.yoff = getYOffset( text );
+		//this.yoff = getYOffset( text );
 	}
 
 	/**
@@ -228,15 +230,15 @@ public class Label extends Container{
 	 * @return the yoffset of the font if it is an instanceof AngelCodeFont,
 	 * otherwise 0
 	 */
-	protected float getYOffset( String s ){
-		Font font = getFont();
-		if( s == null || s.length() == 0 )
-			return 0;
-		else if( font instanceof AngelCodeFont )
-			return ( (AngelCodeFont)font ).getYOffset( s );
-		else
-			return 0;
-	}
+//	protected float getYOffset( String s ){
+//		Font font = getFont();
+//		if( s == null || s.length() == 0 )
+//			return 0;
+//		else if( font instanceof AngelCodeFont )
+//			return ( (AngelCodeFont)font ).getYOffset( s );
+//		else
+//			return 0;
+//	}
 
 	public float getYOffset(){
 		return yoff;

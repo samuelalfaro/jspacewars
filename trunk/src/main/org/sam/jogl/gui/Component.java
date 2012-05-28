@@ -277,7 +277,8 @@ public abstract class Component{
 	 * @param container the GUIContext we are rendering to
 	 * @param delta the delta time (in ms)
 	 */
-	protected void updateComponent( GUIContext container, int delta ){
+	//protected void updateComponent( GUIContext container, int delta ){
+	protected void updateComponent( int delta ){
 	}
 
 	/**
@@ -310,9 +311,10 @@ public abstract class Component{
 	 * @param container The container displaying this component
 	 * @param delta The delta to update by
 	 */
-	public void update( GUIContext container, int delta ){
+	//public void update( GUIContext container, int delta ){
+	public void update( int delta ){
 		//TODO: update only while visible?
-		updateComponent( container, delta );
+		//updateComponent( container, delta );
 	}
 
 	/**
@@ -321,10 +323,11 @@ public abstract class Component{
 	 * 
 	 * @param context the context to center to
 	 */
-	public void setLocationRelativeToContext( GUIContext context ){
-		if( context == null )
-			return;
-		setLocation( context.getWidth() / 2f - getWidth() / 2f, context.getHeight() / 2f - getHeight() / 2f );
+	//public void setLocationRelativeToContext( GUIContext context ){
+	public void setLocationRelativeToContext(){
+//		if( context == null )
+//			return;
+//		setLocation( context.getWidth() / 2f - getWidth() / 2f, context.getHeight() / 2f - getHeight() / 2f );
 	}
 
 	/**
@@ -599,20 +602,21 @@ public abstract class Component{
 //		}
 	}
 
-	void setWindowsActive( boolean b, Display display ){
-		display.clearActiveWindows();
-		Component top = this;
-		while( top != null ){
-			if( top instanceof Window ){
-				Window win = (Window)top;
-				boolean old = win.isActive();
-				win.setActive( b );
-
-				if( b )
-					display.activeWindows.add( win );
-			}
-			top = top.parent;
-		}
+	//void setWindowsActive( boolean b, Display display ){
+	void setWindowsActive( boolean b ){
+//		display.clearActiveWindows();
+//		Component top = this;
+//		while( top != null ){
+//			if( top instanceof Window ){
+//				Window win = (Window)top;
+//				boolean old = win.isActive();
+//				win.setActive( b );
+//
+//				if( b )
+//					display.activeWindows.add( win );
+//			}
+//			top = top.parent;
+//		}
 	}
 
 	//TODO: skip input for overlapping buttons
