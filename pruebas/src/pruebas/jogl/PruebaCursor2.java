@@ -323,12 +323,12 @@ public class PruebaCursor2 implements WindowListener, KeyListener{
 			
 
 			// let's get notified if window is closed
-			window.addWindowListener( this );
+			
 			Renderer renderer = new Renderer();
 			window.addGLEventListener( renderer );
 			
 			window.setVisible( true );
-
+			window.addWindowListener( this );
 			while( running ){
 				display.dispatchMessages();
 
@@ -343,6 +343,7 @@ public class PruebaCursor2 implements WindowListener, KeyListener{
 				// not necessary Thread.sleep(40);
 			}
 			window.destroy();
+			
 		}catch( Throwable t ){
 			t.printStackTrace();
 		}

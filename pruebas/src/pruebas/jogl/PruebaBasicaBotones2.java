@@ -22,10 +22,12 @@
  */
 package pruebas.jogl;
 
+import java.awt.AWTEvent;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -55,13 +57,13 @@ public class PruebaBasicaBotones2{
 	private static final int VIRTUAL_AREA_WIDTH  = 1024;
 	private static final int VIRTUAL_AREA_HEIGHT =  768;
 	
-	static int AREA_WIDTH;
-	static int AREA_HEIGHT;
+	static int AREA_WIDTH = 1;
+	static int AREA_HEIGHT = 1;
 	
-	static int VIRTUAL_VIEWPORT_X; 
-	static int VIRTUAL_VIEWPORT_Y;
-	static int VIRTUAL_VIEWPORT_WIDTH;
-	static int VIRTUAL_VIEWPORT_HEIGHT;
+	static int VIRTUAL_VIEWPORT_X = 0; 
+	static int VIRTUAL_VIEWPORT_Y = 0;
+	static int VIRTUAL_VIEWPORT_WIDTH = 1;
+	static int VIRTUAL_VIEWPORT_HEIGHT = 1;
 	
 	static void toVirtualPosition( Point point, Point2f virtualPoint ){
 		virtualPoint.x = VIRTUAL_AREA_WIDTH * ( point.x - VIRTUAL_VIEWPORT_X ) / VIRTUAL_VIEWPORT_WIDTH;
@@ -145,7 +147,6 @@ public class PruebaBasicaBotones2{
 			toVirtualPosition( e.getPoint(), virtualPoint );
 			setPosition( cursorTransform, virtualPoint );
 			container.checkCursorPosition( virtualPoint );
-			
 		}
 	
 		/* (non-Javadoc)
@@ -276,7 +277,7 @@ public class PruebaBasicaBotones2{
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 			
-			cursor.draw( gl );
+			//cursor.draw( gl );
 		}
 
 		public void reshape( GLAutoDrawable glDrawable, int x, int y, int width, int height ){
@@ -307,6 +308,13 @@ public class PruebaBasicaBotones2{
 		frame.getContentPane().setLayout( new BorderLayout() );
 		frame.getContentPane().setBackground( Color.BLACK );
 
+//		GLCanvas canvas = new GLCanvas(){
+//		    protected void processEvent(AWTEvent e) {
+//		    	System.err.println( e );
+//		    	super.processEvent( e );
+//		    }
+//		};
+		
 		GLCanvas canvas = new GLCanvas();
 		
 		GLGUI gui = new GLGUI();
@@ -317,19 +325,19 @@ public class PruebaBasicaBotones2{
 		GLComponent button;
 		
 		button = new GLButton();
-		button.setBounds( 50, 50, 100, 100 );
+		button.setBounds( 50, 50, 200, 50 );
 		container.add( button );
 		
 		button = new GLButton();
-		button.setBounds( 200, 50, 100, 100 );
+		button.setBounds( 50, 125, 200, 50 );
 		container.add( button );
 		
 		button = new GLButton();
-		button.setBounds( 50, 200, 100, 100 );
+		button.setBounds( 50, 200, 200, 50 );
 		container.add( button );
 		
 		button = new GLButton();
-		button.setBounds( 200, 200, 100, 100 );
+		button.setBounds( 50, 275, 200, 50 );
 		container.add( button );
 		
 		container.setPosition( 
@@ -346,15 +354,6 @@ public class PruebaBasicaBotones2{
 		
 		canvas.addGLEventListener( new CursorRenderer( cursor ) );
 		
-		
-		GUIListener guiListener = new GUIListener( gui );
-		guiListener.setCursor( cursor );
-
-		canvas.addMouseListener( guiListener );
-		canvas.addMouseMotionListener( guiListener );
-		canvas.addMouseWheelListener( guiListener );
-		
-		
 		frame.getContentPane().add( canvas, BorderLayout.CENTER );
 
 		frame.getContentPane().setPreferredSize( new Dimension( 640, 480 ) );
@@ -367,6 +366,14 @@ public class PruebaBasicaBotones2{
 		animator.setRunAsFastAsPossible( true );
 		animator.add( canvas );
 		animator.start();
+		
+		GUIListener guiListener = new GUIListener( gui );
+		guiListener.setCursor( cursor );
+
+		canvas.addMouseListener( guiListener );
+		canvas.addMouseMotionListener( guiListener );
+		canvas.addMouseWheelListener( guiListener );
+		canvas.addKeyListener( new KeyAdapter(){} );
 		
 		canvas.requestFocusInWindow();
 	}
