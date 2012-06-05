@@ -23,6 +23,8 @@ package org.sam.jogl.gui;
 
 import java.io.InputStream;
 
+import org.sam.util.XStreamUtils;
+
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -34,7 +36,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 /**
  * 
  */
-class FontDataReader{
+final class FontDataReader{
 
 	private static class CharacterPixmapConverter implements Converter{
 
@@ -51,12 +53,12 @@ class FontDataReader{
 
 		public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ){
 			char c = 0;
-			float x = readAttribute( reader, "x", 0.0f );
-			float y = readAttribute( reader, "y", 0.0f );
-			float width = readAttribute( reader, "width", 0.0f );
-			float height = readAttribute( reader, "height", 0.0f );
-			float offsetX = readAttribute( reader, "offsetX", 0.0f );
-			float charWidth = readAttribute( reader, "charWidth", width );
+			float x = XStreamUtils.readAttribute( reader, "x", 0.0f );
+			float y = XStreamUtils.readAttribute( reader, "y", 0.0f );
+			float width = XStreamUtils.readAttribute( reader, "width", 0.0f );
+			float height = XStreamUtils.readAttribute( reader, "height", 0.0f );
+			float offsetX = XStreamUtils.readAttribute( reader, "offsetX", 0.0f );
+			float charWidth = XStreamUtils.readAttribute( reader, "charWidth", width );
 			if( reader.hasMoreChildren() ){
 				reader.moveDown();
 				c = reader.getValue().charAt( 0 );
@@ -81,10 +83,10 @@ class FontDataReader{
 
 		public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ){
 			FontData fontData = new FontData(
-					readAttribute( reader, "maxAscent", 0 ), readAttribute( reader, "maxDescent", 0 ),
-					readAttribute( reader, "gap", 0 ),
-					readAttribute( reader, "textureWidth", 256 ), readAttribute( reader, "textureHeight", 256 ),
-					readAttribute( reader, "scaleX", 1.0f ), readAttribute( reader, "scaleY", 1.0f )
+					XStreamUtils.readAttribute( reader, "maxAscent", 0 ), XStreamUtils.readAttribute( reader, "maxDescent", 0 ),
+					XStreamUtils.readAttribute( reader, "gap", 0 ),
+					XStreamUtils.readAttribute( reader, "textureWidth", 256 ), XStreamUtils.readAttribute( reader, "textureHeight", 256 ),
+					XStreamUtils.readAttribute( reader, "scaleX", 1.0f ), XStreamUtils.readAttribute( reader, "scaleY", 1.0f )
 			);
 			FontData.CharacterData charData;
 			while( reader.hasMoreChildren() ){
@@ -97,9 +99,11 @@ class FontDataReader{
 		}
 	}
 	
+	private FontDataReader(){}
+	
 	private static XStream xStream = null;
 
-	private static final XStream getXStream(){
+	private static XStream getXStream(){
 		if( xStream == null ){
 			xStream = new XStream( new DomDriver() );
 			xStream.alias( "CharacterPixmap", FontData.CharacterData.class );
@@ -110,26 +114,6 @@ class FontDataReader{
 		return xStream;
 	}
 
-	static float readAttribute( HierarchicalStreamReader reader, String name, float defaultValue ){
-		String att = reader.getAttribute( name );
-		if( att != null && att.length() > 0 )
-			try{
-				return (float)Double.parseDouble( att );
-			}catch( NumberFormatException e ){
-			}
-		return defaultValue;
-	}
-
-	static int readAttribute( HierarchicalStreamReader reader, String name, int defaultValue ){
-		String att = reader.getAttribute( name );
-		if( att != null && att.length() > 0 )
-			try{
-				return Integer.parseInt( att );
-			}catch( NumberFormatException e ){
-			}
-		return defaultValue;
-	}
-	
 	public static FontData fromXML( InputStream xml ){
 		return (FontData)getXStream().fromXML( xml );
 	}

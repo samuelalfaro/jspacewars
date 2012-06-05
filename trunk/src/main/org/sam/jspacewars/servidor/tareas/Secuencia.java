@@ -36,7 +36,13 @@ public final class Secuencia extends TareaAbs {
 		return duracion;
 	}
 	
-	Secuencia(Tarea[] tareas){
+	/**
+	 * Constructor de una tarea formada por un conjunto de tareas, que se realizan
+	 * secuencialmente.
+	 * 
+	 * @param tareas vector que contiene el conjunto de tareas a realizar.
+	 */
+	public Secuencia( Tarea[] tareas ){
 		super( calcularDuracion(tareas) );
 		this.tareas = tareas;
 		this.finales = new long[tareas.length];

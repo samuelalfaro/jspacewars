@@ -29,7 +29,7 @@ import javax.media.opengl.GL2;
  */
 public class GLLabel extends GLComponent{
 	
-	private void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
+	protected void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glColor3f  ( rf, gf, bf );
 			gl.glVertex2f ( x1, y1 );
@@ -54,17 +54,8 @@ public class GLLabel extends GLComponent{
 	public void draw( GL2 gl ){
 		if( !isEnabled() ){
 			draw( gl, 0.25f, 0.25f, 0.25f, 0.5f, 0.5f, 0.5f ); 	// desactivado
-		}else if( isPressed() ){
-			draw( gl, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f ); // pulsado recibe el foco
-		}else if( isFocused() ){
-			if( isHovered() )
-				draw( gl, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f ); // ratón encima foco
-			else
-				draw( gl, 0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f ); // default foco
-		}else if( isHovered() ){
-			draw( gl, 0.0f, 1.0f, 0.0f, 0.75f, 0.75f, 0.75f ); // ratón encima
-		}else
-			draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
+		}
+		draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
 	}
 
 }

@@ -21,14 +21,13 @@
  */
 package org.sam.jogl.gui;
 
+import java.awt.MouseInfo;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
-
-import org.sam.jogl.Apariencia;
 
 import com.jogamp.common.nio.Buffers;
 
@@ -75,7 +74,6 @@ public class GLTextRenderer{
 	
 	private static float toBuffer( String string, TextureFont font ){
 		// TODO caché de cadenas usadas anteriormente
-		
 		if( font == null )
 			return 0.0f;
 		
@@ -120,6 +118,7 @@ public class GLTextRenderer{
 		}
 
 		float posY = y / font.scaleY;
+		
 		switch( verticalAlignment ){
 		case BASE_LINE:
 			break;

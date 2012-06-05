@@ -1,4 +1,4 @@
-package org.sam.jogl.gui;
+package org.sam.jogl.gui.tmp;
 
 import javax.vecmath.Color4f;
 
@@ -17,7 +17,7 @@ import javax.vecmath.Color4f;
  * @author davedes
  * @since b.0.1
  */
-public class Label extends Container{
+public class Label extends Component{
 
 	/** A constant for the horizontal alignment. */
 	public static final int LEFT_ALIGNMENT = 0;
@@ -85,7 +85,6 @@ public class Label extends Container{
 	}
 
 	protected Label( boolean updateAppearance ){
-		super( false );
 		if( updateAppearance )
 			updateAppearance();
 	}

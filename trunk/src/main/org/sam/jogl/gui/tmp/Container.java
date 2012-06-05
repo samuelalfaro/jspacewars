@@ -1,4 +1,4 @@
-package org.sam.jogl.gui;
+package org.sam.jogl.gui.tmp;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -205,11 +205,8 @@ public class Container extends Component{
 		renderChildren();
 	}
 
-	private class ZComparator implements Comparator{
-		public int compare( Object o1, Object o2 ){
-			Component c1 = (Component)o1;
-			Component c2 = (Component)o2;
-
+	private class ZComparator implements Comparator<Component>{
+		public int compare( Component c1, Component c2 ){
 			if( c1 == null || c2 == null || c1.equals( c2 ) )
 				return 0;
 //			return ( c2.getZIndex() < c1.getZIndex() ? 1: -1 );
