@@ -27,7 +27,7 @@ package org.sam.jogl.gui;
 
 import javax.media.opengl.GL2;
 
-public class PixmapComponent extends GLComponent{
+public class PixmapComponent extends GLRectangle{
 	
 	public final Pixmap pixmap;
 

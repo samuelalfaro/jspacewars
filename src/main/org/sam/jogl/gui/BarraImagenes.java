@@ -24,7 +24,7 @@ package org.sam.jogl.gui;
 
 import javax.media.opengl.GL2;
 
-public class BarraImagenes extends GLComponent{
+public class BarraImagenes extends GLRectangle{
 
 	private final Pixmap[] pixmaps;
 	private final int[] valores;

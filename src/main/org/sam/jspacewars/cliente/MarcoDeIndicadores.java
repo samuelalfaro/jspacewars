@@ -37,12 +37,12 @@ import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.Textura;
 import org.sam.jogl.gui.BarraImagenes;
 import org.sam.jogl.gui.Contador;
-import org.sam.jogl.gui.GLComponent;
+import org.sam.jogl.gui.GLRectangle;
 import org.sam.jogl.gui.Pixmap;
 import org.sam.jogl.gui.PixmapComponent;
 import org.sam.util.Imagen;
 
-public abstract class MarcoDeIndicadores extends GLComponent{
+public abstract class MarcoDeIndicadores extends GLRectangle{
 
 	private static class LedsNiveles extends BarraImagenes{
 
@@ -415,11 +415,11 @@ public abstract class MarcoDeIndicadores extends GLComponent{
 
 			apariencias[4].usar( gl );
 
-			for( GLComponent component: ledsNiveles )
+			for( GLRectangle component: ledsNiveles )
 				component.draw( gl );
 			ledsGrado.draw( gl );
 
-			for( GLComponent component: ledsIndicadores )
+			for( GLRectangle component: ledsIndicadores )
 				component.draw( gl );
 			ledIndicadorGrado.draw( gl );
 
