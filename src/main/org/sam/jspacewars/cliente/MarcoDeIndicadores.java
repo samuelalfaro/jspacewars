@@ -427,7 +427,7 @@ public abstract class MarcoDeIndicadores extends GLRectangle{
 		}
 	}
 	
-	private static final AtributosTransparencia FUSION_ALPHA = new AtributosTransparencia(
+	static final AtributosTransparencia FUSION_ALPHA = new AtributosTransparencia(
 		AtributosTransparencia.Equation.ADD,
 		AtributosTransparencia.SrcFunc.SRC_ALPHA,
 		AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
@@ -466,7 +466,7 @@ public abstract class MarcoDeIndicadores extends GLRectangle{
 	 * 
 	 * @param valor asignado.
 	 */
-	private void setIndicador(int valor) {
+	private void setIndicador( int valor ){
 		for( int i = 0; i < ledsIndicadores.length; i++ ){
 			if( valor > 0 ){
 				valor -= 2;
@@ -494,7 +494,7 @@ public abstract class MarcoDeIndicadores extends GLRectangle{
 	 *
 	 * @param data {@code ClientData} que contiene los datos que serán actualizados en el marco.
 	 */
-	void update(ClientData data) {
+	void update( ClientData data ){
 
 		vidas.setValor(data.nVidas);
 		bombas.setValor(data.nBombas);
