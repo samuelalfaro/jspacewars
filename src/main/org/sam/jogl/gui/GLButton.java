@@ -21,7 +21,6 @@
  */
 package org.sam.jogl.gui;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 /**
@@ -29,24 +28,6 @@ import javax.media.opengl.GL2;
  */
 public class GLButton extends GLLabel{
 	
-	private void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
-		gl.glBegin(GL2.GL_QUADS);
-			gl.glColor3f  ( rf, gf, bf );
-			gl.glVertex2f ( x1, y1 );
-			gl.glVertex2f ( x2, y1 );
-			gl.glVertex2f ( x2, y2 );
-			gl.glVertex2f ( x1, y2 );
-		gl.glEnd();
-		gl.glBegin( GL.GL_LINE_STRIP );
-			gl.glColor3f  ( rb, gb, bb );
-			gl.glVertex2f ( x1, y1 );
-			gl.glVertex2f ( x2, y1 );
-			gl.glVertex2f ( x2, y2 );
-			gl.glVertex2f ( x1, y2 );
-			gl.glVertex2f ( x1, y1 );
-		gl.glEnd();
-	}
-
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */

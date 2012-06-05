@@ -4,7 +4,7 @@
  * Created on November 6, 2007, 3:38 PM
  */
 
-package org.sam.jogl.gui;
+package org.sam.jogl.gui.tmp;
 
 import javax.swing.event.EventListenerList;
 
@@ -89,7 +89,7 @@ public abstract class Component{
 	/**
 	 * Creates a new instance of Component
 	 */
-	public Component(){
+	protected Component(){
 	}
 
 	/**
@@ -521,7 +521,6 @@ public abstract class Component{
 		setY( getY() - v );
 		setWidth( getWidth() + ( h * 2 ) );
 		setHeight( getHeight() + ( v * 2 ) );
-
 	}
 
 	/**
@@ -548,18 +547,13 @@ public abstract class Component{
 	 * Non-focusable components will never receive key, controller or mouse
 	 * wheel events.
 	 * 
-	 * @param b <tt>true</tt> if this component should receive key, controller
+	 * @param focusable <tt>true</tt> if this component should receive key, controller
 	 * or mouse wheel events when it has the focus
 	 */
-	public void setFocusable( boolean b ){
-		boolean old = b;
-		focusable = b;
-
-		//going from focusable to non-focusable 
-		//ensure that it is not the focus owner
-		if( old && !focusable ){
+	public void setFocusable( boolean focusable ){
+		if( this.focusable && !focusable )
 			releaseFocus();
-		}
+		this.focusable = focusable;
 	}
 
 	public boolean isFocusable(){
@@ -577,7 +571,7 @@ public abstract class Component{
 	}
 
 	public boolean hasFocus(){
-		return hasFocus && focusable;
+		return focusable && hasFocus;
 		/*
 		 * Display d = getDisplay();
 		 * return d!=null ? d.getFocusOwner()==this : false;
@@ -729,21 +723,18 @@ public abstract class Component{
 	 * @param chr the character of the key
 	 * @see mdes.slick.sui.event.KeyEvent
 	 */
-	protected void fireKeyEvent( int id, int key, char chr ){
-		KeyEvent evt = null;
-
-		final KeyListener[] listeners = (KeyListener[])listenerList.getListeners( KeyListener.class );
-		for( int i = 0; i < listeners.length; i++ ){
-			//lazily create it
-			if( evt == null ){
-				evt = new KeyEvent( this, id, key, chr );
-			}
+	protected void processKeyEvent( int id, int key, char chr ){
+		KeyListener[] listeners = listenerList.getListeners( KeyListener.class );
+		if( listeners.length > 0 ){
+			KeyEvent evt = new KeyEvent( this, id, key, chr );
 			switch( id ){
 			case KeyEvent.KEY_PRESSED:
-				listeners[i].keyPressed( evt );
+				for( KeyListener listener: listeners )
+					listener.keyPressed( evt );
 				break;
 			case KeyEvent.KEY_RELEASED:
-				listeners[i].keyReleased( evt );
+				for( KeyListener listener: listeners )
+					listener.keyReleased( evt );
 				break;
 			}
 		}
@@ -762,35 +753,35 @@ public abstract class Component{
 	 * @param oy the local old y position
 	 * @param absx the absolute x position
 	 * @param absy the absolute y position
-	 * @see mdes.slick.sui.event.MouseEvent
 	 */
-	protected void fireMouseEvent( int id, int button, int x, int y, int ox, int oy, int absx, int absy ){
-		MouseEvent evt = null;
-
-		final MouseListener[] listeners = (MouseListener[])listenerList.getListeners( MouseListener.class );
-		for( int i = 0; i < listeners.length; i++ ){
-			//lazily create it
-			if( evt == null ){
-				evt = new MouseEvent( this, id, button, x, y, ox, oy, absx, absy );
-			}
+	protected void processMouseEvent( int id, int button, int x, int y, int ox, int oy, int absx, int absy ){
+		MouseListener[] listeners = listenerList.getListeners( MouseListener.class );
+		if( listeners.length > 0 ){
+			MouseEvent evt = new MouseEvent( this, id, button, x, y, ox, oy, absx, absy );
 			switch( id ){
 			case MouseEvent.MOUSE_MOVED:
-				listeners[i].mouseMoved( evt );
+				for( MouseListener listener: listeners )
+					listener.mouseMoved( evt );
 				break;
 			case MouseEvent.MOUSE_PRESSED:
-				listeners[i].mousePressed( evt );
+				for( MouseListener listener: listeners )
+					listener.mousePressed( evt );
 				break;
 			case MouseEvent.MOUSE_RELEASED:
-				listeners[i].mouseReleased( evt );
+				for( MouseListener listener: listeners )
+					listener.mouseReleased( evt );
 				break;
 			case MouseEvent.MOUSE_DRAGGED:
-				listeners[i].mouseDragged( evt );
+				for( MouseListener listener: listeners )
+					listener.mouseDragged( evt );
 				break;
 			case MouseEvent.MOUSE_ENTERED:
-				listeners[i].mouseEntered( evt );
+				for( MouseListener listener: listeners )
+					listener.mouseEntered( evt );
 				break;
 			case MouseEvent.MOUSE_EXITED:
-				listeners[i].mouseExited( evt );
+				for( MouseListener listener: listeners )
+					listener.mouseExited( evt );
 				break;
 			}
 		}
@@ -809,8 +800,8 @@ public abstract class Component{
 	 * @param absy the absolute y position
 	 * @see mdes.slick.sui.event.MouseEvent
 	 */
-	protected void fireMouseEvent( int id, int button, int x, int y, int absx, int absy ){
-		fireMouseEvent( id, button, x, y, x, y, absx, absy );
+	protected void processMouseEvent( int id, int button, int x, int y, int absx, int absy ){
+		processMouseEvent( id, button, x, y, x, y, absx, absy );
 	}
 
 	/**
@@ -827,8 +818,8 @@ public abstract class Component{
 	 * @param absy the absolute y position
 	 * @see mdes.slick.sui.event.MouseEvent
 	 */
-	protected void fireMouseEvent( int id, int x, int y, int ox, int oy, int absx, int absy ){
-		fireMouseEvent( id, MouseEvent.NOBUTTON, x, y, ox, oy, absx, absy );
+	protected void processMouseEvent( int id, int x, int y, int ox, int oy, int absx, int absy ){
+		processMouseEvent( id, MouseEvent.NOBUTTON, x, y, ox, oy, absx, absy );
 	}
 
 	/**
@@ -839,17 +830,12 @@ public abstract class Component{
 	 * @param change the amount the mouse wheel has changed
 	 * @see mdes.slick.sui.event.MouseWheelEvent
 	 */
-	protected void fireMouseWheelEvent( int change ){
-		MouseWheelEvent evt = null;
-
-		final MouseWheelListener[] listeners = (MouseWheelListener[])listenerList
-				.getListeners( MouseWheelListener.class );
-		for( int i = 0; i < listeners.length; i++ ){
-			//lazily create it
-			if( evt == null ){
-				evt = new MouseWheelEvent( this, change );
-			}
-			listeners[i].mouseWheelMoved( evt );
+	protected void processMouseWheelEvent( int change ){
+		MouseWheelListener[] listeners = listenerList.getListeners( MouseWheelListener.class );
+		if( listeners.length > 0 ){
+			MouseWheelEvent evt = new MouseWheelEvent( this, change );
+			for( MouseWheelListener listener: listeners )
+				listener.mouseWheelMoved( evt );
 		}
 	}
 
@@ -864,21 +850,17 @@ public abstract class Component{
 	 * @see mdes.slick.sui.event.ControllerEvent
 	 */
 	protected void fireControllerEvent( int id, int controller, int button ){
-		ControllerEvent evt = null;
-
-		final ControllerListener[] listeners = (ControllerListener[])listenerList
-				.getListeners( ControllerListener.class );
-		for( int i = 0; i < listeners.length; i++ ){
-			//lazily create it
-			if( evt == null ){
-				evt = new ControllerEvent( this, id, controller, button );
-			}
+		ControllerListener[] listeners = listenerList.getListeners( ControllerListener.class );
+		if( listeners.length > 0 ){
+			ControllerEvent evt = new ControllerEvent( this, id, controller, button );
 			switch( id ){
 			case ControllerEvent.BUTTON_PRESSED:
-				listeners[i].controllerButtonPressed( evt );
+				for( ControllerListener listener: listeners )
+					listener.controllerButtonPressed( evt );
 				break;
 			case ControllerEvent.BUTTON_RELEASED:
-				listeners[i].controllerButtonReleased( evt );
+				for( ControllerListener listener: listeners )
+					listener.controllerButtonReleased( evt );
 				break;
 			}
 		}

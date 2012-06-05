@@ -36,7 +36,13 @@ public final class TareasParalelas extends TareaAbs {
 		return max;
 	}
 	
-	public TareasParalelas(Tarea[] tareas){
+	/**
+	 * Constructor de una tarea formada por un conjunto de tareas, que se realizan
+	 * en paralelo.
+	 * 
+	 * @param tareas vector que contiene el conjunto de tareas a realizar.
+	 */
+	public TareasParalelas( Tarea[] tareas ){
 		super( calcularDuracion(tareas) );
 		this.tareas = tareas;
 	}
