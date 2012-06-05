@@ -31,14 +31,9 @@ import org.sam.jogl.Dibujable;
 
 public abstract class GLComponent extends GLRectangle{
 	
-	javax.swing.event.EventListenerList list;
-	
 	private int state;
 	
-	/**
-	 * Esquinas / Corners
-	 */
-	protected float x1, y1, x2, y2;
+	javax.swing.event.EventListenerList list;
 	
 	public GLComponent(){
 		state = StateConstants.STATE_DEFAULT;
