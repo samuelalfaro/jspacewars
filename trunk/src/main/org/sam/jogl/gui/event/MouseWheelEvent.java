@@ -11,7 +11,7 @@ package org.sam.jogl.gui.event;
 public class MouseWheelEvent extends EventObject {
     
     /** An event ID for the mouse wheel event. */
-    public static final int MOUSE_WHEEL = MouseEvent.LAST_EVENT+1;
+	public static final int MOUSE_WHEEL = java.awt.event.MouseEvent.MOUSE_WHEEL;
     
     /** The amount of change. */
     private int change;

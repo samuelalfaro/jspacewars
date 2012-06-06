@@ -23,10 +23,76 @@ package org.sam.jogl.gui;
 
 import javax.media.opengl.GL2;
 
+import org.sam.jogl.gui.event.MouseAdapter;
+import org.sam.jogl.gui.event.MouseEvent;
+
 /**
  * 
  */
 public class GLButton extends GLLabel{
+	
+	private class ButtonListener extends MouseAdapter{
+
+		public void mouseEntered( MouseEvent e ){
+			if( !isEnabled() )
+				return;
+			if( !isHovered() )
+				setHovered( true );
+		}
+
+		public void mouseExited( MouseEvent e ){
+			if( !isEnabled() )
+				return;
+			setHovered( false );
+		}
+
+		public void mousePressed( MouseEvent e ){
+			if( !isEnabled() )
+				return;
+			if( e.getButton() == MouseEvent.BUTTON1 ){
+				setPressed( true );
+			}
+		}
+
+		public void mouseReleased( MouseEvent e ){
+			if( !isEnabled() )
+				return;
+			if( isPressed() && e.getButton() == MouseEvent.BUTTON1 ){
+				setHovered( true );
+				setFocused( true );
+				setPressed( false );
+				//fireActionPerformed( actionCommand );
+			}
+		}
+
+		public void mouseDragged( MouseEvent e ){
+			if( !isEnabled() )
+				return;
+			if( contains( e.getX(), e.getY() ) ){
+				setHovered( true );
+				setPressed( e.getButton() == MouseEvent.BUTTON1  );
+			}else{
+				setHovered( false );
+				setPressed( false );
+			}
+		}
+	}
+	
+	public GLButton(){
+		addMouseListener( new ButtonListener() );
+	}
+	
+	
+	public final void setPressed( boolean pressed ){
+		if( pressed )
+			this.state |= StateConstants.STATE_PRESSED;
+		else
+			this.state &= ~StateConstants.STATE_PRESSED;
+	}
+	
+	public final boolean isPressed(){
+		return ( state & StateConstants.STATE_PRESSED ) != 0;
+	}
 	
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)

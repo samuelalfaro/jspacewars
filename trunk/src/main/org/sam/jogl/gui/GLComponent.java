@@ -22,18 +22,18 @@
  */
 package org.sam.jogl.gui;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import javax.swing.event.EventListenerList;
 
-import javax.vecmath.Point2f;
-
-import org.sam.jogl.Dibujable;
+import org.sam.jogl.gui.event.MouseEvent;
+import org.sam.jogl.gui.event.MouseListener;
+import org.sam.jogl.gui.event.MouseWheelEvent;
+import org.sam.jogl.gui.event.MouseWheelListener;
 
 public abstract class GLComponent extends GLRectangle{
 	
-	private int state;
+	protected int state;
 	
-	javax.swing.event.EventListenerList list;
+	protected EventListenerList listenerList = new EventListenerList();
 	
 	public GLComponent(){
 		state = StateConstants.STATE_DEFAULT;
@@ -72,26 +72,86 @@ public abstract class GLComponent extends GLRectangle{
 		return ( state & StateConstants.STATE_HOVERED ) != 0;
 	}
 	
-	public final void setPressed( boolean pressed ){
-		if( pressed )
-			this.state |= StateConstants.STATE_PRESSED;
-		else
-			this.state &= ~StateConstants.STATE_PRESSED;
+	/**
+	 * Adds the specified listener to the list.
+	 * 
+	 * @param s the listener to receive events
+	 */
+	public synchronized void addMouseListener( MouseListener s ){
+		listenerList.add( MouseListener.class, s );
+	}
+
+	/**
+	 * Removes the specified listener from the list.
+	 * 
+	 * @param s the listener to remove
+	 */
+	public synchronized void removeMouseListener( MouseListener s ){
+		listenerList.remove( MouseListener.class, s );
+	}
+
+	/**
+	 * Adds the specified listener to the list.
+	 * 
+	 * @param s the listener to receive events
+	 */
+	public synchronized void addMouseWheelListener( MouseWheelListener s ){
+		listenerList.add( MouseWheelListener.class, s );
+	}
+
+	/**
+	 * Removes the specified listener from the list.
+	 * 
+	 * @param s the listener to remove
+	 */
+	public synchronized void removeMouseWheelListener( MouseWheelListener s ){
+		listenerList.remove( MouseWheelListener.class, s );
 	}
 	
-	public final boolean isPressed(){
-		return ( state & StateConstants.STATE_PRESSED ) != 0;
+	protected void processMouseEvent( int id, int button, float x, float y ){
+		MouseListener[] listeners = listenerList.getListeners( MouseListener.class );
+		if( listeners.length > 0 ){
+			MouseEvent evt = new MouseEvent( this, id, button, x, y );
+			switch( id ){
+			case MouseEvent.MOUSE_MOVED:
+				for( MouseListener listener: listeners )
+					listener.mouseMoved( evt );
+				break;
+			case MouseEvent.MOUSE_PRESSED:
+				for( MouseListener listener: listeners )
+					listener.mousePressed( evt );
+				break;
+			case MouseEvent.MOUSE_RELEASED:
+				for( MouseListener listener: listeners )
+					listener.mouseReleased( evt );
+				break;
+			case MouseEvent.MOUSE_DRAGGED:
+				for( MouseListener listener: listeners )
+					listener.mouseDragged( evt );
+				break;
+			case MouseEvent.MOUSE_ENTERED:
+				for( MouseListener listener: listeners )
+					listener.mouseEntered( evt );
+				break;
+			case MouseEvent.MOUSE_EXITED:
+				for( MouseListener listener: listeners )
+					listener.mouseExited( evt );
+				break;
+			}
+		}
 	}
-	
-	protected void processMouseEvent( MouseEvent e ){
 
+	protected void processMouseEvent( int id, float x, float y ){
+		processMouseEvent( id, MouseEvent.NOBUTTON, x, y );
 	}
 
-	protected void processMouseMotionEvent( MouseEvent e ){
-
+	protected void processMouseWheelEvent( int change ){
+		MouseWheelListener[] listeners = listenerList.getListeners( MouseWheelListener.class );
+		if( listeners.length > 0 ){
+			MouseWheelEvent evt = new MouseWheelEvent( this, change );
+			for( MouseWheelListener listener: listeners )
+				listener.mouseWheelMoved( evt );
+		}
 	}
 
-	protected void processMouseWheelEvent( MouseWheelEvent e ){
-
-	}
 }
