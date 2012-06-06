@@ -26,6 +26,7 @@ package org.sam.jogl;
  * Clase que representa un {@code Nodo} final (hoja) del grafo de escena.
  */
 public abstract class Hoja implements Nodo {
+	
 	private transient Nodo parent;
 
 	/**
@@ -38,7 +39,7 @@ public abstract class Hoja implements Nodo {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final void setParent(Nodo parent) {
+	public final void setParent( Nodo parent ){
 		this.parent = parent;
 	}
 	

@@ -80,19 +80,6 @@ public class GLContainer extends GLComponent{
 			c.setPosition( c.x1 + offX, c.y1 + offY );
 	}
 
-	public void checkCursorPosition( Point2f cursorPosition ){
-		if( contains( cursorPosition ) ){
-			this.setHovered( true );
-			for( GLComponent c: this.childs() )
-				c.setHovered( c.contains( cursorPosition ) );
-		}else{
-			this.setHovered( false );
-			for( GLComponent c: this.childs() )
-				c.setHovered( false );
-		}
-	}
-
-	
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
