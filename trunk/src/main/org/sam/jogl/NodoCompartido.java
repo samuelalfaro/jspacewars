@@ -37,7 +37,7 @@ public class NodoCompartido implements Nodo {
 	 * tener varios antecesores.
 	 * @param child {@code Nodo} descendiente.
 	 */
-	public NodoCompartido(Nodo child) {
+	public NodoCompartido( Nodo child ){
 		this.child = child;
 	}
 	
@@ -45,8 +45,8 @@ public class NodoCompartido implements Nodo {
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL2 gl) {
-		child.draw(gl);
+	public void draw( GL2 gl ){
+		child.draw( gl );
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class NodoCompartido implements Nodo {
 	 * clase son empleados para que tengan varios antecesores.</p>
 	 */
 	@Override
-	public void setParent(Nodo parent) {
+	public void setParent( Nodo parent ){
 	}
 	
 	private transient Nodo[] nodos; 

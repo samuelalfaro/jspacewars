@@ -57,5 +57,4 @@ public class GLLabel extends GLComponent{
 		}
 		draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
 	}
-
 }

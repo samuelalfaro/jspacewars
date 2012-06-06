@@ -47,8 +47,8 @@ public class NodoTransformador implements Nodo {
 	 * transformación correspondiente.
 	 * @param child {@code Nodo} descendiente.
 	 */
-	public NodoTransformador(Nodo child) {
-		this(null, child);
+	public NodoTransformador( Nodo child ){
+		this( null, child );
 	}
 	
 	/**
@@ -58,14 +58,23 @@ public class NodoTransformador implements Nodo {
 	 * @param transformMatrix {@code Matrix4f} con la transformación asignada.
 	 * @param child {@code Nodo} descendiente.
 	 */
-	public NodoTransformador(Matrix4f transformMatrix, Nodo child){
+	public NodoTransformador( Matrix4f transformMatrix, Nodo child ){
+		/*
+		FIXME Comprobar que no hay problemas cuando se usa una misma
+		instancia de la transformación para crear distintos nodos.
 		this.transformMatrix = new Matrix4f();
-		if(transformMatrix == null)
+		if( transformMatrix == null )
 			this.transformMatrix.setIdentity();
 		else
-			this.transformMatrix.set(transformMatrix);
+			this.transformMatrix.set( transformMatrix );
+		*/
+		if( transformMatrix == null ){
+			this.transformMatrix = new Matrix4f();
+			this.transformMatrix.setIdentity();
+		}else
+			this.transformMatrix = transformMatrix;
 		this.child = child;
-		this.child.setParent(this);
+		this.child.setParent( this );
 	}
 	
 	/**
@@ -75,10 +84,10 @@ public class NodoTransformador implements Nodo {
 	 * 
 	 * @param me {@code NodoTransformador} empleado como prototipo.
 	 */
-	protected NodoTransformador(NodoTransformador me){
-		this.transformMatrix = new Matrix4f(me.transformMatrix);
+	protected NodoTransformador( NodoTransformador me ){
+		this.transformMatrix = new Matrix4f( me.transformMatrix );
 		this.child = me.child.clone();
-		this.child.setParent(this);
+		this.child.setParent( this );
 	}
 
 	/**
@@ -93,8 +102,8 @@ public class NodoTransformador implements Nodo {
 	/**
 	 * @param transform La {@code Matrix4f} asignada.
 	 */
-	public void setTransform(Matrix4f transform) {
-		transformMatrix.set(transform);
+	public void setTransform( Matrix4f transform ){
+		transformMatrix.set( transform );
 	}
 	
 	private transient final float[]  mt_array = new float[16];
@@ -103,7 +112,7 @@ public class NodoTransformador implements Nodo {
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw(GL2 gl) {
+	public void draw( GL2 gl ){
 		gl.glPushMatrix();
 
 		mt_array[ 0] = transformMatrix.m00; mt_array[ 1] = transformMatrix.m10; mt_array[ 2] = transformMatrix.m20; mt_array[ 3] = transformMatrix.m30;
@@ -118,7 +127,7 @@ public class NodoTransformador implements Nodo {
 	}
 	
 	@SuppressWarnings("unused")
-	private static void drawBox(GL2 gl){
+	private static void drawBox( GL2 gl ){
 		gl.glDisable(GLLightingFunc.GL_LIGHTING);
 		gl.glDisable(GL.GL_TEXTURE_2D);
 
@@ -157,7 +166,7 @@ public class NodoTransformador implements Nodo {
 	 * @see org.sam.jogl.Nodo#setParent(org.sam.jogl.Nodo)
 	 */
 	@Override
-	public void setParent(Nodo parent) {
+	public void setParent( Nodo parent ){
 		this.parent = parent;
 	}
 	
