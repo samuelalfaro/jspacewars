@@ -57,7 +57,7 @@ import com.jogamp.opengl.util.Animator;
 
 public class Prueba020_FondoCieloEstrellado{
 
-	private static class Renderer implements GLEventListener{
+	static class Renderer implements GLEventListener{
 
 		private GLU glu;
 		private OrbitBehavior orbitBehavior;
@@ -197,7 +197,7 @@ public class Prueba020_FondoCieloEstrellado{
 
 			helix.draw( gl );
 
-			gl.glFlush();
+			//gl.glFlush();
 		}
 
 		public void reshape( GLAutoDrawable drawable, int x, int y, int w, int h ){
@@ -232,7 +232,7 @@ public class Prueba020_FondoCieloEstrellado{
 
 	public static void main( String[] args ){
 
-		JFrame frame = new JFrame( "Prueba Orbit Behavior" );
+		JFrame frame = new JFrame( "Prueba Fondo Estrellas" );
 		frame.getContentPane().setBackground( Color.BLACK );
 		frame.getContentPane().setPreferredSize( new Dimension( 640, 480 ) );
 		frame.pack();
