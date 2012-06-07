@@ -125,9 +125,7 @@ public class GLButton extends GLLabel{
 			draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
 			TEXT_RENDERER.setColor( 0.0f, 0.0f, 0.0f,  1.0f );
 		}
-		TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
-		TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
-		TEXT_RENDERER.glPrint( gl, x1, (y1 + y2)/ 2, text );
+		printText(gl);
 	}
 
 }

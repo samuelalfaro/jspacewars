@@ -514,7 +514,9 @@ public class GLGUI{
 		
 		Matrix4f tLocal = new Matrix4f();
 		tLocal.setIdentity();
-		
+		tLocal.m03 = -80; // x out
+		tLocal.m13 = -80; // y out
+	
 		if( guiRenderer == null )
 			guiRenderer = new GUIRenderer();
 		glDrawable.addGLEventListener( guiRenderer );

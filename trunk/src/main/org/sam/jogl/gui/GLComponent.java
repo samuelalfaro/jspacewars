@@ -48,11 +48,30 @@ public abstract class GLComponent extends GLRectangle{
 	}
 	
 	protected int state;
-	
 	protected EventListenerList listenerList = new EventListenerList();
+	
+	protected float leftPadding;
+	protected float topPadding;
+	protected float rightPadding;
+	protected float bottomPadding;
 	
 	public GLComponent(){
 		state = StateConstants.STATE_DEFAULT;
+	}
+	
+	public final void setPadding( float padding ){
+		setPadding( padding, padding, padding, padding );
+	}
+	
+	public final void setPadding( float horizontalPadding, float verticalPadding ){
+		setPadding( horizontalPadding, verticalPadding, horizontalPadding, verticalPadding );
+	}
+	
+	public void setPadding( float leftPadding, float topPadding, float rightPadding, float bottomPadding ){
+		this.leftPadding = leftPadding;
+		this.topPadding = topPadding;
+		this.rightPadding = rightPadding;
+		this.bottomPadding = bottomPadding;
 	}
 	
 	public final void setEnabled( boolean enabled ){
