@@ -126,7 +126,7 @@ public class PruebaBloom{
 		gl.glPopMatrix();
 	}
 
-	private static class Renderer implements GLEventListener{
+	static class Renderer implements GLEventListener{
 
 		// User Defined Variables
 		private GLU glu = new GLU();

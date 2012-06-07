@@ -52,7 +52,7 @@ import com.jogamp.opengl.util.Animator;
 
 public class Prueba011_StencilBufferWireframe{
 
-	private static class Renderer implements GLEventListener{
+	static class Renderer implements GLEventListener{
 
 		private GLU glu;
 		private OrbitBehavior orbitBehavior;

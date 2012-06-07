@@ -26,6 +26,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
@@ -46,7 +48,7 @@ public class PruebaBasicaBotones2{
 		frame.getContentPane().setLayout( new BorderLayout() );
 		frame.getContentPane().setBackground( Color.BLACK );
 
-		GLCanvas canvas = new GLCanvas();
+		GLCanvas canvas = new GLCanvas( new GLCapabilities( GLProfile.get( GLProfile.GL2 ) ) );
 		
 		canvas.addGLEventListener( new pruebas.jogl.Prueba020_FondoCieloEstrellado.Renderer() );
 		

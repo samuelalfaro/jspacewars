@@ -68,7 +68,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Prueba050_Shaders{
 
-	private static class Renderer implements GLEventListener{
+	static class Renderer implements GLEventListener{
 
 		private GLU glu;
 		private OrbitBehavior orbitBehavior;
