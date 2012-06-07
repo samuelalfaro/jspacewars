@@ -62,19 +62,19 @@ public class PruebaBasicaBotones2{
 		
 		GLComponent component;
 		
-		component = new GLButton();
+		component = new GLButton( "Botón 1" );
 		component.setBounds( 50, 50, 200, 50 );
 		container.add( component );
 		
-		component = new GLButton();
+		component = new GLButton( "Botón 2" );
 		component.setBounds( 50, 125, 200, 50 );
 		container.add( component );
 		
-		component = new GLLabel();
+		component = new GLLabel( "Etiqueta" );
 		component.setBounds( 50, 200, 200, 50 );
 		container.add( component );
 		
-		component = new GLButton();
+		component = new GLButton( "Botón 3" );
 		component.setBounds( 50, 275, 200, 50 );
 		container.add( component );
 		
