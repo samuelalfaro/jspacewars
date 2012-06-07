@@ -44,6 +44,7 @@ public class GLButton extends GLLabel{
 			if( !isEnabled() )
 				return;
 			setHovered( false );
+			setPressed( false );
 		}
 
 		public void mousePressed( MouseEvent e ){
@@ -78,10 +79,14 @@ public class GLButton extends GLLabel{
 		}
 	}
 	
-	public GLButton(){
+	public GLButton( String text ){
+		super( text );
 		addMouseListener( new ButtonListener() );
 	}
-	
+
+	public GLButton(){
+		this("");
+	}
 	
 	public final void setPressed( boolean pressed ){
 		if( pressed )
@@ -101,17 +106,28 @@ public class GLButton extends GLLabel{
 	public void draw( GL2 gl ){
 		if( !isEnabled() ){
 			draw( gl, 0.25f, 0.25f, 0.25f, 0.5f, 0.5f, 0.5f ); 	// desactivado
+			TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.5f,  1.0f );
 		}else if( isPressed() ){
 			draw( gl, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f ); // pulsado recibe el foco
+			TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.0f,  1.0f );
 		}else if( isFocused() ){
-			if( isHovered() )
+			if( isHovered() ){
 				draw( gl, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f ); // ratón encima foco
-			else
+				TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.0f,  1.0f );
+			}else{
 				draw( gl, 0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f ); // default foco
+				TEXT_RENDERER.setColor( 0.0f, 0.0f, 0.0f,  1.0f );
+			}
 		}else if( isHovered() ){
 			draw( gl, 0.0f, 1.0f, 0.0f, 0.75f, 0.75f, 0.75f ); // ratón encima
-		}else
+			TEXT_RENDERER.setColor( 0.0f, 0.0f, 0.0f,  1.0f );
+		}else{
 			draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
+			TEXT_RENDERER.setColor( 0.0f, 0.0f, 0.0f,  1.0f );
+		}
+		TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
+		TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
+		TEXT_RENDERER.glPrint( gl, x1, (y1 + y2)/ 2, text );
 	}
 
 }
