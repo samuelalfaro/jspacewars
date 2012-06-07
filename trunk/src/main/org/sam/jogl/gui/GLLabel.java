@@ -58,6 +58,42 @@ public class GLLabel extends GLComponent{
     	this( "", HorizontalAlignment.LEFT, VerticalAlignment.CENTER );
     }
 	
+    private final void updateTextX(){
+		switch( horizontalAlignment ){
+		case LEFT:
+			textX = x1 + leftPadding;
+			break;
+		case CENTER:
+			textX = ( x1 + leftPadding + x2 - rightPadding ) / 2;
+			break;
+		case RIGHT:
+			textX = x2 - rightPadding;
+			break;
+		}
+    }
+    
+    private final void updateTextY(){
+		switch( verticalAlignment ){
+		case BASE_LINE:
+			textY = y2 - bottomPadding;
+			break;
+		case TOP:
+			textY = y1 + topPadding;
+			break;
+		case CENTER:
+			textY = ( y1 + topPadding + y2 - bottomPadding ) / 2;
+			break;
+		case BOTTOM:
+			textY = y2 - bottomPadding;
+			break;
+		}
+    }
+    
+	private final void updateTextPosition(){
+		updateTextX();
+		updateTextY();
+	}
+    
     /* (non-Javadoc)
      * @see org.sam.jogl.gui.GLComponent#setPadding(float, float, float, float)
      */
@@ -86,47 +122,11 @@ public class GLLabel extends GLComponent{
 		updateTextPosition();
 	}
     
-	private final void updateTextPosition(){
-		updateTextX();
-		updateTextY();
-	}
-    
-    private final void updateTextX(){
-		switch( horizontalAlignment ){
-		case LEFT:
-			textX = x1 + leftPadding;
-			break;
-		case CENTER:
-			textX = ( x1 + leftPadding + x2 - rightPadding ) / 2;
-			break;
-		case RIGHT:
-			textX = x2 - rightPadding;
-			break;
-		}
-    }
-    
 	public final void setHorizontalAlignment( HorizontalAlignment horizontalAlignment ){
 		this.horizontalAlignment = horizontalAlignment;
 		updateTextX();
 	}
 	
-    private final void updateTextY(){
-		switch( verticalAlignment ){
-		case BASE_LINE:
-			textY = y2 - bottomPadding;
-			break;
-		case TOP:
-			textY = y1 + topPadding;
-			break;
-		case CENTER:
-			textY = ( y1 + topPadding + y2 - bottomPadding ) / 2;
-			break;
-		case BOTTOM:
-			textY = y2 - bottomPadding;
-			break;
-		}
-    }
-
 	public final void setVerticalAlignment( VerticalAlignment verticalAlignment ){
 		this.verticalAlignment = verticalAlignment;
 		updateTextY();
@@ -174,9 +174,11 @@ public class GLLabel extends GLComponent{
 	}
 	
 	protected final void printText( GL2 gl ){
-		TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
-		TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
-		TEXT_RENDERER.glPrint( gl, textX, textY, text );
+		if( text.length() > 0 ){
+			TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
+			TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
+			TEXT_RENDERER.glPrint( gl, textX, textY, text );
+		}
 	}
 
 	/* (non-Javadoc)
