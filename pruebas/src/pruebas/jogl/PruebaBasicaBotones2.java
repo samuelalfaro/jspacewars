@@ -30,10 +30,11 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
 import org.sam.jogl.gui.GLButton;
-import org.sam.jogl.gui.GLComponent;
 import org.sam.jogl.gui.GLContainer;
 import org.sam.jogl.gui.GLGUI;
 import org.sam.jogl.gui.GLLabel;
+import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
+import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
 
 import com.jogamp.opengl.util.Animator;
 
@@ -60,22 +61,29 @@ public class PruebaBasicaBotones2{
 		GLContainer container = new GLContainer();
 		container.setBounds( 350, 350 );
 		
-		GLComponent component;
+		GLLabel component;
 		
 		component = new GLButton( "Botón 1" );
 		component.setBounds( 50, 50, 200, 50 );
+		component.setVerticalAlignment( VerticalAlignment.TOP );
+		component.setHorizontalAlignment( HorizontalAlignment.LEFT );
 		container.add( component );
 		
 		component = new GLButton( "Botón 2" );
 		component.setBounds( 50, 125, 200, 50 );
+		component.setVerticalAlignment( VerticalAlignment.CENTER);
+		component.setHorizontalAlignment( HorizontalAlignment.CENTER );
 		container.add( component );
 		
 		component = new GLLabel( "Etiqueta" );
 		component.setBounds( 50, 200, 200, 50 );
+		component.setVerticalAlignment( VerticalAlignment.BOTTOM );
 		container.add( component );
 		
 		component = new GLButton( "Botón 3" );
 		component.setBounds( 50, 275, 200, 50 );
+		component.setVerticalAlignment( VerticalAlignment.BASE_LINE );
+		component.setHorizontalAlignment( HorizontalAlignment.RIGHT );
 		container.add( component );
 		
 		GLGUI gui = new GLGUI();
