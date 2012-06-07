@@ -168,8 +168,10 @@ public class GLContainer extends GLComponent{
 	 */
 	@Override
 	public void draw( GL2 gl ){
+		
+		apariencia.usar( gl );
 		gl.glBegin(GL2.GL_QUADS);
-			gl.glColor4f  ( .5f, .0f, .5f, .25f );
+			gl.glColor4f  ( .5f, .0f, .5f, .5f );
 			gl.glVertex2f ( x1, y1 );
 			gl.glVertex2f ( x2, y1 );
 			gl.glVertex2f ( x2, y2 );
@@ -191,6 +193,7 @@ public class GLContainer extends GLComponent{
 			gl.glVertex2f( x1 - 5, y2 + 5 );
 			gl.glVertex2f( x1 - 5, y1 - 5 );
 		gl.glEnd();
+		
 		for( GLComponent c: components )
 			c.draw( gl );
 	}

@@ -31,6 +31,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -161,9 +163,6 @@ public class GLGUI{
 			Matrix4f tCursor = new Matrix4f();
 			tCursor.setIdentity();
 			cursor = new NodoTransformador( transform, nt );
-			
-			//gl.glShadeModel( GLLightingFunc.GL_SMOOTH );
-			//gl.glClearColor( 0.2f, 0.2f, 0.3f, 0.0f );
 		}
 
 		private transient long tAnterior, tActual;
@@ -286,20 +285,48 @@ public class GLGUI{
 	
 	private class GUIRenderer implements GLEventListener{
 		
-		private final transient Apariencia apariencia;
-		
-		GUIRenderer(){
-			apariencia = new Apariencia();
-			apariencia.setAtributosTransparencia( 
-					new AtributosTransparencia( 
-							AtributosTransparencia.Equation.ADD,
-							AtributosTransparencia.SrcFunc.SRC_ALPHA,
-							AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
-					)
-			);
-		}
+		GUIRenderer(){}
 
 		public void init( GLAutoDrawable glDrawable ){
+			
+			String fontDef      = "resources/texturas/fonts/arbeka.xml";
+			String font1Texture = "resources/texturas/fonts/arbeka.png";
+			GL2 gl = glDrawable.getGL().getGL2();
+			
+			try{
+				TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) );
+				font = font.deriveFont( 0.3f );
+
+				BufferedImage img = Imagen.cargarToBufferedImage( font1Texture );
+
+				Apariencia apFont = new Apariencia();
+
+				apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
+				apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
+				apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
+
+				apFont.setAtributosTextura( new AtributosTextura() );
+
+				apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+				apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
+				apFont.getAtributosTextura().setCombineRgbSource0( AtributosTextura.CombineSrc.OBJECT,
+						AtributosTextura.CombineOperand.SRC_COLOR );
+				apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
+				apFont.getAtributosTextura().setCombineAlphaSource0( AtributosTextura.CombineSrc.OBJECT,
+						AtributosTextura.CombineOperand.SRC_ALPHA );
+				apFont.getAtributosTextura().setCombineAlphaSource1( AtributosTextura.CombineSrc.TEXTURE,
+						AtributosTextura.CombineOperand.SRC_ALPHA );
+				
+				apFont.setAtributosTransparencia( new AtributosTransparencia( AtributosTransparencia.Equation.ADD,
+						AtributosTransparencia.SrcFunc.SRC_ALPHA, AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA ) );
+				
+				font.setApariencia( apFont );
+
+				GLComponent.TEXT_RENDERER.setFont( font );
+
+			}catch( FileNotFoundException e ){
+				e.printStackTrace();
+			}
 		}
 
 		public void display( GLAutoDrawable glDrawable ){
@@ -315,7 +342,6 @@ public class GLGUI{
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 			
-			apariencia.usar( gl );
 			getContentPane().draw( gl );
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );

@@ -24,12 +24,28 @@ package org.sam.jogl.gui;
 
 import javax.swing.event.EventListenerList;
 
+import org.sam.jogl.Apariencia;
+import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.gui.event.MouseEvent;
 import org.sam.jogl.gui.event.MouseListener;
 import org.sam.jogl.gui.event.MouseWheelEvent;
 import org.sam.jogl.gui.event.MouseWheelListener;
 
 public abstract class GLComponent extends GLRectangle{
+	
+	protected static final GLTextRenderer TEXT_RENDERER = new GLTextRenderer();
+	
+	protected static final Apariencia apariencia = new Apariencia();
+	
+	static{
+		apariencia.setAtributosTransparencia( 
+				new AtributosTransparencia( 
+						AtributosTransparencia.Equation.ADD,
+						AtributosTransparencia.SrcFunc.SRC_ALPHA,
+						AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
+				)
+		);
+	}
 	
 	protected int state;
 	

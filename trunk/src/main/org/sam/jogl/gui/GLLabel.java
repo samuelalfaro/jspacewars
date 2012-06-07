@@ -24,12 +24,63 @@ package org.sam.jogl.gui;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
+import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
+import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
+
 /**
  * 
  */
 public class GLLabel extends GLComponent{
+
+	protected String text;
+	protected HorizontalAlignment horizontalAlignment;
+	protected VerticalAlignment verticalAlignment;
 	
+    public GLLabel(String text, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) {
+        setText(text);
+        setHorizontalAlignment(horizontalAlignment);
+        setVerticalAlignment(verticalAlignment);
+    }
+            
+	public GLLabel( String text, HorizontalAlignment horizontalAlignment ){
+		this( text, horizontalAlignment, VerticalAlignment.CENTER );
+	}
+
+	public GLLabel( String text ){
+		this( text, HorizontalAlignment.LEFT, VerticalAlignment.CENTER );
+	}
+
+    public GLLabel() {
+    	this( "", HorizontalAlignment.LEFT, VerticalAlignment.CENTER );
+    }
+	
+    
+	public void setHorizontalAlignment( HorizontalAlignment horizontalAlignment ){
+		this.horizontalAlignment = horizontalAlignment;
+	}
+
+	public void setVerticalAlignment( VerticalAlignment verticalAlignment ){
+		this.verticalAlignment = verticalAlignment;
+	}
+	
+	/**
+	 * @param text valor del text asignado.
+	 */
+	public void setText( String text ){
+		this.text = text;
+	}
+	
+	/**
+	 * @return el text solicitado.
+	 */
+	public String getText(){
+		return text;
+	}
+
 	protected void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
+		
+		apariencia.usar( gl );
+		
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glColor3f  ( rf, gf, bf );
 			gl.glVertex2f ( x1, y1 );
@@ -54,7 +105,13 @@ public class GLLabel extends GLComponent{
 	public void draw( GL2 gl ){
 		if( !isEnabled() ){
 			draw( gl, 0.25f, 0.25f, 0.25f, 0.5f, 0.5f, 0.5f ); 	// desactivado
+			TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.5f,  1.0f );
+		}else{
+			draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
+			TEXT_RENDERER.setColor( 1.0f,  1.0f,  1.0f,  1.0f );
 		}
-		draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
+		TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
+		TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
+		TEXT_RENDERER.glPrint( gl, x1, (y1 + y2)/ 2, text );
 	}
 }
