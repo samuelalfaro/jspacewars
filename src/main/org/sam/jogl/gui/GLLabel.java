@@ -61,13 +61,13 @@ public class GLLabel extends GLComponent{
     private final void updateTextX(){
 		switch( horizontalAlignment ){
 		case LEFT:
-			textX = x1 + leftPadding;
+			textX = x1 + padding.left;
 			break;
 		case CENTER:
-			textX = ( x1 + leftPadding + x2 - rightPadding ) / 2;
+			textX = ( x1 + padding.left + x2 - padding.right ) / 2;
 			break;
 		case RIGHT:
-			textX = x2 - rightPadding;
+			textX = x2 - padding.right;
 			break;
 		}
     }
@@ -75,16 +75,16 @@ public class GLLabel extends GLComponent{
     private final void updateTextY(){
 		switch( verticalAlignment ){
 		case BASE_LINE:
-			textY = y2 - bottomPadding;
+			textY = y2 - padding.bottom;
 			break;
 		case TOP:
-			textY = y1 + topPadding;
+			textY = y1 + padding.top;
 			break;
 		case CENTER:
-			textY = ( y1 + topPadding + y2 - bottomPadding ) / 2;
+			textY = ( y1 + padding.top + y2 - padding.bottom ) / 2;
 			break;
 		case BOTTOM:
-			textY = y2 - bottomPadding;
+			textY = y2 - padding.bottom;
 			break;
 		}
     }
@@ -165,11 +165,11 @@ public class GLLabel extends GLComponent{
 		gl.glEnd();
 		gl.glBegin( GL.GL_LINE_STRIP );
 			gl.glColor4f  ( rb, gb, bb, 0.5f );
-			gl.glVertex2f ( x1 + leftPadding, y1 + topPadding );
-			gl.glVertex2f ( x2 - rightPadding, y1 + topPadding );
-			gl.glVertex2f ( x2 - rightPadding, y2 - bottomPadding );
-			gl.glVertex2f ( x1 + leftPadding, y2 - bottomPadding );
-			gl.glVertex2f ( x1 + leftPadding, y1 + topPadding );
+			gl.glVertex2f ( x1 + padding.left, y1 +  padding.top );
+			gl.glVertex2f ( x2 - padding.right, y1 + padding.top );
+			gl.glVertex2f ( x2 - padding.right, y2 - padding.bottom );
+			gl.glVertex2f ( x1 + padding.left, y2 - padding.bottom );
+			gl.glVertex2f ( x1 + padding.left, y1 + padding.top );
 		gl.glEnd();
 	}
 	
@@ -186,6 +186,7 @@ public class GLLabel extends GLComponent{
 	 */
 	@Override
 	public void draw( GL2 gl ){
+		super.draw( gl );
 		if( !isEnabled() ){
 			draw( gl, 0.25f, 0.25f, 0.25f, 0.5f, 0.5f, 0.5f ); 	// desactivado
 			TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.5f,  1.0f );

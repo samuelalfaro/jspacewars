@@ -22,7 +22,9 @@
  */
 package org.sam.jogl.gui;
 
+import javax.media.opengl.GL2;
 import javax.swing.event.EventListenerList;
+import javax.vecmath.Color4f;
 
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTransparencia;
@@ -50,28 +52,21 @@ public abstract class GLComponent extends GLRectangle{
 	protected int state;
 	protected EventListenerList listenerList = new EventListenerList();
 	
-	protected float leftPadding;
-	protected float topPadding;
-	protected float rightPadding;
-	protected float bottomPadding;
+	protected Border border;
+	protected Background background;
+	
+	protected Insets padding;
 	
 	public GLComponent(){
 		state = StateConstants.STATE_DEFAULT;
-	}
-	
-	public final void setPadding( float padding ){
-		setPadding( padding, padding, padding, padding );
-	}
-	
-	public final void setPadding( float horizontalPadding, float verticalPadding ){
-		setPadding( horizontalPadding, verticalPadding, horizontalPadding, verticalPadding );
-	}
-	
-	public void setPadding( float leftPadding, float topPadding, float rightPadding, float bottomPadding ){
-		this.leftPadding = leftPadding;
-		this.topPadding = topPadding;
-		this.rightPadding = rightPadding;
-		this.bottomPadding = bottomPadding;
+		this.setBorder(
+			new Border.Gradient(
+				new Insets( 5 ), 
+				new Color4f( 1.0f, 1.0f, 1.0f, 0.5f ),
+				new Color4f( 0.5f, 0.5f, 0.5f, 0.5f ),
+				new Color4f( 0.0f, 0.0f, 0.0f, 0.5f )
+			)
+		);
 	}
 	
 	public final void setEnabled( boolean enabled ){
@@ -105,6 +100,32 @@ public abstract class GLComponent extends GLRectangle{
 	
 	public final boolean isHovered(){
 		return ( state & StateConstants.STATE_HOVERED ) != 0;
+	}
+	
+	public final void setPadding( float padding ){
+		setPadding( padding, padding, padding, padding );
+	}
+	
+	public final void setPadding( float horizontalPadding, float verticalPadding ){
+		setPadding( horizontalPadding, verticalPadding, horizontalPadding, verticalPadding );
+	}
+	
+	public void setPadding( float leftPadding, float topPadding, float rightPadding, float bottomPadding ){
+		this.padding = new Insets( leftPadding, topPadding, rightPadding, bottomPadding );
+	}
+	
+	/**
+	 * @param border valor del border asignado.
+	 */
+	public void setBorder( Border border ){
+		this.border = border;
+	}
+
+	/**
+	 * @param background valor del background asignado.
+	 */
+	public void setBackground( Background background ){
+		this.background = background;
 	}
 	
 	/**
@@ -187,6 +208,13 @@ public abstract class GLComponent extends GLRectangle{
 			for( MouseWheelListener listener: listeners )
 				listener.mouseWheelMoved( evt );
 		}
+	}
+	
+	public void draw( GL2 gl ){
+		if( background != null)
+			background.draw( gl, x1, y1, x2, y2 );
+		if( border != null)
+			border.draw( gl, x1, y1, x2, y2 );
 	}
 
 }
