@@ -37,10 +37,10 @@ public abstract class GLComponent extends GLRectangle{
 	
 	protected static final GLTextRenderer TEXT_RENDERER = new GLTextRenderer();
 	
-	protected static final Apariencia apariencia = new Apariencia();
+	protected static final Apariencia BLEND = new Apariencia();
 	
 	static{
-		apariencia.setAtributosTransparencia( 
+		BLEND.setAtributosTransparencia( 
 				new AtributosTransparencia( 
 						AtributosTransparencia.Equation.ADD,
 						AtributosTransparencia.SrcFunc.SRC_ALPHA,
@@ -49,6 +49,7 @@ public abstract class GLComponent extends GLRectangle{
 		);
 	}
 	
+	private   boolean initialized;
 	protected int state;
 	protected EventListenerList listenerList = new EventListenerList();
 	
@@ -58,15 +59,8 @@ public abstract class GLComponent extends GLRectangle{
 	protected Insets padding;
 	
 	public GLComponent(){
-		state = StateConstants.STATE_DEFAULT;
-		this.setBorder(
-			new Border.Gradient(
-				new Insets( 5 ), 
-				new Color4f( 1.0f, 1.0f, 1.0f, 0.5f ),
-				new Color4f( 0.5f, 0.5f, 0.5f, 0.5f ),
-				new Color4f( 0.0f, 0.0f, 0.0f, 0.5f )
-			)
-		);
+		this.initialized = false;
+		this.state = StateConstants.STATE_DEFAULT;
 	}
 	
 	public final void setEnabled( boolean enabled ){
@@ -196,6 +190,14 @@ public abstract class GLComponent extends GLRectangle{
 			}
 		}
 	}
+	
+	protected void init(){
+		if( initialized )
+			return;
+		initialized = true;
+		this.setBackground( UIManager.getBackground( "Background.default" ) );
+		this.setBorder( UIManager.getBorder( "Border.default" ) );
+	}
 
 	protected void processMouseEvent( int id, float x, float y ){
 		processMouseEvent( id, MouseEvent.NOBUTTON, x, y );
@@ -211,10 +213,10 @@ public abstract class GLComponent extends GLRectangle{
 	}
 	
 	public void draw( GL2 gl ){
+		init();
 		if( background != null)
 			background.draw( gl, x1, y1, x2, y2 );
 		if( border != null)
 			border.draw( gl, x1, y1, x2, y2 );
 	}
-
 }

@@ -169,7 +169,7 @@ public class GLContainer extends GLComponent{
 	@Override
 	public void draw( GL2 gl ){
 		
-		apariencia.usar( gl );
+		BLEND.usar( gl );
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glColor4f  ( .5f, .0f, .5f, .5f );
 			gl.glVertex2f ( x1, y1 );

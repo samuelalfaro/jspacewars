@@ -39,31 +39,31 @@ import java.util.TreeMap;
 public class Cache<T extends PrototipoCacheable<T>>{
 
 	@SuppressWarnings("serial")
-	private static class PrototipoDesconocidoException extends RuntimeException {
-		PrototipoDesconocidoException(String str){
-			super(str);
+	private static class PrototipoDesconocidoException extends RuntimeException{
+		PrototipoDesconocidoException( String str ){
+			super( str );
 		}
 	}
 
-	private static class Nodo<S>{
+	private static class Nodo <S>{
 		PrototipoCacheable<S> prototipo;
 		Queue<S> instancias;
-		
-		Nodo(PrototipoCacheable<S> prototipo){
+
+		Nodo( PrototipoCacheable<S> prototipo ){
 			this.prototipo = prototipo;
 			this.instancias = new LinkedList<S>();
 		}
 	}
-	
+
 	private int elementos;
 	private int tam;
 	private int tamMax;
-	private Map <Integer,Nodo<T>> prototipos;
+	private Map<Integer, Nodo<T>> prototipos;
 	//private int dCreados, dRecuperados; //Borrar comentarios para testear.
 	
 	private static Comparator<Integer> COMPARADOR = new Comparator<Integer>(){
-		public int compare(Integer o1, Integer o2) {
-			return o1.compareTo(o2);
+		public int compare( Integer o1, Integer o2 ){
+			return o1.compareTo( o2 );
 		}
 	};
 	
@@ -71,11 +71,11 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * Constructor que genera una {@code Cache} con una capacidad determinada.
 	 * @param tam valor de la capacidad deseada de la {@code Cache}.
 	 */
-	public Cache(int tam){
-		this.prototipos = new TreeMap<Integer,Nodo<T>>(COMPARADOR);
+	public Cache( int tam ){
+		this.prototipos = new TreeMap<Integer, Nodo<T>>( COMPARADOR );
 		this.elementos = 0;
 		this.tam = tam;
-		this.tamMax = (tam*125)/100;
+		this.tamMax = ( tam * 125 ) / 100;
 		//this.dCreados = 0;
 		//this.dRecuperados = 0;
 	}
@@ -84,8 +84,8 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * Método que registra un {@code PrototipoCacheable<T>} en la {@code Cache}.
 	 * @param prototipo registrado.
 	 */
-	public void addPrototipo(PrototipoCacheable<T> prototipo){
-		prototipos.put(prototipo.hashCode(),new Nodo<T>(prototipo));
+	public void addPrototipo( PrototipoCacheable<T> prototipo ){
+		prototipos.put( prototipo.hashCode(), new Nodo<T>( prototipo ) );
 	}
 	
 	/**
@@ -97,12 +97,12 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * @throws PrototipoDesconocidoException
 	 * Si la {@code Cache} no contine ningún prototipo con el código solicitado.
 	 */
-	public T newObject(int tipo) throws PrototipoDesconocidoException{
-		Nodo<T> nodo = prototipos.get(tipo);
-		if( nodo == null)
-			throw new PrototipoDesconocidoException("\nNo existe ningún prototipo con el identificador: "+tipo);
+	public T newObject( int tipo ) throws PrototipoDesconocidoException{
+		Nodo<T> nodo = prototipos.get( tipo );
+		if( nodo == null )
+			throw new PrototipoDesconocidoException( "\nNo existe ningún prototipo con el identificador: " + tipo );
 		T newObject;
-		if (nodo.instancias.size()>0){
+		if( nodo.instancias.size() > 0 ){
 			elementos--;
 			//dRecuperados++;
 			newObject = nodo.instancias.poll();
@@ -124,18 +124,18 @@ public class Cache<T extends PrototipoCacheable<T>>{
 	 * @throws PrototipoDesconocidoException
 	 * Si la {@code Cache} no contine ningún prototipo con el código solicitado.
 	 */
-	public void cached(T elemento) throws PrototipoDesconocidoException{
-		Nodo<T> nodo = prototipos.get(elemento.hashCode());
-		if( nodo == null)
-			throw new PrototipoDesconocidoException("Prototipo "+elemento.hashCode()+" desconcido");
-		nodo.instancias.offer(elemento);
+	public void cached( T elemento ) throws PrototipoDesconocidoException{
+		Nodo<T> nodo = prototipos.get( elemento.hashCode() );
+		if( nodo == null )
+			throw new PrototipoDesconocidoException( "Prototipo " + elemento.hashCode() + " desconcido" );
+		nodo.instancias.offer( elemento );
 		elementos++;
-		if (elementos > tamMax)
+		if( elementos > tamMax )
 			while( elementos > tam ){
-				for(Nodo<T> n: prototipos.values()){
-					if(n.instancias.size()>0){
+				for( Nodo<T> n: prototipos.values() ){
+					if( n.instancias.size() > 0 ){
 						n.instancias.poll();
-						elementos --;
+						elementos--;
 					}
 				}
 			}

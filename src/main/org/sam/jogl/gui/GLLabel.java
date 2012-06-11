@@ -147,7 +147,7 @@ public class GLLabel extends GLComponent{
 	}
 
 	protected void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
-		apariencia.usar( gl );
+		BLEND.usar( gl );
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glColor3f  ( rf, gf, bf );
 			gl.glVertex2f ( x1, y1 );

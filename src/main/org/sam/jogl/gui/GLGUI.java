@@ -288,45 +288,7 @@ public class GLGUI{
 		GUIRenderer(){}
 
 		public void init( GLAutoDrawable glDrawable ){
-			
-			String fontDef      = "resources/texturas/fonts/arbeka.xml";
-			String font1Texture = "resources/texturas/fonts/arbeka.png";
-			GL2 gl = glDrawable.getGL().getGL2();
-			
-			try{
-				TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) );
-				font = font.deriveFont( 0.3f );
-
-				BufferedImage img = Imagen.cargarToBufferedImage( font1Texture );
-
-				Apariencia apFont = new Apariencia();
-
-				apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
-				apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
-				apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
-
-				apFont.setAtributosTextura( new AtributosTextura() );
-
-				apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
-				apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
-				apFont.getAtributosTextura().setCombineRgbSource0( AtributosTextura.CombineSrc.OBJECT,
-						AtributosTextura.CombineOperand.SRC_COLOR );
-				apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
-				apFont.getAtributosTextura().setCombineAlphaSource0( AtributosTextura.CombineSrc.OBJECT,
-						AtributosTextura.CombineOperand.SRC_ALPHA );
-				apFont.getAtributosTextura().setCombineAlphaSource1( AtributosTextura.CombineSrc.TEXTURE,
-						AtributosTextura.CombineOperand.SRC_ALPHA );
-				
-				apFont.setAtributosTransparencia( new AtributosTransparencia( AtributosTransparencia.Equation.ADD,
-						AtributosTransparencia.SrcFunc.SRC_ALPHA, AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA ) );
-				
-				font.setApariencia( apFont );
-
-				GLComponent.TEXT_RENDERER.setFont( font );
-
-			}catch( FileNotFoundException e ){
-				e.printStackTrace();
-			}
+			UIManager.Init( glDrawable.getGL().getGL2() );
 		}
 
 		public void display( GLAutoDrawable glDrawable ){

@@ -25,37 +25,38 @@ import javax.media.opengl.GL2;
 import javax.vecmath.Color4f;
 
 import org.sam.jogl.Apariencia;
+import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
+import org.sam.jogl.Textura;
+import org.sam.jogl.UnidadTextura;
 
-/**
- * 
- */
 public interface Border{
 	
 	public abstract static class AbsBorder implements Border{
 		
-		protected static final Apariencia apariencia = new Apariencia();
-		
-		static{
-			apariencia.setAtributosTransparencia( 
-					new AtributosTransparencia( 
-							AtributosTransparencia.Equation.ADD,
-							AtributosTransparencia.SrcFunc.SRC_ALPHA,
-							AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
-					)
-			);
-		}
-		
 		Insets border;
+		Apariencia apariencia;
 		
 		AbsBorder( Insets border ){
 			this.border = border;
 		}
 		
+		public void setApariencia( Apariencia apariencia ){
+			this.apariencia = apariencia;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#setInsets(org.sam.jogl.gui.Insets)
+		 */
+		@Override
 		public final void setInsets( Insets border ){
 			this.border = border;
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#getInsets()
+		 */
+		@Override
 		public final Insets getInsets(){
 			return border;
 		}
@@ -75,7 +76,8 @@ public interface Border{
 		
 		public Solid( Insets insets, float r, float g, float b, float a ){
 			super( insets );
-			setColor( r, g, b, a );
+			this.setApariencia( null );
+			this.setColor( r, g, b, a );
 		}
 		
 		public void setColor( Color4f color ){
@@ -89,6 +91,10 @@ public interface Border{
 			this.a = a;
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#draw(javax.media.opengl.GL2, float, float, float, float)
+		 */
+		@Override
 		public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
 			
 			float x0 = x1 - border.left;
@@ -224,8 +230,10 @@ public interface Border{
 			setExternalColor( color.x, color.y, color.z, color.w );
 		}
 		
-
-		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#draw(javax.media.opengl.GL2, float, float, float, float)
+		 */
+		@Override
 		public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
 			
 			float x0 = x1 - border.left;
@@ -274,10 +282,97 @@ public interface Border{
 			gl.glEnd();
 		}
 	}
+		
+	public static class Textured extends AbsBorder{
+
+		private Pixmap leftTopPixmap, topPixmap, rightTopPixmap;
+		private Pixmap leftPixmap, rightPixmap;
+		private Pixmap leftBottomPixmap, bottomPixmap, rightBottomPixmap;
+		
+		public Textured( Insets border, int textureWidth, int textureHeight ){
+			this( 
+					border,
+					border.left/textureWidth,
+					( textureHeight - border.top )/textureHeight,
+					( textureWidth - border.right )/textureWidth,
+					border.bottom/textureHeight
+			);
+		}
+		
+		public Textured( Insets border, int left, int top, int right, int bottom, int textureWidth, int textureHeight ){
+			this( border, (float)left/textureWidth, (float)top/textureHeight, (float)right/textureWidth, (float)bottom/textureHeight );
+		}
+		
+		public Textured( Insets border, float left, float top, float right, float bottom  ){
+			this(
+					border,
+					new Pixmap( 0.0f, 0.0f, left, 1.0f - top ),
+					new Pixmap( left, 0.0f, right - left, 1.0f - top ),
+					new Pixmap( right, 0.0f, 1.0f - right , 1.0f - top ),
+					
+					new Pixmap( 0.0f, bottom, left, top - bottom ),
+					new Pixmap( right, bottom, 1.0f - right, top - bottom ),
+					
+					new Pixmap( 0.0f, 1.0f - bottom, left, bottom ),
+					new Pixmap( left, 1.0f - bottom, right - left, bottom ),
+					new Pixmap( right, 1.0f - bottom, 1.0f - right , bottom )
+			);
+		}
+		
+		public Textured( Insets border, 
+				Pixmap leftTopPixmap, Pixmap topPixmap, Pixmap rightTopPixmap,
+				Pixmap leftPixmap, Pixmap rightPixmap,
+				Pixmap leftBottomPixmap, Pixmap bottomPixmap, Pixmap rightBottomPixmap ){
+			super( border );
+			this.leftTopPixmap     = leftTopPixmap;
+			this.topPixmap         = topPixmap;
+			this.rightTopPixmap    = rightTopPixmap;
+			this.leftPixmap        = leftPixmap;
+			this.rightPixmap       = rightPixmap;
+			this.leftBottomPixmap  = leftBottomPixmap;
+			this.bottomPixmap      = bottomPixmap; 
+			this.rightBottomPixmap = rightBottomPixmap;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#draw(javax.media.opengl.GL2, float, float, float, float)
+		 */
+		@Override
+		public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
+			float x0 = x1 - border.left;
+			float y0 = y1 - border.top;
+			float x3 = x2 + border.right;
+			float y3 = y2 + border.bottom;
+			
+			apariencia.usar( gl );
+			
+			leftTopPixmap.draw(     gl, x0, y0, x1, y1 );
+			topPixmap.draw(         gl, x1, y0, x2, y1 );
+			rightTopPixmap.draw(    gl, x2, y0, x3, y1 );
+			leftPixmap.draw(        gl, x0, y1, x1, y2 );
+			rightPixmap.draw(       gl, x2, y1, x3, y2 );
+			leftBottomPixmap.draw(  gl, x0, y2, x1, y3 );
+			bottomPixmap.draw(      gl, x1, y2, x2, y3 );
+			rightBottomPixmap.draw( gl, x2, y2, x3, y3 );
+		}
+		
+	}
 	
+	/**
+	 * Método que dibuja el borde alrededor en la zona rectagular
+	 * delimitada por las coordenadas correspondientes.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * @param x1 coordenada X de una de las esquinas.
+	 * @param y1 coordenada Y de una de las esquinas.
+	 * @param x2 coordenada X de la esquina opuesta.
+	 * @param y2 coordenada Y de la esquina opuesta.
+	 */
 	public void draw( GL2 gl, float x1, float y1, float x2, float y2 );
 	
-	public void setInsets(Insets insets);
+	public void setApariencia( Apariencia apariencia );
 	
+	public void setInsets( Insets insets );
+
 	public Insets getInsets();
 }

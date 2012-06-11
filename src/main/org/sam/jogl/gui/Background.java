@@ -27,5 +27,16 @@ import javax.media.opengl.GL2;
  * 
  */
 public interface Background{
+	
+	/**
+	 * Método que dibuja el fondo en la zona rectagular
+	 * delimitada por las coordenadas correspondientes.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * @param x1 coordenada X de una de las esquinas.
+	 * @param y1 coordenada Y de una de las esquinas.
+	 * @param x2 coordenada X de la esquina opuesta.
+	 * @param y2 coordenada Y de la esquina opuesta.
+	 */
 	public void draw( GL2 gl, float x1, float y1, float x2, float y2 );
 }
