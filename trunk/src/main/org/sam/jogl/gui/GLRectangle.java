@@ -28,10 +28,14 @@ import org.sam.jogl.Dibujable;
 
 public abstract class GLRectangle implements Dibujable{
 	
-	/**
-	 * Esquinas / Corners
-	 */
-	protected float x1, y1, x2, y2;
+	 /** Coordenada X menor de una de las esquinas del rectángulo. */
+	 protected float x1;
+	 /** Coordenada Y menor de una de las esquinas del rectángulo. */
+	 protected float y1;
+	 /** Coordenada X de la esquina opuesta. */
+	 protected float x2;
+	 /** Coordenada Y de la esquina opuesta. */
+	 protected float y2;
 	
 	public GLRectangle(){
 	}
@@ -63,7 +67,7 @@ public abstract class GLRectangle implements Dibujable{
 		return y2 - y1;
 	}
 	
-	public final boolean contains( Point2f p){
+	public final boolean contains( Point2f p ){
 		return contains( p.x, p.y );
 	}
 	

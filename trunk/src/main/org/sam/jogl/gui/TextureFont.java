@@ -22,19 +22,24 @@
 package org.sam.jogl.gui;
 
 import java.io.InputStream;
+import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import javax.media.opengl.GL2;
 
 import org.sam.jogl.Apariencia;
 
+import com.jogamp.common.nio.Buffers;
+
 public class TextureFont{
 
-	final char[] characters;
-	final int[]  charactersIds;
-	final int    unknownId;
+	private final char[] characters;
+	private final int[]  charactersIds;
+	private final int    unknownId;
 
-	final float[] charactersWidths;
-	final float defaultWidth;
+	private final float[] charactersWidths;
+	private final float defaultWidth;
+	
 	final float maxAscent;
 	final float maxDescent;
 
@@ -143,5 +148,48 @@ public class TextureFont{
 	
 	public Apariencia getApariencia(){
 		return this.apariencia;
+	}
+	
+	private transient IntBuffer stringBuffer = Buffers.newDirectIntBuffer( 256 );
+	private transient String    lastString   = null;
+	private transient float     stringWidth  = 0.0f;
+	
+	IntBuffer toBuffer( String string ){
+		// TODO caché de cadenas usadas anteriormente
+		if( string.length() == 0 || string.equals( lastString ) ){
+			stringBuffer.flip();
+			lastString = string;
+			return stringBuffer;
+		}
+	
+		if( stringBuffer.capacity() < string.length() ){
+			stringBuffer = Buffers.newDirectIntBuffer( string.length() );
+		}
+		stringBuffer.clear();
+		stringWidth = 0;
+		for( int i = 0; i < string.length(); i++ ){
+			char c = string.charAt( i );
+			int charIndex = Arrays.binarySearch( characters, c );
+			stringBuffer.put( charIndex < 0 ? unknownId: charactersIds[charIndex] );
+			stringWidth += charIndex < 0 ? defaultWidth: charactersWidths[charIndex];
+		}
+		stringBuffer.flip();
+		lastString = string;
+		return stringBuffer;
+	}
+	
+	float getWidth( String string ){
+		if( string == null || string.length() == 0 )
+			return 0;
+		if( string.equals( lastString ) )
+			return stringWidth;
+			
+		stringWidth = 0;
+		for( int i = 0; i < string.length(); i++ ){
+			char c = string.charAt( i );
+			int charIndex = Arrays.binarySearch( characters, c );
+			stringWidth += charIndex < 0 ? defaultWidth: charactersWidths[charIndex];
+		}
+		return stringWidth;
 	}
 }

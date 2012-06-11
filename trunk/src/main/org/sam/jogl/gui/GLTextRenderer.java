@@ -21,15 +21,13 @@
  */
 package org.sam.jogl.gui;
 
-import java.awt.MouseInfo;
 import java.nio.IntBuffer;
-import java.util.Arrays;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES2;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
-
-import com.jogamp.common.nio.Buffers;
+import javax.vecmath.Color3f;
+import javax.vecmath.Color4f;
 
 public class GLTextRenderer{
 
@@ -62,6 +60,14 @@ public class GLTextRenderer{
 	public void setVerticalAlignment( VerticalAlignment verticalAlignment ){
 		this.verticalAlignment = verticalAlignment;
 	}
+	
+	public void setColor( Color3f color ){
+		setColor( color.x, color.y, color.z, 1.0f );
+	}
+	
+	public void setColor( Color4f color ){
+		setColor( color.x, color.y, color.z, color.w );
+	}
 
 	public void setColor( float r, float g, float b, float a ){
 		this.r = r;
@@ -70,33 +76,15 @@ public class GLTextRenderer{
 		this.a = a;
 	}
 
-	private static IntBuffer stringBuffer = Buffers.newDirectIntBuffer( 256 );
-	
-	private static float toBuffer( String string, TextureFont font ){
-		// TODO caché de cadenas usadas anteriormente
-		if( font == null )
-			return 0.0f;
-		
-		if( stringBuffer.capacity() < string.length() ){
-			stringBuffer = Buffers.newDirectIntBuffer( string.length() );
-		}
-
-		stringBuffer.clear();
-		float stringWidth = 0;
-		for( int i = 0; i < string.length(); i++ ){
-			char c = string.charAt( i );
-			int charIndex = Arrays.binarySearch( font.characters, c );
-			stringBuffer.put( charIndex < 0 ? font.unknownId: font.charactersIds[charIndex] );
-			stringWidth += charIndex < 0 ? font.defaultWidth: font.charactersWidths[charIndex];
-		}
-		stringBuffer.flip();
-		
-		return stringWidth;
-	}
-	
 	public void glPrint( GL2 gl, float x, float y, String string ){
+		
+		if( font == null )
+			setFont( UIManager.getFont( "Font.default" ) );
+		if( font == null )
+			return;
 
-		float stringWidth = toBuffer( string, font );
+		IntBuffer stringBuffer = font.toBuffer( string );
+		float stringWidth =  font.getWidth( string );
 		
 		gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		gl.glPushMatrix();
@@ -110,7 +98,7 @@ public class GLTextRenderer{
 		case LEFT:
 			break;
 		case CENTER:
-			posX -= stringWidth / 2;
+			posX -= stringWidth/ 2;
 			break;
 		case RIGHT:
 			posX -= stringWidth;
