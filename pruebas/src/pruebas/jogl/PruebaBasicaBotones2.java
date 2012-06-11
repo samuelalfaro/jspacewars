@@ -50,6 +50,7 @@ public class PruebaBasicaBotones2{
 
 		GLCanvas canvas = new GLCanvas( new GLCapabilities( GLProfile.get( GLProfile.GL2 ) ) );
 		
+		//canvas.addGLEventListener( new pruebas.jogl.Prueba050_Shaders.Renderer() );
 		canvas.addGLEventListener( new pruebas.jogl.Prueba020_FondoCieloEstrellado.Renderer() );
 		
 		frame.getContentPane().add( canvas, BorderLayout.CENTER );

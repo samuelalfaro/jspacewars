@@ -51,6 +51,7 @@ import org.sam.jogl.MatrixSingleton;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.OglList;
 import org.sam.jogl.gui.GLTextRenderer;
+import org.sam.jogl.gui.UIManager;
 import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
 import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
 import org.sam.jspacewars.serialization.ElementosConverters;
@@ -152,6 +153,8 @@ public class Prueba060_Loader{
 		public void init( GLAutoDrawable drawable ){
 			GL2 gl = drawable.getGL().getGL2();
 			glu = new GLU();
+			
+			UIManager.Init( gl );
 
 			gl.glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 			gl.glEnable( GL.GL_DEPTH_TEST );
@@ -172,7 +175,7 @@ public class Prueba060_Loader{
 
 			data.instancias[index].reset();
 			
-			renderer = TextUtils.getDefaultTextRenderer(gl);
+			renderer = new GLTextRenderer();
 
 			tActual = System.nanoTime();
 			iniciado = true;
