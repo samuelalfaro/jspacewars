@@ -118,6 +118,7 @@ public class UIManager{
 				AtributosTransparencia.SrcFunc.SRC_ALPHA, AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA ) );
 		
 		Border border = new Border.Textured( new Insets( 16 ), 64, 64 );
+		border.setInsets( new Insets( 20 ) );
 		border.setApariencia( ap1 );
 		
 //		border = new Border.Gradient(

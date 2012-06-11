@@ -291,31 +291,49 @@ public interface Border{
 		
 		public Textured( Insets border, int textureWidth, int textureHeight ){
 			this( 
-					border,
-					border.left/textureWidth,
-					( textureHeight - border.top )/textureHeight,
-					( textureWidth - border.right )/textureWidth,
-					border.bottom/textureHeight
+					border,	
+					border.left/textureWidth, border.top/textureHeight,
+					border.right/textureWidth, border.bottom/textureHeight
 			);
 		}
 		
-		public Textured( Insets border, int left, int top, int right, int bottom, int textureWidth, int textureHeight ){
-			this( border, (float)left/textureWidth, (float)top/textureHeight, (float)right/textureWidth, (float)bottom/textureHeight );
+		public Textured( Insets border, int textureX0, int textureY0, int textureX1, int textureY1, int textureWidth, int textureHeight ){
+			this(
+					border, 
+					(float)textureX0/textureWidth,            (float)textureY0/textureHeight,
+					( textureX0 + border.left)/textureWidth,  ( textureY0 + border.top )/textureHeight,
+					( textureX1 - border.right)/textureWidth, ( textureY1 - border.bottom)/textureHeight,
+					(float)textureX1/textureWidth,            (float)textureY1/textureHeight
+			);
+		}
+		
+		public Textured( Insets border, int left, int top, int right, int bottom, int textureX0, int textureY0, int textureX1, int textureY1, int textureWidth, int textureHeight ){
+			this(
+					border, 
+					(float)textureX0/textureWidth,            (float)textureY0/textureHeight,
+					(float)( textureX0 + left)/textureWidth,  (float)( textureY0 + top )/textureHeight,
+					(float)( textureX1 - right)/textureWidth, (float)( textureY1 - bottom)/textureHeight,
+					(float)textureX1/textureWidth,            (float)textureY1/textureHeight
+			);
 		}
 		
 		public Textured( Insets border, float left, float top, float right, float bottom  ){
+			this( border, 0.0f, 0.0f, left, top, 1.0f - right, 1.0f - bottom, 1.0f, 1.0f );
+		}
+		
+		public Textured( Insets border, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3 ){
 			this(
 					border,
-					new Pixmap( 0.0f, 0.0f, left, 1.0f - top ),
-					new Pixmap( left, 0.0f, right - left, 1.0f - top ),
-					new Pixmap( right, 0.0f, 1.0f - right , 1.0f - top ),
+					new Pixmap( u0, v0, u1 - u0, v1 - v0 ),
+					new Pixmap( u1, v0, u2 - u1, v1 - v0 ),
+					new Pixmap( u2, v0, u3 - u2, v1 - v0 ),
 					
-					new Pixmap( 0.0f, bottom, left, top - bottom ),
-					new Pixmap( right, bottom, 1.0f - right, top - bottom ),
+					new Pixmap( u0, v1, u1 - u0, v2 - v1 ),
+					new Pixmap( u2, v1, u3 - u2, v2 - v1 ),
 					
-					new Pixmap( 0.0f, 1.0f - bottom, left, bottom ),
-					new Pixmap( left, 1.0f - bottom, right - left, bottom ),
-					new Pixmap( right, 1.0f - bottom, 1.0f - right , bottom )
+					new Pixmap( u0, v2, u1 - u0, v3 - v2 ),
+					new Pixmap( u1, v2, u2 - u1, v3 - v2 ),
+					new Pixmap( u2, v2, u3 - u2, v3 - v2 )
 			);
 		}
 		
@@ -345,7 +363,6 @@ public interface Border{
 			float y3 = y2 + border.bottom;
 			
 			apariencia.usar( gl );
-			
 			leftTopPixmap.draw(     gl, x0, y0, x1, y1 );
 			topPixmap.draw(         gl, x1, y0, x2, y1 );
 			rightTopPixmap.draw(    gl, x2, y0, x3, y1 );
