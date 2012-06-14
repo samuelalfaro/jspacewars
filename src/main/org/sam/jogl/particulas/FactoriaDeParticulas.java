@@ -31,6 +31,7 @@ public class FactoriaDeParticulas{
 	public static Particulas createParticulas( int nParticulas ){
 		return optimizedFor2D	?
 				new ParticulasLibres2D(nParticulas) :
+				//new Particulas2D(nParticulas) :
 				new ParticulasQuads(nParticulas);
 	}
 	

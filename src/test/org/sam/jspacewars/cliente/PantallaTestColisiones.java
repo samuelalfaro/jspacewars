@@ -23,6 +23,8 @@
 package org.sam.jspacewars.cliente;
 
 import java.awt.Color;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -120,14 +122,20 @@ public class PantallaTestColisiones extends GLCanvas{
 
 		private final transient GLU glu = new GLU();
 
+		private transient final Rectangle viewport;
 		private final transient ClientData data;
 		private final transient Apariencia apLineas;
 		private final transient MarcoDeIndicadores marco;
+		private final transient float ratio_4_3;
 
 		Renderer( ClientData data ){
+			viewport = new Rectangle();
 			this.data = data;
 			this.apLineas = new Apariencia();
 			this.marco = MarcoDeIndicadores.getMarco( 0 );
+			Rectangle2D.Float a43 = new Rectangle2D.Float();
+			marco.calcularAreaInterna( a43, 4, 3 );
+			ratio_4_3 = a43.width / a43.height;
 		}
 
 		private boolean iniciado = false;
@@ -148,7 +156,7 @@ public class PantallaTestColisiones extends GLCanvas{
 
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 
-			marco.setViewportAreaInterna( gl );
+			gl.glViewport( viewport.x, viewport.y, viewport.width, viewport.height );
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			glu.gluLookAt( 0.0, 0.0, 11, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
@@ -163,26 +171,28 @@ public class PantallaTestColisiones extends GLCanvas{
 		}
 
 		//private transient final Rectangle areaInterna = new Rectangle();
+		private final transient Rectangle2D.Float areaInterna = new Rectangle2D.Float();
 		
 		public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ){
 			GL2 gl = drawable.getGL().getGL2();
-			gl.glViewport( 0, 0, width, height );
-			marco.setBounds( 0, 0, width, height );
 			
-			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
-			gl.glLoadIdentity();
+			marco.setBounds( 0, 0, width, height );
+			marco.calcularAreaInterna( areaInterna, width, height );
+			viewport.x = (int)areaInterna.x;
+			viewport.y = (int)areaInterna.y;
+			viewport.width = (int)areaInterna.width;
+			viewport.height = (int)areaInterna.height;
+
 			double near = 0.5;
 			double far = 240.0;
 			double a1 = 35.0; // angulo en grados
 			double a2 = a1 / 360 * Math.PI; // mitad del angulo en radianes
 			double d = near / Math.sqrt( ( 1 / Math.pow( Math.sin( a2 ), 2 ) ) - 1 );
 
+			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
+			gl.glLoadIdentity();
 			// Formato 4/3 centrado, panorámico a la derecha en caso contrario.
-			float ratio_4_3 = marco.getWidthAreaInterna( 4, 3 ) / marco.getHeightAreaInterna( 4, 3 );
-			float aWidth = marco.getWidthAreaInterna( width, height );
-			float aHeight = marco.getHeightAreaInterna( width, height );
-
-			gl.glFrustum( -ratio_4_3 * d, ( ( 2.0 * aWidth ) / aHeight - ratio_4_3 ) * d, -d, d, near, far );
+			gl.glFrustum( -ratio_4_3 * d, ( ( 2.0 * areaInterna.width ) / areaInterna.height - ratio_4_3 ) * d, -d, d, near, far );
 
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 		}

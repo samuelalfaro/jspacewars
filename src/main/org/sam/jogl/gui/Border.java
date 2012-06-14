@@ -34,32 +34,89 @@ public interface Border{
 	
 	public abstract static class AbsBorder implements Border{
 		
-		Insets border;
 		Apariencia apariencia;
 		
+		Insets outer;
+		//TODO implementar
+		Insets inner;
+		
 		AbsBorder( Insets border ){
-			this.border = border;
+			this.outer = border;
 		}
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#setApariencia(org.sam.jogl.Apariencia)
+		 */
+		@Override
 		public void setApariencia( Apariencia apariencia ){
 			this.apariencia = apariencia;
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.Border#setInsets(org.sam.jogl.gui.Insets)
+		 * @see org.sam.jogl.gui.Border#setOuterInsets(org.sam.jogl.gui.Insets)
 		 */
 		@Override
-		public final void setInsets( Insets border ){
-			this.border = border;
+		public void setOuterInsets( Insets insets ){
+			this.outer = insets;
 		}
 		
 		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.Border#getInsets()
+		 * @see org.sam.jogl.gui.Border#setInnerInsets(org.sam.jogl.gui.Insets)
 		 */
 		@Override
-		public final Insets getInsets(){
-			return border;
+		public void setInnerInsets( Insets insets ){
+			this.inner = insets;
 		}
+		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#getOuterInsets()
+		 */
+		@Override
+		public final Insets getOuterInsets(){
+			return outer;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#getInnerInsets()
+		 */
+		@Override
+		public final Insets getInnerInsets(){
+			return inner;
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.Border#draw(javax.media.opengl.GL2, float, float, float, float)
+		 */
+		@Override
+		public final void draw( GL2 gl, float rx1, float ry1, float rx2, float ry2 ){
+			final float x0, y0, x1, y1, x2, y2, x3, y3;
+			if( outer == null ){
+				x0 = rx1;
+				y0 = ry1;
+				x3 = rx2;
+				y3 = ry2;
+			}else{
+				x0 = rx1 - outer.left;
+				y0 = ry1 - outer.top;
+				x3 = rx2 + outer.right;
+				y3 = ry2 + outer.bottom;
+			}
+			if( inner == null ){
+				x1 = rx1;
+				y1 = ry1;
+				x2 = rx2;
+				y2 = ry2;
+			}else{
+				x1 = rx1 + inner.left;
+				y1 = ry1 + inner.top;
+				x2 = rx2 - inner.right;
+				y2 = ry2 - inner.bottom;
+			}
+			apariencia.usar( gl );
+			draw( gl, x0, y0, x1, y1, x2, y2, x3, y3 );
+		}
+		
+		abstract void draw( GL2 gl, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3);
 	}
 	
 	public static class Solid extends AbsBorder{
@@ -76,7 +133,6 @@ public interface Border{
 		
 		public Solid( Insets insets, float r, float g, float b, float a ){
 			super( insets );
-			this.setApariencia( null );
 			this.setColor( r, g, b, a );
 		}
 		
@@ -91,40 +147,30 @@ public interface Border{
 			this.a = a;
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.Border#draw(javax.media.opengl.GL2, float, float, float, float)
-		 */
 		@Override
-		public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
-			
-			float x0 = x1 - border.left;
-			float y0 = y1 - border.top;
-			float x3 = x2 + border.right;
-			float y3 = y2 + border.bottom;
-			
-			apariencia.usar( gl );
+		void draw( GL2 gl, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3){
 			gl.glBegin(GL2.GL_QUADS);
 				gl.glColor4f( r, g, b, a );
 				// Left quad
 				gl.glVertex2f ( x1, y2 );
-				gl.glVertex2f ( x0, y3 );
-				gl.glVertex2f ( x0, y0 );
 				gl.glVertex2f ( x1, y1 );
+				gl.glVertex2f ( x0, y0 );
+				gl.glVertex2f ( x0, y3 );
 				// Top quad
 				gl.glVertex2f ( x1, y1 );
-				gl.glVertex2f ( x0, y0 );
-				gl.glVertex2f ( x3, y0 );
 				gl.glVertex2f ( x2, y1 );
+				gl.glVertex2f ( x3, y0 );
+				gl.glVertex2f ( x0, y0 );
 				// Right quad
 				gl.glVertex2f ( x2, y1 );
-				gl.glVertex2f ( x3, y0 );
-				gl.glVertex2f ( x3, y3 );
 				gl.glVertex2f ( x2, y2 );
+				gl.glVertex2f ( x3, y3 );
+				gl.glVertex2f ( x3, y0 );
 				// Bottom quad
 				gl.glVertex2f ( x2, y2 );
-				gl.glVertex2f ( x3, y3 );
-				gl.glVertex2f ( x0, y3 );
 				gl.glVertex2f ( x1, y2 );
+				gl.glVertex2f ( x0, y3 );
+				gl.glVertex2f ( x3, y3 );
 			gl.glEnd();
 		}
 	}
@@ -230,70 +276,62 @@ public interface Border{
 			setExternalColor( color.x, color.y, color.z, color.w );
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.Border#draw(javax.media.opengl.GL2, float, float, float, float)
-		 */
 		@Override
-		public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
-			
-			float x0 = x1 - border.left;
-			float y0 = y1 - border.top;
-			float x3 = x2 + border.right;
-			float y3 = y2 + border.bottom;
-			
-			apariencia.usar( gl );
+		void draw( GL2 gl, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3){
 			gl.glBegin(GL2.GL_QUADS);
 				// Left quad
 				gl.glColor4f( rx1, gx1, bx1, ax1 );
 				gl.glVertex2f ( x1, y2 );
-				gl.glColor4f( rx0, gx0, bx0, ax0 );
-				gl.glVertex2f ( x0, y3 );
-				gl.glColor4f( rx0, gx0, bx0, ax0 );
-				gl.glVertex2f ( x0, y0 );
 				gl.glColor4f( rx1, gx1, bx1, ax1 );
 				gl.glVertex2f ( x1, y1 );
+				gl.glColor4f( rx0, gx0, bx0, ax0 );
+				gl.glVertex2f ( x0, y0 );
+				gl.glColor4f( rx0, gx0, bx0, ax0 );
+				gl.glVertex2f ( x0, y3 );
 				// Top quad
 				gl.glColor4f( ry1, gy1, by1, ay1 );
 				gl.glVertex2f ( x1, y1 );
-				gl.glColor4f( ry0, gy0, by0, ay0 );
-				gl.glVertex2f ( x0, y0 );
-				gl.glColor4f( ry0, gy0, by0, ay0 );
-				gl.glVertex2f ( x3, y0 );
 				gl.glColor4f( ry1, gy1, by1, ay1 );
 				gl.glVertex2f ( x2, y1 );
+				gl.glColor4f( ry0, gy0, by0, ay0 );
+				gl.glVertex2f ( x3, y0 );
+				gl.glColor4f( ry0, gy0, by0, ay0 );
+				gl.glVertex2f ( x0, y0 );
 				// Right quad
 				gl.glColor4f( rx2, gx2, bx2, ax2 );
 				gl.glVertex2f ( x2, y1 );
-				gl.glColor4f( rx3, gx3, bx3, ax3 );
-				gl.glVertex2f ( x3, y0 );
-				gl.glColor4f( rx3, gx3, bx3, ax3 );
-				gl.glVertex2f ( x3, y3 );
 				gl.glColor4f( rx2, gx2, bx2, ax2 );
 				gl.glVertex2f ( x2, y2 );
+				gl.glColor4f( rx3, gx3, bx3, ax3 );
+				gl.glVertex2f ( x3, y3 );
+				gl.glColor4f( rx3, gx3, bx3, ax3 );
+				gl.glVertex2f ( x3, y0 );
 				// Bottom quad
 				gl.glColor4f( ry2, gy2, by2, ay2 );
 				gl.glVertex2f ( x2, y2 );
-				gl.glColor4f( ry3, gy3, by3, ay3 );
-				gl.glVertex2f ( x3, y3 );
-				gl.glColor4f( ry3, gy3, by3, ay3 );
-				gl.glVertex2f ( x0, y3 );
 				gl.glColor4f( ry2, gy2, by2, ay2 );
 				gl.glVertex2f ( x1, y2 );
+				gl.glColor4f( ry3, gy3, by3, ay3 );
+				gl.glVertex2f ( x0, y3 );
+				gl.glColor4f( ry3, gy3, by3, ay3 );
+				gl.glVertex2f ( x3, y3 );
 			gl.glEnd();
 		}
 	}
 		
 	public static class Textured extends AbsBorder{
 
-		private Pixmap leftTopPixmap, topPixmap, rightTopPixmap;
-		private Pixmap leftPixmap, rightPixmap;
-		private Pixmap leftBottomPixmap, bottomPixmap, rightBottomPixmap;
+		private final Pixmap leftTopPixmap,      topPixmap,     rightTopPixmap;
+		private final Pixmap leftPixmap,                           rightPixmap;
+		private final Pixmap leftBottomPixmap, bottomPixmap, rightBottomPixmap;
 		
 		public Textured( Insets border, int textureWidth, int textureHeight ){
 			this( 
 					border,	
+					0.0f, 0.0f,
 					border.left/textureWidth, border.top/textureHeight,
-					border.right/textureWidth, border.bottom/textureHeight
+					1.0f - border.right/textureWidth, 1.0f - border.bottom/textureHeight,
+					1.0f, 1.0f
 			);
 		}
 		
@@ -305,20 +343,6 @@ public interface Border{
 					( textureX1 - border.right)/textureWidth, ( textureY1 - border.bottom)/textureHeight,
 					(float)textureX1/textureWidth,            (float)textureY1/textureHeight
 			);
-		}
-		
-		public Textured( Insets border, int left, int top, int right, int bottom, int textureX0, int textureY0, int textureX1, int textureY1, int textureWidth, int textureHeight ){
-			this(
-					border, 
-					(float)textureX0/textureWidth,            (float)textureY0/textureHeight,
-					(float)( textureX0 + left)/textureWidth,  (float)( textureY0 + top )/textureHeight,
-					(float)( textureX1 - right)/textureWidth, (float)( textureY1 - bottom)/textureHeight,
-					(float)textureX1/textureWidth,            (float)textureY1/textureHeight
-			);
-		}
-		
-		public Textured( Insets border, float left, float top, float right, float bottom  ){
-			this( border, 0.0f, 0.0f, left, top, 1.0f - right, 1.0f - bottom, 1.0f, 1.0f );
 		}
 		
 		public Textured( Insets border, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3 ){
@@ -337,10 +361,12 @@ public interface Border{
 			);
 		}
 		
-		public Textured( Insets border, 
-				Pixmap leftTopPixmap, Pixmap topPixmap, Pixmap rightTopPixmap,
-				Pixmap leftPixmap, Pixmap rightPixmap,
-				Pixmap leftBottomPixmap, Pixmap bottomPixmap, Pixmap rightBottomPixmap ){
+		private Textured(
+				Insets border,
+				Pixmap leftTopPixmap,      Pixmap topPixmap,     Pixmap rightTopPixmap,
+				Pixmap leftPixmap,                                  Pixmap rightPixmap,
+				Pixmap leftBottomPixmap, Pixmap bottomPixmap, Pixmap rightBottomPixmap
+		){
 			super( border );
 			this.leftTopPixmap     = leftTopPixmap;
 			this.topPixmap         = topPixmap;
@@ -352,25 +378,16 @@ public interface Border{
 			this.rightBottomPixmap = rightBottomPixmap;
 		}
 		
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.Border#draw(javax.media.opengl.GL2, float, float, float, float)
-		 */
 		@Override
-		public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
-			float x0 = x1 - border.left;
-			float y0 = y1 - border.top;
-			float x3 = x2 + border.right;
-			float y3 = y2 + border.bottom;
-			
-			apariencia.usar( gl );
-			leftTopPixmap.draw(     gl, x0, y0, x1, y1 );
-			topPixmap.draw(         gl, x1, y0, x2, y1 );
-			rightTopPixmap.draw(    gl, x2, y0, x3, y1 );
-			leftPixmap.draw(        gl, x0, y1, x1, y2 );
-			rightPixmap.draw(       gl, x2, y1, x3, y2 );
-			leftBottomPixmap.draw(  gl, x0, y2, x1, y3 );
-			bottomPixmap.draw(      gl, x1, y2, x2, y3 );
-			rightBottomPixmap.draw( gl, x2, y2, x3, y3 );
+		void draw( GL2 gl, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3){
+			leftTopPixmap.drawCounterclockwise(     gl, x0, y0, x1, y1 );
+			topPixmap.drawCounterclockwise(         gl, x1, y0, x2, y1 );
+			rightTopPixmap.drawCounterclockwise(    gl, x2, y0, x3, y1 );
+			leftPixmap.drawCounterclockwise(        gl, x0, y1, x1, y2 );
+			rightPixmap.drawCounterclockwise(       gl, x2, y1, x3, y2 );
+			leftBottomPixmap.drawCounterclockwise(  gl, x0, y2, x1, y3 );
+			bottomPixmap.drawCounterclockwise(      gl, x1, y2, x2, y3 );
+			rightBottomPixmap.drawCounterclockwise( gl, x2, y2, x3, y3 );
 		}
 		
 	}
@@ -380,16 +397,20 @@ public interface Border{
 	 * delimitada por las coordenadas correspondientes.
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
-	 * @param x1 coordenada X de una de las esquinas.
-	 * @param y1 coordenada Y de una de las esquinas.
-	 * @param x2 coordenada X de la esquina opuesta.
-	 * @param y2 coordenada Y de la esquina opuesta.
+	 * @param rx1 coordenada X de una de las esquinas.
+	 * @param ry1 coordenada Y de una de las esquinas.
+	 * @param rx2 coordenada X de la esquina opuesta.
+	 * @param ry2 coordenada Y de la esquina opuesta.
 	 */
-	public void draw( GL2 gl, float x1, float y1, float x2, float y2 );
+	public void draw( GL2 gl, float rx1, float ry1, float rx2, float ry2 );
+	
+	public void setOuterInsets( Insets insets );
+	
+	public void setInnerInsets( Insets insets );
 	
 	public void setApariencia( Apariencia apariencia );
-	
-	public void setInsets( Insets insets );
 
-	public Insets getInsets();
+	public Insets getOuterInsets();
+	
+	public Insets getInnerInsets();
 }

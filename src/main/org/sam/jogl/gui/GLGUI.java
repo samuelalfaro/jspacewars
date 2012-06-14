@@ -117,32 +117,6 @@ public class GLGUI{
 			FactoriaDeParticulas.setOptimizedFor2D(true);
 			
 			estela = FactoriaDeParticulas.createParticulas( 50 );
-			estela.setEmision( Particulas.Emision.CONTINUA );
-			estela.setRangoDeEmision( 1.0f );
-			estela.setEmisor( new Emisor.Puntual( 0.25f, -0.25f, 45 ) );
-			estela.setVelocidad( 300.0f, 20.0f, false );
-			estela.setTiempoVida( 0.25f );
-			estela.setGiroInicial( 0, 180, true );
-			estela.setVelocidadGiro( 30.0f, 15.0f, true );
-			estela.setColor(
-					0.16f,
-					0.24f,
-					0.08f,
-					GettersFactory.Float.create( 
-						new float[] { 0.25f, 1.0f },
-						new float[] { 1.0f, 0.0f },
-						MetodoDeInterpolacion.Predefinido.COSENOIDAL
-					)
-			);
-			estela.setRadio( 	
-					GettersFactory.Float.create( 
-						new float[] { 0.0f, 0.25f },
-						new float[] { 0.0f, 12.0f },
-						MetodoDeInterpolacion.Predefinido.COSENOIDAL
-					)
-			);
-			estela.reset();
-			estela.setApariencia( ap );
 			
 			Matrix4f t1 = new Matrix4f();
 			t1.setIdentity();
@@ -158,11 +132,36 @@ public class GLGUI{
 			t1.setTranslation( new Vector3f( 8, 8, 0 ) );
 			t1.mul( t2 );
 			
-			NodoTransformador nt = new NodoTransformador( t1, estela );
+			estela.setEmisor( new Emisor.Cache( new Emisor.Transformador( new Emisor.Puntual( 0.25f, -0.25f, 45 ), t1 ), 256 ) );
 			
-			Matrix4f tCursor = new Matrix4f();
-			tCursor.setIdentity();
-			cursor = new NodoTransformador( transform, nt );
+			estela.setEmision( Particulas.Emision.CONTINUA );
+			estela.setRangoDeEmision( 1.0f );
+			estela.setVelocidad( 300.0f, 20.0f, false );
+			estela.setTiempoVida( 0.25f );
+			estela.setGiroInicial( 0, 180, true );
+			estela.setVelocidadGiro( 30.0f, 15.0f, true );
+			estela.setColor(
+					0.16f,
+					0.24f,
+					0.08f,
+					GettersFactory.Float.create( 
+						new float[] { 0.25f, 1.0f },
+						new float[] { 1.0f, 0.0f },
+						MetodoDeInterpolacion.Predefinido.COSENOIDAL
+					)
+			);
+//			estela.setRadio( 	
+//					GettersFactory.Float.create( 
+//						new float[] { 0.0f, 0.25f },
+//						new float[] { 0.0f, 8.0f },
+//						MetodoDeInterpolacion.Predefinido.COSENOIDAL
+//					)
+//			);
+			estela.setRadio( 8.0f );
+			estela.reset();
+			estela.setApariencia( ap );
+		
+			cursor = new NodoTransformador( transform, estela );
 		}
 
 		private transient long tAnterior, tActual;

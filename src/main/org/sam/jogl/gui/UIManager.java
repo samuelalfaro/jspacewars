@@ -99,8 +99,11 @@ public class UIManager{
 	
 	private static void loadTextures( GL2 gl, Hashtable<Object, Object> hashtable ){
 		
-		String texture1 = "resources/bordes_prueba.png";
-		//String texture1 = "resources/fondo.png";
+		Border border;
+		Background background;
+		
+		//String texture1 = "resources/bordes_prueba.png";
+		String texture1 = "resources/fondo.png";
 		
 		BufferedImage img = Imagen.cargarToBufferedImage( texture1 );
 
@@ -117,19 +120,28 @@ public class UIManager{
 		ap1.setAtributosTransparencia( new AtributosTransparencia( AtributosTransparencia.Equation.ADD,
 				AtributosTransparencia.SrcFunc.SRC_ALPHA, AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA ) );
 		
-		Border border = new Border.Textured( new Insets( 16 ), 64, 64 );
-		border.setInsets( new Insets( 20 ) );
+		background = new Background.Textured( 16,16, 48, 48, 64, 64 );
+		background.setApariencia( ap1 );
+		hashtable.put( "Background.default", background );
+		
+		
+		border = new Border.Textured( new Insets( 16 ), 64, 64 );
 		border.setApariencia( ap1 );
 		
-//		border = new Border.Gradient(
-//			new Insets( 5 ), 
-//			new Color4f( 1.0f, 1.0f, 1.0f, 0.5f ),
-//			new Color4f( 0.5f, 0.5f, 0.5f, 0.5f ),
-//			new Color4f( 0.0f, 0.0f, 0.0f, 0.5f )
-//		);
-//		border.setApariencia( BLEND );
-		
 		hashtable.put( "Border.default", border );
+		
+		border = new Border.Gradient(
+			new Insets( 5 ), 
+			new Color4f( 1.0f, 1.0f, 1.0f, 0.5f ),
+			new Color4f( 0.25f, 0.0f, 0.25f, 1.0f ),
+			new Color4f( 0.0f, 0.0f, 0.0f, 0.5f )
+		);
+		border.setApariencia( BLEND );
+		hashtable.put( "Container.Border", border );
+		
+		background = new Background.Gradient( 0.25f, 0.0f, 0.25f, 1.0f, 0.5f, 0.0f, 0.5f, 0.5f, false );
+		background.setApariencia( BLEND );
+		hashtable.put( "Container.Background", background );
 	}
 	
 	public static void Init( GL2 gl ){

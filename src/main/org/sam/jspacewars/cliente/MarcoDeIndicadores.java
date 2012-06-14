@@ -22,10 +22,9 @@
  */
 package org.sam.jspacewars.cliente;
 
-import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 
@@ -298,42 +297,30 @@ public abstract class MarcoDeIndicadores extends GLRectangle{
 		private static final transient Funcion.Float f = 
 			GeneradorDeFunciones.Predefinido.LINEAL.generaFuncion(6.0/32, 1, 14.0/32, 0).toFloatFunction();
 		
+		/* (non-Javadoc)
+		 * @see org.sam.jspacewars.cliente.MarcoDeIndicadores#calcularAreaInterna(java.awt.geom.Rectangle2D.Float, float, float)
+		 */
+		@Override
+		public void calcularAreaInterna( Rectangle2D.Float areaInterna, float w, float h ){
+			areaInterna.width = 31 * w / 32;
+			areaInterna.height = h - 3 * w / 32;
+			areaInterna.x = ( w - areaInterna.width ) / 2;
+			areaInterna.y = ( h - areaInterna.height ) / 6;
+		}
+		
 		private transient float proporcionesPantalla;
-		
-		public float getWidthAreaInterna(float w, float h){
-			return 31*w/32;
-		}
-		
-		public float getHeightAreaInterna(float w, float h){
-			return h - 3*w/32;
-		}
-		
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
-		protected void actualizar( Rectangle areaInterna, float w, float h){
-			float aWidth = getWidthAreaInterna( w, h );
-			float aHeight = getHeightAreaInterna( w, h );
-			
-			areaInterna.x      = (int)((w - aWidth)/2);
-			areaInterna.y      = (int)((h - aHeight)/6);
-			areaInterna.width  = (int)aWidth;
-			areaInterna.height = (int)aHeight;
-		}
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		protected void recalcularBoundsComponentesInternos(float w, float h){
-			proporcionesPantalla = w/h;
+		protected void recalcularBoundsComponentesInternos( float w, float h ){
+			proporcionesPantalla = w / h;
 			// guias horizontales
 			float gh0, gh1, gh2, gh3, gh4;
 			gh0 = 0.0f;
-			gh1 = proporcionesPantalla/32;
-			gh2 = 1.0f - 5 * proporcionesPantalla/32;
-			gh3 = 1.0f - 3 * proporcionesPantalla/32;
+			gh1 = proporcionesPantalla / 32;
+			gh2 = 1.0f - 5 * proporcionesPantalla / 32;
+			gh3 = 1.0f - 3 * proporcionesPantalla / 32;
 			gh4 = 1.0f;
 			// guias verticales
 			float gv0, gv1, gv2, gv3;
@@ -343,41 +330,41 @@ public abstract class MarcoDeIndicadores extends GLRectangle{
 			gv3 = proporcionesPantalla;
 			
 			inferior.setCorners( gv0, gh0, gv3, gh1 );
-			superior.setCorners( gv0, gh3, gv3, gh4);
-			
+			superior.setCorners( gv0, gh3, gv3, gh4 );
+
 			izqInf.setCorners( gv0, gh1, gv1, gh2 );
 			derInf.setCorners( gv2, gh1, gv3, gh2 );
 			
-			izqInf.pixmap.v1 = derInf.pixmap.v1 = f.f(1.0f/proporcionesPantalla);
-			
+			izqInf.pixmap.v1 = derInf.pixmap.v1 = f.f( 1.0f / proporcionesPantalla );
+
 			izqSup.setCorners( gv0, gh2, gv1, gh3 );
 			derSup.setCorners( gv2, gh2, gv3, gh3 );
-			
+
 			float x1, y1, y2, w1, h1, h2;
 			
-			y1 = 1.0f - 19 * proporcionesPantalla/512;
-			y2 = 1.0f - 39 * proporcionesPantalla/512;
+			y1 = 1.0f - 19 * proporcionesPantalla / 512;
+			y2 = 1.0f - 39 * proporcionesPantalla / 512;
 			w1 = h1 = 3 * proporcionesPantalla / 128;
-			vidas .setBounds( 17 * proporcionesPantalla / 256, y1, w1, h1);
-			bombas.setBounds( 35 * proporcionesPantalla / 256, y1, w1, h1);
+			vidas.setBounds( 17 * proporcionesPantalla / 256, y1, w1, h1 );
+			bombas.setBounds( 35 * proporcionesPantalla / 256, y1, w1, h1 );
 			w1 = 17 * proporcionesPantalla / 128;
-			puntos.setBounds(  7 * proporcionesPantalla / 256, y2, w1, h1);
+			puntos.setBounds( 7 * proporcionesPantalla / 256, y2, w1, h1 );
 			
-			y1 = 1.0f - 71 * proporcionesPantalla/1024;
-			y2 = 1.0f - 23 * proporcionesPantalla/256;
+			y1 = 1.0f - 71 * proporcionesPantalla / 1024;
+			y2 = 1.0f - 23 * proporcionesPantalla / 256;
 			w1 = 14 * proporcionesPantalla / 128;
-			h1 =  3 * proporcionesPantalla / 256;
-			h2 =  proporcionesPantalla / 64;
-			
-			for(int i = 0, j= 24; i < 5; i++, j+= 18){
+			h1 = 3 * proporcionesPantalla / 256;
+			h2 = proporcionesPantalla / 64;
+
+			for( int i = 0, j = 24; i < 5; i++, j += 18 ){
 				x1 = j * proporcionesPantalla / 128;
-				ledsNiveles    [i].setBounds( x1, y1, w1, h1 );
+				ledsNiveles[i].setBounds( x1, y1, w1, h1 );
 				ledsIndicadores[i].setBounds( x1, y2, w1, h2 );
 			}
 			x1 = 114 * proporcionesPantalla / 128;
-			w1 =  10 * proporcionesPantalla / 128;
-			ledsGrado         .setBounds( x1, y1, w1, h1 );
-			ledIndicadorGrado .setBounds( x1, y2, w1, h2 );
+			w1 = 10 * proporcionesPantalla / 128;
+			ledsGrado.setBounds( x1, y1, w1, h1 );
+			ledIndicadorGrado.setBounds( x1, y2, w1, h2 );
 		}
 		
 		/* (non-Javadoc)
@@ -443,7 +430,7 @@ public abstract class MarcoDeIndicadores extends GLRectangle{
 	transient LedsNiveles ledsGrado;
 	transient LedIndicadorGrado ledIndicadorGrado;
 	
-	private transient final Rectangle areaInterna = new Rectangle();
+	private transient final Rectangle2D.Float areaInterna = new Rectangle2D.Float();
 	
 	/**
 	 * Método que indica si se han cargado todas las texturas necesarias para mostrar el {@code Marco}.
@@ -517,27 +504,19 @@ public abstract class MarcoDeIndicadores extends GLRectangle{
 		ledIndicadorGrado.actualizar();
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.gui.GLRectangle#setBounds(float, float, float, float)
 	 */
 	@Override
-	public final void setBounds( float x, float y, float w, float h ){
-		super.setBounds(x, y, w, h);
-		actualizar( areaInterna, w, h);
-		recalcularBoundsComponentesInternos(w, h);
+	public final void setBounds( float x, float y, float width, float height ){
+		super.setBounds( x, y, width, height );
+		calcularAreaInterna( areaInterna, width, height );
+		recalcularBoundsComponentesInternos( width, height );
 	}
 	
-	protected abstract void actualizar( Rectangle areaInterna, float w, float h );
+	public abstract void calcularAreaInterna( Rectangle2D.Float areaInterna, float w, float h );
 	
-	protected abstract void recalcularBoundsComponentesInternos(float w, float h);
-	
-	public abstract float getWidthAreaInterna(float w, float h);
-	
-	public abstract float getHeightAreaInterna(float w, float h);
-	
-	public final void setViewportAreaInterna(GL gl){
-		gl.glViewport(areaInterna.x, areaInterna.y, areaInterna.width, areaInterna.height );
-	}
+	protected abstract void recalcularBoundsComponentesInternos( float w, float h );
 	
 	/**
 	 * Método estático que poporcionará una marco en función del valor del parámetro {@code type}.<br/>
