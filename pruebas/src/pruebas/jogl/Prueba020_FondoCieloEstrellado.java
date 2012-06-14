@@ -100,7 +100,7 @@ public class Prueba020_FondoCieloEstrellado{
 			tEmisor.setIdentity();
 			tEmisor.rotZ( (float)Math.PI );
 			tEmisor.setTranslation( new Vector3f( 2.05f, 0.5f, 0.0f ) );
-			Emisor emisor = new Emisor.Cache( new Emisor.Lineal( 1.0f, 0.0f ), tEmisor, 1024 );
+			Emisor emisor = new Emisor.Cache(  new Emisor.Transformador( new Emisor.Lineal( 1.0f, 0.0f ), tEmisor ), 1024 );
 
 			FactoriaDeParticulas.setOptimizedFor2D( true );
 			for( int i = 0, len = estrellas.length; i < len; i++ ){

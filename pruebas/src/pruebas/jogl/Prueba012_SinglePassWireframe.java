@@ -161,7 +161,7 @@ public class Prueba012_SinglePassWireframe{
 			gl.glLightfv( GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR,
 					new float[] { 1.0f, 1.0f, 1.0f, 1.0f }, 0 );
 
-			// gl.glEnable(GL.GL_CULL_FACE);
+			gl.glEnable(GL.GL_CULL_FACE);
 			gl.glHint( GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST );
 		}
 
@@ -177,7 +177,7 @@ public class Prueba012_SinglePassWireframe{
 			
 			forma.draw( gl );
 
-			gl.glFlush();
+			//gl.glFlush();
 		}
 
 		public void reshape( GLAutoDrawable drawable, int x, int y, int w, int h ){
