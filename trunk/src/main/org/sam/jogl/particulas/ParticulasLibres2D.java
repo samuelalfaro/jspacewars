@@ -50,16 +50,17 @@ class ParticulasLibres2D extends Particulas{
 		ModificadorDeParticulas(){
 		}
 
-		private void setPos( float p11x, float p11y, float p12x, float p12y ){
+		private void setPos( float x0, float y0, float x1, float y1 ){
 			// Orden inverso a las agujas del reloj, normal hacia el observador
-			pos.put( p11x );
-			pos.put( p11y );
-			pos.put( p12x );
-			pos.put( p11y );
-			pos.put( p12x );
-			pos.put( p12y );
-			pos.put( p11x );
-			pos.put( p12y );
+//			pos.put( x0 ); pos.put( y0 );
+//			pos.put( x1 ); pos.put( y0 );
+//			pos.put( x1 ); pos.put( y1 );
+//			pos.put( x0 ); pos.put( y1 );
+			
+			pos.put( x0 ); pos.put( y0 );
+			pos.put( x0 ); pos.put( y1 );
+			pos.put( x1 ); pos.put( y1 );
+			pos.put( x1 ); pos.put( y0 );
 		}
 		
 		private final transient Quat4f rEmisorPre = new Quat4f();
@@ -110,14 +111,14 @@ class ParticulasLibres2D extends Particulas{
 				if( vida <= iVidaT ){
 					VectorLibre vec = emisor.emite();
 					
-					float alpha= (iVidaT - vida)/iVidaT;
-					rEmisorInt.interpolate(rEmisorPre, rEmisorAct,  alpha);
-					transform_matrix.setRotation(rEmisorInt);
-					pEmisorInt.interpolate(pEmisorPre, pEmisorAct, alpha );
-					transform_matrix.setTranslation(pEmisorInt);
+					float alpha = ( iVidaT - vida ) / iVidaT;
+					rEmisorInt.interpolate( rEmisorPre, rEmisorAct, alpha );
+					transform_matrix.setRotation( rEmisorInt );
+					pEmisorInt.interpolate( pEmisorPre, pEmisorAct, alpha );
+					transform_matrix.setTranslation( pEmisorInt );
 					
-					transform_matrix.transform(vec.posicion);
-					transform_matrix.transform(vec.direccion);
+					transform_matrix.transform( vec.posicion );
+					transform_matrix.transform( vec.direccion );
 
 					float moduloVelocidad = ( ( pVelocidad != 0.0f ) ? velocidad + ( aleatorio.nextFloat() - 0.5f )
 							* pVelocidad: velocidad )
@@ -131,30 +132,29 @@ class ParticulasLibres2D extends Particulas{
 				}
 
 				if(iColores != null && iAlfa != null){
-					float rgb[] = iColores.get(vida);
-					r = rgb[0]; g = rgb[1]; b = rgb[2];
-					a = iAlfa.get(vida);
-					
-					col.position(i<<4);
+					float rgb[] = iColores.get( vida );
+					r = rgb[0];	g = rgb[1];	b = rgb[2];
+					a = iAlfa.get( vida );
 
-					col.put(r); col.put(g); col.put(b); col.put(a);
-					col.put(r); col.put(g); col.put(b); col.put(a);
-					col.put(r); col.put(g); col.put(b); col.put(a);
-					col.put(r); col.put(g); col.put(b); col.put(a);
+					col.position( i << 4 );
+					col.put( r ); col.put( g ); col.put( b ); col.put( a );
+					col.put( r ); col.put( g ); col.put( b ); col.put( a );
+					col.put( r ); col.put( g ); col.put( b ); col.put( a );
+					col.put( r ); col.put( g ); col.put( b ); col.put( a );
 				}else if(iColores != null ){
 					float rgb[] = iColores.get(vida);
 					r = rgb[0]; g = rgb[1]; b = rgb[2];
 					
-					col.position(i<<4);       col.put(r); col.put(g); col.put(b);
-					col.position((i<<4) +4);  col.put(r); col.put(g); col.put(b);
-					col.position((i<<4) +8);  col.put(r); col.put(g); col.put(b);
-					col.position((i<<4) +12); col.put(r); col.put(g); col.put(b);
+					col.position( i << 4 );          col.put( r ); col.put( g ); col.put( b );
+					col.position( ( i << 4 ) + 4 );  col.put( r ); col.put( g ); col.put( b );
+					col.position( ( i << 4 ) + 8 );  col.put( r ); col.put( g ); col.put( b );
+					col.position( ( i << 4 ) + 12 ); col.put( r ); col.put( g ); col.put( b );
 				}else if( iAlfa != null ){
 					a = iAlfa.get(vida);
-					col.position((i<<4) +3);  col.put(a);
-					col.position((i<<4) +7);  col.put(a);
-					col.position((i<<4) +11); col.put(a);
-					col.position((i<<4) +15); col.put(a);
+					col.position( ( i << 4 ) + 3 );  col.put( a );
+					col.position( ( i << 4 ) + 7 );  col.put( a );
+					col.position( ( i << 4 ) + 11 ); col.put( a );
+					col.position( ( i << 4 ) + 15 ); col.put( a );
 				}
 				
 				float x = velocidades[j] * vida + posIni[j++];

@@ -87,4 +87,28 @@ public class Pixmap{
 			gl.glVertex2f  ( x1, y2 );
 		gl.glEnd();
 	}
+	
+	/**
+	 * Método que dibuja el área de textura en la zona rectagular
+	 * delimitada por las coordenadas correspondientes.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 * @param x1 coordenada X de una de las esquinas.
+	 * @param y1 coordenada Y de una de las esquinas.
+	 * @param x2 coordenada X de la esquina opuesta.
+	 * @param y2 coordenada Y de la esquina opuesta.
+	 */
+	public void drawCounterclockwise( GL2 gl, float x1, float y1, float x2, float y2 ){
+		//System.out.printf( "\t%3.1f %3.1f [ %2.2f %2.2f ] -> %3.1f %3.1f [ %2.2f %2.2f ]\n",  x1, y1, u1, v1, x2, y2, u2, v2 );
+		gl.glBegin( GL2.GL_QUADS );
+			gl.glTexCoord2f( u1, v1 );
+			gl.glVertex2f  ( x1, y1 );
+			gl.glTexCoord2f( u1, v2 );
+			gl.glVertex2f  ( x1, y2 );
+			gl.glTexCoord2f( u2, v2 );
+			gl.glVertex2f  ( x2, y2 );
+			gl.glTexCoord2f( u2, v1 );
+			gl.glVertex2f  ( x2, y1 );
+		gl.glEnd();
+	}
 }

@@ -43,16 +43,17 @@ class Particulas2D extends Particulas{
 		ModificadorDeParticulas(){
 		}
 
-		private void setPos( float p11x, float p11y, float p12x, float p12y ){
-			// Orden inverso a las agujas del reloj, normal hacia el observador
-			pos.put( p11x );
-			pos.put( p11y );
-			pos.put( p12x );
-			pos.put( p11y );
-			pos.put( p12x );
-			pos.put( p12y );
-			pos.put( p11x );
-			pos.put( p12y );
+		private void setPos( float x0, float y0, float x1, float y1 ){
+			// Orden inverso a las agujas del reloj, Y positiva arriba, normal hacia el observador
+//			pos.put( x0 ); pos.put( y0 );
+//			pos.put( x1 ); pos.put( y0 );
+//			pos.put( x1 ); pos.put( y1 );
+//			pos.put( x0 ); pos.put( y1 );
+			// Orden inverso a las agujas del reloj, Y potivia abajo, normal hacia el observador
+			pos.put( x0 ); pos.put( y0 );
+			pos.put( x0 ); pos.put( y1 );
+			pos.put( x1 ); pos.put( y1 );
+			pos.put( x1 ); pos.put( y0 );
 		}
 
 		public boolean modificar( float steep ){
@@ -218,7 +219,7 @@ class Particulas2D extends Particulas{
 				float tmp1 = cosA + senA;
 				float tmp2 = cosA - senA;
 
-				tex.put( 0.5f - tmp1 );
+				tex.put( 0.5f - tmp1 ); 
 				tex.put( 0.5f - tmp2 );
 				tex.put( 0.5f + tmp2 );
 				tex.put( 0.5f - tmp1 );

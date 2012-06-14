@@ -23,6 +23,7 @@ package org.sam.jogl.gui;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.vecmath.Color4f;
 
 import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
 import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
@@ -32,12 +33,23 @@ import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
  */
 public class GLLabel extends GLComponent{
 
-	protected float textX;
-	protected float textY;
+	private TextureFont shadowFont;
+	private Color4f     shadowColor;
+	private float       shadowOfsetX, shadowOfsetY;
 	
-	protected String text;
-	protected HorizontalAlignment horizontalAlignment;
-	protected VerticalAlignment verticalAlignment;
+	private TextureFont font;
+	private Color4f     color;
+
+	private TextureFont fxFont;
+	private Color4f     fxColor;
+	private float       fxOfsetX, fxOfsetY;
+	
+	private float textX;
+	private float textY;
+	
+	private String text;
+	private HorizontalAlignment horizontalAlignment;
+	private VerticalAlignment verticalAlignment;
 
 	public GLLabel( String text, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment ){
 		setText( text );
@@ -147,7 +159,7 @@ public class GLLabel extends GLComponent{
 	}
 
 	protected void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
-		BLEND.usar( gl );
+		//BLEND.usar( gl );
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glColor3f  ( rf, gf, bf );
 			gl.glVertex2f ( x1, y1 );
@@ -177,7 +189,21 @@ public class GLLabel extends GLComponent{
 		if( text.length() > 0 ){
 			TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
 			TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
+			if( shadowFont != null){
+				TEXT_RENDERER.setColor( shadowColor );
+				TEXT_RENDERER.setFont( shadowFont );
+				TEXT_RENDERER.glPrint( gl, textX + shadowOfsetX, textY + shadowOfsetY, text );
+			}
+			if( color != null )
+				TEXT_RENDERER.setColor( color );
+			if( font != null )
+				TEXT_RENDERER.setFont( font );
 			TEXT_RENDERER.glPrint( gl, textX, textY, text );
+			if( fxFont != null){
+				TEXT_RENDERER.setColor( fxColor );
+				TEXT_RENDERER.setFont( fxFont );
+				TEXT_RENDERER.glPrint( gl, textX + fxOfsetX, textY + fxOfsetY, text );
+			}
 		}
 	}
 

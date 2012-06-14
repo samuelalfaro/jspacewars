@@ -27,25 +27,24 @@ import java.util.Random;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
-
 @SuppressWarnings("serial")
 public interface Emisor {
 
 	static final Random ALEATORIO = new Random(){
 		@Override
-		public int nextInt(int nBits) {
-			return next(nBits);
+		public int nextInt( int nBits ){
+			return next( nBits );
 		}
 	};
 	
 	public static class Cache implements Emisor{
 
-		private static int log2(int val){
-			assert (val >= 0);
+		private static int log2( int val ){
+			assert ( val >= 0 );
 			val--;
-			int n=0;
-			while(val>0){
-				val >>=1;
+			int n = 0;
+			while( val > 0 ){
+				val >>= 1;
 				n++;
 			}
 			return n;
@@ -56,29 +55,13 @@ public interface Emisor {
 		private transient final float[] dir;
 		private transient final VectorLibre v;
 
-		public Cache(Emisor e, int size){
-			this.nBits = log2(size);
-			size = (int)Math.pow(2,nBits);
-			pos = new float[size*3];
-			dir = new float[size*3];
-			for(int i = 0, j=0; i<size; i++){
+		public Cache( Emisor e, int size ){
+			this.nBits = log2( size );
+			size = (int)Math.pow( 2, nBits );
+			pos = new float[size * 3];
+			dir = new float[size * 3];
+			for( int i = 0, j = 0; i < size; i++ ){
 				VectorLibre aux = e.emite();
-				pos[j]= aux.posicion.x; dir[j++]= aux.direccion.x;
-				pos[j]= aux.posicion.y; dir[j++]= aux.direccion.y;
-				pos[j]= aux.posicion.z; dir[j++]= aux.direccion.z;
-			}
-			v = new VectorLibre();
-		}
-
-		public Cache(Emisor e, Matrix4f t, int size){
-			this.nBits = log2(size);
-			size = (int)Math.pow(2,nBits);
-			pos = new float[size*3];
-			dir = new float[size*3];
-			for(int i = 0, j=0; i<size; i++){
-				VectorLibre aux = e.emite();
-				t.transform(aux.posicion);
-				t.transform(aux.direccion);
 				pos[j]= aux.posicion.x; dir[j++]= aux.direccion.x;
 				pos[j]= aux.posicion.y; dir[j++]= aux.direccion.y;
 				pos[j]= aux.posicion.z; dir[j++]= aux.direccion.z;
@@ -91,10 +74,32 @@ public interface Emisor {
 		 */
 		@Override
 		public VectorLibre emite(){
-			int i = ALEATORIO.nextInt(nBits)*3;
+			int i = ALEATORIO.nextInt( nBits ) * 3;
 			v.posicion.x = pos[i]; v.direccion.x = dir[i++];
 			v.posicion.y = pos[i]; v.direccion.y = dir[i++];
 			v.posicion.z = pos[i]; v.direccion.z = dir[i++];
+			return v;
+		}
+	}
+	
+	public static class Transformador implements Emisor{
+
+		private final Emisor e;
+		private final Matrix4f t;
+
+		public Transformador( Emisor e, Matrix4f t ){
+			this.e = e;
+			this.t = t;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public VectorLibre emite(){
+			VectorLibre v = e.emite();
+			t.transform( v.posicion );
+			t.transform( v.direccion );
 			return v;
 		}
 	}
@@ -110,8 +115,8 @@ public interface Emisor {
 			this( 1.0f, 1.0f );
 		}
 
-		public Conico(float radio, float altura){
-			this.radio  = radio;
+		public Conico( float radio, float altura ){
+			this.radio = radio;
 			this.altura = altura;
 			v = new VectorLibre();
 		}
@@ -123,9 +128,9 @@ public interface Emisor {
 		public VectorLibre emite(){
 			// distribucion homogenea de los puntos en el circulo.
 			// float r  = (float)Math.sqrt(ALEATORIO.nextFloat()) * radio;
-			float r  = ALEATORIO.nextFloat() * radio;
+			float r = ALEATORIO.nextFloat() * radio;
 			float a = ALEATORIO.nextFloat() * dosPI;
-			v.posicion.set(0.0f, r * (float)Math.sin(a), r * (float)Math.cos(a));
+			v.posicion.set( 0.0f, r * (float)Math.sin( a ), r * (float)Math.cos( a ) );
 
 			v.direccion.x = altura;
 			v.direccion.y = v.posicion.y;
@@ -146,9 +151,9 @@ public interface Emisor {
 			this( 1.0f, 360.0f );
 		}
 
-		public Lineal(float longitud, float rangoGiro){
+		public Lineal( float longitud, float rangoGiro ){
 			this.longitud = longitud;
-			this.rangoGiro = (float)(rangoGiro * Math.PI /180.0);
+			this.rangoGiro = (float)( rangoGiro * Math.PI / 180.0 );
 			v = new VectorLibre();
 		}
 
@@ -157,9 +162,9 @@ public interface Emisor {
 		 */
 		@Override
 		public VectorLibre emite(){
-			v.posicion.set(0.0f,(ALEATORIO.nextFloat()-0.5f)*longitud, 0.0f);
-			float a = (ALEATORIO.nextFloat()-0.5f)*rangoGiro;
-			v.direccion.set((float)Math.cos(a), 0.0f, (float)Math.sin(a));
+			v.posicion.set( 0.0f, ( ALEATORIO.nextFloat() - 0.5f ) * longitud, 0.0f );
+			float a = ( ALEATORIO.nextFloat() - 0.5f ) * rangoGiro;
+			v.direccion.set( (float)Math.cos( a ), 0.0f, (float)Math.sin( a ) );
 			return v;
 		}
 	}
@@ -171,11 +176,11 @@ public interface Emisor {
 		private final transient VectorLibre v;
 
 		public Piramidal(){
-			this(1.0f,1.0f);
+			this( 1.0f, 1.0f );
 		}
 
-		public Piramidal(float lado, float altura){
-			this.lado   = lado;
+		public Piramidal( float lado, float altura ){
+			this.lado = lado;
 			this.altura = altura;
 			v = new VectorLibre();
 		}
@@ -185,7 +190,7 @@ public interface Emisor {
 		 */
 		@Override
 		public VectorLibre emite(){
-			v.posicion.set(0.0f,(ALEATORIO.nextFloat()-0.5f)*lado,(ALEATORIO.nextFloat()-0.5f)*lado);
+			v.posicion.set( 0.0f, ( ALEATORIO.nextFloat() - 0.5f ) * lado, ( ALEATORIO.nextFloat() - 0.5f ) * lado );
 
 			v.direccion.x = altura;
 			v.direccion.y = v.posicion.y;

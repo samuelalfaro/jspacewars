@@ -30,6 +30,6 @@ import org.sam.jogl.Dibujable;
 
 public interface Fondo extends Dibujable, Modificable{
 
-	public void setProporcionesPantalla(float proporcionesPantalla);
+	public void setBounds( float x, float y, float width, float height );
 
 }

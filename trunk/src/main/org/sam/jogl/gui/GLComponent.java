@@ -37,19 +37,19 @@ public abstract class GLComponent extends GLRectangle{
 	
 	protected static final GLTextRenderer TEXT_RENDERER = new GLTextRenderer();
 	
-	protected static final Apariencia BLEND = new Apariencia();
+//	protected static final Apariencia BLEND = new Apariencia();
+//	
+//	static{
+//		BLEND.setAtributosTransparencia( 
+//				new AtributosTransparencia( 
+//						AtributosTransparencia.Equation.ADD,
+//						AtributosTransparencia.SrcFunc.SRC_ALPHA,
+//						AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
+//				)
+//		);
+//	}
 	
-	static{
-		BLEND.setAtributosTransparencia( 
-				new AtributosTransparencia( 
-						AtributosTransparencia.Equation.ADD,
-						AtributosTransparencia.SrcFunc.SRC_ALPHA,
-						AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
-				)
-		);
-	}
-	
-	private   boolean initialized;
+	protected boolean initialized;
 	protected int state;
 	protected EventListenerList listenerList = new EventListenerList();
 	
