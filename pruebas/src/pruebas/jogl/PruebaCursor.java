@@ -24,15 +24,12 @@ package pruebas.jogl;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GL;
@@ -44,7 +41,6 @@ import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.swing.JFrame;
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 
 import org.sam.interpoladores.GettersFactory;
 import org.sam.interpoladores.MetodoDeInterpolacion;
@@ -62,18 +58,19 @@ import com.jogamp.opengl.util.Animator;
 
 public class PruebaCursor{	
 	
-	private static class GUIListener implements MouseListener, MouseMotionListener, MouseWheelListener{
-	
-		final NodoTransformador cursor;
-		final Vector3f posOld;
-		final Vector3f posCur;
+	static class CursorListener implements MouseListener, MouseMotionListener{
+
+		private transient final Matrix4f transform;
 		
-		GUIListener( NodoTransformador cursor ){
-			this.cursor = cursor;
-			this.posOld = new Vector3f();
-			this.posCur = new Vector3f();
+		CursorListener( Matrix4f transform ){
+			this.transform = transform;
 		}
-	
+		
+		private void setPosition( Point point ){
+			transform.m03 = point.x;
+			transform.m13 = point.y;
+		}
+		
 		/* (non-Javadoc)
 		 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 		 */
@@ -86,10 +83,7 @@ public class PruebaCursor{
 		 */
 		@Override
 		public void mouseEntered( MouseEvent e ){
-			posOld.set( posCur );
-			posCur.x = e.getPoint().x;
-			posCur.y = e.getPoint().y;
-			cursor.getTransform().setTranslation( posCur );
+			setPosition( e.getPoint() );
 		}
 	
 		/* (non-Javadoc)
@@ -97,9 +91,8 @@ public class PruebaCursor{
 		 */
 		@Override
 		public void mouseExited( MouseEvent e ){
-			posCur.x = ( e.getPoint().x - posOld.x ) * 40 + e.getPoint().x;
-			posCur.y = ( e.getPoint().y - posOld.y ) * 40 + e.getPoint().y;
-			cursor.getTransform().setTranslation( posCur );
+			transform.m03 =	( e.getPoint().x - transform.m03 ) * 80 + e.getPoint().x;
+			transform.m13 =	( e.getPoint().y - transform.m13 ) * 80 + e.getPoint().y;
 		}
 	
 		/* (non-Javadoc)
@@ -121,10 +114,7 @@ public class PruebaCursor{
 		 */
 		@Override
 		public void mouseDragged( MouseEvent e ){
-			posOld.set( posCur );
-			posCur.x = e.getPoint().x;
-			posCur.y = e.getPoint().y;
-			cursor.getTransform().setTranslation( posCur );
+			setPosition( e.getPoint() );
 		}
 	
 		/* (non-Javadoc)
@@ -132,29 +122,56 @@ public class PruebaCursor{
 		 */
 		@Override
 		public void mouseMoved( MouseEvent e ){
-			posOld.set( posCur );
-			posCur.x = e.getPoint().x;
-			posCur.y = e.getPoint().y;
-			cursor.getTransform().setTranslation( posCur );
-		}
-	
-		/* (non-Javadoc)
-		 * @see java.awt.event.MouseWheelListener#mouseWheelMoved(java.awt.event.MouseWheelEvent)
-		 */
-		@Override
-		public void mouseWheelMoved( MouseWheelEvent e ){
+			setPosition( e.getPoint() );
 		}
 	}
 
-	private static class Renderer implements GLEventListener{
+	static class Renderer implements GLEventListener{
+ 
+		private final Particulas estela;
+		private final NodoTransformador cursor;
 		
-		private Particulas estela;
-		private NodoTransformador cursor;
-		
-		public Renderer(){
-		}
+		public Renderer( Matrix4f tCursor ){
+			
+			tCursor.setIdentity();
+			
+			FactoriaDeParticulas.setOptimizedFor2D(true);
+			
+			estela = FactoriaDeParticulas.createParticulas( 50 );
 
+			estela.setEmisor( new Emisor.Puntual() );
+			estela.setEmision( Particulas.Emision.CONTINUA );
+			estela.setRangoDeEmision( 1.0f );
+			estela.setVelocidad( 100.0f, 20.0f, false );
+			estela.setTiempoVida( 0.25f );
+			estela.setGiroInicial( 0, 180, true );
+			estela.setVelocidadGiro( 30.0f, 15.0f, true );
+			estela.setColor(
+					0.15f,
+					0.3f,
+					0.2f,
+					GettersFactory.Float.create( 
+							new float[] { 0.25f, 1.0f },
+							new float[] { 1.0f, 0.0f },
+							MetodoDeInterpolacion.Predefinido.COSENOIDAL
+					)
+			);
+			estela.setRadio( 	
+					GettersFactory.Float.create( 
+						new float[] { 0.0f, 0.25f },
+						new float[] { 0.0f, 15.0f },
+						MetodoDeInterpolacion.Predefinido.COSENOIDAL
+					)
+			);
+			estela.reset();
+			
+			FactoriaDeParticulas.setOptimizedFor2D( false );
+			
+			cursor = new NodoTransformador( tCursor, estela );
+		}
+	
 		public void init( GLAutoDrawable glDrawable ){
+			
 			GL2 gl = glDrawable.getGL().getGL2();
 			
 			Apariencia ap = new Apariencia();
@@ -186,62 +203,22 @@ public class PruebaCursor{
 					) 
 			);
 			
-			FactoriaDeParticulas.setOptimizedFor2D(true);
-			
-			estela = FactoriaDeParticulas.createParticulas( 50 );
-			estela.setEmision( Particulas.Emision.CONTINUA );
-			estela.setRangoDeEmision( 1.0f );
-			estela.setEmisor( new Emisor.Puntual() );
-			estela.setVelocidad( 100.0f, 20.0f, false );
-			estela.setTiempoVida( 0.25f );
-			estela.setGiroInicial( 0, 180, true );
-			estela.setVelocidadGiro( 30.0f, 15.0f, true );
-			estela.setColor(
-					0.15f,
-					0.3f,
-					0.2f,
-					GettersFactory.Float.create( 
-							new float[] { 0.25f, 1.0f },
-							new float[] { 1.0f, 0.0f },
-							MetodoDeInterpolacion.Predefinido.COSENOIDAL
-					)
-			);
-			estela.setRadio( 	
-					GettersFactory.Float.create( 
-						new float[] { 0.0f, 0.25f },
-						new float[] { 0.0f, 15.0f },
-						MetodoDeInterpolacion.Predefinido.COSENOIDAL
-					)
-			);
-			estela.reset();
 			estela.setApariencia( ap );
-			
-			Matrix4f tLocal = new Matrix4f();
-			tLocal.setIdentity();
-			
-			cursor = new NodoTransformador( tLocal, estela );
 			
 			gl.glShadeModel( GLLightingFunc.GL_SMOOTH );
 			gl.glClearColor( 0.2f, 0.2f, 0.3f, 0.0f );
-			
-			GUIListener myListener = new GUIListener( cursor );
-			
-			Component component = ( (GLCanvas)glDrawable );
-			component.addMouseListener( myListener );
-			component.addMouseMotionListener( myListener );
-			component.addMouseWheelListener( myListener );
 		}
-
+	
 		private transient long tAnterior, tActual;
 		
 		public void display( GLAutoDrawable glDrawable ){
 			tAnterior = tActual;
 			tActual = System.nanoTime();
-			// @SuppressWarnings("unused")
+
 			float incT = (float)( tActual - tAnterior ) / 1000000000;
 		
 			GL2 gl = glDrawable.getGL().getGL2();
-
+	
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT );
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
@@ -251,7 +228,7 @@ public class PruebaCursor{
 			cursor.draw( gl );
 			gl.glFlush();
 		}
-
+	
 		public void reshape( GLAutoDrawable glDrawable, int x, int y, int w, int h ){
 			if( h == 0 )
 				h = 1;
@@ -262,7 +239,7 @@ public class PruebaCursor{
 			gl.glLoadIdentity();
 			gl.glOrtho( 0, w, h, 0, -1, 1 );
 		}
-
+	
 		/* (non-Javadoc)
 		 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
 		 */
@@ -287,7 +264,14 @@ public class PruebaCursor{
 				)
 		);
 		
-		canvas.addGLEventListener( new Renderer() );
+		Matrix4f tCursor = new  Matrix4f();
+		
+		CursorListener cursorListener = new CursorListener( tCursor );
+		canvas.addMouseListener( cursorListener );
+		canvas.addMouseMotionListener( cursorListener );
+		
+		canvas.addGLEventListener( new Renderer( tCursor ) );
+		
 		frame.getContentPane().add( canvas, BorderLayout.CENTER );
 
 		frame.getContentPane().setPreferredSize( new Dimension( 640, 480 ) );

@@ -1,5 +1,5 @@
 /* 
- * Prueba040_Interface.java
+ * Prueba040_StatusBar.java
  * 
  * Copyright (c) 2008-2010
  * Samuel Alfaro Jiménez <samuelalfaro at gmail.com>.
@@ -49,7 +49,7 @@ import pruebas.jogl.generators.HelixGenerator;
 
 import com.jogamp.opengl.util.Animator;
 
-public class Prueba040_Interface{
+public class Prueba040_StatusBar{
 
 	private static class Renderer implements GLEventListener{
 
