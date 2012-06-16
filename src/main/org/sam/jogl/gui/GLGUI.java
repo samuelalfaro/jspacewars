@@ -203,19 +203,14 @@ public class GLGUI{
 	private static class CursorListener implements MouseListener, MouseMotionListener{
 
 		private transient final Matrix4f transform;
-		private transient int oldX = 0, oldY = 0;
 		
 		CursorListener( Matrix4f transform ){
 			this.transform = transform;
 		}
 		
-		private void setPosition( int x, int y ){
-			transform.m03 = oldX = x;
-			transform.m13 = oldY = y;
-		}
-		
 		private void setPosition( Point point ){
-			setPosition( point.x, point.y );
+			transform.m03 = point.x;
+			transform.m13 = point.y;
 		}
 		
 		/* (non-Javadoc)
@@ -238,10 +233,8 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseExited( MouseEvent e ){
-			setPosition(
-				( e.getPoint().x - oldX ) * 40 + e.getPoint().x,
-				( e.getPoint().y - oldY ) * 40 + e.getPoint().y
-			);
+			transform.m03 =	( e.getPoint().x - transform.m03 ) * 80 + e.getPoint().x;
+			transform.m13 =	( e.getPoint().y - transform.m13 ) * 80 + e.getPoint().y;
 		}
 	
 		/* (non-Javadoc)
