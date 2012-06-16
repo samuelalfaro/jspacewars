@@ -186,7 +186,7 @@ public class PruebaBotones{
 			
 			Apariencia apFont = new Apariencia();
 			
-			//*
+			/*
 			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
 			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER);
 			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );

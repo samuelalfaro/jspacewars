@@ -82,7 +82,7 @@ public class Prueba001_Raster{
 		public void init( GLAutoDrawable drawable ){
 			GL gl = drawable.getGL();
 			glu = new GLU();
-			gl.glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+			gl.glClearColor( 0.0f, 0.5f, 0.0f, 0.0f );
 			// gl.glShadeModel(GL.GL_FLAT);
 			// gl.glPixelStorei(GL.GL_UNPACK_ALIGNMENT, 1);
 		}

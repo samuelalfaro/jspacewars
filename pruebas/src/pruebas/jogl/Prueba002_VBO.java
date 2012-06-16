@@ -195,8 +195,7 @@ public class Prueba002_VBO{
 			tex.put( senA );
 			tex.rewind();
 
-			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
-			gl.glClear( GL.GL_COLOR_BUFFER_BIT );
+			gl.glClear( GL.GL_DEPTH_BUFFER_BIT | GL.GL_COLOR_BUFFER_BIT );
 
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();

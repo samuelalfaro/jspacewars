@@ -57,6 +57,7 @@ public class Prueba012_SinglePassWireframe{
 		private GLU glu;
 		private OrbitBehavior orbitBehavior;
 
+		private final Apariencia aparienciaNula = new Apariencia();
 		private Objeto3D forma;
 		private final Tuple2f viewport = new Point2f();
 		
@@ -169,6 +170,7 @@ public class Prueba012_SinglePassWireframe{
 
 			GL2 gl = drawable.getGL().getGL2();
 
+			aparienciaNula.usar( gl );
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
@@ -187,12 +189,12 @@ public class Prueba012_SinglePassWireframe{
 			
 			Shader.desactivar( gl );
 			forma.getApariencia().getShader().setUniform( "viewport", viewport );
-			forma.getApariencia().getShader().activar( gl );
+			//forma.getApariencia().getShader().activar( gl );
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glLoadIdentity();
 			double near = 0.01;
-			double far = 100.0;
+			double far = 10000.0;
 			double a1 = 45.0; // angulo en grados
 			double a2 = a1 / 360 * Math.PI; // mitad del angulo en radianes
 			double d = near / Math.sqrt( ( 1 / Math.pow( Math.sin( a2 ), 2 ) ) - 1 );
