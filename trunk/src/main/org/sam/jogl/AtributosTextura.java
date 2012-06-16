@@ -240,110 +240,88 @@ public class AtributosTextura {
 	 */
 	public static final AtributosTextura DEFAULT = new AtributosTextura() {
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setEnvColor(float, float, float, float)
 		 */
 		@Override
 		public void setEnvColor(float r, float g, float b, float a) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setMode(org.sam.jogl.AtributosTextura.Mode)
 		 */
 		@Override
 		public void setMode(Mode mode) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineRgbMode(org.sam.jogl.AtributosTextura.CombineMode)
 		 */
 		@Override
 		public void setCombineRgbMode(CombineMode combineRgbMode) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineRgbSource0(org.sam.jogl.AtributosTextura.CombineSrc, org.sam.jogl.AtributosTextura.CombineOperand)
 		 */
 		@Override
 		public void setCombineRgbSource0(CombineSrc src, CombineOperand operand) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineRgbSource1(org.sam.jogl.AtributosTextura.CombineSrc, org.sam.jogl.AtributosTextura.CombineOperand)
 		 */
 		@Override
 		public void setCombineRgbSource1(CombineSrc src, CombineOperand operand) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineRgbSource2(org.sam.jogl.AtributosTextura.CombineSrc, org.sam.jogl.AtributosTextura.CombineOperand)
 		 */
 		@Override
 		public void setCombineRgbSource2(CombineSrc src, CombineOperand operand) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineAlphaMode(org.sam.jogl.AtributosTextura.CombineMode)
 		 */
 		@Override
 		public void setCombineAlphaMode(CombineMode combineAlphaMode) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineAlphaSource0(org.sam.jogl.AtributosTextura.CombineSrc, org.sam.jogl.AtributosTextura.CombineOperand)
 		 */
 		@Override
 		public void setCombineAlphaSource0(CombineSrc src, CombineOperand operand) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineAlphaSource1(org.sam.jogl.AtributosTextura.CombineSrc, org.sam.jogl.AtributosTextura.CombineOperand)
 		 */
 		@Override
 		public void setCombineAlphaSource1(CombineSrc src, CombineOperand operand) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setCombineAlphaSource2(org.sam.jogl.AtributosTextura.CombineSrc, org.sam.jogl.AtributosTextura.CombineOperand)
 		 */
 		@Override
 		public void setCombineAlphaSource2(CombineSrc src, CombineOperand operand) {
 			throw new UnsupportedOperationException("DEFAULT can't be changed");
 		}
 
-		/**
-		 * {@inheritDoc}
-		 * @throws
-		 * UnsupportedOperationException Puesto que no se pueden modificar los valores por defecto.
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.AtributosTextura#setPerspectiveCorrection(org.sam.jogl.AtributosTextura.PerspectiveCorrection)
 		 */
 		@Override
 		public void setPerspectiveCorrection(PerspectiveCorrection perspCorrection) {
@@ -516,7 +494,7 @@ public class AtributosTextura {
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
 	@SuppressWarnings( "static-access" )
-	public void usar(GL2 gl) {
+	public void usar( GL2 gl ){
 
 		if (envColor != null)
 			gl.glTexEnvfv(GL2.GL_TEXTURE_ENV, GL2.GL_TEXTURE_ENV_COLOR, envColor, 0);

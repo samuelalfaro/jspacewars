@@ -44,6 +44,7 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 
 import org.sam.elementos.Cache;
+import org.sam.jogl.fondos.GLEventListenerBackgroundRenderer;
 import org.sam.jogl.gui.ButtonAction;
 import org.sam.jspacewars.cliente.Cliente;
 import org.sam.jspacewars.serialization.Loader;
@@ -91,7 +92,7 @@ public class ExampleGameMenuJOGL {
 		return frame;
 	}
 	
-	private static void mostrar(Window frame, Component component) {
+	private static void mostrar( Window frame, Component component ){
 //		if( Container.class.isAssignableFrom(component.getClass()) ){
 //			frame.setContentPane((Container) component);
 //		}else{
@@ -105,8 +106,8 @@ public class ExampleGameMenuJOGL {
 		frame.removeAll();
 		frame.add( component, BorderLayout.CENTER );
 		frame.validate();
-		if(!frame.isVisible()){
-			frame.setVisible(true);
+		if( !frame.isVisible() ){
+			frame.setVisible( true );
 		}
 		component.requestFocus();
 	}
@@ -118,61 +119,61 @@ public class ExampleGameMenuJOGL {
 		ClientServer(){}
 	}
 	
-	public static void main(String[] args) {
+	public static void main( String[] args ){
 
-		final ClientServer clientServer= new ClientServer();
-		
+		final ClientServer clientServer = new ClientServer();
+
 		final DataGame dataGame = new DataGame();
 		GLCanvas splashCanvas = new GLCanvas( new GLCapabilities( GLProfile.get( GLProfile.GL2 ) ) );
 
-		SplashWindow splashWindow = new SplashWindow("splash.jpg", splashCanvas, dataGame);
-		splashWindow.setVisible(true);
-		
-		final Cache<Elemento> cache = new Cache<Elemento>(1000);
-		try {
-			Loader.loadData(cache);
-		} catch (FileNotFoundException e1) {
+		SplashWindow splashWindow = new SplashWindow( "splash.jpg", splashCanvas, dataGame );
+		splashWindow.setVisible( true );
+
+		final Cache<Elemento> cache = new Cache<Elemento>( 1000 );
+		try{
+			Loader.loadData( cache );
+		}catch( FileNotFoundException e1 ){
 			e1.printStackTrace();
-		} catch (IOException e1) {
+		}catch( IOException e1 ){
 			e1.printStackTrace();
 		}
 
 		final Animator animator = new Animator();
-		animator.setRunAsFastAsPossible(true);
-		animator.setPrintExceptions(true);
+		animator.setRunAsFastAsPossible( true );
+		animator.setPrintExceptions( true );
 		splashWindow.waitForLoading();
-		splashWindow.setVisible(false);
+		splashWindow.setVisible( false );
 
-		final GLCanvas canvas = new GLCanvas(null, null, splashCanvas.getContext(), null);
-		
-		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer(dataGame.getFondo());
-		Map<String,ButtonAction> actions = new Hashtable<String,ButtonAction>();
-		final GLEventListenerDisplayGUI displayGUI = new GLEventListenerDisplayGUI(actions);
-		
-		canvas.addGLEventListener(backgroundRenderer);
-		canvas.addGLEventListener(displayGUI);
-		
+		final GLCanvas canvas = new GLCanvas( null, null, splashCanvas.getContext(), null );
+
+		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer( dataGame.getFondo() );
+		Map<String, ButtonAction> actions = new Hashtable<String, ButtonAction>();
+		final GLEventListenerDisplayGUI displayGUI = new GLEventListenerDisplayGUI( actions );
+
+		canvas.addGLEventListener( backgroundRenderer );
+		canvas.addGLEventListener( displayGUI );
+
 		splashWindow = null;
 		System.gc();
 
 		final Window frame = getFullScreenFrame();
-		
-		ButtonAction action =  new ButtonAction() {
-			public void run() {
+
+		ButtonAction action = new ButtonAction(){
+			public void run(){
 				try{
 					displayGUI.hideMenu();
 					animator.stop();
-					animator.remove(canvas);
-					canvas.removeGLEventListener(backgroundRenderer);
+					animator.remove( canvas );
+					canvas.removeGLEventListener( backgroundRenderer );
 					//canvas.removeGLEventListener(displayGUI);
-						
-					clientServer.server = new ServidorJuego(cache);
+
+					clientServer.server = new ServidorJuego( cache );
 					clientServer.cliente = new Cliente( dataGame, canvas );
-					clientServer.cliente.setChannelIn(clientServer.server.getLocalChannelClientIn());
-					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut());
+					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
+					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
 					//canvas.addGLEventListener(displayGUI);
 					clientServer.cliente.start();
-					
+
 					new Thread(){
 						public void run(){
 							try{
@@ -182,31 +183,31 @@ public class ExampleGameMenuJOGL {
 							}
 						}
 					}.start();
-					
+
 				}catch( IOException exception ){
 					exception.printStackTrace();
 				}
 			}
 		};
-		actions.put("player1", action);
-		
-		action =  new ButtonAction() {
-			public void run() {
+		actions.put( "player1", action );
+
+		action = new ButtonAction(){
+			public void run(){
 				try{
 					displayGUI.hideMenu();
 					animator.stop();
-					animator.remove(canvas);
-					canvas.removeGLEventListener(backgroundRenderer);
+					animator.remove( canvas );
+					canvas.removeGLEventListener( backgroundRenderer );
 					//canvas.removeGLEventListener(displayGUI);
-						
-					clientServer.server = new ServidorJuego(cache,getPort());
-					
+
+					clientServer.server = new ServidorJuego( cache, getPort() );
+
 					clientServer.cliente = new Cliente( dataGame, canvas );
-					clientServer.cliente.setChannelIn(clientServer.server.getLocalChannelClientIn());
-					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut());
+					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
+					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
 					//canvas.addGLEventListener(displayGUI);
 					clientServer.cliente.start();
-					
+
 					new Thread(){
 						public void run(){
 							try{
@@ -216,37 +217,37 @@ public class ExampleGameMenuJOGL {
 							}
 						}
 					}.start();
-					
+
 				}catch( IOException exception ){
 					exception.printStackTrace();
 				}
 			}
 		};
-		actions.put("server", action);
-		
-		action =  new ButtonAction() {
-			public void run() {
+		actions.put( "server", action );
+
+		action = new ButtonAction(){
+			public void run(){
 				try{
 					displayGUI.hideMenu();
 					animator.stop();
-					animator.remove(canvas);
-					canvas.removeGLEventListener(backgroundRenderer);
+					animator.remove( canvas );
+					canvas.removeGLEventListener( backgroundRenderer );
 					//canvas.removeGLEventListener(displayGUI);
 					DatagramChannel canalCliente = DatagramChannel.open();
-					canalCliente.connect(new InetSocketAddress(getHostName(), getPort()));
-					clientServer.cliente = new Cliente(dataGame, canvas);
-					clientServer.cliente.setChannelIn(canalCliente);
-					clientServer.cliente.setChannelOut(canalCliente);
+					canalCliente.connect( new InetSocketAddress( getHostName(), getPort() ) );
+					clientServer.cliente = new Cliente( dataGame, canvas );
+					clientServer.cliente.setChannelIn( canalCliente );
+					clientServer.cliente.setChannelOut( canalCliente );
 					clientServer.cliente.start();
 				}catch( IOException exception ){
 					exception.printStackTrace();
 				}
 			}
 		};
-		actions.put("client", action);
-		
-		animator.add(canvas);
-		mostrar(frame, canvas);
+		actions.put( "client", action );
+
+		animator.add( canvas );
+		mostrar( frame, canvas );
 		animator.start();
 	}
 }

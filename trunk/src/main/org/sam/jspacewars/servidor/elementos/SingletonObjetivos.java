@@ -30,17 +30,17 @@ public final class SingletonObjetivos {
 	private static NaveEnemiga objetivoProtas;
 	private static NaveUsuario objetivoEnemigos;
 
-	public static Elemento getObjetivo(Nave me) {
-		return me instanceof NaveUsuario ? objetivoProtas : objetivoEnemigos;
+	public static Elemento getObjetivo( Nave me ){
+		return me instanceof NaveUsuario ? objetivoProtas: objetivoEnemigos;
 	}
-	
+
 	@Deprecated
-	public static Elemento  getObjetivo(){
+	public static Elemento getObjetivo(){
 		return objetivoProtas;
 	}
-	
+
 	@Deprecated
-	public static void setObjetivoUsuario(NaveEnemiga objetivo) {
+	public static void setObjetivoUsuario( NaveEnemiga objetivo ){
 		SingletonObjetivos.objetivoProtas = objetivo;
 	}
 	

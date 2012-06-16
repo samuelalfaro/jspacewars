@@ -153,10 +153,10 @@ public class PantallaTestColisiones extends GLCanvas{
 				init( drawable );
 			}
 			GL2 gl = drawable.getGL().getGL2();
-
+			
+			gl.glViewport( viewport.x, viewport.y, viewport.width, viewport.height );
 			gl.glClear( GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 
-			gl.glViewport( viewport.x, viewport.y, viewport.width, viewport.height );
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			glu.gluLookAt( 0.0, 0.0, 11, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0 );
 
@@ -170,7 +170,6 @@ public class PantallaTestColisiones extends GLCanvas{
 			gl.glFlush();
 		}
 
-		//private transient final Rectangle areaInterna = new Rectangle();
 		private final transient Rectangle2D.Float areaInterna = new Rectangle2D.Float();
 		
 		public void reshape( GLAutoDrawable drawable, int x, int y, int width, int height ){
@@ -211,13 +210,13 @@ public class PantallaTestColisiones extends GLCanvas{
 	 * Constructor que genera un cliente que se encarga de mostrar los poligonos
 	 * asociados a los distintos elementos elementos del juego. 
 	 */
-	public PantallaTestColisiones() {
-		this.data =  new ClientData();
-				
-		this.setBackground(Color.BLACK);
-		this.setIgnoreRepaint(true);
-		this.addGLEventListener( new Renderer(data) );
-		this.addKeyListener(new GameKeyListener(data));	
+	public PantallaTestColisiones(){
+		this.data = new ClientData();
+
+		this.setBackground( Color.BLACK );
+		this.setIgnoreRepaint( true );
+		this.addGLEventListener( new Renderer( data ) );
+		this.addKeyListener( new GameKeyListener( data ) );
 	}
 	
 	/**
@@ -226,78 +225,78 @@ public class PantallaTestColisiones extends GLCanvas{
 	public int getKeyState(){
 		return data.key_state;
 	}
-	
+
 	/**
 	 * @param nVidas valor del número de vidas asignado.
 	 */
-	public void setNVidas(int nVidas){
+	public void setNVidas( int nVidas ){
 		data.nVidas = nVidas;
 	}
-	
+
 	/**
 	 * @param nBombas valor del número de bombas asignado.
 	 */
-	public void setNBombas(int nBombas){
+	public void setNBombas( int nBombas ){
 		data.nBombas = nBombas;
 	}
-	
+
 	/**
 	 * @param puntos valor de los puntos asignados.
 	 */
-	public void setPuntos(int puntos){
+	public void setPuntos( int puntos ){
 		data.puntos = puntos;
 	}
-	
+
 	/**
 	 * @param nivelesFijos valores de los niveles fijos asignados.
 	 */
-	public void setNivelesFijos(int[] nivelesFijos) {
-		for(int i = 0; i < nivelesFijos.length; i++ )
+	public void setNivelesFijos( int[] nivelesFijos ){
+		for( int i = 0; i < nivelesFijos.length; i++ )
 			data.nivelesFijos[i] = nivelesFijos[i];
 	}
 
 	/**
 	 * @param nivelesActuales valores de los niveles actuales asignados.
 	 */
-	public void setNivelesActuales(int[] nivelesActuales) {
-		for(int i = 0; i < nivelesActuales.length; i++ )
+	public void setNivelesActuales( int[] nivelesActuales ){
+		for( int i = 0; i < nivelesActuales.length; i++ )
 			data.nivelesActuales[i] = nivelesActuales[i];
 	}
 
 	/**
 	 * @param nivelesDisponibles valores de los niveles disponibles asignados.
 	 */
-	public void setNivelesDisponibles(int[] nivelesDisponibles) {
-		for(int i = 0; i < nivelesDisponibles.length; i++ )
+	public void setNivelesDisponibles( int[] nivelesDisponibles ){
+		for( int i = 0; i < nivelesDisponibles.length; i++ )
 			data.nivelesDisponibles[i] = nivelesDisponibles[i];
 	}
-	
+
 	/**
 	 * @param indicador valor del indicador asignado.
 	 */
-	public void setIndicador(int indicador){
+	public void setIndicador( int indicador ){
 		data.indicador = indicador;
 	}
-	
+
 	/**
 	 * @param grado valor del grado asignado.
 	 */
-	public void setGrado(int grado){
+	public void setGrado( int grado ){
 		data.grado = grado;
 	}
-	
+
 	/**
 	 * Método que limpia la lista de elementos.
 	 */
 	public void clearList(){
 		data.elementos.clear();
 	}
-	
+
 	/**
 	 * Método que añade un nuevo elemento la lista de elementos.
 	 * @param e elemento a añadir.
 	 */
-	public void add(Elemento e){
-		data.elementos.add( new Instancia3D( (short)0, new PoligonoDibujable (e)) );
+	public void add( Elemento e ){
+		data.elementos.add( new Instancia3D( (short)0, new PoligonoDibujable( e ) ) );
 	}
 }

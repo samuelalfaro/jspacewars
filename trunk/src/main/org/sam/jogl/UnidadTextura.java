@@ -71,7 +71,7 @@ public class UnidadTextura {
 	 * <i>Getter</i> que devuelve la {@code Textura} de esta {@code UnidadTextura}.
 	 * @return La {@code Textura} solicitada.
 	 */
-	public Textura getTextura() {
+	public Textura getTextura(){
 		return textura;
 	}
 	
@@ -79,7 +79,7 @@ public class UnidadTextura {
 	 * <i>Setter</i> que asigna la {@code Textura} a esta {@code UnidadTextura}.
 	 * @param textura La {@code Textura} asignada.
 	 */
-	public void setTextura(Textura textura) {
+	public void setTextura( Textura textura ){
 		this.textura = textura;
 	}
 	
@@ -87,7 +87,7 @@ public class UnidadTextura {
 	 * <i>Getter</i> que devuelve los {@code AtributosTextura} de esta {@code UnidadTextura}.
 	 * @return Los {@code AtributosTextura} solicitados.
 	 */
-	public AtributosTextura getAtributosTextura() {
+	public AtributosTextura getAtributosTextura(){
 		return atributosTextura;
 	}
 	
@@ -95,7 +95,7 @@ public class UnidadTextura {
 	 * <i>Setter</i> que asigna los {@code AtributosTextura} a esta {@code UnidadTextura}.
 	 * @param atributosTextura Los {@code AtributosTextura} asignados.
 	 */
-	public void setAtributosTextura(AtributosTextura atributosTextura) {
+	public void setAtributosTextura( AtributosTextura atributosTextura ){
 		this.atributosTextura = atributosTextura;
 	}
 	
@@ -103,7 +103,7 @@ public class UnidadTextura {
 	 * <i>Getter</i> que devuelve el {@code GenCoordTextura} de esta {@code UnidadTextura}.
 	 * @return El {@code GenCoordTextura} solicitado.
 	 */
-	public GenCoordTextura getGenCoordTextura() {
+	public GenCoordTextura getGenCoordTextura(){
 		return genCoordTextura;
 	}
 	
@@ -111,7 +111,7 @@ public class UnidadTextura {
 	 * <i>Setter</i> que asigna el {@code GenCoordTextura} a esta {@code UnidadTextura}.
 	 * @param genCoordTextura El {@code GenCoordTextura} asignado.
 	 */
-	public void setGenCoordTextura(GenCoordTextura genCoordTextura) {
+	public void setGenCoordTextura( GenCoordTextura genCoordTextura ){
 		this.genCoordTextura = genCoordTextura;
 	}
 	
@@ -160,7 +160,7 @@ public class UnidadTextura {
 		if( lastUnit != unit )
 			gl.glActiveTexture( units[unit] );
 
-		tAnteriores[unit].desactivar( gl );
+		Textura.desactivar( gl );
 		tAnteriores[unit] = null;
 		aAnteriores[unit] = null;
 		if( gAnteriores[unit] != null ){

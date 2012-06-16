@@ -353,7 +353,7 @@ public class Textura{
 	 * @param gl
 	 *            Contexto gráfico en el que se realiza a acción.
 	 */
-	public void desactivar( GL2 gl ){
+	public static void desactivar( GL2 gl ){
 		gl.glDisable( GL.GL_TEXTURE_2D );
 	}
 }
