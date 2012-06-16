@@ -58,12 +58,14 @@ public class UIManager{
 	
 	private static void loadFonts( GL2 gl, Hashtable<Object, Object> hashtable ){
 		
-		String fontDef      = "resources/texturas/fonts/arbeka.xml";
-		String font1Texture = "resources/texturas/fonts/arbeka.png";
+		final String fontDef      = "resources/texturas/fonts/arbeka.xml";
+		final String font1Texture = "resources/texturas/fonts/arbeka.png";
+		final String font2Texture = "resources/texturas/fonts/arbeka-blur.png";
+		final String font3Texture = "resources/texturas/fonts/arbeka-neon.png";
+		
 		
 		try{
-			TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) );
-			font = font.deriveFont( 0.3f );
+			TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) ).deriveFont( 0.3f );
 
 			BufferedImage img = Imagen.cargarToBufferedImage( font1Texture );
 
@@ -77,20 +79,110 @@ public class UIManager{
 
 			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
 			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
-			apFont.getAtributosTextura().setCombineRgbSource0( AtributosTextura.CombineSrc.OBJECT,
-					AtributosTextura.CombineOperand.SRC_COLOR );
+			apFont.getAtributosTextura().setCombineRgbSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
+			);
 			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
-			apFont.getAtributosTextura().setCombineAlphaSource0( AtributosTextura.CombineSrc.OBJECT,
-					AtributosTextura.CombineOperand.SRC_ALPHA );
-			apFont.getAtributosTextura().setCombineAlphaSource1( AtributosTextura.CombineSrc.TEXTURE,
-					AtributosTextura.CombineOperand.SRC_ALPHA );
+			apFont.getAtributosTextura().setCombineAlphaSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			apFont.getAtributosTextura().setCombineAlphaSource1(
+					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
 			
-			apFont.setAtributosTransparencia( new AtributosTransparencia( AtributosTransparencia.Equation.ADD,
-					AtributosTransparencia.SrcFunc.SRC_ALPHA, AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA ) );
+			apFont.setAtributosTransparencia( new AtributosTransparencia(
+					AtributosTransparencia.Equation.ADD, 
+					AtributosTransparencia.SrcFunc.SRC_ALPHA,
+					AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
+			) );
 			
 			font.setApariencia( apFont );
 			
 			hashtable.put( "Font.default", font );
+			
+			img = Imagen.cargarToBufferedImage( font2Texture );
+			apFont = new Apariencia();
+
+			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
+
+			apFont.setAtributosTextura( new AtributosTextura() );
+			
+
+			apFont.getAtributosTextura().setEnvColor( 1.0f, 1.0f, 1.0f, 1.0f );
+			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.INTERPOLATE );
+			// C' = S0 * S2 + S1*(1-S2)
+			apFont.getAtributosTextura().setCombineRgbSource0(
+					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineRgbSource1(
+					AtributosTextura.CombineSrc.CONSTANT, AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineRgbSource2(
+					AtributosTextura.CombineSrc.PREVIOUS, AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+
+			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineRgbSource0(
+				AtributosTextura.CombineSrc.OBJECT, 
+				AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
+			apFont.getAtributosTextura().setCombineAlphaSource0(
+				AtributosTextura.CombineSrc.OBJECT,
+				AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			apFont.getAtributosTextura().setCombineAlphaSource1(
+				AtributosTextura.CombineSrc.TEXTURE,
+				AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			apFont.setAtributosTransparencia(
+				new AtributosTransparencia(
+					AtributosTransparencia.Equation.ADD,
+					AtributosTransparencia.SrcFunc.ZERO,
+					AtributosTransparencia.DstFunc.SRC_COLOR
+				)
+			);
+			
+			hashtable.put( "Font.default.shadow", font.deriveFont( apFont ) );
+			
+			img = Imagen.cargarToBufferedImage( font3Texture );
+			apFont = new Apariencia();
+
+			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
+			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
+			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
+
+			apFont.setAtributosTextura( new AtributosTextura() );
+
+			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
+			apFont.getAtributosTextura().setCombineRgbSource0(
+				AtributosTextura.CombineSrc.OBJECT, 
+				AtributosTextura.CombineOperand.SRC_COLOR
+			);
+			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
+			apFont.getAtributosTextura().setCombineAlphaSource0(
+				AtributosTextura.CombineSrc.OBJECT,
+				AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			apFont.getAtributosTextura().setCombineAlphaSource1(
+				AtributosTextura.CombineSrc.TEXTURE,
+				AtributosTextura.CombineOperand.SRC_ALPHA
+			);
+			apFont.setAtributosTransparencia(
+				new AtributosTransparencia(
+					AtributosTransparencia.Equation.ADD,
+					AtributosTransparencia.SrcFunc.SRC_ALPHA,
+					AtributosTransparencia.DstFunc.ONE
+				)
+			);
+			
+			hashtable.put( "Font.default.fx", font.deriveFont( apFont ) );
+			
 			
 		}catch( FileNotFoundException e ){
 			e.printStackTrace();

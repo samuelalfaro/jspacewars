@@ -100,7 +100,7 @@ public class TestColisiones implements Runnable{
 		float ratio = ( 30 * 4.0f / 32 ) / ( 3.0f - 4 * 4.0f / 32 ); // ratio 4/3 sin bordes GUI
 		float h = 2.9f;
 		float w = ratio * h;
-		nave.setLimites(w, h);
+		nave.setLimites( w, h );
 		navesProtagonistas.add(nave);
 		
 		NaveEnemiga naveEnemiga = (NaveEnemiga)cache.newObject( 0x10 );

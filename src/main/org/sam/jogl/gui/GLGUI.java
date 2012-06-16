@@ -31,8 +31,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;

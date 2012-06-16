@@ -20,22 +20,20 @@
  * You should have received a copy of the GNU General Public License
  * along with jSpaceWars. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sam.jspacewars;
+package org.sam.jogl.fondos;
 
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 
-import org.sam.jogl.fondos.Fondo;
-
 /**
  * Implementación de un {@code GLEventListener} que renderiza un Fondo.
  */
-class GLEventListenerBackgroundRenderer implements GLEventListener {
+public class GLEventListenerBackgroundRenderer implements GLEventListener {
 
 	private final transient Fondo fondo;
 	private transient long tAnterior, tActual;
 
-	GLEventListenerBackgroundRenderer( Fondo fondo ){
+	public GLEventListenerBackgroundRenderer( Fondo fondo ){
 		this.fondo = fondo;
 		tActual = System.nanoTime();
 	}

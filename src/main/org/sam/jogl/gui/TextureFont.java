@@ -33,12 +33,12 @@ import com.jogamp.common.nio.Buffers;
 
 public class TextureFont{
 
-	private final char[] characters;
-	private final int[]  charactersIds;
-	private final int    unknownId;
+	private final char[]  characters;
+	private final int[]   charactersIds;
+	private final int     unknownId;
 
 	private final float[] charactersWidths;
-	private final float defaultWidth;
+	private final float   defaultWidth;
 	
 	final float maxAscent;
 	final float maxDescent;
@@ -62,14 +62,14 @@ public class TextureFont{
 
 		gl.glNewList( listId, GL2.GL_COMPILE );
 		gl.glBegin( GL2.GL_QUADS );
-		gl.glTexCoord2f( u1, v1 );
-		gl.glVertex2f( x1, y1 );
-		gl.glTexCoord2f( u1, v2 );
-		gl.glVertex2f( x1, y2 );
-		gl.glTexCoord2f( u2, v2 );
-		gl.glVertex2f( x2, y2 );
-		gl.glTexCoord2f( u2, v1 );
-		gl.glVertex2f( x2, y1 );
+			gl.glTexCoord2f( u1, v1 );
+			gl.glVertex2f( x1, y1 );
+			gl.glTexCoord2f( u1, v2 );
+			gl.glVertex2f( x1, y2 );
+			gl.glTexCoord2f( u2, v2 );
+			gl.glVertex2f( x2, y2 );
+			gl.glTexCoord2f( u2, v1 );
+			gl.glVertex2f( x2, y1 );
 		gl.glEnd();
 		gl.glTranslated( ( cData.charWidth + fData.gap ) / fData.scaleX, 0, 0 );
 		gl.glEndList();
@@ -118,7 +118,7 @@ public class TextureFont{
 		this( gl, FontDataReader.fromXML( xml ) );
 	}
 	
-	private TextureFont( TextureFont me, float scaleX, float scaleY ){
+	private TextureFont( TextureFont me, float scaleX, float scaleY, Apariencia apariencia ){
 		this.characters = me.characters;
 		this.charactersIds = me.charactersIds;
 		this.unknownId = me.unknownId;
@@ -131,15 +131,19 @@ public class TextureFont{
 		this.scaleX = me.scaleX * scaleX;
 		this.scaleY = me.scaleY * scaleY;
 		
-		this.apariencia = me.apariencia;
+		this.apariencia = apariencia;
 	}
 
+	public TextureFont deriveFont( Apariencia apariencia ){
+		return new TextureFont( this, 1.0f, 1.0f, this.apariencia );
+	}
+	
 	public TextureFont deriveFont( float scale ){
-		return new TextureFont( this, scale, scale );
+		return new TextureFont( this, scale, scale, this.apariencia );
 	}
 
 	public TextureFont deriveFont( float scaleX, float scaleY ){
-		return new TextureFont( this, scaleX, scaleY );
+		return new TextureFont( this, scaleX, scaleY, this.apariencia );
 	}
 	
 	public void setApariencia( Apariencia apariencia ){
