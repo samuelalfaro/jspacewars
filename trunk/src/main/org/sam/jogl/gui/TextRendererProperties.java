@@ -1,5 +1,5 @@
 /* 
- * StateConstants.java
+ * TextRendererProperties.java
  * 
  * Copyright (c) 2012 Samuel Alfaro Jiménez <samuelalfaro at gmail dot com>.
  * All rights reserved.
@@ -21,19 +21,19 @@
  */
 package org.sam.jogl.gui;
 
-/**
- * 
- */
-public interface StateConstants{
+import javax.vecmath.Color4f;
 
-	public static final int STATE_VISIBLE   = 0x80;
-	public static final int STATE_DISABLED  = 0x40;
-	public static final int STATE_FOCUSABLE = 0x20;
+public class TextRendererProperties{
 	
-	public static final int STATE_PRESSED   = 0x04;
-	public static final int STATE_HOVERED   = 0x02;
-	public static final int STATE_FOCUSED   = 0x01;
-	
-	public static final int STATE_DEFAULT   = 0x00;
+	public TextureFont shadowFont;
+	public Color4f shadowColor;
+	public float shadowOfsetX, shadowOfsetY;
+
+	public TextureFont font;
+	public Color4f color;
+
+	public TextureFont fxFont;
+	public Color4f fxColor;
+	public float fxOfsetX, fxOfsetY;
 	
 }

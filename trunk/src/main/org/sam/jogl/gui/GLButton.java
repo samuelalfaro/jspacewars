@@ -21,8 +21,6 @@
  */
 package org.sam.jogl.gui;
 
-import javax.media.opengl.GL2;
-
 import org.sam.jogl.gui.event.MouseAdapter;
 import org.sam.jogl.gui.event.MouseEvent;
 
@@ -34,13 +32,14 @@ public class GLButton extends GLLabel{
 	private class ButtonListener extends MouseAdapter{
 
 		public void mouseEntered( MouseEvent e ){
+			System.err.println( isHovered() +" " +getText() + " mouseEntered " + e.getX() + " " + e.getY() );
 			if( !isEnabled() )
 				return;
-			if( !isHovered() )
-				setHovered( true );
+			setHovered( true );
 		}
 
 		public void mouseExited( MouseEvent e ){
+			System.err.println( isHovered() +" " +getText() + " mouseExited " + e.getX() + " " + e.getY() );
 			if( !isEnabled() )
 				return;
 			setHovered( false );
@@ -48,33 +47,22 @@ public class GLButton extends GLLabel{
 		}
 
 		public void mousePressed( MouseEvent e ){
+			System.err.println(  getText() + " mousePressed " );
 			if( !isEnabled() )
 				return;
 			if( e.getButton() == MouseEvent.BUTTON1 ){
+			//	setHovered( true );
 				setPressed( true );
 			}
 		}
 
 		public void mouseReleased( MouseEvent e ){
+			System.err.println(  getText() + " mouseReleased " );
 			if( !isEnabled() )
 				return;
 			if( isPressed() && e.getButton() == MouseEvent.BUTTON1 ){
-				setHovered( true );
-				setFocused( true );
 				setPressed( false );
 				//fireActionPerformed( actionCommand );
-			}
-		}
-
-		public void mouseDragged( MouseEvent e ){
-			if( !isEnabled() )
-				return;
-			if( contains( e.getX(), e.getY() ) ){
-				setHovered( true );
-				setPressed( e.getButton() == MouseEvent.BUTTON1  );
-			}else{
-				setHovered( false );
-				setPressed( false );
 			}
 		}
 	}
@@ -87,45 +75,58 @@ public class GLButton extends GLLabel{
 	public GLButton(){
 		this("");
 	}
+
+	protected void changeState( int oldState, int newState ){
+		if( !isEnabled() ){
+			// desactivado
+			this.setBackground( UIManager.getBackground( "Button.background.disabled" ) );
+			this.setBorder( UIManager.getBorder( "Button.border.disabled" ) );
+			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.disabled" ) );
+		}else if( isPressed() ){
+			// pulsado recibe el foco
+			this.setBackground( UIManager.getBackground( "Button.background.pressed" ) );
+			this.setBorder( UIManager.getBorder( "Button.border.pressed" ) );
+			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.pressed" ) );
+		}else if( isFocused() ){
+			if( isHovered() ){
+				// ratón encima foco
+				this.setBackground( UIManager.getBackground( "Button.background.hovered" ) );
+				this.setBorder( UIManager.getBorder( "Button.border.hovered" ) );
+				this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.hovered" ) );
+			}else{
+				// default foco
+				this.setBackground( UIManager.getBackground( "Button.background.focused" ) );
+				this.setBorder( UIManager.getBorder( "Button.border.focused" ) );
+				this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.focused" ) );
+			}
+		}else if( isHovered() ){
+			// ratón encima
+			this.setBackground( UIManager.getBackground( "Button.background.hovered" ) );
+			this.setBorder( UIManager.getBorder( "Button.border.hovered" ) );
+			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.hovered" ) );
+		}else{
+			// default
+			this.setBackground( UIManager.getBackground( "Button.background.default" ) );
+			this.setBorder( UIManager.getBorder( "Button.border.default" ) );
+			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.default" ) );
+		}
+	}
 	
 	public final void setPressed( boolean pressed ){
-		if( pressed )
-			this.state |= StateConstants.STATE_PRESSED;
-		else
-			this.state &= ~StateConstants.STATE_PRESSED;
+		setStateBit( pressed, StateConstants.STATE_PRESSED );
 	}
 	
 	public final boolean isPressed(){
 		return ( state & StateConstants.STATE_PRESSED ) != 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
-	 */
-	@Override
-	public void draw( GL2 gl ){
-		if( !isEnabled() ){
-			draw( gl, 0.25f, 0.25f, 0.25f, 0.5f, 0.5f, 0.5f ); 	// desactivado
-			TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.5f,  1.0f );
-		}else if( isPressed() ){
-			draw( gl, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f ); // pulsado recibe el foco
-			TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.0f,  1.0f );
-		}else if( isFocused() ){
-			if( isHovered() ){
-				draw( gl, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f ); // ratón encima foco
-				TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.0f,  1.0f );
-			}else{
-				draw( gl, 0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f ); // default foco
-				TEXT_RENDERER.setColor( 0.0f, 0.0f, 0.0f,  1.0f );
-			}
-		}else if( isHovered() ){
-			draw( gl, 0.0f, 1.0f, 0.0f, 0.75f, 0.75f, 0.75f ); // ratón encima
-			TEXT_RENDERER.setColor( 0.0f, 0.0f, 0.0f,  1.0f );
-		}else{
-			draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
-			TEXT_RENDERER.setColor( 0.0f, 0.0f, 0.0f,  1.0f );
-		}
-		printText(gl);
+	protected void init(){
+		if( initialized )
+			return;
+		initialized = true;
+		
+		this.setBackground( UIManager.getBackground( "Button.background.default" ) );
+		this.setBorder( UIManager.getBorder( "Button.border.default" ) );
+		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.default" ) );
 	}
-
 }

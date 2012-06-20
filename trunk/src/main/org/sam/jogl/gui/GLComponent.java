@@ -24,10 +24,7 @@ package org.sam.jogl.gui;
 
 import javax.media.opengl.GL2;
 import javax.swing.event.EventListenerList;
-import javax.vecmath.Color4f;
 
-import org.sam.jogl.Apariencia;
-import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.gui.event.MouseEvent;
 import org.sam.jogl.gui.event.MouseListener;
 import org.sam.jogl.gui.event.MouseWheelEvent;
@@ -36,18 +33,6 @@ import org.sam.jogl.gui.event.MouseWheelListener;
 public abstract class GLComponent extends GLRectangle{
 	
 	protected static final GLTextRenderer TEXT_RENDERER = new GLTextRenderer();
-	
-//	protected static final Apariencia BLEND = new Apariencia();
-//	
-//	static{
-//		BLEND.setAtributosTransparencia( 
-//				new AtributosTransparencia( 
-//						AtributosTransparencia.Equation.ADD,
-//						AtributosTransparencia.SrcFunc.SRC_ALPHA,
-//						AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
-//				)
-//		);
-//	}
 	
 	protected boolean initialized;
 	protected int state;
@@ -63,22 +48,58 @@ public abstract class GLComponent extends GLRectangle{
 		this.state = StateConstants.STATE_DEFAULT;
 	}
 	
+	protected void init(){
+		if( initialized )
+			return;
+		initialized = true;
+		this.setBackground( UIManager.getBackground( "Background.default" ) );
+		this.setBorder( UIManager.getBorder( "Border.default" ) );
+	}
+	
+	//protected abstract void changeState( int oldState, int newState );
+	protected void changeState( int oldState, int newState ){}
+	
+	protected final void setStateBit( boolean newState, int stateBit ){
+		int stateMask = ~stateBit;
+		// newState == true  && bit in state == 0 -> newState != oldState
+		// newState == false && bit in state == 1 -> newState != oldState
+		if( newState != ( ( state & stateBit ) != 0 ) ){
+			if( newState ){
+				this.state |= stateBit;
+				changeState( stateMask, stateBit );
+			}else{
+				this.state &= stateMask;
+				changeState( stateBit, stateMask );
+			}
+		}
+	}
+	
+	public final void setVisible( boolean visible ){
+		setStateBit( visible, StateConstants.STATE_VISIBLE );
+	}
+	
+	public final boolean isVisible(){
+		return ( state & StateConstants.STATE_VISIBLE ) != 0;
+	}
+	
 	public final void setEnabled( boolean enabled ){
-		if( !enabled )
-			this.state = StateConstants.STATE_DISABLED;
-		else
-			this.state &= ~StateConstants.STATE_DISABLED;
+		setStateBit( !enabled, StateConstants.STATE_DISABLED );
 	}
 	
 	public final boolean isEnabled(){
 		return ( state & StateConstants.STATE_DISABLED ) == 0;
 	}
 	
-	public final void setFocused( boolean focused ){
-		if( focused )
-			this.state |= StateConstants.STATE_FOCUSED;
-		else
-			this.state &= ~StateConstants.STATE_FOCUSED;
+	public final void setFocusable( boolean focusable ){
+		setStateBit( focusable, StateConstants.STATE_FOCUSABLE );
+	}
+	
+	public final boolean isFocusable(){
+		return ( state & ~StateConstants.STATE_DISABLED & StateConstants.STATE_FOCUSABLE ) == StateConstants.STATE_FOCUSABLE;
+	}
+	
+	private final void setFocused( boolean focused ){
+		setStateBit( focused, StateConstants.STATE_FOCUSED );
 	}
 	
 	public final boolean isFocused(){
@@ -86,10 +107,7 @@ public abstract class GLComponent extends GLRectangle{
 	}
 	
 	public final void setHovered( boolean hovered ){
-		if( hovered )
-			this.state |= StateConstants.STATE_HOVERED;
-		else
-			this.state &= ~StateConstants.STATE_HOVERED;
+		setStateBit( hovered, StateConstants.STATE_HOVERED );
 	}
 	
 	public final boolean isHovered(){
@@ -191,14 +209,6 @@ public abstract class GLComponent extends GLRectangle{
 		}
 	}
 	
-	protected void init(){
-		if( initialized )
-			return;
-		initialized = true;
-		this.setBackground( UIManager.getBackground( "Background.default" ) );
-		this.setBorder( UIManager.getBorder( "Border.default" ) );
-	}
-
 	protected void processMouseEvent( int id, float x, float y ){
 		processMouseEvent( id, MouseEvent.NOBUTTON, x, y );
 	}
@@ -213,7 +223,6 @@ public abstract class GLComponent extends GLRectangle{
 	}
 	
 	public void draw( GL2 gl ){
-		init();
 		if( background != null)
 			background.draw( gl, x1, y1, x2, y2 );
 		if( border != null)

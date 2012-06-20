@@ -21,9 +21,7 @@
  */
 package org.sam.jogl.gui;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.vecmath.Color4f;
 
 import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
 import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
@@ -32,17 +30,6 @@ import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
  * 
  */
 public class GLLabel extends GLComponent{
-
-	private TextureFont shadowFont;
-	private Color4f     shadowColor;
-	private float       shadowOfsetX, shadowOfsetY;
-	
-	private TextureFont font;
-	private Color4f     color;
-
-	private TextureFont fxFont;
-	private Color4f     fxColor;
-	private float       fxOfsetX, fxOfsetY;
 	
 	private float textX;
 	private float textY;
@@ -50,6 +37,7 @@ public class GLLabel extends GLComponent{
 	private String text;
 	private HorizontalAlignment horizontalAlignment;
 	private VerticalAlignment verticalAlignment;
+	private TextRendererProperties properties;
 
 	public GLLabel( String text, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment ){
 		setText( text );
@@ -144,6 +132,10 @@ public class GLLabel extends GLComponent{
 		updateTextY();
 	}
 	
+	public final void setTextRendererProperties( TextRendererProperties properties ){
+		this.properties = properties;
+	}
+	
 	/**
 	 * @param text valor del text asignado.
 	 */
@@ -158,51 +150,33 @@ public class GLLabel extends GLComponent{
 		return text;
 	}
 
-	protected void draw( GL2 gl, float rf, float gf, float bf, float rb, float gb, float bb ){
-		//BLEND.usar( gl );
-		gl.glBegin(GL2.GL_QUADS);
-			gl.glColor3f  ( rf, gf, bf );
-			gl.glVertex2f ( x1, y1 );
-			gl.glVertex2f ( x2, y1 );
-			gl.glVertex2f ( x2, y2 );
-			gl.glVertex2f ( x1, y2 );
-		gl.glEnd();
-		gl.glBegin( GL.GL_LINE_STRIP );
-			gl.glColor3f  ( rb, gb, bb );
-			gl.glVertex2f ( x1, y1 );
-			gl.glVertex2f ( x2, y1 );
-			gl.glVertex2f ( x2, y2 );
-			gl.glVertex2f ( x1, y2 );
-			gl.glVertex2f ( x1, y1 );
-		gl.glEnd();
-		gl.glBegin( GL.GL_LINE_STRIP );
-			gl.glColor4f  ( rb, gb, bb, 0.5f );
-			gl.glVertex2f ( x1 + padding.left, y1 +  padding.top );
-			gl.glVertex2f ( x2 - padding.right, y1 + padding.top );
-			gl.glVertex2f ( x2 - padding.right, y2 - padding.bottom );
-			gl.glVertex2f ( x1 + padding.left, y2 - padding.bottom );
-			gl.glVertex2f ( x1 + padding.left, y1 + padding.top );
-		gl.glEnd();
+	protected void init(){
+		if( initialized )
+			return;
+		initialized = true;
+		this.setBackground( UIManager.getBackground( "Label.background.default" ) );
+		this.setBorder( UIManager.getBorder( "Label.border.default" ) );
+		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Label.properties.default" ) );
 	}
 	
 	protected final void printText( GL2 gl ){
-		if( text.length() > 0 ){
+		if( text.length() > 0 && properties != null ){
 			TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
 			TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
-			if( shadowFont != null){
-				TEXT_RENDERER.setColor( shadowColor );
-				TEXT_RENDERER.setFont( shadowFont );
-				TEXT_RENDERER.glPrint( gl, textX + shadowOfsetX, textY + shadowOfsetY, text );
+			if( properties.shadowFont != null){
+				TEXT_RENDERER.setColor( properties.shadowColor );
+				TEXT_RENDERER.setFont( properties.shadowFont );
+				TEXT_RENDERER.glPrint( gl, textX + properties.shadowOfsetX, textY + properties.shadowOfsetY, text );
 			}
-			if( color != null )
-				TEXT_RENDERER.setColor( color );
-			if( font != null )
-				TEXT_RENDERER.setFont( font );
+			if( properties.color != null )
+				TEXT_RENDERER.setColor( properties.color );
+			if( properties.font != null )
+				TEXT_RENDERER.setFont( properties.font );
 			TEXT_RENDERER.glPrint( gl, textX, textY, text );
-			if( fxFont != null){
-				TEXT_RENDERER.setColor( fxColor );
-				TEXT_RENDERER.setFont( fxFont );
-				TEXT_RENDERER.glPrint( gl, textX + fxOfsetX, textY + fxOfsetY, text );
+			if( properties.fxFont != null){
+				TEXT_RENDERER.setColor( properties.fxColor );
+				TEXT_RENDERER.setFont( properties.fxFont );
+				TEXT_RENDERER.glPrint( gl, textX + properties.fxOfsetX, textY + properties.fxOfsetY, text );
 			}
 		}
 	}
@@ -213,13 +187,6 @@ public class GLLabel extends GLComponent{
 	@Override
 	public void draw( GL2 gl ){
 		super.draw( gl );
-		if( !isEnabled() ){
-			draw( gl, 0.25f, 0.25f, 0.25f, 0.5f, 0.5f, 0.5f ); 	// desactivado
-			TEXT_RENDERER.setColor( 0.5f, 0.5f, 0.5f,  1.0f );
-		}else{
-			draw( gl, 0.5f, 0.5f, 0.5f, 0.75f, 0.75f, 0.75f ); // default
-			TEXT_RENDERER.setColor( 1.0f,  1.0f,  1.0f,  1.0f );
-		}
 		printText(gl);
 	}
 }

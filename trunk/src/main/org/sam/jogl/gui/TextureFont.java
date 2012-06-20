@@ -135,7 +135,7 @@ public class TextureFont{
 	}
 
 	public TextureFont deriveFont( Apariencia apariencia ){
-		return new TextureFont( this, 1.0f, 1.0f, this.apariencia );
+		return new TextureFont( this, 1.0f, 1.0f, apariencia );
 	}
 	
 	public TextureFont deriveFont( float scale ){
