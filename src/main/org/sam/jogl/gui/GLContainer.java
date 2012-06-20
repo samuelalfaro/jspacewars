@@ -24,7 +24,6 @@ package org.sam.jogl.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import org.sam.jogl.gui.event.MouseEvent;
@@ -166,8 +165,10 @@ public class GLContainer extends GLComponent{
 		if( initialized )
 			return;
 		initialized = true;
-		this.setBackground( UIManager.getBackground( "Container.Background" ) );
-		this.setBorder( UIManager.getBorder( "Container.Border" ) );
+		this.setBackground( UIManager.getBackground( "Container.background.default" ) );
+		this.setBorder( UIManager.getBorder( "Container.border.default" ) );
+		for( GLComponent c: components )
+			c.init();
 	}
 
 	/*
@@ -176,31 +177,6 @@ public class GLContainer extends GLComponent{
 	 */
 	@Override
 	public void draw( GL2 gl ){
-		
-//		BLEND.usar( gl );
-//		gl.glBegin(GL2.GL_QUADS);
-//			gl.glColor4f  ( .5f, .0f, .5f, .5f );
-//			gl.glVertex2f ( x1, y1 );
-//			gl.glVertex2f ( x2, y1 );
-//			gl.glVertex2f ( x2, y2 );
-//			gl.glVertex2f ( x1, y2 );
-//		gl.glEnd();
-//		gl.glBegin( GL.GL_LINE_STRIP );
-//			gl.glColor3f( 1, 1, 1 );
-//			gl.glVertex2f( x1, y1 );
-//			gl.glVertex2f( x2, y1 );
-//			gl.glVertex2f( x2, y2 );
-//			gl.glVertex2f( x1, y2 );
-//			gl.glVertex2f( x1, y1 );
-//		gl.glEnd();
-//		gl.glBegin( GL.GL_LINE_STRIP );
-//			gl.glColor3f( 0.5f, 0.5f, 0.5f );
-//			gl.glVertex2f( x1 - 5, y1 - 5 );
-//			gl.glVertex2f( x2 + 5, y1 - 5 );
-//			gl.glVertex2f( x2 + 5, y2 + 5 );
-//			gl.glVertex2f( x1 - 5, y2 + 5 );
-//			gl.glVertex2f( x1 - 5, y1 - 5 );
-//		gl.glEnd();
 		super.draw( gl );
 		for( GLComponent c: components )
 			c.draw( gl );

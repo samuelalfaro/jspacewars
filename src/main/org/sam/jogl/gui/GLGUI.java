@@ -24,6 +24,7 @@ package org.sam.jogl.gui;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -52,9 +53,6 @@ import org.sam.jogl.particulas.FactoriaDeParticulas;
 import org.sam.jogl.particulas.Particulas;
 import org.sam.util.Imagen;
 
-/**
- * 
- */
 public class GLGUI{
 	
 	private static final Cursor defaultCursor;
@@ -148,14 +146,14 @@ public class GLGUI{
 						MetodoDeInterpolacion.Predefinido.COSENOIDAL
 					)
 			);
-//			estela.setRadio( 	
-//					GettersFactory.Float.create( 
-//						new float[] { 0.0f, 0.25f },
-//						new float[] { 0.0f, 8.0f },
-//						MetodoDeInterpolacion.Predefinido.COSENOIDAL
-//					)
-//			);
-			estela.setRadio( 8.0f );
+			estela.setRadio( 	
+					GettersFactory.Float.create( 
+						new float[] { 0.0f, 0.25f },
+						new float[] { 0.0f, 8.0f },
+						MetodoDeInterpolacion.Predefinido.COSENOIDAL
+					)
+			);
+//			estela.setRadio( 8.0f );
 			estela.reset();
 			estela.setApariencia( ap );
 		
@@ -268,33 +266,40 @@ public class GLGUI{
 		}
 	}
 	
-	transient int VIRTUAL_VIEWPORT_X = 0; 
-	transient int VIRTUAL_VIEWPORT_Y = 0;
-	transient int VIRTUAL_VIEWPORT_WIDTH = 1;
-	transient int VIRTUAL_VIEWPORT_HEIGHT = 1;
-	
-	private class GUIRenderer implements GLEventListener{
+	private static class GUIRenderer implements GLEventListener{
 		
-		GUIRenderer(){}
+		private final Rectangle viewport;
+		private int virtualAreaWidth;
+		private int virtualAreaHeight;
+		private GLContainer contentPane;
+
+		GUIRenderer( Rectangle viewport ){
+			this.viewport = viewport;
+		}
 
 		public void init( GLAutoDrawable glDrawable ){
 			UIManager.Init( glDrawable.getGL().getGL2() );
+			if( contentPane != null )
+				contentPane.init();
 		}
 
 		public void display( GLAutoDrawable glDrawable ){
+			if( contentPane == null )
+				return;
+				
 			GL2 gl = glDrawable.getGL().getGL2();
 			
-			gl.glViewport( VIRTUAL_VIEWPORT_X, VIRTUAL_VIEWPORT_Y, VIRTUAL_VIEWPORT_WIDTH, VIRTUAL_VIEWPORT_HEIGHT );
+			gl.glViewport( viewport.x, viewport.y, viewport.width, viewport.height );
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
-			gl.glOrtho( 0, VIRTUAL_AREA_WIDTH, VIRTUAL_AREA_HEIGHT, 0, -1, 1 );
+			gl.glOrtho( 0, virtualAreaWidth, virtualAreaHeight, 0, -1, 1 );
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 			
-			getContentPane().draw( gl );
+			contentPane.draw( gl );
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPopMatrix();
@@ -302,11 +307,11 @@ public class GLGUI{
 
 		public void reshape( GLAutoDrawable glDrawable, int x, int y, int width, int height ){
 			if( width != 0 && height != 0 ){
-				VIRTUAL_VIEWPORT_X      = ( VIRTUAL_AREA_HEIGHT * width - VIRTUAL_AREA_WIDTH * height ) 
-				                          / ( 2 * VIRTUAL_AREA_HEIGHT );
-				VIRTUAL_VIEWPORT_Y      = 0;
-				VIRTUAL_VIEWPORT_WIDTH  = VIRTUAL_AREA_WIDTH * height / VIRTUAL_AREA_HEIGHT;
-				VIRTUAL_VIEWPORT_HEIGHT = height;
+				viewport.x      = ( virtualAreaHeight * width - virtualAreaWidth * height ) 
+				                          / ( 2 * virtualAreaHeight );
+				viewport.y      = 0;
+				viewport.width  = virtualAreaWidth * height / virtualAreaHeight;
+				viewport.height = height;
 			}
 		}
 
@@ -320,15 +325,22 @@ public class GLGUI{
 		}
 	}
 	
-	private class GUIListener implements MouseListener, MouseMotionListener, MouseWheelListener{
+	private static class GUIListener implements MouseListener, MouseMotionListener, MouseWheelListener{
 		
-		GUIListener(){}
+		private final Rectangle viewport;
+		private int virtualAreaWidth;
+		private int virtualAreaHeight;
+		private GLContainer contentPane;
+		
+		GUIListener( Rectangle viewport ){
+			this.viewport = viewport;
+		}
 		
 		private transient final Point2f virtualPoint = new Point2f();
 
 		Point2f toVirtualPosition( Point point ){
-			virtualPoint.x = VIRTUAL_AREA_WIDTH * ( point.x - VIRTUAL_VIEWPORT_X ) / VIRTUAL_VIEWPORT_WIDTH;
-			virtualPoint.y = VIRTUAL_AREA_HEIGHT * ( point.y - VIRTUAL_VIEWPORT_Y) / VIRTUAL_VIEWPORT_HEIGHT;
+			virtualPoint.x = virtualAreaWidth * ( point.x - viewport.x ) / viewport.width;
+			virtualPoint.y = virtualAreaHeight * ( point.y - viewport.y) / viewport.height;
 			return virtualPoint;
 		}
 		
@@ -344,11 +356,11 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseEntered( MouseEvent e ){
-			if( !getContentPane().isEnabled() )
+			if( !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
-			if( getContentPane().contains( cursorPosition ) ){
-				getContentPane().processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
+			if( contentPane.contains( cursorPosition ) ){
+				contentPane.processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
 			}
 		}
 	
@@ -357,10 +369,10 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseExited( MouseEvent e ){
-			if( !getContentPane().isEnabled() )
+			if( !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
-			getContentPane().processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
+			contentPane.processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
 		}
 	
 		/* (non-Javadoc)
@@ -368,11 +380,11 @@ public class GLGUI{
 		 */
 		@Override
 		public void mousePressed( MouseEvent e ){
-			if( !getContentPane().isEnabled() )
+			if( !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
-			if( getContentPane().contains( cursorPosition ) ){
-				getContentPane().processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
+			if( contentPane.contains( cursorPosition ) ){
+				contentPane.processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
 			}
 		}
 	
@@ -381,11 +393,11 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseReleased( MouseEvent e ){
-			if( !getContentPane().isEnabled() )
+			if( !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
-			if( getContentPane().contains( cursorPosition ) ){
-				getContentPane().processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
+			if( contentPane.contains( cursorPosition ) ){
+				contentPane.processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
 			}
 		}
 	
@@ -394,17 +406,17 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseDragged( MouseEvent e ){
-			if( !getContentPane().isEnabled() )
+			if( !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
-			if( getContentPane().contains( cursorPosition ) ){
-				if( !getContentPane().isHovered() )
-					getContentPane().processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), cursorPosition.x, cursorPosition.y );
+			if( contentPane.contains( cursorPosition ) ){
+				if( !contentPane.isHovered() )
+					contentPane.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), cursorPosition.x, cursorPosition.y );
 				else
-					getContentPane().processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
+					contentPane.processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
 			}else
-				if( getContentPane().isHovered() )
-					getContentPane().processMouseEvent( MouseEvent.MOUSE_EXITED, e.getButton(), cursorPosition.x, cursorPosition.y );
+				if( contentPane.isHovered() )
+					contentPane.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getButton(), cursorPosition.x, cursorPosition.y );
 			
 		}
 	
@@ -413,17 +425,17 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseMoved( MouseEvent e ){
-			if( !getContentPane().isEnabled() )
+			if( !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
-			if( getContentPane().contains( cursorPosition ) ){
-				if( !getContentPane().isHovered() )
-					getContentPane().processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), cursorPosition.x, cursorPosition.y );
+			if( contentPane.contains( cursorPosition ) ){
+				if( !contentPane.isHovered() )
+					contentPane.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), cursorPosition.x, cursorPosition.y );
 				else
-					getContentPane().processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
+					contentPane.processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
 			}else
-				if( getContentPane().isHovered() )
-					getContentPane().processMouseEvent( MouseEvent.MOUSE_EXITED, e.getButton(), cursorPosition.x, cursorPosition.y );
+				if( contentPane.isHovered() )
+					contentPane.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getButton(), cursorPosition.x, cursorPosition.y );
 		}
 	
 		/* (non-Javadoc)
@@ -434,22 +446,44 @@ public class GLGUI{
 		}
 	}
 	
-	int VIRTUAL_AREA_WIDTH  = 1024;
-	int VIRTUAL_AREA_HEIGHT =  768;
+	private final CursorRenderer cursorRenderer; 
+	private final CursorListener cursorListener;
+	private final GUIRenderer    guiRenderer; 
+	private final GUIListener    guiListener;
+	
+	private int virtualAreaWidth;
+	private int virtualAreaHeight;
 	
 	private GLContainer contentPane;
 	
+	public GLGUI(){
+		Matrix4f tLocal = new Matrix4f();
+		tLocal.setIdentity();
+		tLocal.m03 = -80; // x out
+		tLocal.m13 = -80; // y out
+		
+		cursorRenderer = new CursorRenderer( tLocal );
+		cursorListener = new CursorListener( tLocal );
+		
+		Rectangle viewport = new Rectangle();
+		guiRenderer = new GUIRenderer( viewport );
+		guiListener = new GUIListener( viewport );
+		
+		//setVirtualAreaDimesions( 1024, 768 );
+		setVirtualAreaDimesions( 640, 480 );
+	}
+	
 	public void setVirtualAreaDimesions( int width, int height ){
-		VIRTUAL_AREA_WIDTH = width;
-		VIRTUAL_AREA_HEIGHT = height;
+		virtualAreaWidth  = guiRenderer.virtualAreaWidth  = guiListener.virtualAreaWidth =  width;
+		virtualAreaHeight = guiRenderer.virtualAreaHeight = guiListener.virtualAreaHeight = height;
 	}
 	
 	public void setContentPane( GLContainer container ){
-		this.contentPane = container;
-		//container.setBounds( 0, 0, VIRTUAL_AREA_WIDTH, VIRTUAL_AREA_HEIGHT );
+		this.contentPane = guiRenderer.contentPane = guiListener.contentPane = container;
+//		container.setBounds( 0, 0, virtualAreaWidth, virtualAreaHeight );
 		container.setPosition( 
-				( VIRTUAL_AREA_WIDTH - container.getWidth() ) /2,
-				( VIRTUAL_AREA_HEIGHT - container.getHeight() ) /2
+				( virtualAreaWidth  - container.getWidth()  ) / 2,
+				( virtualAreaHeight - container.getHeight() ) / 2
 		);
 	}
 	
@@ -457,36 +491,16 @@ public class GLGUI{
 		return this.contentPane;
 	}
 	
-	private transient CursorRenderer cursorRenderer; 
-	private transient CursorListener cursorListener;
-	private transient GUIRenderer    guiRenderer; 
-	private transient GUIListener    guiListener;
-	
 	public void bind( GLAutoDrawable glDrawable ){
-		
-		Matrix4f tLocal = new Matrix4f();
-		tLocal.setIdentity();
-		tLocal.m03 = -80; // x out
-		tLocal.m13 = -80; // y out
 	
-		if( guiRenderer == null )
-			guiRenderer = new GUIRenderer();
 		glDrawable.addGLEventListener( guiRenderer );
-		
-		if( cursorRenderer == null )
-			cursorRenderer = new CursorRenderer( tLocal );
 		glDrawable.addGLEventListener( cursorRenderer );
 		
 		Component component = ((Component)glDrawable);
-		
-		if( guiListener == null )
-			guiListener = new GUIListener();
+			
 		component.addMouseListener( guiListener );
 		component.addMouseMotionListener( guiListener );
 		component.addMouseWheelListener( guiListener );
-		
-		if( cursorListener == null )
-			cursorListener = new CursorListener( tLocal );
 		component.addMouseListener( cursorListener );
 		component.addMouseMotionListener( cursorListener );
 		
@@ -495,23 +509,15 @@ public class GLGUI{
 	
 	public void unbind( GLAutoDrawable glDrawable ){
 		
-		if( guiRenderer != null )
-			glDrawable.removeGLEventListener( guiRenderer );
-		
-		if( cursorRenderer != null )
-			glDrawable.removeGLEventListener( cursorRenderer );
+		glDrawable.removeGLEventListener( guiRenderer );
+		glDrawable.removeGLEventListener( cursorRenderer );
 		
 		Component component = ((Component)glDrawable);
 		
-		if( guiListener != null ){
-			component.removeMouseListener( guiListener );
-			component.removeMouseMotionListener( guiListener );
-			component.removeMouseWheelListener( guiListener );
-		}
-		
-		if( cursorListener != null ){
-			component.removeMouseListener( cursorListener );
-			component.removeMouseMotionListener( cursorListener );
-		}
+		component.removeMouseListener( guiListener );
+		component.removeMouseMotionListener( guiListener );
+		component.removeMouseWheelListener( guiListener );
+		component.removeMouseListener( cursorListener );
+		component.removeMouseMotionListener( cursorListener );
 	}
 }

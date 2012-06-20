@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2GL3;
+import javax.media.opengl.glu.GLU;
 
 /**
  * Clase que encapsula los datos necesarios en el manejo de texturas y proporciona los métodos para facilitar su empleo.
@@ -140,7 +141,11 @@ public class Textura{
 		/** Encapsula el valor GL_LINEAR.*/
 		LINEAR( GL.GL_LINEAR ),
 		/** Encapsula el valor GL_LINEAR_MIPMAP_NEAREST. */
-		MIPMAP( GL.GL_LINEAR_MIPMAP_NEAREST );
+		MIPMAP( GL.GL_NEAREST_MIPMAP_LINEAR ),
+		/** Encapsula el valor GL_LINEAR_MIPMAP_NEAREST. */
+		BILINEAR( GL.GL_LINEAR_MIPMAP_NEAREST ),
+		/** Encapsula el valor GL_LINEAR_MIPMAP_LINEAR. */
+		TRILINEAR( GL.GL_LINEAR_MIPMAP_LINEAR );
 
 		/** Entero que almacena el valor encapsulado.*/
 		final int value;
@@ -154,15 +159,11 @@ public class Textura{
 	 * Enumeración que contiene los valores que describen los distintos de modos <i>MagFilter</i> soportados.
 	 */
 	public enum MagFilter{
-		/**
-		 * Encapsula el valor GL_NEAREST.
-		 */
+		/** Encapsula el valor GL_NEAREST. */
 		NEAREST( GL.GL_NEAREST ),
-		/**
-		 * Encapsula el valor GL_LINEAR.
-		 */
+		/** Encapsula el valor GL_LINEAR.*/
 		LINEAR( GL.GL_LINEAR );
-
+		
 		/** Entero que almacena el valor encapsulado.*/
 		final int value;
 
@@ -242,7 +243,7 @@ public class Textura{
 	 *            Booleano que indica si deben reflejarse verticalmente los pixels de la imagen.
 	 */
 	public Textura( GL2 gl, Format format, BufferedImage image, boolean flipY ){
-		this( gl, MinFilter.LINEAR, MagFilter.LINEAR, format, image, flipY );
+		this( gl, MinFilter.TRILINEAR, MagFilter.LINEAR, format, image, flipY );
 	}
 
 	/**
@@ -285,7 +286,7 @@ public class Textura{
 	 *            {@code Buffer} que contiene los pixels de la {@code Textura} generada.
 	 */
 	public Textura( GL2 gl, MinFilter minFilter, MagFilter magFilter, Format format, int width, int height, Buffer pixels ){
-
+		
 		proporciones = (float)width / height;
 
 		int tmp[] = new int[1];
@@ -294,11 +295,18 @@ public class Textura{
 		gl.glBindTexture( GL.GL_TEXTURE_2D, texId );
 		gl.glTexParameteri( GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, minFilter.value );
 		gl.glTexParameteri( GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, magFilter.value );
-
-		gl.glTexImage2D( GL.GL_TEXTURE_2D, 0, format.value, width, height, 0, format.value, GL.GL_UNSIGNED_BYTE, pixels );
+		
+		if( minFilter == MinFilter.MIPMAP || minFilter == MinFilter.BILINEAR || minFilter == MinFilter.TRILINEAR ){
+			gl.glHint( GL.GL_GENERATE_MIPMAP_HINT, GL.GL_NICEST );
+			GLU.createGLU( gl ).gluBuild2DMipmaps( GL.GL_TEXTURE_2D, format.value, width, height, format.value, GL.GL_UNSIGNED_BYTE, pixels );
+		}else
+			gl.glTexImage2D( GL.GL_TEXTURE_2D, 0, format.value, width, height, 0, format.value, GL.GL_UNSIGNED_BYTE, pixels );
+		
 		wrapS = Wrap.REPEAT;
 		wrapT = Wrap.REPEAT;
+		gl.glBindTexture( GL.GL_TEXTURE_2D, 0 );
 	}
+	
 
 	/**
 	 * <i>Setter</i> que asigna el valor {@code Wrap} en direccion {@code S} a esta {@code Textura}.
