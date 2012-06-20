@@ -194,12 +194,12 @@ public class Prueba060_Loader{
 			renderer.setHorizontalAlignment( HorizontalAlignment.LEFT );
 			
 			if( !showHelp ){
-				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.5f );
+				renderer.setColor( 0.5f, 0.5f, 0.5f, 0.9f );
 				renderer.glPrint( gl, 20,  20, "F1:" );
-				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.75f );
+				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.9f );
 				renderer.glPrint( gl, 50, 20, "Muestra/Oculta ayuda" );
 			}else{
-				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.5f );
+				renderer.setColor( 0.5f, 0.5f, 0.5f, 0.9f );
 				renderer.glPrint( gl, 20,  20, "Arrastre el ratón:" );
 				renderer.glPrint( gl, 20,  45, "Rueda del ratón:" );
 				renderer.glPrint( gl, 20,  70, "Tecla +:" );
@@ -208,7 +208,7 @@ public class Prueba060_Loader{
 				renderer.glPrint( gl, 20, 145, "Tecla S:" );
 				renderer.glPrint( gl, 20, 170, "Tecla F:" );
 				
-				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.75f );
+				renderer.setColor( 1.0f, 1.0f, 1.0f, 0.9f );
 				renderer.glPrint( gl, 200,  20, "Girar" );
 				renderer.glPrint( gl, 200,  45, "Zoom" );
 				renderer.glPrint( gl, 200,  70, "Muestra/Oculta FPS" );
@@ -223,7 +223,7 @@ public class Prueba060_Loader{
 			renderer.setHorizontalAlignment( HorizontalAlignment.RIGHT );
 			
 			if( showFPS ){
-				renderer.setColor( 1.0f, 1.0f, 0.25f, 0.75f );
+				renderer.setColor( 1.0f, 1.0f, 0.25f, 0.9f );
 				renderer.glPrint( gl, drawable.getWidth() - 20, drawable.getHeight() - 20,
 						String.format( "%.1f Fps",  1000000000.0f/ ( tActual - tAnterior ) )
 				);

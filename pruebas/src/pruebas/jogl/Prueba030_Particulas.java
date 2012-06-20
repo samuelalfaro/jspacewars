@@ -61,8 +61,9 @@ public class Prueba030_Particulas{
 	
 	static class Renderer implements GLEventListener{
 		
-		private final OrbitBehavior orbitBehavior;
 		private GLU glu;
+		
+		private final OrbitBehavior orbitBehavior;
 		private Particulas explosion, humo, fuente;
 		private UnidadTextura fondo, texture1, texture2, texture3;
 	
@@ -209,6 +210,8 @@ public class Prueba030_Particulas{
 			gl.glPushMatrix();
 			gl.glLoadIdentity();
 	
+			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
+			
 			float x = w / 2;
 			float y = h / 2;
 			float s = x / 256;
@@ -216,7 +219,6 @@ public class Prueba030_Particulas{
 			gl.glOrtho( -x, x, -y, y, 0, 1 );
 	
 			fondo.activar( gl, 0 );
-			gl.glClear( GL.GL_DEPTH_BUFFER_BIT );
 
 			gl.glDepthMask( false );
 			gl.glBegin( GL2.GL_QUADS );

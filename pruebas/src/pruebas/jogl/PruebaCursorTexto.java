@@ -50,6 +50,8 @@ import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
 import org.sam.jogl.NodoTransformador;
 import org.sam.jogl.Textura;
+import org.sam.jogl.Textura.MagFilter;
+import org.sam.jogl.Textura.MinFilter;
 import org.sam.jogl.gui.GLTextRenderer;
 import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
 import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
@@ -101,7 +103,7 @@ public class PruebaCursorTexto{
 			Apariencia apFont = new Apariencia();
 			
 			//*
-			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
+			apFont.setTextura( new Textura( gl, MinFilter.NEAREST, MagFilter.LINEAR, Textura.Format.ALPHA, img, false ) );
 			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER);
 			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
 			
