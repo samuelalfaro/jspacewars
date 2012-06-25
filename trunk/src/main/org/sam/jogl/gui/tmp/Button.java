@@ -71,7 +71,7 @@ public class Button extends Label{
 		public void mouseDragged( MouseEvent e ){
 			if( !isEnabled() )
 				return;
-			state = Button.this.contains( e.getAbsoluteX(), e.getAbsoluteY() ) ? DOWN: UP;
+			state = Button.this.contains( e.getX(), e.getY() ) ? DOWN: UP;
 		}
 	}
 

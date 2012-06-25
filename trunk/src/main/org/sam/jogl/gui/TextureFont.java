@@ -32,6 +32,19 @@ import org.sam.jogl.Apariencia;
 import com.jogamp.common.nio.Buffers;
 
 public class TextureFont{
+	
+	private static class SimpleStringCache{
+		
+		String value;
+		IntBuffer buffer;
+		float width;
+		
+		SimpleStringCache(){
+			value = null;
+			buffer = Buffers.newDirectIntBuffer( 256 );
+			width = 0.0f;
+		}
+	}
 
 	private final char[]  characters;
 	private final int[]   charactersIds;
@@ -39,6 +52,8 @@ public class TextureFont{
 
 	private final float[] charactersWidths;
 	private final float   defaultWidth;
+	
+	private final SimpleStringCache lastString;
 	
 	final float maxAscent;
 	final float maxDescent;
@@ -106,9 +121,11 @@ public class TextureFont{
 		unknownId = base + spaceIndex;
 		defaultWidth = charactersWidths[spaceIndex];
 
+		this.lastString = new SimpleStringCache();
+		
 		this.maxAscent  = fData.maxAscent / fData.scaleY;
 		this.maxDescent = fData.maxDescent / fData.scaleY;
-
+		
 		// FIXME Las escalas cargadas se usan sólo para ajustar las proporciones.
 		this.scaleX = 1.0f;
 		this.scaleY = 1.0f;
@@ -125,6 +142,8 @@ public class TextureFont{
 
 		this.charactersWidths = me.charactersWidths;
 		this.defaultWidth = me.defaultWidth;
+		this.lastString = me.lastString;
+		
 		this.maxAscent = me.maxAscent;
 		this.maxDescent = me.maxDescent;
 
@@ -153,42 +172,34 @@ public class TextureFont{
 	public Apariencia getApariencia(){
 		return this.apariencia;
 	}
-	
-	private transient IntBuffer stringBuffer = Buffers.newDirectIntBuffer( 256 );
-	private transient String    lastString   = null;
-	private transient float     stringWidth  = 0.0f;
-	
+
 	IntBuffer toBuffer( String string ){
-		// TODO caché de cadenas usadas anteriormente
-		if( string.length() == 0 || string.equals( lastString ) ){
-			stringBuffer.flip();
-			lastString = string;
-			return stringBuffer;
+		if( string.equals( lastString.value ) ){
+			lastString.buffer.flip();
+			return lastString.buffer;
 		}
-	
-		if( stringBuffer.capacity() < string.length() ){
-			stringBuffer = Buffers.newDirectIntBuffer( string.length() );
-		}
-		stringBuffer.clear();
-		stringWidth = 0;
+		if( lastString.buffer.capacity() < string.length() )
+			lastString.buffer = Buffers.newDirectIntBuffer( string.length() );
+		lastString.buffer.clear();
+		lastString.width = 0;
 		for( int i = 0; i < string.length(); i++ ){
 			char c = string.charAt( i );
 			int charIndex = Arrays.binarySearch( characters, c );
-			stringBuffer.put( charIndex < 0 ? unknownId: charactersIds[charIndex] );
-			stringWidth += charIndex < 0 ? defaultWidth: charactersWidths[charIndex];
+			lastString.buffer.put( charIndex < 0 ? unknownId: charactersIds[charIndex] );
+			lastString.width += charIndex < 0 ? defaultWidth: charactersWidths[charIndex];
 		}
-		stringBuffer.flip();
-		lastString = string;
-		return stringBuffer;
+		lastString.value = string;
+		lastString.buffer.flip();
+		return lastString.buffer;
 	}
 	
 	float getWidth( String string ){
 		if( string == null || string.length() == 0 )
 			return 0;
-		if( string.equals( lastString ) )
-			return stringWidth;
+		if( string.equals( lastString.value ) )
+			return lastString.width;
 			
-		stringWidth = 0;
+		float stringWidth = 0;
 		for( int i = 0; i < string.length(); i++ ){
 			char c = string.charAt( i );
 			int charIndex = Arrays.binarySearch( characters, c );

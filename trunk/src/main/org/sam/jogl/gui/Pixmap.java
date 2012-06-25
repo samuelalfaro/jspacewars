@@ -66,7 +66,10 @@ public class Pixmap{
 
 	/**
 	 * Método que dibuja el área de textura en la zona rectagular
-	 * delimitada por las coordenadas correspondientes.
+	 * delimitada por las coordenadas correspondientes.<br/>
+	 * Los vértices se envían en sentido inverso a las agujas del reloj,
+	 * en un sistema de coordenadas con <b>la dirección del eje Y hacia arriba</b>, 
+	 * con la normal de la superficie hacia el observdor.
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 * @param x1 coordenada X de una de las esquinas.
@@ -90,7 +93,10 @@ public class Pixmap{
 	
 	/**
 	 * Método que dibuja el área de textura en la zona rectagular
-	 * delimitada por las coordenadas correspondientes.
+	 * delimitada por las coordenadas correspondientes.<br/>
+	 * Los vértices se envían en sentido inverso a las agujas del reloj,
+	 * en un sistema de coordenadas con <b>la dirección del eje Y hacia abajo</b>, 
+	 * con la normal de la superficie hacia el observdor.
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 * @param x1 coordenada X de una de las esquinas.
@@ -98,8 +104,7 @@ public class Pixmap{
 	 * @param x2 coordenada X de la esquina opuesta.
 	 * @param y2 coordenada Y de la esquina opuesta.
 	 */
-	public void drawCounterclockwise( GL2 gl, float x1, float y1, float x2, float y2 ){
-		//System.out.printf( "\t%3.1f %3.1f [ %2.2f %2.2f ] -> %3.1f %3.1f [ %2.2f %2.2f ]\n",  x1, y1, u1, v1, x2, y2, u2, v2 );
+	public void drawYDown( GL2 gl, float x1, float y1, float x2, float y2 ){
 		gl.glBegin( GL2.GL_QUADS );
 			gl.glTexCoord2f( u1, v1 );
 			gl.glVertex2f  ( x1, y1 );

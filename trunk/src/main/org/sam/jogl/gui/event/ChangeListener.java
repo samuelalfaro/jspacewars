@@ -17,5 +17,5 @@ public interface ChangeListener extends Listener {
 	 * 
 	 * @param e the event associated with this listener
 	 */
-    public void stateChanged(ChangeEvent e);
+	public void stateChanged( ChangeEvent e );
 }

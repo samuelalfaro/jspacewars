@@ -21,95 +21,125 @@
  */
 package org.sam.jogl.gui;
 
+import java.util.ResourceBundle;
+
+import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
+import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
+import org.sam.jogl.gui.event.ActionEvent;
+import org.sam.jogl.gui.event.ActionListener;
+import org.sam.jogl.gui.event.ChangeEvent;
+import org.sam.jogl.gui.event.ChangeListener;
 import org.sam.jogl.gui.event.MouseAdapter;
 import org.sam.jogl.gui.event.MouseEvent;
+import org.sam.jogl.gui.event.MouseListener;
 
 /**
  * 
  */
 public class GLButton extends GLLabel{
 	
-	private class ButtonListener extends MouseAdapter{
+	private static final MouseListener ButtonMouseListener = new MouseAdapter(){
 
 		public void mouseEntered( MouseEvent e ){
-			System.err.println( isHovered() +" " +getText() + " mouseEntered " + e.getX() + " " + e.getY() );
-			if( !isEnabled() )
-				return;
-			setHovered( true );
+			((GLButton)e.getSource()).setHovered( true );
 		}
 
 		public void mouseExited( MouseEvent e ){
-			System.err.println( isHovered() +" " +getText() + " mouseExited " + e.getX() + " " + e.getY() );
-			if( !isEnabled() )
-				return;
-			setHovered( false );
-			setPressed( false );
+			GLButton source = (GLButton)e.getSource();
+			source.setHovered( false );
+			source.setPressed( false );
 		}
 
 		public void mousePressed( MouseEvent e ){
-			System.err.println(  getText() + " mousePressed " );
-			if( !isEnabled() )
-				return;
-			if( e.getButton() == MouseEvent.BUTTON1 ){
-			//	setHovered( true );
-				setPressed( true );
-			}
+			if( e.getButton() == MouseEvent.BUTTON1 )
+				((GLButton)e.getSource()).setPressed( true );
 		}
 
 		public void mouseReleased( MouseEvent e ){
-			System.err.println(  getText() + " mouseReleased " );
-			if( !isEnabled() )
-				return;
-			if( isPressed() && e.getButton() == MouseEvent.BUTTON1 ){
-				setPressed( false );
-				//fireActionPerformed( actionCommand );
+			GLButton source = (GLButton)e.getSource();
+			if( source.isPressed() && e.getButton() == MouseEvent.BUTTON1 ){
+				source.setPressed( false );
+				source.fireActionPerformed( source.getActionName() );
 			}
 		}
+	};
+	
+	private static final ChangeListener ButtonChangeListener = new ChangeListener(){
+
+		@Override
+		public void stateChanged( ChangeEvent e ){
+			GLButton source = (GLButton)e.getSource();
+			if( !source.isEnabled() ){
+				// desactivado
+				source.setBackground( UIManager.getBackground( "Button.background.disabled" ) );
+				source.setBorder( UIManager.getBorder( "Button.border.disabled" ) );
+				source.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.disabled" ) );
+			}else if( source.isPressed() ){
+				// pulsado recibe el foco
+				source.setBackground( UIManager.getBackground( "Button.background.pressed" ) );
+				source.setBorder( UIManager.getBorder( "Button.border.pressed" ) );
+				source.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.pressed" ) );
+			}else if( source.isFocused() ){
+				if( source.isHovered() ){
+					// ratón encima foco
+					source.setBackground( UIManager.getBackground( "Button.background.hovered" ) );
+					source.setBorder( UIManager.getBorder( "Button.border.hovered" ) );
+					source.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.hovered" ) );
+				}else{
+					// default foco
+					source.setBackground( UIManager.getBackground( "Button.background.focused" ) );
+					source.setBorder( UIManager.getBorder( "Button.border.focused" ) );
+					source.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.focused" ) );
+				}
+			}else if( source.isHovered() ){
+				// ratón encima
+				source.setBackground( UIManager.getBackground( "Button.background.hovered" ) );
+				source.setBorder( UIManager.getBorder( "Button.border.hovered" ) );
+				source.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.hovered" ) );
+			}else{
+				// default
+				source.setBackground( UIManager.getBackground( "Button.background.default" ) );
+				source.setBorder( UIManager.getBorder( "Button.border.default" ) );
+				source.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.default" ) );
+			}
+		}
+	};
+	
+	private String actionName;
+	
+	public GLButton( String actionName, ActionListener al, ResourceBundle bundle ){
+		super( bundle != null ? bundle.getString( actionName ) : actionName, HorizontalAlignment.CENTER, VerticalAlignment.CENTER );
+		this.actionName = actionName;
+		addMouseListener( ButtonMouseListener );
+		addChangeListener( ButtonChangeListener );
+		if( al != null )
+			this.addActionListener( al );
 	}
 	
-	public GLButton( String text ){
-		super( text );
-		addMouseListener( new ButtonListener() );
+//	public GLButton( String actionName, ActionListener al ){
+//		this( actionName, al, null );
+//	}
+	
+	public GLButton( String actionName, ResourceBundle bundle ){
+		this( actionName, null, bundle );
+	}
+	
+	public GLButton( String actionName ){
+		this( actionName, null, null );
+	}
+	
+	public GLButton( ButtonAction action, ResourceBundle bundle ){
+		this( action.getName(), action, bundle );
+	}
+	
+	public GLButton( ButtonAction action ){
+		this( action.getName(), action, null );
 	}
 
-	public GLButton(){
-		this("");
-	}
-
-	protected void changeState( int oldState, int newState ){
-		if( !isEnabled() ){
-			// desactivado
-			this.setBackground( UIManager.getBackground( "Button.background.disabled" ) );
-			this.setBorder( UIManager.getBorder( "Button.border.disabled" ) );
-			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.disabled" ) );
-		}else if( isPressed() ){
-			// pulsado recibe el foco
-			this.setBackground( UIManager.getBackground( "Button.background.pressed" ) );
-			this.setBorder( UIManager.getBorder( "Button.border.pressed" ) );
-			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.pressed" ) );
-		}else if( isFocused() ){
-			if( isHovered() ){
-				// ratón encima foco
-				this.setBackground( UIManager.getBackground( "Button.background.hovered" ) );
-				this.setBorder( UIManager.getBorder( "Button.border.hovered" ) );
-				this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.hovered" ) );
-			}else{
-				// default foco
-				this.setBackground( UIManager.getBackground( "Button.background.focused" ) );
-				this.setBorder( UIManager.getBorder( "Button.border.focused" ) );
-				this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.focused" ) );
-			}
-		}else if( isHovered() ){
-			// ratón encima
-			this.setBackground( UIManager.getBackground( "Button.background.hovered" ) );
-			this.setBorder( UIManager.getBorder( "Button.border.hovered" ) );
-			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.hovered" ) );
-		}else{
-			// default
-			this.setBackground( UIManager.getBackground( "Button.background.default" ) );
-			this.setBorder( UIManager.getBorder( "Button.border.default" ) );
-			this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.default" ) );
-		}
+	protected void initComponent(){
+		this.setBackground( UIManager.getBackground( "Button.background.default" ) );
+		this.setBorder( UIManager.getBorder( "Button.border.default" ) );
+		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.default" ) );
 	}
 	
 	public final void setPressed( boolean pressed ){
@@ -120,13 +150,43 @@ public class GLButton extends GLLabel{
 		return ( state & StateConstants.STATE_PRESSED ) != 0;
 	}
 	
-	protected void init(){
-		if( initialized )
-			return;
-		initialized = true;
-		
-		this.setBackground( UIManager.getBackground( "Button.background.default" ) );
-		this.setBorder( UIManager.getBorder( "Button.border.default" ) );
-		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.default" ) );
+	 public String getActionName(){
+		 if( actionName == null )
+			 return this.getText();
+		 return actionName;
+	 }
+	
+	/**
+	 * Adds the specified listener to the list.
+	 * 
+	 * @param s the listener to receive events
+	 */
+	public synchronized void addActionListener( ActionListener s ){
+		listenerList.add( ActionListener.class, s );
 	}
+
+	/**
+	 * Removes the specified listener from the list.
+	 * 
+	 * @param s the listener to remove
+	 */
+	public synchronized void removeActionListener( ActionListener s ){
+		listenerList.remove( ActionListener.class, s );
+	}
+	
+	/**
+	 * Fires an action event with the specified command
+	 * to all action listeners registered with this component.
+	 * 
+	 * @param command the action command for the event
+	 */
+	protected void fireActionPerformed( String command ){
+		ActionListener[] listeners = listenerList.getListeners( ActionListener.class );
+		if( listeners.length > 0 ){
+			ActionEvent evt = new ActionEvent( this, command );
+			for( ActionListener listener: listeners )
+				listener.actionPerformed( evt );
+		}
+	}
+
 }

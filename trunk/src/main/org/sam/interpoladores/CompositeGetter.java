@@ -68,7 +68,7 @@ public final class CompositeGetter{
 			if (this.trayectoria == null)
 				throw new UnsupportedOperationException();
 			// TODO calcular bien las derivadas, pues estás deben estar tb en función key.getTan(key)
-			return this.trayectoria.getTan(this.key.get(key));
+			return this.trayectoria.getTan( this.key.get( key ) );
 		}
 		
 		/**

@@ -235,6 +235,19 @@ public interface Emisor {
 			return v;
 		}
 	}
+	
+	/*TODO Más tipos de emisores:
+	 * Planos, se distribuye la posición aleatoriamente y se asigna la direción,
+	 * por defecto, normal al plano:
+	 *   - Rectangualar.
+	 *   - Circular.
+	 * Esférico:
+	 *   - Añadir radio a emisor puntual, la distribución si es homogenea respecto
+	 *   a la superficie, consultar área zona esférica. Al orientar las particulas
+	 *   respecto al abservador, a aperce un efecto de concentración en los polos.
+	 *   Para generar explosiones, se podría hacer un emisor, circular orientado al
+	 *   observador y dirigir las partículas en función de su distancia al centro.
+	 */
 
 	public VectorLibre emite();
 }

@@ -361,7 +361,7 @@ public interface Border{
 			);
 		}
 		
-		private Textured(
+		public Textured(
 				Insets border,
 				Pixmap leftTopPixmap,      Pixmap topPixmap,     Pixmap rightTopPixmap,
 				Pixmap leftPixmap,                                  Pixmap rightPixmap,
@@ -380,14 +380,14 @@ public interface Border{
 		
 		@Override
 		void draw( GL2 gl, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3){
-			leftTopPixmap.drawCounterclockwise(     gl, x0, y0, x1, y1 );
-			topPixmap.drawCounterclockwise(         gl, x1, y0, x2, y1 );
-			rightTopPixmap.drawCounterclockwise(    gl, x2, y0, x3, y1 );
-			leftPixmap.drawCounterclockwise(        gl, x0, y1, x1, y2 );
-			rightPixmap.drawCounterclockwise(       gl, x2, y1, x3, y2 );
-			leftBottomPixmap.drawCounterclockwise(  gl, x0, y2, x1, y3 );
-			bottomPixmap.drawCounterclockwise(      gl, x1, y2, x2, y3 );
-			rightBottomPixmap.drawCounterclockwise( gl, x2, y2, x3, y3 );
+			leftTopPixmap.drawYDown(     gl, x0, y0, x1, y1 );
+			topPixmap.drawYDown(         gl, x1, y0, x2, y1 );
+			rightTopPixmap.drawYDown(    gl, x2, y0, x3, y1 );
+			leftPixmap.drawYDown(        gl, x0, y1, x1, y2 );
+			rightPixmap.drawYDown(       gl, x2, y1, x3, y2 );
+			leftBottomPixmap.drawYDown(  gl, x0, y2, x1, y3 );
+			bottomPixmap.drawYDown(      gl, x1, y2, x2, y3 );
+			rightBottomPixmap.drawYDown( gl, x2, y2, x3, y3 );
 		}
 		
 	}

@@ -46,6 +46,7 @@ import javax.media.opengl.awt.GLCanvas;
 import org.sam.elementos.Cache;
 import org.sam.jogl.fondos.GLEventListenerBackgroundRenderer;
 import org.sam.jogl.gui.ButtonAction;
+import org.sam.jogl.gui.GLGUI;
 import org.sam.jspacewars.cliente.Cliente;
 import org.sam.jspacewars.serialization.Loader;
 import org.sam.jspacewars.servidor.ServidorJuego;
@@ -120,7 +121,9 @@ public class ExampleGameMenuJOGL {
 	}
 	
 	public static void main( String[] args ){
-
+		//TODO Inicializar, y unir
+		final GLGUI displayGUI = new GLGUI();
+		
 		final ClientServer clientServer = new ClientServer();
 
 		final DataGame dataGame = new DataGame();
@@ -148,20 +151,18 @@ public class ExampleGameMenuJOGL {
 
 		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer( dataGame.getFondo() );
 		Map<String, ButtonAction> actions = new Hashtable<String, ButtonAction>();
-		final GLEventListenerDisplayGUI displayGUI = new GLEventListenerDisplayGUI( actions );
 
 		canvas.addGLEventListener( backgroundRenderer );
-		canvas.addGLEventListener( displayGUI );
 
 		splashWindow = null;
 		System.gc();
 
 		final Window frame = getFullScreenFrame();
 
-		ButtonAction action = new ButtonAction(){
+		ButtonAction action = new ButtonAction( "player1" ){
 			public void run(){
 				try{
-					displayGUI.hideMenu();
+					displayGUI.unbind( canvas );
 					animator.stop();
 					animator.remove( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
@@ -189,12 +190,12 @@ public class ExampleGameMenuJOGL {
 				}
 			}
 		};
-		actions.put( "player1", action );
+		actions.put( action.getName(), action );
 
-		action = new ButtonAction(){
+		action = new ButtonAction( "server" ){
 			public void run(){
 				try{
-					displayGUI.hideMenu();
+					displayGUI.unbind( canvas );
 					animator.stop();
 					animator.remove( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
@@ -223,12 +224,12 @@ public class ExampleGameMenuJOGL {
 				}
 			}
 		};
-		actions.put( "server", action );
+		actions.put( action.getName(), action );
 
-		action = new ButtonAction(){
+		action = new ButtonAction( "client" ){
 			public void run(){
 				try{
-					displayGUI.hideMenu();
+					displayGUI.unbind( canvas );
 					animator.stop();
 					animator.remove( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
@@ -244,7 +245,7 @@ public class ExampleGameMenuJOGL {
 				}
 			}
 		};
-		actions.put( "client", action );
+		actions.put( action.getName(), action );
 
 		animator.add( canvas );
 		mostrar( frame, canvas );
