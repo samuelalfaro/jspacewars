@@ -25,6 +25,10 @@ package org.sam.jogl.gui;
 import javax.media.opengl.GL2;
 import javax.swing.event.EventListenerList;
 
+import org.sam.jogl.gui.event.ChangeEvent;
+import org.sam.jogl.gui.event.ChangeListener;
+import org.sam.jogl.gui.event.KeyEvent;
+import org.sam.jogl.gui.event.KeyListener;
 import org.sam.jogl.gui.event.MouseEvent;
 import org.sam.jogl.gui.event.MouseListener;
 import org.sam.jogl.gui.event.MouseWheelEvent;
@@ -34,7 +38,7 @@ public abstract class GLComponent extends GLRectangle{
 	
 	protected static final GLTextRenderer TEXT_RENDERER = new GLTextRenderer();
 	
-	protected boolean initialized;
+	private boolean initialized;
 	protected int state;
 	protected EventListenerList listenerList = new EventListenerList();
 	
@@ -45,32 +49,26 @@ public abstract class GLComponent extends GLRectangle{
 	
 	public GLComponent(){
 		this.initialized = false;
-		this.state = StateConstants.STATE_DEFAULT;
+		this.state = StateConstants.STATE_VISIBLE | StateConstants.STATE_DEFAULT;
 	}
 	
 	protected void init(){
 		if( initialized )
 			return;
 		initialized = true;
-		this.setBackground( UIManager.getBackground( "Background.default" ) );
-		this.setBorder( UIManager.getBorder( "Border.default" ) );
+		initComponent();
 	}
 	
-	//protected abstract void changeState( int oldState, int newState );
-	protected void changeState( int oldState, int newState ){}
+	protected abstract void initComponent();
 	
 	protected final void setStateBit( boolean newState, int stateBit ){
 		int stateMask = ~stateBit;
-		// newState == true  && bit in state == 0 -> newState != oldState
-		// newState == false && bit in state == 1 -> newState != oldState
 		if( newState != ( ( state & stateBit ) != 0 ) ){
-			if( newState ){
+			if( newState )
 				this.state |= stateBit;
-				changeState( stateMask, stateBit );
-			}else{
+			else
 				this.state &= stateMask;
-				changeState( stateBit, stateMask );
-			}
+			fireChangeEvent();
 		}
 	}
 	
@@ -145,6 +143,33 @@ public abstract class GLComponent extends GLRectangle{
 	 * 
 	 * @param s the listener to receive events
 	 */
+	public synchronized void addChangeListener( ChangeListener s ){
+		listenerList.add( ChangeListener.class, s );
+	}
+
+	/**
+	 * Removes the specified listener from the list.
+	 * 
+	 * @param s the listener to remove
+	 */
+	public synchronized void removeChangeListener( ChangeListener s ){
+		listenerList.remove( ChangeListener.class, s );
+	}
+	
+	protected void fireChangeEvent(){
+		ChangeListener[] listeners = listenerList.getListeners( ChangeListener.class );
+		if( listeners.length > 0 ){
+			ChangeEvent evt = new ChangeEvent( this );
+			for( ChangeListener listener: listeners )
+				listener.stateChanged( evt );
+		}
+	}
+	
+	/**
+	 * Adds the specified listener to the list.
+	 * 
+	 * @param s the listener to receive events
+	 */
 	public synchronized void addMouseListener( MouseListener s ){
 		listenerList.add( MouseListener.class, s );
 	}
@@ -158,24 +183,6 @@ public abstract class GLComponent extends GLRectangle{
 		listenerList.remove( MouseListener.class, s );
 	}
 
-	/**
-	 * Adds the specified listener to the list.
-	 * 
-	 * @param s the listener to receive events
-	 */
-	public synchronized void addMouseWheelListener( MouseWheelListener s ){
-		listenerList.add( MouseWheelListener.class, s );
-	}
-
-	/**
-	 * Removes the specified listener from the list.
-	 * 
-	 * @param s the listener to remove
-	 */
-	public synchronized void removeMouseWheelListener( MouseWheelListener s ){
-		listenerList.remove( MouseWheelListener.class, s );
-	}
-	
 	protected void processMouseEvent( int id, int button, float x, float y ){
 		MouseListener[] listeners = listenerList.getListeners( MouseListener.class );
 		if( listeners.length > 0 ){
@@ -213,6 +220,24 @@ public abstract class GLComponent extends GLRectangle{
 		processMouseEvent( id, MouseEvent.NOBUTTON, x, y );
 	}
 
+	/**
+	 * Adds the specified listener to the list.
+	 * 
+	 * @param s the listener to receive events
+	 */
+	public synchronized void addMouseWheelListener( MouseWheelListener s ){
+		listenerList.add( MouseWheelListener.class, s );
+	}
+
+	/**
+	 * Removes the specified listener from the list.
+	 * 
+	 * @param s the listener to remove
+	 */
+	public synchronized void removeMouseWheelListener( MouseWheelListener s ){
+		listenerList.remove( MouseWheelListener.class, s );
+	}
+	
 	protected void processMouseWheelEvent( int change ){
 		MouseWheelListener[] listeners = listenerList.getListeners( MouseWheelListener.class );
 		if( listeners.length > 0 ){
@@ -222,10 +247,50 @@ public abstract class GLComponent extends GLRectangle{
 		}
 	}
 	
+	/**
+	 * Adds the specified listener to the list.
+	 * 
+	 * @param s the listener to receive events
+	 */
+	public synchronized void addKeyListener( KeyListener s ){
+		listenerList.add( KeyListener.class, s );
+	}
+
+	/**
+	 * Removes the specified listener from the list.
+	 * 
+	 * @param s the listener to remove
+	 */
+	public synchronized void removeKeyListener( KeyListener s ){
+		listenerList.remove( KeyListener.class, s );
+	}
+	
+	protected void processKeyEvent( int id, int key, char chr ){
+		KeyListener[] listeners = listenerList.getListeners( KeyListener.class );
+		if( listeners.length > 0 ){
+			KeyEvent evt = new KeyEvent( this, id, key, chr );
+			switch( id ){
+			case KeyEvent.KEY_PRESSED:
+				for( KeyListener listener: listeners )
+					listener.keyPressed( evt );
+				break;
+			case KeyEvent.KEY_RELEASED:
+				for( KeyListener listener: listeners )
+					listener.keyReleased( evt );
+				break;
+			}
+		}
+	}
+	
 	public void draw( GL2 gl ){
+		if( !isVisible() )
+			return;
 		if( background != null)
 			background.draw( gl, x1, y1, x2, y2 );
 		if( border != null)
 			border.draw( gl, x1, y1, x2, y2 );
+		drawComponent( gl );
 	}
+	
+	public abstract void drawComponent( GL2 gl );
 }

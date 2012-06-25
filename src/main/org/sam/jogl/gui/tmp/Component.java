@@ -715,8 +715,6 @@ public abstract class Component{
 
 	/**
 	 * Fires the specified key event to all key listeners
-	 * in this component.
-	 * 
 	 * 
 	 * @param id the KeyEvent id constant
 	 * @param key the Input constant
@@ -757,7 +755,7 @@ public abstract class Component{
 	protected void processMouseEvent( int id, int button, int x, int y, int ox, int oy, int absx, int absy ){
 		MouseListener[] listeners = listenerList.getListeners( MouseListener.class );
 		if( listeners.length > 0 ){
-			MouseEvent evt = new MouseEvent( this, id, button, x, y, ox, oy, absx, absy );
+			MouseEvent evt = new MouseEvent( this, id, button, x, y );
 			switch( id ){
 			case MouseEvent.MOUSE_MOVED:
 				for( MouseListener listener: listeners )

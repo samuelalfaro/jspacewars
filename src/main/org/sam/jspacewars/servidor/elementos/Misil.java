@@ -37,8 +37,8 @@ public class Misil extends Disparo {
 
 	private transient Elemento objetivo;
 
-	Misil(short code, Poligono forma) {
-		super(code, forma);
+	Misil( short code, Poligono forma ){
+		super( code, forma );
 	}
 
 	/**
@@ -46,40 +46,40 @@ public class Misil extends Disparo {
 	 * datos de otro {@code Misil} que sirve como prototipo.
 	 * @param prototipo {@code Misil} prototipo.
 	 */
-	protected Misil(Misil prototipo) {
-		super(prototipo);
+	protected Misil( Misil prototipo ){
+		super( prototipo );
 	}
 
 	public Misil clone() {
 		return new Misil(this);
 	}
 
-	private static float anguloAcotado(float angulo){
+	private static float anguloAcotado( float angulo ){
 		float a = angulo;
 		while( a < 0 )
 			a += PI2;
-		while(a > PI2 )
+		while( a > PI2 )
 			a -= PI2;
 		return a;
 	}
 	
-	public void setValues(float posX, float posY, float angulo, float velocidad) {
-		super.setPosicion(posX, posY);
-		super.setAngulo(anguloAcotado(angulo));
+	public void setValues( float posX, float posY, float angulo, float velocidad ){
+		super.setPosicion( posX, posY );
+		super.setAngulo( anguloAcotado( angulo ) );
 		this.vTangencial = velocidad;
 		this.aceleracion = velocidad / 500000000;
 	}
 
-	public void setObjetivo(Elemento objetivo) {
+	public void setObjetivo( Elemento objetivo ){
 		this.objetivo = objetivo;
 	}
 
 	private static transient final float PI2 = (float) (2 * Math.PI);
 	private static transient final float PI = (float) Math.PI;
 
-	private void rotarPos(float alfa, float x, float y, float pX, float pY) {
-		float cosAlfa = (float) Math.cos(alfa);
-		float senAlfa = (float) Math.sin(alfa);
+	private void rotarPos( float alfa, float x, float y, float pX, float pY ){
+		float cosAlfa = (float)Math.cos( alfa );
+		float senAlfa = (float)Math.sin( alfa );
 		setPosicion( x * cosAlfa - y * senAlfa + pX, x * senAlfa + y * cosAlfa + pY );
 	}
 
@@ -87,12 +87,12 @@ public class Misil extends Disparo {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void actua(long nanos) {
+	public void actua( long nanos ){
 
 		float vel = vTangencial * nanos;
 		float x = getX(), y = getY(), a = getAngulo();
 
-		if( objetivo != null && !objetivo.isDestruido()){
+		if( objetivo != null && !objetivo.isDestruido() ){
 
 			float oX =  objetivo.getX(), oY =  objetivo.getY();
 			

@@ -217,7 +217,7 @@ public interface Background{
 		@Override
 		public void draw( GL2 gl, float x1, float y1, float x2, float y2 ){
 			apariencia.usar( gl );
-			pixmap.drawCounterclockwise( gl, x1, y1, x2, y2 );
+			pixmap.drawYDown( gl, x1, y1, x2, y2 );
 		}
 	}
 	

@@ -40,10 +40,16 @@ public class GLLabel extends GLComponent{
 	private TextRendererProperties properties;
 
 	public GLLabel( String text, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment ){
-		setText( text );
+		this.setText( text );
 		this.horizontalAlignment = horizontalAlignment;
 		this.verticalAlignment = verticalAlignment;
-		setPadding( 10 );
+		this.setPadding( 10 );
+	}
+	
+	protected void initComponent(){
+		this.setBackground( UIManager.getBackground( "Label.background.default" ) );
+		this.setBorder( UIManager.getBorder( "Label.border.default" ) );
+		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Label.properties.default" ) );
 	}
             
 	public GLLabel( String text, HorizontalAlignment horizontalAlignment ){
@@ -150,16 +156,11 @@ public class GLLabel extends GLComponent{
 		return text;
 	}
 
-	protected void init(){
-		if( initialized )
-			return;
-		initialized = true;
-		this.setBackground( UIManager.getBackground( "Label.background.default" ) );
-		this.setBorder( UIManager.getBorder( "Label.border.default" ) );
-		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Label.properties.default" ) );
-	}
-	
-	protected final void printText( GL2 gl ){
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.gui.GLComponent#drawComponent(javax.media.opengl.GL2)
+	 */
+	@Override
+	public void drawComponent( GL2 gl ){
 		if( text.length() > 0 && properties != null ){
 			TEXT_RENDERER.setHorizontalAlignment( horizontalAlignment );
 			TEXT_RENDERER.setVerticalAlignment( verticalAlignment );
@@ -168,10 +169,8 @@ public class GLLabel extends GLComponent{
 				TEXT_RENDERER.setFont( properties.shadowFont );
 				TEXT_RENDERER.glPrint( gl, textX + properties.shadowOfsetX, textY + properties.shadowOfsetY, text );
 			}
-			if( properties.color != null )
-				TEXT_RENDERER.setColor( properties.color );
-			if( properties.font != null )
-				TEXT_RENDERER.setFont( properties.font );
+			TEXT_RENDERER.setColor( properties.color );
+			TEXT_RENDERER.setFont( properties.font );
 			TEXT_RENDERER.glPrint( gl, textX, textY, text );
 			if( properties.fxFont != null){
 				TEXT_RENDERER.setColor( properties.fxColor );
@@ -179,14 +178,5 @@ public class GLLabel extends GLComponent{
 				TEXT_RENDERER.glPrint( gl, textX + properties.fxOfsetX, textY + properties.fxOfsetY, text );
 			}
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
-	 */
-	@Override
-	public void draw( GL2 gl ){
-		super.draw( gl );
-		printText(gl);
 	}
 }

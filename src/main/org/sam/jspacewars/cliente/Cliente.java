@@ -151,20 +151,20 @@ public class Cliente extends Thread {
 	 * @param dataGame
 	 * @param canvas
 	 */
-	public Cliente(DataGame dataGame, GLCanvas canvas) {
+	public Cliente( DataGame dataGame, GLCanvas canvas ){
 
 		this.channelIn = null;
 		this.channelOut = null;
-		this.buff = ByteBuffer.allocateDirect(8192);
+		this.buff = ByteBuffer.allocateDirect( 8192 );
 
 		this.cache = dataGame.getCache();
-		this.data =  new ClientData();
+		this.data = new ClientData();
 		this.canvas = canvas;
-		
-		this.canvas.setBackground(Color.BLACK);
-		this.canvas.setIgnoreRepaint(true);
-		this.canvas.addGLEventListener( new Renderer(dataGame.getFondo(), data, dataGame.getGui() ));
-		this.canvas.addKeyListener(new GameKeyListener(data));	
+
+		this.canvas.setBackground( Color.BLACK );
+		this.canvas.setIgnoreRepaint( true );
+		this.canvas.addGLEventListener( new Renderer( dataGame.getFondo(), data, dataGame.getGui() ) );
+		this.canvas.addKeyListener( new GameKeyListener( data ) );
 	}
 	
 	/**

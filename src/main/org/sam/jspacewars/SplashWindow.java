@@ -47,18 +47,18 @@ class SplashWindow extends Window {
 	private final transient ModificableBoolean loading;
 	private final transient GLCanvas barra;
 
-	SplashWindow( String ruta, GLCanvas barra, DataGame dataGame ) {
-		super(null);
-		this.setLayout(null);
+	SplashWindow( String ruta, GLCanvas barra, DataGame dataGame ){
+		super( null );
+		this.setLayout( null );
 
-		Image splashImage = Imagen.cargarImagen(ruta);
+		Image splashImage = Imagen.cargarImagen( ruta );
 
 		Rectangle maxWindowBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		int w = splashImage.getWidth(null);
-		int h = splashImage.getHeight(null);
-		this.setBounds(new Rectangle((maxWindowBounds.width - w) / 2, (maxWindowBounds.height - h) / 2, w, h));
+		int w = splashImage.getWidth( null );
+		int h = splashImage.getHeight( null );
+		this.setBounds( new Rectangle( ( maxWindowBounds.width - w ) / 2, ( maxWindowBounds.height - h ) / 2, w, h ) );
 
-		if( ruta.toLowerCase().endsWith(".jpg") )
+		if( ruta.toLowerCase().endsWith( ".jpg" ) )
 			/*
 			 * Sería más correcto algo parecido a esto:
 			 * ((ToolkitImage)splashImage).getColorModel().getTransparency() ==
@@ -72,76 +72,80 @@ class SplashWindow extends Window {
 		else{
 			BufferedImage captura = null;
 			try{
-				Robot robot = new Robot();
-				captura = robot.createScreenCapture(this.getBounds());
-				captura.getGraphics().drawImage(splashImage, 0, 0, null);
+				captura = new Robot().createScreenCapture( this.getBounds() );
+				captura.getGraphics().drawImage( splashImage, 0, 0, null );
 			}catch( AWTException ignorada ){
 			}
 			fondo = captura;
 		}
 
-		loading = new ModificableBoolean(true);
+		loading = new ModificableBoolean( true );
 
 		this.barra = barra;
-		this.barra.setBounds(50, h - 10, w - 100, 5);
-		this.barra.addGLEventListener(new GLEventListenerLoader(dataGame, loading));
+		this.barra.setBounds( 50, h - 10, w - 100, 5 );
+		this.barra.addGLEventListener( new GLEventListenerLoader( dataGame, loading ) );
 
-		this.add(barra);
+		this.add( barra );
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
-	public void paint(Graphics g) {
-		g.drawImage(fondo, 0, 0, this);
-		super.paint(g);
+	public void paint( Graphics g ){
+		g.drawImage( fondo, 0, 0, this );
+		super.paint( g );
 	}
 
 	/**
-	 * Método que sobreescribe y llama al método de la clase padre
-	 * {@link java.awt.Window#setVisible(boolean) setVisible(boolean)}.
+	 * Método que sobreescribe y llama al método de la clase padre {@link java.awt.Window#setVisible(boolean)
+	 * setVisible(boolean)}.
 	 * 
 	 * @param visible
-	 *            <ul>
-	 *            <li>Si {@code true}, muestra la {@link java.awt.Window
-	 *            ventana}, si no hay datos cargados, crea una nueva hebra, que
-	 *            se encargará, de animar la barra de progreso.</li>
-	 *            <li>En caso contrario, si todavía se están cargando datos,
-	 *            bloquea la hebra llamante hasta que dichos datos hallan sido
-	 *            cargados y finalmente oculta la {@link java.awt.Window
-	 *            ventana}.</li>
-	 *            </ul>
+	 * <ul>
+	 * <li>Si {@code true}, muestra la {@link java.awt.Window
+	 * ventana}, si no hay datos cargados, crea una nueva hebra, que se encargará, de animar la barra de progreso.</li>
+	 * <li>En caso contrario, si todavía se están cargando datos, bloquea la hebra llamante hasta que dichos datos
+	 * hallan sido cargados y finalmente oculta la {@link java.awt.Window
+	 * ventana}.</li>
+	 * </ul>
 	 * 
 	 * @see java.awt.Window#setVisible(boolean)
 	 */
-	public void setVisible(boolean visible) {
+	public void setVisible( boolean visible ){
 
 		if( visible ){
-			super.setVisible(true);
+			super.setVisible( true );
 			if( loading.isTrue() ){
-				new Thread() {
-					public void run() {
-						long tActual = System.currentTimeMillis(), tAnterior;
+				new Thread(){
+					
+					final long FPS    = 60;
+					final long F_TIME = 1000000000 / FPS;
+					
+					public void run(){
+						long tActual = System.nanoTime(), tAnterior;
 						do{
 							tAnterior = tActual;
 							barra.display();
-							tActual = System.currentTimeMillis();
+							tActual = System.nanoTime();
 							long tRender = tActual - tAnterior;
-							if( tRender < 40 )
+							
+							if( tRender < F_TIME ){
+								long sleepNanos = F_TIME - tRender;
 								try{
-									Thread.sleep(40 - tRender);
+									
+									Thread.sleep( sleepNanos / 1000000, (int)( sleepNanos % 1000000 ) );
 								}catch( InterruptedException ignorada ){
 								}
+							}
 						}while( loading.isTrue() );
 					}
 				}.start();
 			}
 		}else
-			super.setVisible(false);
+			super.setVisible( false );
 	}
-	
+
 	public void waitForLoading(){
 		if( loading.isTrue() ){
 			synchronized( loading ){

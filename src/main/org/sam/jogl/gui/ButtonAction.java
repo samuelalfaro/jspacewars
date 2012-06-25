@@ -22,13 +22,25 @@
  */
 package org.sam.jogl.gui;
 
+import org.sam.jogl.gui.event.ActionEvent;
+import org.sam.jogl.gui.event.ActionListener;
+
 /**
- * Interfarce que define una acción que será invocada cuando es pulsado un botón.
+ * Clase Abstracta que define una acción que será invocada cuando es pulsado un botón.
  */
-public interface ButtonAction{
-	
-	/**
-	 * Acción invocada cuando se pulsa un botón.
-	 */
-	public void run();
+public abstract class ButtonAction implements ActionListener, Runnable{
+
+	private final String name;
+
+	public ButtonAction( String name ){
+		this.name = name;
+	}
+
+	public final String getName(){
+		return this.name;
+	}
+
+	public final void actionPerformed( ActionEvent e ){
+		this.run();
+	}
 }

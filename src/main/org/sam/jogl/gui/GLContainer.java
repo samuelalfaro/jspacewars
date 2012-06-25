@@ -42,14 +42,16 @@ public class GLContainer extends GLComponent{
 		@Override
 		public void mouseMoved( MouseEvent e ){
 			for( GLComponent c: GLContainer.this.childs() )
-				if( c.contains( e.getX(), e.getY() ) ){
-					if( !c.isHovered() )
-						c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), e.getX(), e.getY() );
-					else
-						c.processMouseEvent( MouseEvent.MOUSE_MOVED, e.getButton(), e.getX(), e.getY() );
-				}else
-					if( c.isHovered() )
-						c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
+				if( c.isVisible() && c.isEnabled() ){
+					if( c.contains( e.getX(), e.getY() ) ){
+						if( !c.isHovered() )
+							c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), e.getX(), e.getY() );
+						else
+							c.processMouseEvent( MouseEvent.MOUSE_MOVED, e.getButton(), e.getX(), e.getY() );
+					}else
+						if( c.isHovered() )
+							c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
+				}
 		}
 
 		/* (non-Javadoc)
@@ -58,14 +60,16 @@ public class GLContainer extends GLComponent{
 		@Override
 		public void mouseDragged( MouseEvent e ){
 			for( GLComponent c: GLContainer.this.childs() )
-				if( c.contains( e.getX(), e.getY() ) ){
-					if( !c.isHovered() )
-						c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), e.getX(), e.getY() );
-					else
-						c.processMouseEvent( MouseEvent.MOUSE_DRAGGED, e.getButton(), e.getX(), e.getY() );
-				}else
-					if( c.isHovered() )
-						c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
+				if( c.isVisible() && c.isEnabled() ){
+					if( c.contains( e.getX(), e.getY() ) ){
+						if( !c.isHovered() )
+							c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), e.getX(), e.getY() );
+						else
+							c.processMouseEvent( MouseEvent.MOUSE_DRAGGED, e.getButton(), e.getX(), e.getY() );
+					}else
+						if( c.isHovered() )
+							c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
+				}
 		}
 
 		/* (non-Javadoc)
@@ -74,7 +78,7 @@ public class GLContainer extends GLComponent{
 		@Override
 		public void mousePressed( MouseEvent e ){
 			for( GLComponent c: GLContainer.this.childs() )
-				if( c.contains( e.getX(), e.getY() ) )
+				if( c.isVisible() && c.isEnabled() && c.contains( e.getX(), e.getY() ) )
 					c.processMouseEvent( MouseEvent.MOUSE_PRESSED, e.getButton(), e.getX(), e.getY() );
 		}
 
@@ -84,7 +88,7 @@ public class GLContainer extends GLComponent{
 		@Override
 		public void mouseReleased( MouseEvent e ){
 			for( GLComponent c: GLContainer.this.childs() )
-				if( c.contains( e.getX(), e.getY() ) )
+				if( c.isVisible() && c.isEnabled() && c.contains( e.getX(), e.getY() ) )
 					c.processMouseEvent( MouseEvent.MOUSE_RELEASED, e.getButton(), e.getX(), e.getY() );
 		}
 
@@ -95,7 +99,7 @@ public class GLContainer extends GLComponent{
 		public void mouseEntered( MouseEvent e ){
 			GLContainer.this.setHovered( true );
 			for( GLComponent c: GLContainer.this.childs() )
-				if( !c.isHovered() && c.contains( e.getX(), e.getY() ) )
+				if( c.isVisible() && c.isEnabled() && !c.isHovered() && c.contains( e.getX(), e.getY() ) )
 					c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getX(), e.getY() );
 		}
 
@@ -106,7 +110,7 @@ public class GLContainer extends GLComponent{
 		public void mouseExited( MouseEvent e ){
 			GLContainer.this.setHovered( false );
 			for( GLComponent c: GLContainer.this.childs() )
-				if(	c.isHovered() )
+				if(	c.isVisible() && c.isEnabled() && c.isHovered() )
 					c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
 		}
 	}
@@ -116,6 +120,13 @@ public class GLContainer extends GLComponent{
 	public GLContainer(){
 		components = new ArrayList<GLComponent>();
 		addMouseListener( new GLContainerMouseListener() );
+	}
+	
+	protected void initComponent(){
+		this.setBackground( UIManager.getBackground( "Container.background.default" ) );
+		this.setBorder( UIManager.getBorder( "Container.border.default" ) );
+		for( GLComponent c: components )
+			c.init();
 	}
 
 	public void add( GLComponent component ){
@@ -161,23 +172,11 @@ public class GLContainer extends GLComponent{
 			c.setPosition( c.x1 + offX, c.y1 + offY );
 	}
 	
-	protected void init(){
-		if( initialized )
-			return;
-		initialized = true;
-		this.setBackground( UIManager.getBackground( "Container.background.default" ) );
-		this.setBorder( UIManager.getBorder( "Container.border.default" ) );
-		for( GLComponent c: components )
-			c.init();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.gui.GLComponent#drawComponent(javax.media.opengl.GL2)
 	 */
 	@Override
-	public void draw( GL2 gl ){
-		super.draw( gl );
+	public void drawComponent( GL2 gl ){
 		for( GLComponent c: components )
 			c.draw( gl );
 	}

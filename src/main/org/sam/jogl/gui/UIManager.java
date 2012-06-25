@@ -60,10 +60,10 @@ public class UIManager{
 	
 	private static void loadFonts( GL2 gl, Hashtable<Object, Object> hashtable ){
 		
-		final String fontDef      = "resources/texturas/fonts/arbeka.xml";
-		final String font1Texture = "resources/texturas/fonts/arbeka.png";
-		final String font2Texture = "resources/texturas/fonts/arbeka-blur.png";
-		final String font3Texture = "resources/texturas/fonts/arbeka-neon.png";
+		final String fontDef      = "resources/texturas/fonts/abduction.xml";
+		final String font1Texture = "resources/texturas/fonts/abduction.png";
+		final String font2Texture = "resources/texturas/fonts/abduction-blur.png";
+		final String font3Texture = "resources/texturas/fonts/abduction-neon.png";
 		
 		try{
 			TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) );

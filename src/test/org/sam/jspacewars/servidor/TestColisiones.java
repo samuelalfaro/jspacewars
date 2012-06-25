@@ -137,7 +137,18 @@ public class TestColisiones implements Runnable{
 			}
 		}
 	}
+	
+	private long calcularAcciones( long nanos, long timeStep ){
+		int steps = (int)( ( nanos + timeStep / 2 ) / timeStep );
+		System.out.println( steps );
+		for( int i = 0; i < steps; i++ )
+			calcularAcciones( timeStep );
+		return nanos - timeStep * steps;
+	}
 
+	//private static final long STEP =  500000000; // 0.5 seg
+	private static final int STEP = 8333334; // 120 ciclos por segundo en nanos
+	
 	public void run(){
 		
 		long tAnterior = System.nanoTime();
@@ -146,7 +157,9 @@ public class TestColisiones implements Runnable{
 			long tActual = System.nanoTime();
 
 			nave.setKeyState( pantalla.getKeyState() );
-			calcularAcciones( tActual - tAnterior );
+			long timeOffset = calcularAcciones( tActual - tAnterior, STEP );
+			tAnterior = tActual - timeOffset;
+//			System.out.printf( "%d %d %d\n",tActual, tAnterior, timeOffset );
 
 			pantalla.setNVidas( 2 );
 			pantalla.setNBombas( 1 );
@@ -161,8 +174,6 @@ public class TestColisiones implements Runnable{
 			for( Collection<? extends Elemento> listaElementos: elementos )
 				for( Elemento elemento: listaElementos )
 					pantalla.add( elemento );
-			tAnterior = tActual;
-
 			pantalla.display();
 		}
 	}

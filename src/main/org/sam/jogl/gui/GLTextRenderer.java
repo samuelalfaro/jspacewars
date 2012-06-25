@@ -62,11 +62,13 @@ public class GLTextRenderer{
 	}
 	
 	public void setColor( Color3f color ){
-		setColor( color.x, color.y, color.z, 1.0f );
+		if( color != null )
+			setColor( color.x, color.y, color.z, 1.0f );
 	}
 	
 	public void setColor( Color4f color ){
-		setColor( color.x, color.y, color.z, color.w );
+		if( color != null )
+			setColor( color.x, color.y, color.z, color.w );
 	}
 
 	public void setColor( float r, float g, float b, float a ){
@@ -78,9 +80,7 @@ public class GLTextRenderer{
 
 	public void glPrint( GL2 gl, float x, float y, String string ){
 		
-		if( font == null )
-			setFont( UIManager.getFont( "Font.default" ) );
-		if( font == null )
+		if( string == null || string.length() == 0 || font == null )
 			return;
 
 		IntBuffer stringBuffer = font.toBuffer( string );

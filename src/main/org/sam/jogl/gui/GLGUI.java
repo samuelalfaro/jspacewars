@@ -55,17 +55,22 @@ import org.sam.util.Imagen;
 
 public class GLGUI{
 	
-	private static final Cursor defaultCursor;
+	private static final Cursor blankCursor;
+	private static final Cursor spaceshipCursor;
 	
 	static{
 		BufferedImage bi = new BufferedImage( 32, 32, BufferedImage.TYPE_INT_ARGB );
+		blankCursor = Toolkit.getDefaultToolkit().createCustomCursor( 
+				bi,
+				new Point( 0, 0 ),
+				"blank cursor"
+		);
 		bi.createGraphics().drawImage( Imagen.cargarToBufferedImage( "resources/cursor.png" ), 0, 0, null );
-		
-		defaultCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-						bi,
-						new Point( 0, 0 ),
-						"spaceship cursor"
-				);
+		spaceshipCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+				bi,
+				new Point( 0, 0 ),
+				"spaceship cursor"
+		);
 	}
 	
 	private static class CursorRenderer implements GLEventListener{
@@ -110,7 +115,7 @@ public class GLGUI{
 					) 
 			);
 			
-			FactoriaDeParticulas.setOptimizedFor2D(true);
+			FactoriaDeParticulas.setOptimizedFor2D( true );
 			
 			estela = FactoriaDeParticulas.createParticulas( 50 );
 			
@@ -269,9 +274,9 @@ public class GLGUI{
 	private static class GUIRenderer implements GLEventListener{
 		
 		private final Rectangle viewport;
-		private int virtualAreaWidth;
-		private int virtualAreaHeight;
-		private GLContainer contentPane;
+		int virtualAreaWidth;
+		int virtualAreaHeight;
+		GLContainer contentPane;
 
 		GUIRenderer( Rectangle viewport ){
 			this.viewport = viewport;
@@ -328,9 +333,9 @@ public class GLGUI{
 	private static class GUIListener implements MouseListener, MouseMotionListener, MouseWheelListener{
 		
 		private final Rectangle viewport;
-		private int virtualAreaWidth;
-		private int virtualAreaHeight;
-		private GLContainer contentPane;
+		int virtualAreaWidth;
+		int virtualAreaHeight;
+		GLContainer contentPane;
 		
 		GUIListener( Rectangle viewport ){
 			this.viewport = viewport;
@@ -469,8 +474,8 @@ public class GLGUI{
 		guiRenderer = new GUIRenderer( viewport );
 		guiListener = new GUIListener( viewport );
 		
-		//setVirtualAreaDimesions( 1024, 768 );
-		setVirtualAreaDimesions( 640, 480 );
+		setVirtualAreaDimesions( 1024, 768 );
+		//setVirtualAreaDimesions( 640, 480 );
 	}
 	
 	public void setVirtualAreaDimesions( int width, int height ){
@@ -504,7 +509,7 @@ public class GLGUI{
 		component.addMouseListener( cursorListener );
 		component.addMouseMotionListener( cursorListener );
 		
-		component.setCursor(defaultCursor);
+		component.setCursor( spaceshipCursor );
 	}
 	
 	public void unbind( GLAutoDrawable glDrawable ){
@@ -519,5 +524,7 @@ public class GLGUI{
 		component.removeMouseWheelListener( guiListener );
 		component.removeMouseListener( cursorListener );
 		component.removeMouseMotionListener( cursorListener );
+		
+		component.setCursor( blankCursor );
 	}
 }

@@ -22,95 +22,108 @@
  */
 package org.sam.jspacewars;
 
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.sam.jogl.gui.ButtonAction;
+import org.sam.jogl.gui.GLButton;
 import org.sam.jogl.gui.GLContainer;
+import org.sam.jogl.gui.event.ActionEvent;
+import org.sam.jogl.gui.event.ActionListener;
 
 public class GameMenu extends GLContainer {
 
-//	private static class MyListener implements IButtonPressedListener{
-//		final Map<String, ButtonAction> actions;
-//
-//		MyListener( Map<String, ButtonAction> actions ){
-//			this.actions = actions;
-//		}
-//
-//		/* (non-Javadoc)
-//		 * @see org.fenggui.event.IButtonPressedListener#buttonPressed(java.lang.Object, org.fenggui.event.ButtonPressedEvent)
-//		 */
-//		@Override
-//		public void buttonPressed( Object source, ButtonPressedEvent e ){
-//			System.out.println( ((MyGameMenuButton)source ).getName());
-//			System.out.println( actions.get( ( (MyGameMenuButton)source ).getName() ) );
-//			actions.get( ( (MyGameMenuButton)source ).getName() ).run();
-//		}
-//	}
+	private static class MyListener implements ActionListener{
+		
+		final Map<String, ButtonAction> actions;
 
-//	private final MyGameMenuButton player1, player2, server, client, options, quit;
-//	private final MyGameMenuButton sound, graphics, network, back;
-	private MyGameMenuButton player1, player2, server, client, options, quit;
-	private MyGameMenuButton sound, graphics, network, back;
+		MyListener( Map<String, ButtonAction> actions ){
+			this.actions = actions;
+		}
+
+		/* (non-Javadoc)
+		 * @see org.sam.jogl.gui.event.ActionListener#actionPerformed(org.sam.jogl.gui.event.ActionEvent)
+		 */
+		@Override
+		public void actionPerformed( ActionEvent e ){
+			actions.get( ( (GLButton)e.getSource() ).getActionName() ).run();
+		}
+	}
+
+	
+
+	
+	private final GLButton player1, player2, server, client, options, quit;
+	private final GLButton sound, graphics, network, back;
 	
 	public GameMenu( Map<String, ButtonAction> actions ){
-//		MyListener listener = new MyListener(actions);
-//
-//		this.setLayoutManager(new RowLayout(false));
-//		this.getAppearance().add(
-//				new GradientBackground(new Color(0.0f, 1.0f, 1.0f, 0.25f), new Color(0.0f, 0.0f, 1.0f, 0.5f)));
-//		this.getAppearance().setPadding(new Spacing(10, 10));
-//
-//		player1 = MyGameMenuButton.derive( "player1", listener );
-//
-//		player2 = MyGameMenuButton.derive( "player2", listener );
-//		actions.put("player2", new ButtonAction() {
-//			public void run() {
-//				buildTowPlayersMenu();
-//			}
-//		});
-//		
-//		server = MyGameMenuButton.derive( "server", listener );
-//		client = MyGameMenuButton.derive( "client", listener );
-//
-//		options = MyGameMenuButton.derive( "options", listener );
-//		actions.put("options", new ButtonAction() {
-//			public void run() {
-//				GameMenu.this.buildOptionsMenu();
-//			}
-//		});
-//
-//		sound = MyGameMenuButton.derive( "sound", listener );
-//		actions.put("sound", new ButtonAction() {
-//			public void run() {
-//			}
-//		});
-//
-//		graphics = MyGameMenuButton.derive( "graphics", listener );
-//		actions.put("graphics", new ButtonAction() {
-//			public void run() {
-//			}
-//		});
-//
-//		network = MyGameMenuButton.derive( "network", listener );
-//		actions.put("network", new ButtonAction() {
-//			public void run() {
-//			}
-//		});
-//
-//		back = MyGameMenuButton.derive( "back", listener );
-//		actions.put("back", new ButtonAction() {
-//			public void run() {
-//				GameMenu.this.buildMainMenu();
-//			}
-//		});
-//
-//		quit = MyGameMenuButton.derive( "quit", listener );
-//		actions.put("quit", new ButtonAction() {
-//			public void run() {
-//				GameMenu.this.getDisplay().removeWidget(GameMenu.this);
-//				System.exit(0);
-//			}
-//		});
+		
+		Locale locale = Locale.getDefault(); 
+		ResourceBundle bundle = ResourceBundle.getBundle("org.sam.gui.translations.messages", locale);
+		ResourceBundle basic = ResourceBundle.getBundle("com.sun.swing.internal.plaf.basic.resources.basic", locale);
+		
+		MyListener listener = new MyListener( actions );
+		ButtonAction action;
+
+		player1 = new GLButton( "player1", listener, bundle );
+
+		player2 = new GLButton( "player2", listener, bundle );
+		action = new ButtonAction( "player2" ){
+			public void run(){
+				buildTowPlayersMenu();
+			}
+		};
+		actions.put( action.getName(), action );
+
+		server = new GLButton( "server", listener, bundle );
+		client = new GLButton( "client", listener, bundle );
+
+		action = new ButtonAction( "options" ){
+			public void run(){
+				GameMenu.this.buildOptionsMenu();
+			}
+		};
+		options = new GLButton( action.getName(), listener, bundle );
+		actions.put( action.getName(), action );
+
+		action = new ButtonAction( "sound" ){
+			public void run(){
+			}
+		};
+		sound = new GLButton( action.getName(), listener, bundle );
+		actions.put( action.getName(), action );
+
+		action = new ButtonAction( "graphics" ){
+			public void run(){
+			}
+		};
+		graphics = new GLButton( action.getName(), listener, bundle );
+		actions.put( action.getName(), action );
+
+		action = new ButtonAction( "network" ){
+			public void run(){
+			}
+		};
+		network = new GLButton( action.getName(), listener, bundle );
+		actions.put( action.getName(), action );
+
+		action = new ButtonAction( "back" ){
+			public void run(){
+				GameMenu.this.buildMainMenu();
+			}
+		};
+		back = new GLButton( action.getName(), listener, bundle );
+		actions.put( action.getName(), action );
+
+		action = new ButtonAction( "quit" ){
+			public void run(){
+				//GameMenu.this.getDisplay().removeWidget( GameMenu.this );
+				System.exit( 0 );
+			}
+		};
+		quit = new GLButton( action.getName(), listener, bundle );
+		actions.put( action.getName(), action );
 	}
 
 	private void buildMainMenu() {
@@ -119,8 +132,6 @@ public class GameMenu extends GLContainer {
 		this.add(player2);
 		this.add(options);
 		this.add(quit);
-//		this.pack();
-//		StaticLayout.center(this, this.getDisplay());
 	}
 
 	private void buildTowPlayersMenu() {
@@ -128,8 +139,6 @@ public class GameMenu extends GLContainer {
 		this.add(server);
 		this.add(client);
 		this.add(back);
-//		this.pack();
-//		StaticLayout.center(this, this.getDisplay());
 	}
 	
 	private void buildOptionsMenu() {
@@ -138,14 +147,5 @@ public class GameMenu extends GLContainer {
 		this.add(sound);
 		this.add(network);
 		this.add(back);
-//		this.pack();
-//		StaticLayout.center(this, this.getDisplay());
 	}
-
-//	/** {@inheritDoc} */
-//	@Override
-//	public void addedToWidgetTree() {
-//		super.addedToWidgetTree();
-//		buildMainMenu();
-//	}
 }
