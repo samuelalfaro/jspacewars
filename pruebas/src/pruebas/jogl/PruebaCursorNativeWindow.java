@@ -157,11 +157,11 @@ public class PruebaCursorNativeWindow implements WindowListener{
 	
 	void run(){
 		
-		GLCapabilities caps = new GLCapabilities(null);
+		GLCapabilities caps = new GLCapabilities( null );
 		caps.setRedBits( 8 );
 		caps.setGreenBits( 8 );
 		caps.setBlueBits( 8 );
-		// caps.setBackgroundOpaque(true);
+		caps.setBackgroundOpaque( true );
 
 		Display display = NewtFactory.createDisplay( null );
 		Screen screen = NewtFactory.createScreen( display, 0 );
@@ -179,6 +179,7 @@ public class PruebaCursorNativeWindow implements WindowListener{
 		
 		window.setVisible( true );
 		window.addWindowListener( this );
+
 		while( running ){
 			display.dispatchMessages();
 
@@ -193,6 +194,7 @@ public class PruebaCursorNativeWindow implements WindowListener{
 			// not necessary Thread.sleep(40);
 		}
 		window.destroy();
+		
 	}
 	
 	public static void main( String[] args ){
