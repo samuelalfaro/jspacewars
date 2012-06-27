@@ -244,7 +244,7 @@ public class Prueba060_Loader{
 				init( drawable );
 			tAnterior = tActual;
 			tActual = System.nanoTime();
-			float incT = ( tActual - tAnterior ) / 1000000000.0f;
+			long incT = tActual - tAnterior;
 
 			GL2 gl = drawable.getGL().getGL2();
 

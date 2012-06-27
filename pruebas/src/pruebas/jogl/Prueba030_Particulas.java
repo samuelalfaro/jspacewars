@@ -200,7 +200,7 @@ public class Prueba030_Particulas{
 		public void display( GLAutoDrawable drawable ){
 			tAnterior = tActual;
 			tActual = System.nanoTime();
-			float incT = (float)( tActual - tAnterior ) / 1000000000;
+			long incT = tActual - tAnterior;
 	
 			GL2 gl = drawable.getGL().getGL2();
 	

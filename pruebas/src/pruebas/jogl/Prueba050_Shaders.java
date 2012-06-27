@@ -24,6 +24,8 @@ package pruebas.jogl;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,8 +34,12 @@ import java.util.LinkedList;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
+import javax.media.opengl.GL2ES1;
+import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.fixedfunc.GLLightingFunc;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
@@ -46,6 +52,10 @@ import javax.vecmath.Vector3f;
 import org.sam.elementos.Modificador;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
+import org.sam.jogl.AtributosTransparencia;
+import org.sam.jogl.AtributosTransparencia.DstFunc;
+import org.sam.jogl.AtributosTransparencia.Equation;
+import org.sam.jogl.AtributosTransparencia.SrcFunc;
 import org.sam.jogl.GenCoordTextura;
 import org.sam.jogl.Grupo;
 import org.sam.jogl.Instancia3D;
@@ -57,6 +67,8 @@ import org.sam.jogl.ObjLoader;
 import org.sam.jogl.Objeto3D;
 import org.sam.jogl.Shader;
 import org.sam.jogl.Textura;
+import org.sam.jogl.Textura.MagFilter;
+import org.sam.jogl.Textura.MinFilter;
 import org.sam.jogl.UnidadTextura;
 import org.sam.jogl.particulas.Particulas;
 import org.sam.jspacewars.serialization.GrafoEscenaConverters;
@@ -127,11 +139,15 @@ public class Prueba050_Shaders{
 				UnidadTextura unidadesTextura[] = new UnidadTextura[3];
 				AtributosTextura atributosTextura;
 				unidadesTextura[0] = new UnidadTextura();
-				unidadesTextura[0].setTextura( new Textura( gl, Textura.Format.RGB, Imagen
-						.cargarToBufferedImage( "resources/obj3d/nave05/t01.jpg" ), true ) );
+				unidadesTextura[0].setTextura( new Textura(
+						gl, MinFilter.TRILINEAR, MagFilter.LINEAR, Textura.Format.RGB,
+						Imagen.cargarToBufferedImage( "resources/obj3d/nave05/t01.jpg" ), true )
+				);
 				unidadesTextura[1] = new UnidadTextura();
-				unidadesTextura[1].setTextura( new Textura( gl, Textura.Format.LUMINANCE, Imagen
-						.cargarToBufferedImage( "resources/obj3d/nave05/t02.jpg" ), true ) );
+				unidadesTextura[1].setTextura( new Textura(
+						gl, MinFilter.TRILINEAR, MagFilter.LINEAR, Textura.Format.LUMINANCE,
+						Imagen.cargarToBufferedImage( "resources/obj3d/nave05/t02.jpg" ), true )
+				);
 				atributosTextura = new AtributosTextura();
 				atributosTextura.setMode( AtributosTextura.Mode.COMBINE );
 				atributosTextura.setCombineRgbMode( AtributosTextura.CombineMode.SUBTRACT );
@@ -142,7 +158,8 @@ public class Prueba050_Shaders{
 				unidadesTextura[1].setAtributosTextura( atributosTextura );
 
 				unidadesTextura[2] = new UnidadTextura();
-				unidadesTextura[2].setTextura( new Textura( gl, Textura.Format.RGB, Imagen
+				unidadesTextura[2].setTextura(
+					new Textura( gl, Textura.Format.RGB, Imagen
 						.cargarToBufferedImage( "resources/texturas/reflect.jpg" ), true ) );
 				atributosTextura = new AtributosTextura();
 				atributosTextura.setMode( AtributosTextura.Mode.COMBINE );
@@ -167,6 +184,10 @@ public class Prueba050_Shaders{
 
 					nave.getApariencia().setShader( shader );
 				}
+				nave.getApariencia().setAtributosTransparencia(
+					//new AtributosTransparencia( Equation.ADD, SrcFunc.ALPHA_SATURATE, DstFunc.ONE )
+					new AtributosTransparencia( Equation.ADD, SrcFunc.SRC_ALPHA, DstFunc.ONE_MINUS_SRC_ALPHA )
+				);
 
 				childs = new Grupo();
 				childs.add( new NodoCompartido( nave ) );
@@ -198,13 +219,36 @@ public class Prueba050_Shaders{
 			gl.glLightfv( GLLightingFunc.GL_LIGHT0, GLLightingFunc.GL_SPECULAR,
 					new float[] { 1.0f, 1.0f, 1.0f, 1.0f }, 0 );
 			gl.glEnable( GL.GL_CULL_FACE );
+			
+			if( gl.isExtensionAvailable( "GL_ARB_multisample" ) ){
+				System.out.println(  "GL_ARB_multisample Available" );
+				gl.glEnable( GL.GL_MULTISAMPLE );
+				
+				gl.glEnable( GL2ES1.GL_POINT_SMOOTH );
+				gl.glHint( GL2ES1.GL_POINT_SMOOTH_HINT, GL.GL_NICEST );
+				gl.glEnable( GL.GL_LINE_SMOOTH );
+				gl.glHint( GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST );
+				gl.glEnable( GL2GL3.GL_POLYGON_SMOOTH );
+				gl.glHint( GL2GL3.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST );
+			}
+			if( gl.isExtensionAvailable( "GL_EXT_framebuffer_multisample" ) ){
+				System.out.println(  "GL_EXT_framebuffer_multisample Available" );
+			}
+			if( gl.isExtensionAvailable( "GL_EXT_framebuffer_blit" ) ){
+				System.out.println(  "GL_EXT_framebuffer_blit Available" );
+			}
+			int[] buf = new int[1];
+			gl.glGetIntegerv( GL.GL_SAMPLE_BUFFERS, buf, 0 );
+			System.out.println( "number of sample buffers is " + buf[0] );
+			gl.glGetIntegerv( GL.GL_SAMPLES, buf, 0 );
+			System.out.println( "number of samples is " + buf[0] );
 			tActual = System.nanoTime();
 		}
 
 		public void display( GLAutoDrawable drawable ){
 			tAnterior = tActual;
 			tActual = System.nanoTime();
-			float incT = ( tActual - tAnterior ) / 1000000000.0f;
+			long incT = tActual - tAnterior;
 
 			GL2 gl = drawable.getGL().getGL2();
 
@@ -242,7 +286,7 @@ public class Prueba050_Shaders{
 
 			for( Modificador modificador: gestorDeParticulas )
 				modificador.modificar( incT );
-
+	
 			nave1.draw( gl );
 
 			gl.glFlush();
@@ -291,7 +335,8 @@ public class Prueba050_Shaders{
 	}
 
 	public static void main( String[] args ){
-
+		boolean preferMultiSampling = true;
+		
 		JFrame frame = new JFrame( "Prueba Shaders" );
 		frame.getContentPane().setBackground( Color.BLACK );
 		frame.getContentPane().setPreferredSize( new Dimension( 640, 480 ) );
@@ -299,9 +344,41 @@ public class Prueba050_Shaders{
 		frame.setLocationRelativeTo( null ); // center
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-		GLCanvas canvas = new GLCanvas();
-		canvas.addGLEventListener( new Renderer() );
+		DisplayMode tDesktopDisplayMode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
+		
+		GLCapabilities tGLCapabilities = new GLCapabilities( GLProfile.getDefault() );
+		//enable/configure multisampling support ...
+		if( preferMultiSampling ){
+			tGLCapabilities.setSampleBuffers( true );
+			tGLCapabilities.setNumSamples( 8 );
+			tGLCapabilities.setAccumAlphaBits( 16 );
+			tGLCapabilities.setAccumBlueBits( 16 );
+			tGLCapabilities.setAccumGreenBits( 16 );
+			tGLCapabilities.setAccumRedBits( 16 );
+			tGLCapabilities.setAlphaBits(8);
+		}
+        /*
+        //test method for JOGL2 mutisampling bug: http://jogamp.org/bugzilla/show_bug.cgi?id=410
+		GLCanvas canvas = new GLCanvas( tGLCapabilities, new GLCapabilitiesChooser(){
 
+			@Override
+			@SuppressWarnings( "rawtypes" )
+			public int chooseCapabilities( CapabilitiesImmutable cpblts, List list, int i ){
+				@SuppressWarnings( "unchecked" )
+				List<CapabilitiesImmutable> cpbltss = list;
+				for( CapabilitiesImmutable caps: cpbltss ){
+					System.out.println( caps );
+				}
+				System.out.println( "recommended:" );
+				System.out.println( cpblts );
+				return i;
+			}
+		}, null, null );
+		/*/
+		GLCanvas canvas = new GLCanvas(tGLCapabilities);
+		//*/
+		
+		canvas.addGLEventListener( new Renderer() );
 		frame.getContentPane().add( canvas );
 
 		Animator animator = new Animator();

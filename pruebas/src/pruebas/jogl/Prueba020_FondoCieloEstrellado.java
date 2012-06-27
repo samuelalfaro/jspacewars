@@ -127,7 +127,7 @@ public class Prueba020_FondoCieloEstrellado{
 				// estrellas[i].setPertubacionColor(0.25f, false, true);
 				estrellas[i].setApariencia( apEstrellas );
 				estrellas[i].reset();
-				estrellas[i].getModificador().modificar( tVida );
+				estrellas[i].getModificador().modificar( (long)( tVida * 1000000000) );
 			}
 			FactoriaDeParticulas.setOptimizedFor2D( false );
 
@@ -150,7 +150,7 @@ public class Prueba020_FondoCieloEstrellado{
 		public void display( GLAutoDrawable drawable ){
 			tAnterior = tActual;
 			tActual = System.nanoTime();
-			float incT = ( tActual - tAnterior ) / 1000000000.0f;
+			long incT = tActual - tAnterior;
 
 			GL2 gl = drawable.getGL().getGL2();
 

@@ -215,7 +215,7 @@ public class PruebaCursor{
 			tAnterior = tActual;
 			tActual = System.nanoTime();
 
-			float incT = (float)( tActual - tAnterior ) / 1000000000;
+			long incT = tActual - tAnterior;
 		
 			GL2 gl = glDrawable.getGL().getGL2();
 	

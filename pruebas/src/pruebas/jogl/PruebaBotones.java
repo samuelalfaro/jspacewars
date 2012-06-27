@@ -31,6 +31,7 @@ import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
+import org.sam.jogl.gui.ButtonAction;
 import org.sam.jogl.gui.GLButton;
 import org.sam.jogl.gui.GLContainer;
 import org.sam.jogl.gui.GLGUI;
@@ -66,13 +67,23 @@ public class PruebaBotones{
 		
 		GLLabel component;
 		
-		component = new GLButton( "Botón 1" );
+		component = new GLButton( new ButtonAction("Botón 1"){
+			@Override
+			public void run(){
+				System.out.println("Botón 1 pulsado");
+			}
+		});
 		component.setBounds( 50, 50, 200, 50 );
 		component.setVerticalAlignment( VerticalAlignment.TOP );
 		component.setHorizontalAlignment( HorizontalAlignment.LEFT );
 		container.add( component );
 		
-		component = new GLButton( "Botón 2" );
+		component = new GLButton(new ButtonAction("Botón 2"){
+			@Override
+			public void run(){
+				System.out.println("Botón 2 pulsado");
+			}
+		});
 		component.setBounds( 50, 125, 200, 50 );
 		component.setVerticalAlignment( VerticalAlignment.CENTER);
 		component.setHorizontalAlignment( HorizontalAlignment.CENTER );
@@ -83,7 +94,12 @@ public class PruebaBotones{
 		component.setVerticalAlignment( VerticalAlignment.BOTTOM );
 		container.add( component );
 		
-		component = new GLButton( "Botón 3" );
+		component = new GLButton( new ButtonAction("Botón 3"){
+			@Override
+			public void run(){
+				System.out.println("Botón 3 pulsado");
+			}
+		});
 		component.setBounds( 50, 275, 200, 50 );
 		component.setVerticalAlignment( VerticalAlignment.BASE_LINE );
 		component.setHorizontalAlignment( HorizontalAlignment.RIGHT );
