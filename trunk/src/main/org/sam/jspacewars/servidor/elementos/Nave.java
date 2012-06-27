@@ -55,8 +55,6 @@ public abstract class Nave extends Elemento {
 		this.dstDisparos = dstDisparos;
 	}
 
-	public abstract void iniciar();
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -68,11 +66,11 @@ public abstract class Nave extends Elemento {
 	
 	int resistencia = 1000;
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Initializable#init()
 	 */
 	@Override
-	public void inicializar(){
+	public void init(){
 		resistencia = 1000;
 	}
 	

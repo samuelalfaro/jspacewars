@@ -235,7 +235,7 @@ public class AtributosTransparencia {
 		gl.glEnable( GL.GL_BLEND );
 		gl.glBlendEquation( equation.value );
 		gl.glBlendFunc( srcFunc.value, dstFunc.value );
-		// gl.glDisable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
+		//gl.glDisable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
 		gl.glDepthMask( false );
 		anterior = this;
 	}
@@ -249,7 +249,7 @@ public class AtributosTransparencia {
 		if( anterior == null )
 			return;
 		gl.glDepthMask( true );
-		// gl.glEnable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
+		//gl.glEnable(GL.GL_CULL_FACE);//TODO cambiar a AtributosRender
 		gl.glDisable( GL.GL_BLEND );
 		anterior = null;
 	}

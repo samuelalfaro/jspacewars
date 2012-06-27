@@ -35,5 +35,5 @@ public interface Dibujable {
 	 * 
 	 * @param gl Contexto gráfico en el que se realiza a acción.
 	 */
-	public void draw(GL2 gl);
+	public void draw( GL2 gl );
 }

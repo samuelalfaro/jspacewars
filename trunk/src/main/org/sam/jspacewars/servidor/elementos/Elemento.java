@@ -183,8 +183,6 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	@Override
 	public final void reset() {
 		this.id = prototipo.getAutoIncrementable().getNextId();
-		inicializar();
+		init();
 	}
-	
-	public abstract void inicializar();
 }

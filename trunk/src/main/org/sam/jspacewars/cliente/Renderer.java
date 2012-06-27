@@ -97,7 +97,7 @@ class Renderer implements GLEventListener {
 
 		tAnterior = tActual;
 		tActual = System.nanoTime();
-		float incT = (float)( tActual - tAnterior ) / 1000000000;
+		long incT = tActual - tAnterior;
 		
 		fondo.getModificador().modificar( incT );
 		for( Modificador modificador: data.modificadores )

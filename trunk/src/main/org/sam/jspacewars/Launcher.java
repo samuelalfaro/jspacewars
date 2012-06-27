@@ -54,6 +54,8 @@ import org.sam.jspacewars.servidor.elementos.Elemento;
 @Deprecated
 public class Launcher{
 
+	private static final String pathElementos = "resources/elementos-instancias3D-stream-sh.xml";
+	
 	private static JFrame getFullScreenFrame(){
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		JFrame frame = new JFrame( myDevice.getDefaultConfiguration() );
@@ -108,7 +110,7 @@ public class Launcher{
 			splashWindow.setVisible( true );
 
 			Cache<Elemento> cache = new Cache<Elemento>( 1000 );
-			Loader.loadData( cache );
+			Loader.loadData( pathElementos, cache );
 
 			ServidorJuego server = new ServidorJuego( cache );
 			splashWindow.waitForLoading();
@@ -141,7 +143,7 @@ public class Launcher{
 			splashWindow.setVisible( true );
 
 			Cache<Elemento> cache = new Cache<Elemento>( 1000 );
-			Loader.loadData( cache );
+			Loader.loadData( pathElementos, cache );
 
 			ServidorJuego server = new ServidorJuego( cache, port );
 			splashWindow.waitForLoading();

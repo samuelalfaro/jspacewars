@@ -50,10 +50,8 @@ public class NodoCompartido implements Nodo {
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 * <p>Este método siempre devuelve {@code null}, puesto que
-	 * los nodos de esta clase son empleados para que tengan
-	 * varios antecesores.</p>
+	 * Método sobreescrito método que siempre devuelve {@code null}, puesto que
+	 * los nodos de esta clase son empleados para que tengan varios antecesores.
 	 * @return {@code null}.
 	 */
 	@Override
@@ -62,9 +60,11 @@ public class NodoCompartido implements Nodo {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>Este método no hace nada, puesto que los nodos de esta 
-	 * clase son empleados para que tengan varios antecesores.</p>
+	 * Método sobreescrito para no hacer nada, puesto que los nodos de esta 
+	 * clase son empleados para que tengan varios antecesores.
+	 * @param parent parámetro igronarado.
+	 * 
+	 * @see org.sam.jogl.Nodo#setParent(org.sam.jogl.Nodo)
 	 */
 	@Override
 	public void setParent( Nodo parent ){

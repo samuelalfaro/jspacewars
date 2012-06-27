@@ -74,7 +74,6 @@ public class Objeto3D extends Objeto3DAbs{
 	public void setGeometria(Geometria geometria) {
 		this.geometria = geometria;
 	}
-	
 
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Objeto3DAbs#draw(javax.media.opengl.GL2)

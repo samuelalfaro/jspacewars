@@ -56,13 +56,13 @@ class Particulas2D extends Particulas{
 			pos.put( x1 ); pos.put( y0 );
 		}
 
-		public boolean modificar( float steep ){
+		public boolean modificar( long nanos ){
 
 			pos.rewind();
 			col.rewind();
 			tex.rewind();
 
-			float iVidaT = iVida * steep;
+			float iVidaT = iVidaNanos * nanos;
 
 			for( int i = 0, j = 0, len = vidas.length; i < len; i++ ){
 				vidas[i] += iVidaT;

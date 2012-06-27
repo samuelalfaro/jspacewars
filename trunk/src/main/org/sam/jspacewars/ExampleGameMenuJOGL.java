@@ -55,6 +55,10 @@ import org.sam.jspacewars.servidor.elementos.Elemento;
 import com.jogamp.opengl.util.Animator;
 
 public class ExampleGameMenuJOGL {
+	
+	static String getPathElementos(){
+		return "resources/elementos-instancias3D-stream-sh.xml";
+	}
 
 	static int getPort(){
 		return 1111;
@@ -134,7 +138,7 @@ public class ExampleGameMenuJOGL {
 
 		final Cache<Elemento> cache = new Cache<Elemento>( 1000 );
 		try{
-			Loader.loadData( cache );
+			Loader.loadData( getPathElementos(), cache );
 		}catch( FileNotFoundException e1 ){
 			e1.printStackTrace();
 		}catch( IOException e1 ){
@@ -143,13 +147,14 @@ public class ExampleGameMenuJOGL {
 
 		final Animator animator = new Animator();
 		animator.setRunAsFastAsPossible( true );
-		animator.setPrintExceptions( true );
+		//animator.setPrintExceptions( true );
 		splashWindow.waitForLoading();
 		splashWindow.setVisible( false );
 
 		final GLCanvas canvas = new GLCanvas( null, null, splashCanvas.getContext(), null );
 
 		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer( dataGame.getFondo() );
+		
 		Map<String, ButtonAction> actions = new Hashtable<String, ButtonAction>();
 
 		canvas.addGLEventListener( backgroundRenderer );
@@ -166,13 +171,11 @@ public class ExampleGameMenuJOGL {
 					animator.stop();
 					animator.remove( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
-					//canvas.removeGLEventListener(displayGUI);
 
 					clientServer.server = new ServidorJuego( cache );
 					clientServer.cliente = new Cliente( dataGame, canvas );
 					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
 					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
-					//canvas.addGLEventListener(displayGUI);
 					clientServer.cliente.start();
 
 					new Thread(){
@@ -199,14 +202,12 @@ public class ExampleGameMenuJOGL {
 					animator.stop();
 					animator.remove( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
-					//canvas.removeGLEventListener(displayGUI);
 
 					clientServer.server = new ServidorJuego( cache, getPort() );
 
 					clientServer.cliente = new Cliente( dataGame, canvas );
 					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
 					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
-					//canvas.addGLEventListener(displayGUI);
 					clientServer.cliente.start();
 
 					new Thread(){
@@ -233,7 +234,6 @@ public class ExampleGameMenuJOGL {
 					animator.stop();
 					animator.remove( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
-					//canvas.removeGLEventListener(displayGUI);
 					DatagramChannel canalCliente = DatagramChannel.open();
 					canalCliente.connect( new InetSocketAddress( getHostName(), getPort() ) );
 					clientServer.cliente = new Cliente( dataGame, canvas );
@@ -249,6 +249,7 @@ public class ExampleGameMenuJOGL {
 
 		animator.add( canvas );
 		mostrar( frame, canvas );
+		displayGUI.bind( canvas );
 		animator.start();
 	}
 }

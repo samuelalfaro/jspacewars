@@ -306,11 +306,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave01/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -373,7 +373,7 @@
 					<Apariencia>
 						<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA"
 							dstFunc="ONE"/>
-						<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+						<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="ALPHA"
 							image="resources/texturas/smoke_particle.jpg" flipY="true" wrapS="CLAMP_TO_BORDER"
 							wrapT="CLAMP_TO_BORDER"/>
 					</Apariencia>
@@ -746,11 +746,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -1182,11 +1182,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -1611,11 +1611,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura reference="/Instancia3D/Grupo/NodoCompartido/Objeto3D/Apariencia/unidadesTextura/UnidadTextura[3]"/>
@@ -1924,11 +1924,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave03/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2253,11 +2253,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2331,11 +2331,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave04/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura
@@ -2400,11 +2400,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2477,11 +2477,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2538,11 +2538,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave04/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2606,11 +2606,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave06/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2667,11 +2667,11 @@
 						</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/nave05/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2728,11 +2728,11 @@
 						<Material>DEFAULT</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/bomber01/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/bomber01/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2818,11 +2818,11 @@
 						<Material>DEFAULT</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/bomber02/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/nave05/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2897,11 +2897,11 @@
 						<Material>DEFAULT</Material>
 						<unidadesTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="RGB"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="RGB"
 									image="resources/obj3d/fragata/t01.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
-								<Textura minFilter="LINEAR" magFilter="LINEAR" format="LUMINANCE"
+								<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="LUMINANCE"
 									image="resources/obj3d/fragata/t02.jpg" flipY="true" wrapS="REPEAT" wrapT="REPEAT"/>
 							</UnidadTextura>
 							<UnidadTextura>
@@ -2952,7 +2952,7 @@
 								<specular r="1.0" g="1.0" b="1.0" a="1.0"/>
 							</Material>
 							<Textura
-									minFilter="LINEAR" magFilter="LINEAR"
+									minFilter="TRILINEAR" magFilter="LINEAR"
 									format="RGB" image="resources/obj3d/misiles/t01.jpg" flipY="true"
 									wrapS="REPEAT" wrapT="REPEAT"
 							/>
@@ -2966,7 +2966,7 @@
 								<mode>REPLACE</mode>
 							</AtributosTextura>
 							<Textura
-									minFilter="LINEAR" magFilter="LINEAR"
+									minFilter="TRILINEAR" magFilter="LINEAR"
 									format="RGBA" image="resources/texturas/disparos.png" flipY="true"
 									wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"
 							/>
@@ -3014,7 +3014,7 @@
 				<VelocidadGiro v="360.0" p="0.0" s="true"/>
 				<Apariencia>
 					<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
-					<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA"
+					<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="ALPHA"
 						image="resources/texturas/smok.png" flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
 				</Apariencia>
 			</Particulas>
@@ -4108,7 +4108,7 @@
 			</Color>
 			<Apariencia>
 				<AtributosTransparencia equation="ADD" srcFunc="SRC_ALPHA" dstFunc="ONE"/>
-				<Textura minFilter="LINEAR" magFilter="LINEAR" format="ALPHA" image="resources/texturas/smoke4.jpg"
+				<Textura minFilter="TRILINEAR" magFilter="LINEAR" format="ALPHA" image="resources/texturas/smoke4.jpg"
 					flipY="true" wrapS="CLAMP_TO_BORDER" wrapT="CLAMP_TO_BORDER"/>
 			</Apariencia>
 		</Particulas>

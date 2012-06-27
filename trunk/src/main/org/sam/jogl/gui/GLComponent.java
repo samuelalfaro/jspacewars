@@ -25,6 +25,7 @@ package org.sam.jogl.gui;
 import javax.media.opengl.GL2;
 import javax.swing.event.EventListenerList;
 
+import org.sam.elementos.Initializable;
 import org.sam.jogl.gui.event.ChangeEvent;
 import org.sam.jogl.gui.event.ChangeListener;
 import org.sam.jogl.gui.event.KeyEvent;
@@ -34,7 +35,7 @@ import org.sam.jogl.gui.event.MouseListener;
 import org.sam.jogl.gui.event.MouseWheelEvent;
 import org.sam.jogl.gui.event.MouseWheelListener;
 
-public abstract class GLComponent extends GLRectangle{
+public abstract class GLComponent extends GLRectangle implements Initializable{
 	
 	protected static final GLTextRenderer TEXT_RENDERER = new GLTextRenderer();
 	
@@ -50,9 +51,10 @@ public abstract class GLComponent extends GLRectangle{
 	public GLComponent(){
 		this.initialized = false;
 		this.state = StateConstants.STATE_VISIBLE | StateConstants.STATE_DEFAULT;
+		UIManager.registerInitializable( this );
 	}
 	
-	protected void init(){
+	public final void init(){
 		if( initialized )
 			return;
 		initialized = true;

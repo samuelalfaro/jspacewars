@@ -36,10 +36,9 @@ public class GeometriaQuads extends GeometriaAbs {
 	 * @param nVertex  {@link GeometriaAbs#nVertex Número de vértices} de la {@code Geometria} creada.
 	 * @param att_mask {@link GeometriaAbs#att_mask Máscara de atributos} de la {@code Geometria} creada.
 	 */
-	public GeometriaQuads(int nVertex, int att_mask) {
-		super(nVertex, att_mask);
+	public GeometriaQuads( int nVertex, int att_mask ){
+		super( nVertex, att_mask );
 	}
-
 
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)

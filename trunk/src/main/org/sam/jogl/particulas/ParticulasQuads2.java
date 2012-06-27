@@ -103,7 +103,7 @@ class ParticulasQuads2 extends Particulas{
 		private final transient Vector3f pEmisorAct = new Vector3f();
 		private final transient Vector3f pEmisorInt = new Vector3f();
 
-		public boolean modificar( float steep ){
+		public boolean modificar( long nanos ){
 
 			if( particulasActivas == 0 ){
 				if( emision == Emision.UNICA )
@@ -116,7 +116,7 @@ class ParticulasQuads2 extends Particulas{
 			col.rewind();
 			tex.rewind();
 
-			float iVidaT = iVida * steep;
+			float iVidaT = iVidaNanos * nanos;
 
 			Matrix4f transform_matrix = getTransformMatrix();
 
@@ -616,8 +616,7 @@ class ParticulasQuads2 extends Particulas{
 		tAnterior = tActual;
 		tActual = System.nanoTime();
 
-		float incT = (float)( tActual - tAnterior ) / 1000000000;
-		this.getModificador().modificar( incT );
+		this.getModificador().modificar( tActual - tAnterior );
 
 		gl.glMatrixMode( GL2.GL_MODELVIEW );
 		gl.glPushMatrix();
