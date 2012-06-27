@@ -88,12 +88,10 @@ public class PruebaMovimiento{
 			return forma;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.sam.util.Cacheable#reset()
-		 */
 		public void reset(){
+		}
+		
+		public void init(){
 		}
 	}
 
