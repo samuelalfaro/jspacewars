@@ -163,7 +163,7 @@ public class ServidorJuego {
 		listasDeDisparosProtagonistas.clear();
 		listasDeDisparosProtagonistas.add( disparosNave );
 		elementos.add( disparosNave );
-		nave1.iniciar();
+		nave1.init();
 		nave1.setPosicion( 0, 0 );
 
 		nave1.setLimites( LIMITE_HORIZONTAL, LIMITE_VERTICAL );
@@ -176,7 +176,7 @@ public class ServidorJuego {
 			nave2.setDstDisparos( disparosNave );
 			listasDeDisparosProtagonistas.add( disparosNave );
 			elementos.add( disparosNave );
-			nave2.iniciar();
+			nave2.init();
 			nave2.setPosicion( 0, -1 );
 			nave2.setLimites( LIMITE_HORIZONTAL, LIMITE_VERTICAL );
 			navesProtagonistas.add( nave2 );

@@ -23,6 +23,7 @@
 package org.sam.jspacewars;
 
 import java.awt.AWTException;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -31,23 +32,23 @@ import java.awt.Robot;
 import java.awt.Window;
 import java.awt.image.BufferedImage;
 
-import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.GLAutoDrawable;
 
+import org.sam.jogl.ConditionalAnimator;
 import org.sam.util.Imagen;
 import org.sam.util.ModificableBoolean;
 
 /**
  * 
- * @author Samuel Alfaro
  */
 @SuppressWarnings("serial")
 class SplashWindow extends Window {
 
 	private final transient Image fondo;
 	private final transient ModificableBoolean loading;
-	private final transient GLCanvas barra;
+	private final transient ConditionalAnimator animator;
 
-	SplashWindow( String ruta, GLCanvas barra, DataGame dataGame ){
+	SplashWindow( String ruta, GLAutoDrawable barra, DataGame dataGame ){
 		super( null );
 		this.setLayout( null );
 
@@ -81,69 +82,32 @@ class SplashWindow extends Window {
 
 		loading = new ModificableBoolean( true );
 
-		this.barra = barra;
-		this.barra.setBounds( 50, h - 10, w - 100, 5 );
-		this.barra.addGLEventListener( new GLEventListenerLoader( dataGame, loading ) );
-
-		this.add( barra );
+		barra.addGLEventListener( new GLEventListenerLoader( dataGame, loading ) );
+		this.animator = new ConditionalAnimator( barra, loading, 60 );
+		Component component = (Component)barra;
+		component.setBounds( 50, h - 10, w - 100, 5 );
+		
+		this.add( component );
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see java.awt.Container#paint(java.awt.Graphics)
 	 */
+	@Override
 	public void paint( Graphics g ){
 		g.drawImage( fondo, 0, 0, this );
 		super.paint( g );
 	}
 
-	/**
-	 * Método que sobreescribe y llama al método de la clase padre {@link java.awt.Window#setVisible(boolean)
-	 * setVisible(boolean)}.
-	 * 
-	 * @param visible
-	 * <ul>
-	 * <li>Si {@code true}, muestra la {@link java.awt.Window
-	 * ventana}, si no hay datos cargados, crea una nueva hebra, que se encargará, de animar la barra de progreso.</li>
-	 * <li>En caso contrario, si todavía se están cargando datos, bloquea la hebra llamante hasta que dichos datos
-	 * hallan sido cargados y finalmente oculta la {@link java.awt.Window
-	 * ventana}.</li>
-	 * </ul>
-	 * 
+	/* (non-Javadoc)
 	 * @see java.awt.Window#setVisible(boolean)
 	 */
+	@Override
 	public void setVisible( boolean visible ){
-
-		if( visible ){
-			super.setVisible( true );
-			if( loading.isTrue() ){
-				new Thread(){
-					
-					final long FPS    = 60;
-					final long F_TIME = 1000000000 / FPS;
-					
-					public void run(){
-						long tActual = System.nanoTime(), tAnterior;
-						do{
-							tAnterior = tActual;
-							barra.display();
-							tActual = System.nanoTime();
-							long tRender = tActual - tAnterior;
-							
-							if( tRender < F_TIME ){
-								long sleepNanos = F_TIME - tRender;
-								try{
-									
-									Thread.sleep( sleepNanos / 1000000, (int)( sleepNanos % 1000000 ) );
-								}catch( InterruptedException ignorada ){
-								}
-							}
-						}while( loading.isTrue() );
-					}
-				}.start();
-			}
-		}else
-			super.setVisible( false );
+		super.setVisible( visible );
+		if( visible && loading.isTrue() )
+			animator.start();
 	}
 
 	public void waitForLoading(){

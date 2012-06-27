@@ -24,14 +24,18 @@ package org.sam.jogl.gui;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayDeque;
 import java.util.Hashtable;
+import java.util.Queue;
 
 import javax.media.opengl.GL2;
 import javax.vecmath.Color4f;
 
+import org.sam.elementos.Initializable;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
+import org.sam.jogl.Nodo;
 import org.sam.jogl.Textura;
 import org.sam.jogl.Textura.MagFilter;
 import org.sam.jogl.Textura.MinFilter;
@@ -40,7 +44,7 @@ import org.sam.util.Imagen;
 /**
  * 
  */
-public class UIManager{
+public final class UIManager{
 	
 	private static final Apariencia BLEND = new Apariencia();
 	
@@ -55,6 +59,8 @@ public class UIManager{
 	}
 	
 	private UIManager(){}
+	
+	private static final Queue<Initializable> initializables = new ArrayDeque<Initializable>();
 	
 	private static Hashtable<Object,Object> hashtable = null;
 	
@@ -214,8 +220,17 @@ public class UIManager{
 		hashtable.put( "Background.default", background );
 	}
 	
+	private static void notifyInitializables(){
+		while( !initializables.isEmpty() )
+			initializables.remove().init();
+	}
+	
+	public static boolean isInitialized(){
+		return hashtable != null;
+	}
+	
 	public static void Init( GL2 gl ){
-		if( hashtable != null )
+		if( isInitialized() )
 			return;
 		hashtable = new Hashtable<Object, Object>();
 		loadFonts( gl, hashtable );
@@ -267,12 +282,16 @@ public class UIManager{
 		hashtable.put( "Button.background.hovered",  UIManager.getBackground( "Background.default" ) );
 		hashtable.put( "Button.border.hovered",  UIManager.getBorder( "Border.default" ) );
 		properties = new TextRendererProperties();
-		properties.shadowFont   = UIManager.getFont(  "Font.Component.fx" ).deriveFont( 1.15f );
-		properties.shadowColor  = new Color4f( 0.5f, 0.5f, 0.1f, 1.0f );
+		properties.shadowFont   = UIManager.getFont(  "Font.Component.fx" ).deriveFont( 1.25f, 1.20f );
+		properties.shadowColor  = new Color4f( 0.5f, 0.5f, 0.1f, 0.5f );
 		properties.shadowOfsetX = 0.0f;
 		properties.shadowOfsetY = 0.0f;
-		properties.font         = UIManager.getFont(  "Font.Component.default" ).deriveFont( 1.15f );
-		properties.color        = UIManager.getColor( "Color.Text.default" );
+		properties.font         = UIManager.getFont(  "Font.Component.fx" ).deriveFont( 1.20f, 1.175f );
+		properties.color        = new Color4f( 0.5f, 0.5f, 0.1f, 0.5f );
+		properties.fxFont       = UIManager.getFont(  "Font.Component.default" ).deriveFont( 1.15f );
+		properties.fxColor      = UIManager.getColor( "Color.Text.default" );
+		properties.fxOfsetX     = 0.0f;
+		properties.fxOfsetY     = 0.0f;
 		hashtable.put( "Button.properties.hovered",  properties );
 		
 		hashtable.put( "Button.background.focused",  UIManager.getBackground( "Background.default" ) );
@@ -315,9 +334,20 @@ public class UIManager{
 		properties.font         = UIManager.getFont(  "Font.Component.default" );
 		properties.color        = UIManager.getColor( "Color.Text.default" );
 		hashtable.put( "Button.properties.default",  properties );
+		
+		notifyInitializables();
+	}
+	
+	public static void registerInitializable( Initializable i ){
+		if( isInitialized() )
+			i.init();
+		else
+			initializables.add( i );
 	}
 	
 	public static Object get( Object key ){
+		if( !isInitialized() )
+			return null;
 		return hashtable.get( key );
 	}
 
@@ -350,5 +380,9 @@ public class UIManager{
         Object value = get(key);
 		return (value instanceof Insets) ? (Insets)value : null;
 	}
-
+	
+	public static Nodo getNodo( Object key ){
+        Object value = get(key);
+		return (value instanceof Nodo) ? (Nodo)value : null;
+	}
 }

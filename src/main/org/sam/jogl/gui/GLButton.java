@@ -33,9 +33,6 @@ import org.sam.jogl.gui.event.MouseAdapter;
 import org.sam.jogl.gui.event.MouseEvent;
 import org.sam.jogl.gui.event.MouseListener;
 
-/**
- * 
- */
 public class GLButton extends GLLabel{
 	
 	private static final MouseListener ButtonMouseListener = new MouseAdapter(){
@@ -107,7 +104,7 @@ public class GLButton extends GLLabel{
 	
 	private String actionName;
 	
-	public GLButton( String actionName, ActionListener al, ResourceBundle bundle ){
+	public GLButton( String actionName, ResourceBundle bundle, ActionListener al ){
 		super( bundle != null ? bundle.getString( actionName ) : actionName, HorizontalAlignment.CENTER, VerticalAlignment.CENTER );
 		this.actionName = actionName;
 		addMouseListener( ButtonMouseListener );
@@ -116,12 +113,12 @@ public class GLButton extends GLLabel{
 			this.addActionListener( al );
 	}
 	
-//	public GLButton( String actionName, ActionListener al ){
-//		this( actionName, al, null );
-//	}
+	public GLButton( String actionName, ActionListener al ){
+		this( actionName, null, al );
+	}
 	
 	public GLButton( String actionName, ResourceBundle bundle ){
-		this( actionName, null, bundle );
+		this( actionName, bundle, null );
 	}
 	
 	public GLButton( String actionName ){
@@ -129,11 +126,11 @@ public class GLButton extends GLLabel{
 	}
 	
 	public GLButton( ButtonAction action, ResourceBundle bundle ){
-		this( action.getName(), action, bundle );
+		this( action.getName(), bundle, action );
 	}
 	
 	public GLButton( ButtonAction action ){
-		this( action.getName(), action, null );
+		this( action.getName(), null, action );
 	}
 
 	protected void initComponent(){

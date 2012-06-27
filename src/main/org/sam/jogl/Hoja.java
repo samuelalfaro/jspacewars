@@ -35,16 +35,16 @@ public abstract class Hoja implements Nodo {
 	protected Hoja() {
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#setParent(org.sam.jogl.Nodo)
 	 */
 	@Override
 	public final void setParent( Nodo parent ){
 		this.parent = parent;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.Nodo#getParent()
 	 */
 	@Override
 	public final Nodo getParent() {
@@ -58,19 +58,19 @@ public abstract class Hoja implements Nodo {
 	private static transient final Nodo[] nodos = new Nodo[]{}; 
 
 	/**
-	 * {@inheritDoc}
 	 * <p>Este método siempre devuelve un vector de nodos vacío, puesto que
 	 * los elementos de esta clase y sus derivadas, representan los nodos 
 	 * finales (hojas), del grafo de escena.</p>
 	 * @return Un vector de nodos vacío.
+	 * @see org.sam.jogl.Nodo#getChilds()
 	 */
 	@Override
 	public final Nodo[] getChilds(){
 		return nodos;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
 	 */
 	@Override
 	public abstract Hoja clone();

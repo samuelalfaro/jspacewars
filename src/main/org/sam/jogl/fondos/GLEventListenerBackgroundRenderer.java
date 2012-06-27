@@ -52,7 +52,7 @@ public class GLEventListenerBackgroundRenderer implements GLEventListener {
 	public void display( GLAutoDrawable drawable ){
 		tAnterior = tActual;
 		tActual = System.nanoTime();
-		fondo.getModificador().modificar( (float)( tActual - tAnterior ) / 1000000000 );
+		fondo.getModificador().modificar( tActual - tAnterior );
 		fondo.draw( drawable.getGL().getGL2() );
 	}
 

@@ -39,6 +39,7 @@ import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import org.sam.jogl.Instancia3D;
 import org.sam.jogl.ObjLoader;
 import org.sam.jogl.fondos.CieloEstrellado;
+import org.sam.jogl.gui.UIManager;
 import org.sam.jspacewars.cliente.MarcoDeIndicadores;
 import org.sam.jspacewars.serialization.GrafoEscenaConverters;
 import org.sam.jspacewars.serialization.Ignorado;
@@ -74,16 +75,13 @@ class GLEventListenerLoader implements GLEventListener {
 	private static final float inc2 = 1.0f / MAX_CICLOS;
 	private transient int ciclo;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable
-	 * )
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
 	 */
+	@Override
 	public void init( final GLAutoDrawable drawable ){
 		dataGame.setGLContext( drawable.getContext() );
-		
+
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glDepthMask( false );
 		gl.glShadeModel( GLLightingFunc.GL_SMOOTH );
@@ -94,31 +92,16 @@ class GLEventListenerLoader implements GLEventListener {
 	private transient ObjectInputStream in;
 	private transient boolean eof;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable
-	 * )
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
 	 */
-	public void display(GLAutoDrawable drawable) {
+	@Override
+	public void display( GLAutoDrawable drawable ){
 		GL2 gl = drawable.getGL().getGL2();
 		if( ciclo == 0 ){
-
 		}
-//		else if( !MyGameMenuButton.hasPrototipo() ){
-//			TextRenderers.init();
-//			Pixmap defaultState = null;
-//			Pixmap hoverState = null;
-//			Pixmap pressedState = null;
-//			try{
-//				defaultState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton0.jpg"));
-//				hoverState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton1.jpg"));
-//				pressedState = new Pixmap(Binding.getInstance().getTexture("resources/img/botones/boton2.jpg"));
-//			}catch( IOException ignorada ){
-//			}
-//			MyGameMenuButton.setPrototipo(new MyGameMenuButton("Prototipo", defaultState, hoverState, pressedState));
-//		}
+		else if( !UIManager.isInitialized() )
+			UIManager.Init( gl );
 		else if( dataGame.getGui() == null ){
 			dataGame.setGui( MarcoDeIndicadores.getMarco( 0 ) );
 		}else if( !dataGame.getGui().isLoadComplete() ){
@@ -136,8 +119,7 @@ class GLEventListenerLoader implements GLEventListener {
 				if( in == null ){
 					XStream xStream = new XStream( new DomDriver() );
 					xStream.setMode( XStream.XPATH_ABSOLUTE_REFERENCES );
-					GrafoEscenaConverters.register( xStream );
-					GrafoEscenaConverters.setReusingReferenceByXPathMarshallingStrategy( xStream );
+					GrafoEscenaConverters.register( xStream, true );
 
 					xStream.registerConverter( new Ignorado() );
 					xStream.alias( "NaveUsuario", Ignorado.class );
@@ -186,19 +168,19 @@ class GLEventListenerLoader implements GLEventListener {
 		if( color2[g] > 1.0f )
 			color2[g] = 1.0f;
 
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		gl.glClear( GL.GL_COLOR_BUFFER_BIT );
 
 		ciclo++;
 
-		gl.glBegin(GL2.GL_QUADS);
-		gl.glColor3fv(color2, 0);
-		gl.glVertex3f(0, 0, 0);
-		gl.glColor3fv(color1, 0);
-		gl.glVertex3f(proporcionesPantalla * ciclo / MAX_CICLOS, 0, 0);
-		gl.glColor3fv(color1, 0);
-		gl.glVertex3f(proporcionesPantalla * ciclo / MAX_CICLOS, 1, 0);
-		gl.glColor3fv(color2, 0);
-		gl.glVertex3f(0, 1, 0);
+		gl.glBegin( GL2.GL_QUADS );
+			gl.glColor3fv( color2, 0 );
+			gl.glVertex3f( 0, 0, 0 );
+			gl.glColor3fv( color1, 0 );
+			gl.glVertex3f( proporcionesPantalla * ciclo / MAX_CICLOS, 0, 0 );
+			gl.glColor3fv( color1, 0 );
+			gl.glVertex3f( proporcionesPantalla * ciclo / MAX_CICLOS, 1, 0 );
+			gl.glColor3fv( color2, 0 );
+			gl.glVertex3f( 0, 1, 0 );
 		gl.glEnd();
 		gl.glFlush();
 
@@ -211,13 +193,10 @@ class GLEventListenerLoader implements GLEventListener {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable
-	 * , int, int, int, int)
+	/* (non-Javadoc)
+	 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
 	 */
+	@Override
 	public void reshape( GLAutoDrawable drawable, int x, int y, int w, int h ){
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glViewport( 0, 0, w, h );
@@ -236,6 +215,5 @@ class GLEventListenerLoader implements GLEventListener {
 	 */
 	@Override
 	public void dispose( GLAutoDrawable drawable ){
-		
 	}
 }

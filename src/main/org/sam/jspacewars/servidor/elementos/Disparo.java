@@ -74,7 +74,7 @@ public abstract class Disparo extends Elemento {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void inicializar(){
+	public void init(){
 		destruido = false;
 	}
 	

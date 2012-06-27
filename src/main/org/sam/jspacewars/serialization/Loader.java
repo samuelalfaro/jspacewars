@@ -57,15 +57,12 @@ public class Loader {
 		}
 	}
 
-	static public void loadData(Cache<Elemento> cache) throws FileNotFoundException, IOException {
+	static public void loadData( String path, Cache<Elemento> cache ) throws FileNotFoundException, IOException{
 
-		Canion.setCache(cache);
-		XStream xStream = new XStream(new DomDriver());
+		Canion.setCache( cache );
+		XStream xStream = new XStream( new DomDriver() );
 
-		ElementosConverters.register(xStream);
-		loadToCache(
-				xStream.createObjectInputStream(new FileReader("resources/elementos-instancias3D-stream-sh.xml")),
-				cache
-		);
+		ElementosConverters.register( xStream );
+		loadToCache( xStream.createObjectInputStream( new FileReader( path ) ), cache );
 	}
 }

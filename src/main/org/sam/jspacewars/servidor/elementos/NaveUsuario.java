@@ -57,7 +57,7 @@ public class NaveUsuario extends Nave {
 		this.velocidadesDisponibles = velocidadesDisponibles;
 		this.canionesDisponibles = canionesDisponibles;
 		this.gradoNave = 1;
-		iniciar();
+		init();
 	}
 	
 	/**
@@ -72,18 +72,18 @@ public class NaveUsuario extends Nave {
 		this.canionesDisponibles = prototipo.canionesDisponibles;
 		// this.gradoNave = prototipo.gradoNave;
 		this.gradoNave = 1;
-		iniciar();
+		init();
 	}
 
 	public NaveUsuario clone() {
 		return new NaveUsuario(this);
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.elementos.Nave#init()
 	 */
 	@Override
-	public void iniciar() {
+	public void init() {
 		if( this.niveles == null ){
 			this.niveles = new int[2][5];
 			// En la posicion 0 estan almacenados los valores inciales

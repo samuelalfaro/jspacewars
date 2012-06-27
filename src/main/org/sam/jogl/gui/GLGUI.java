@@ -41,6 +41,8 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
+import org.sam.elementos.Initializable;
+import org.sam.elementos.Modificador;
 import org.sam.interpoladores.GettersFactory;
 import org.sam.interpoladores.MetodoDeInterpolacion;
 import org.sam.jogl.Apariencia;
@@ -53,7 +55,7 @@ import org.sam.jogl.particulas.FactoriaDeParticulas;
 import org.sam.jogl.particulas.Particulas;
 import org.sam.util.Imagen;
 
-public class GLGUI{
+public class GLGUI implements Initializable{
 	
 	private static final Cursor blankCursor;
 	private static final Cursor spaceshipCursor;
@@ -77,12 +79,16 @@ public class GLGUI{
 		
 		private transient final Matrix4f transform;
 		private transient NodoTransformador cursor;
-		private transient Particulas estela;
+		private transient Modificador modificador;
 		
 		CursorRenderer( Matrix4f transform ){
 			this.transform = transform;
 		}
 		
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
+		 */
+		@Override
 		public void init( GLAutoDrawable glDrawable ){
 			GL2 gl = glDrawable.getGL().getGL2();
 			
@@ -117,7 +123,7 @@ public class GLGUI{
 			
 			FactoriaDeParticulas.setOptimizedFor2D( true );
 			
-			estela = FactoriaDeParticulas.createParticulas( 50 );
+			Particulas estela = FactoriaDeParticulas.createParticulas( 50 );
 			
 			Matrix4f t1 = new Matrix4f();
 			t1.setIdentity();
@@ -158,21 +164,25 @@ public class GLGUI{
 						MetodoDeInterpolacion.Predefinido.COSENOIDAL
 					)
 			);
-//			estela.setRadio( 8.0f );
-			estela.reset();
+			estela.init();
 			estela.setApariencia( ap );
 		
+			modificador = estela.getModificador();
 			cursor = new NodoTransformador( transform, estela );
+			
 		}
 
 		private transient long tAnterior, tActual;
 		
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+		 */
+		@Override
 		public void display( GLAutoDrawable glDrawable ){
 			tAnterior = tActual;
 			tActual = System.nanoTime();
-			// @SuppressWarnings("unused")
-			float incT = (float)( tActual - tAnterior ) / 1000000000;
-		
+			long incT = tActual - tAnterior;
+			
 			GL2 gl = glDrawable.getGL().getGL2();
 
 			gl.glViewport( 0, 0, glDrawable.getWidth(), glDrawable.getHeight() );
@@ -184,7 +194,7 @@ public class GLGUI{
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 			
-			estela.getModificador().modificar( incT );
+			modificador.modificar( incT );
 			cursor.draw( gl );
 			gl.glFlush();
 			
@@ -192,6 +202,10 @@ public class GLGUI{
 			gl.glPopMatrix();
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+		 */
+		@Override
 		public void reshape( GLAutoDrawable glDrawable, int x, int y, int w, int h ){
 		}
 
@@ -282,12 +296,17 @@ public class GLGUI{
 			this.viewport = viewport;
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
+		 */
+		@Override
 		public void init( GLAutoDrawable glDrawable ){
-			UIManager.Init( glDrawable.getGL().getGL2() );
-			if( contentPane != null )
-				contentPane.init();
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+		 */
+		@Override
 		public void display( GLAutoDrawable glDrawable ){
 			if( contentPane == null )
 				return;
@@ -310,6 +329,10 @@ public class GLGUI{
 			gl.glPopMatrix();
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+		 */
+		@Override
 		public void reshape( GLAutoDrawable glDrawable, int x, int y, int width, int height ){
 			if( width != 0 && height != 0 ){
 				viewport.x      = ( virtualAreaHeight * width - virtualAreaWidth * height ) 
@@ -320,9 +343,7 @@ public class GLGUI{
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
+		/* (non-Javadoc)
 		 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
 		 */
 		@Override
@@ -361,7 +382,7 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseEntered( MouseEvent e ){
-			if( !contentPane.isEnabled() )
+			if( contentPane == null |!contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
 			if( contentPane.contains( cursorPosition ) ){
@@ -374,7 +395,7 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseExited( MouseEvent e ){
-			if( !contentPane.isEnabled() )
+			if( contentPane == null || !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
 			contentPane.processMouseEvent( e.getID(), e.getButton(), cursorPosition.x, cursorPosition.y );
@@ -385,7 +406,7 @@ public class GLGUI{
 		 */
 		@Override
 		public void mousePressed( MouseEvent e ){
-			if( !contentPane.isEnabled() )
+			if( contentPane == null || !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
 			if( contentPane.contains( cursorPosition ) ){
@@ -398,7 +419,7 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseReleased( MouseEvent e ){
-			if( !contentPane.isEnabled() )
+			if( contentPane == null || !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
 			if( contentPane.contains( cursorPosition ) ){
@@ -411,7 +432,7 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseDragged( MouseEvent e ){
-			if( !contentPane.isEnabled() )
+			if( contentPane == null || !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
 			if( contentPane.contains( cursorPosition ) ){
@@ -430,7 +451,7 @@ public class GLGUI{
 		 */
 		@Override
 		public void mouseMoved( MouseEvent e ){
-			if( !contentPane.isEnabled() )
+			if( contentPane == null || !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
 			if( contentPane.contains( cursorPosition ) ){
@@ -506,8 +527,9 @@ public class GLGUI{
 		component.addMouseListener( guiListener );
 		component.addMouseMotionListener( guiListener );
 		component.addMouseWheelListener( guiListener );
-		component.addMouseListener( cursorListener );
-		component.addMouseMotionListener( cursorListener );
+		
+//		component.addMouseListener( cursorListener );
+//		component.addMouseMotionListener( cursorListener );
 		
 		component.setCursor( spaceshipCursor );
 	}
@@ -522,9 +544,17 @@ public class GLGUI{
 		component.removeMouseListener( guiListener );
 		component.removeMouseMotionListener( guiListener );
 		component.removeMouseWheelListener( guiListener );
-		component.removeMouseListener( cursorListener );
-		component.removeMouseMotionListener( cursorListener );
+		
+//		component.removeMouseListener( cursorListener );
+//		component.removeMouseMotionListener( cursorListener );
 		
 		component.setCursor( blankCursor );
+	}
+
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Initializable#init()
+	 */
+	@Override
+	public void init(){
 	}
 }

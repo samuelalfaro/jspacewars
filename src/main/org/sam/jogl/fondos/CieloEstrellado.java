@@ -100,8 +100,8 @@ public class CieloEstrellado implements Fondo, Modificador{
 			);
 			estrellas[i].setPertubacionColor( 0.25f, false, false );
 			estrellas[i].setApariencia( apEstrellas );
-			estrellas[i].reset();
-			estrellas[i].getModificador().modificar( tVida );
+			estrellas[i].init();
+			estrellas[i].getModificador().modificar( (long)(tVida * 1000000000) );
 		}
 		FactoriaDeParticulas.setOptimizedFor2D( false );
 	}
@@ -166,16 +166,13 @@ public class CieloEstrellado implements Fondo, Modificador{
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.sam.elementos.Modificador#modificar(float)
-	 */
 	@Override
-	public boolean modificar( float steep ){
-		s1 += 0.02f * steep;
+	public boolean modificar( long nanos ){
+		s1 += 0.00000000002f * nanos;
 		if( s1 > 1.0f )
 			s1 -= 1.0f;
 		for( Particulas p: estrellas )
-			p.getModificador().modificar( steep );
+			p.getModificador().modificar( nanos );
 		return false;
 	}
 }

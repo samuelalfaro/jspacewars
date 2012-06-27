@@ -26,7 +26,7 @@ import org.sam.jogl.gui.event.ActionEvent;
 import org.sam.jogl.gui.event.ActionListener;
 
 /**
- * Clase Abstracta que define una acción que será invocada cuando es pulsado un botón.
+ * Clase abstracta que define una acción que será invocada cuando se pulsa un botón.
  */
 public abstract class ButtonAction implements ActionListener, Runnable{
 

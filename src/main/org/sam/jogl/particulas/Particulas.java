@@ -95,7 +95,11 @@ public abstract class Particulas extends Objeto3DAbs implements Modificable, Pro
 	/**
 	 * Incremento de vida por segundo. Debe ser un valor positivo.
 	 */
-	protected transient float iVida;
+	private transient float iVida;
+	/**
+	 * Incremento de vida por nanosegundo. Debe ser un valor positivo.
+	 */
+	protected transient float iVidaNanos;
 	/**
 	 * Velocidad lineal de la particula, en unidades por segundo.
 	 */
@@ -161,6 +165,7 @@ public abstract class Particulas extends Objeto3DAbs implements Modificable, Pro
 		this.particulasActivas = 0;
 		
 		this.iVida = 1.0f;
+		this.iVidaNanos = 1.0e-9f;
 		this.rangoDeEmision = 0.0f;
 		
 		this.velocidad = 1.0f;
@@ -190,6 +195,7 @@ public abstract class Particulas extends Objeto3DAbs implements Modificable, Pro
 		this.particulasActivas = 0;
 		
 		this.iVida = me.iVida;
+		this.iVidaNanos = me.iVidaNanos;
 		this.rangoDeEmision = me.rangoDeEmision;
 		
 		this.velocidad = me.velocidad;
@@ -253,6 +259,7 @@ public abstract class Particulas extends Objeto3DAbs implements Modificable, Pro
 		pVelGiro   = pVelGiro * iVida * tVida;
 		fuerza.scale( ( iVida * iVida ) * ( tVida * tVida ) );
 		iVida      = 1.0f / tVida;
+		iVidaNanos = iVida / 1000000000;
 	}
 	
 	public final void setVelocidad( float velocidad ){
@@ -379,4 +386,12 @@ public abstract class Particulas extends Objeto3DAbs implements Modificable, Pro
 	}
 	
 	public abstract Particulas clone();
+	
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Initializable#init()
+	 */
+	@Override
+	public final void init(){
+		reset();
+	}
 }

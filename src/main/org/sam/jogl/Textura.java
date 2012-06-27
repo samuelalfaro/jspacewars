@@ -243,7 +243,7 @@ public class Textura{
 	 *            Booleano que indica si deben reflejarse verticalmente los pixels de la imagen.
 	 */
 	public Textura( GL2 gl, Format format, BufferedImage image, boolean flipY ){
-		this( gl, MinFilter.TRILINEAR, MagFilter.LINEAR, format, image, flipY );
+		this( gl, MinFilter.LINEAR, MagFilter.LINEAR, format, image, flipY );
 	}
 
 	/**

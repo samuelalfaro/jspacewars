@@ -42,16 +42,6 @@ public class NodoTransformador implements Nodo {
 	private Nodo child;
 	
 	/**
-	 * Constructor que crea un {@code NodoTransformador} que contiene
-	 * un {@code Nodo} descendiente, al que se le aplicará la 
-	 * transformación correspondiente.
-	 * @param child {@code Nodo} descendiente.
-	 */
-	public NodoTransformador( Nodo child ){
-		this( null, child );
-	}
-	
-	/**
 	 * Constructor que crea un {@code NodoTransformador}, asignando
 	 * la {@code Matrix4f} con la transformación, que se le aplicará
 	 * al {@code Nodo} descendiente.
@@ -60,13 +50,8 @@ public class NodoTransformador implements Nodo {
 	 */
 	public NodoTransformador( Matrix4f transformMatrix, Nodo child ){
 		/*
-		FIXME Comprobar que no hay problemas cuando se usa una misma
+		FIXME Comprobar que no hay problemas cuando si se usa una misma
 		instancia de la transformación para crear distintos nodos.
-		this.transformMatrix = new Matrix4f();
-		if( transformMatrix == null )
-			this.transformMatrix.setIdentity();
-		else
-			this.transformMatrix.set( transformMatrix );
 		*/
 		if( transformMatrix == null ){
 			this.transformMatrix = new Matrix4f();
@@ -75,6 +60,16 @@ public class NodoTransformador implements Nodo {
 			this.transformMatrix = transformMatrix;
 		this.child = child;
 		this.child.setParent( this );
+	}
+	
+	/**
+	 * Constructor que crea un {@code NodoTransformador} que contiene
+	 * un {@code Nodo} descendiente, al que se le aplicará la 
+	 * transformación correspondiente.
+	 * @param child {@code Nodo} descendiente.
+	 */
+	public NodoTransformador( Nodo child ){
+		this( null, child );
 	}
 	
 	/**
@@ -106,7 +101,7 @@ public class NodoTransformador implements Nodo {
 		transformMatrix.set( transform );
 	}
 	
-	private transient final float[]  mt_array = new float[16];
+	private transient final float[] mt_array = new float[16];
 	
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.Dibujable#draw(javax.media.opengl.GL2)
@@ -185,8 +180,8 @@ public class NodoTransformador implements Nodo {
 	 */
 	@Override
 	public Nodo[] getChilds(){
-		if(nodos == null){
-			nodos = new Nodo[]{child};
+		if( nodos == null ){
+			nodos = new Nodo[] { child };
 		}
 		return nodos;
 	}

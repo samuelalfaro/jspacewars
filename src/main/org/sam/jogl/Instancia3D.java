@@ -23,12 +23,18 @@
 package org.sam.jogl;
 
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
 
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Vector3f;
 
-import org.sam.elementos.*;
+import org.sam.elementos.Modificable;
+import org.sam.elementos.Modificador;
+import org.sam.elementos.PrototipoCacheable;
+import org.sam.elementos.Recibible;
+import org.sam.elementos.Reseteable;
 
 /**
  * Implementación de un {@code Nodo} que permite respresentar,
@@ -37,17 +43,22 @@ import org.sam.elementos.*;
 public class Instancia3D extends NodoTransformador implements Modificable, Recibible, PrototipoCacheable<Instancia3D>{
 
 	private static class ModificardorChilds implements Modificador{
-		
+
 		private final transient Modificador modificadores[];
-	
-		ModificardorChilds(Collection<Modificador> modificadores){
+
+		ModificardorChilds( Collection<Modificador> modificadores ){
 			this.modificadores = modificadores.toArray( new Modificador[modificadores.size()] );
 		}
-		
-		public boolean modificar(float steep) {
+
+		public boolean modificar( long nanos ){
 			boolean result = false;
-			for( Modificador  modificador: this.modificadores )
-				result = modificador.modificar(steep) || result;
+			for( Modificador modificador: this.modificadores )
+				/* Ojo!! result |= modificador.modificar( steep );
+				 * no ejecuta el método si result == true.
+				 * boolean b = true || ( lo que sea ) simpre es true
+				 * por tanto no evalúa la expresión
+				 */
+				result = modificador.modificar( nanos ) || result;
 			return result;
 		}
 	}
@@ -68,33 +79,33 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	 * como de las generen usando esta como prototipo. 
 	 * @param child {@code Nodo} descendiente.
 	 */
-	public Instancia3D(short type, Nodo child){
-		super(child);
+	public Instancia3D( short type, Nodo child ){
+		super( child );
 
 		Deque<Nodo> stack = new LinkedList<Nodo>();
 		Collection<Reseteable> reseteables = new LinkedList<Reseteable>();
 		Collection<Modificador> modificadores = new LinkedList<Modificador>();
-		stack.push(child);
+		stack.push( child );
 		do{
 			Nodo actual = stack.pop();
 			if( actual instanceof Reseteable )
-				reseteables.add((Reseteable) actual);
+				reseteables.add( (Reseteable)actual );
 			if( actual instanceof Modificable )
-				modificadores.add(((Modificable) actual).getModificador());
+				modificadores.add( ( (Modificable)actual ).getModificador() );
 			for( Nodo nodo: actual.getChilds() )
-				stack.push(nodo);
+				stack.push( nodo );
 		}while( !stack.isEmpty() );
 
 		if( modificadores.size() > 0 )
-			this.modificador = new ModificardorChilds(modificadores);
+			this.modificador = new ModificardorChilds( modificadores );
 		else
 			this.modificador = null;
 
 		if( reseteables.size() > 0 )
-			this.reseteableChilds = reseteables.toArray(new Reseteable[reseteables.size()]);
+			this.reseteableChilds = reseteables.toArray( new Reseteable[reseteables.size()] );
 		else
 			this.reseteableChilds = null;
-		
+
 		this.type = type;
 		this.rotation = new AxisAngle4f();
 		this.translation = new Vector3f();
@@ -107,36 +118,36 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	 * 
 	 * @param prototipo {@code Instancia3D} empleada como prototipo.
 	 */
-	protected Instancia3D(Instancia3D prototipo){
-		super(prototipo);
-		
+	protected Instancia3D( Instancia3D prototipo ){
+		super( prototipo );
+
 		Deque<Nodo> stack = new LinkedList<Nodo>();
 		Collection<Reseteable> reseteables = new LinkedList<Reseteable>();
 		Collection<Modificador> modificadores = new LinkedList<Modificador>();
-		
-		stack.push(this.getChilds()[0]);
+
+		stack.push( this.getChilds()[0] );
 		do{
 			Nodo actual = stack.pop();
 			if( actual instanceof Reseteable )
-				reseteables.add((Reseteable) actual);
+				reseteables.add( (Reseteable)actual );
 			if( actual instanceof Modificable )
-				modificadores.add(((Modificable) actual).getModificador());
+				modificadores.add( ( (Modificable)actual ).getModificador() );
 			for( Nodo nodo: actual.getChilds() )
-				stack.push(nodo);
+				stack.push( nodo );
 		}while( !stack.isEmpty() );
 
 		if( modificadores.size() > 0 )
-			this.modificador = new ModificardorChilds(modificadores);
+			this.modificador = new ModificardorChilds( modificadores );
 		else
 			this.modificador = null;
 
 		if( reseteables.size() > 0 )
-			this.reseteableChilds = reseteables.toArray(new Reseteable[reseteables.size()]);
+			this.reseteableChilds = reseteables.toArray( new Reseteable[reseteables.size()] );
 		else
 			this.reseteableChilds = null;
-		
+
 		this.type = prototipo.type;
-		this.rotation = new AxisAngle4f(prototipo.rotation);
+		this.rotation = new AxisAngle4f( prototipo.rotation );
 		this.translation = new Vector3f();
 	}
 	
@@ -180,7 +191,7 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	 * <i>Setter</i> que asigna el eje de rotación.
 	 * @param axis {@code Vector3f} con el eje de rotación asignado.
 	 */
-	public void setAxis(Vector3f axis){
+	public void setAxis( Vector3f axis ){
 		this.rotation.x = axis.x;
 		this.rotation.y = axis.y;
 		this.rotation.z = axis.z;
@@ -190,13 +201,39 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	 * @see org.sam.elementos.Recibible#recibir(java.nio.ByteBuffer)
 	 */
 	@Override
-	public void recibir(ByteBuffer buff){
+	public void recibir( ByteBuffer buff ){
 		translation.x = buff.getFloat();
 		translation.y = buff.getFloat();
 		rotation.angle = buff.getFloat();
 		transformMatrix.setIdentity();
-		transformMatrix.setRotation(rotation);
-		transformMatrix.setTranslation(translation);
+		transformMatrix.setRotation( rotation );
+		transformMatrix.setTranslation( translation );
+	}
+	
+	/**
+	 * Método sobreescrito que lanza siempre una excepción, puesto que una {@code Instancia3D},
+	 * no puede ser añadida como un {@code Nodo} descendiente.
+	 * @param parent parámetro igronarado.
+	 * 
+	 * @throws java.lang.UnsupportedOperationException Excepción lanzada siempre que se
+	 * invoca el método.
+	 * @see org.sam.jogl.Nodo#setParent(org.sam.jogl.Nodo)
+	 */
+	@Override
+	public final void setParent( Nodo parent ){
+		throw new UnsupportedOperationException();
+	}
+	
+	/**
+	 * Método sobreescrito que devuelve siempre null, puesto que una {@code Instancia3D},
+	 * no puede ser añadida como un {@code Nodo} descendiente.
+	 * 
+	 * @return siempre null.
+	 * @see org.sam.jogl.Nodo#getParent()
+	 */
+	@Override
+	public final Nodo getParent() {
+		return null;
 	}
 	
 	/* (non-Javadoc)
@@ -227,10 +264,18 @@ public class Instancia3D extends NodoTransformador implements Modificable, Recib
 	 * @see org.sam.elementos.Reseteable#reset()
 	 */
 	@Override
-	public void reset() {
-		if(reseteableChilds == null)
+	public void reset(){
+		if( reseteableChilds == null )
 			return;
-		for(Reseteable child: reseteableChilds)
+		for( Reseteable child: reseteableChilds )
 			child.reset();
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Initializable#init()
+	 */
+	@Override
+	public final void init(){
+		reset();
 	}
 }

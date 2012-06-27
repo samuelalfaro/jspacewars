@@ -125,8 +125,6 @@ public class GLContainer extends GLComponent{
 	protected void initComponent(){
 		this.setBackground( UIManager.getBackground( "Container.background.default" ) );
 		this.setBorder( UIManager.getBorder( "Container.border.default" ) );
-		for( GLComponent c: components )
-			c.init();
 	}
 
 	public void add( GLComponent component ){

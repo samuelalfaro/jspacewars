@@ -63,8 +63,8 @@ public class NaveEnemiga extends Nave {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void iniciar() {
-		super.inicializar();
+	public void init() {
+		super.init();
 		time = 0;
 	}
 

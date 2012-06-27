@@ -43,7 +43,7 @@ class ParticulasPointSprites extends Particulas{
 	
 	private class ModificadorEmisionDiscreta implements Modificador{
 		
-		public boolean modificar(float steep){
+		public boolean modificar( long nanos ){
 			
 			if(particulasActivas == 0){
 				if(emision == Particulas.Emision.UNICA)
@@ -55,7 +55,7 @@ class ParticulasPointSprites extends Particulas{
 			
 			pos.rewind();
 			col.rewind();
-			float iVidaT = iVida * steep;
+			float iVidaT = iVidaNanos * nanos;
 			Matrix4f t = getTransformMatrix();
 			
 			for (int i=0, j=0, len=vidas.length; i < len; i++, j+=3){
@@ -112,12 +112,12 @@ class ParticulasPointSprites extends Particulas{
 	
 	private class ModificadorEmisionContinua implements Modificador{
 
-		public boolean modificar(float steep){
+		public boolean modificar( long nanos ){
 	
 			pos.rewind();
 			col.rewind();
 			
-			float iVidaT = iVida * steep;
+			float iVidaT = iVidaNanos * nanos;
 			Matrix4f t = getTransformMatrix();
 			
 			for (int i=0, j=0, len=vidas.length; i < len; i++, j+=3){

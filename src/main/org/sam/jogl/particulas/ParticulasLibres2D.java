@@ -71,13 +71,13 @@ class ParticulasLibres2D extends Particulas{
 		private final transient Vector3f pEmisorAct = new Vector3f();
 		private final transient Vector3f pEmisorInt = new Vector3f();
 
-		public boolean modificar( float steep ){
+		public boolean modificar( long nanos ){
 
 			pos.rewind();
 			col.rewind();
 			tex.rewind();
 
-			float iVidaT = iVida * steep;
+			float iVidaT = iVidaNanos * nanos;
 			
 			Matrix4f transform_matrix  = getTransformMatrix();
 

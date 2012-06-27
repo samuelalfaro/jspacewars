@@ -32,13 +32,11 @@ public interface Modificador {
 	 * Método que se se encarga de modificar un objeto {@code Modificable} durante
 	 * un periodo de tiempo determinado.
 	 * 
-	 * @param steep periodo de tiempo en segundos durante el cual se realiza la modificiación.
+	 * @param nanos periodo de tiempo en nanosegundos durante el cual se realiza la modificiación.
 	 * @return <ul>
 	 * <li>{@code true},  si se puede seguir modificando el objeto asociado.</li>
 	 * <li>{@code false}, en caso contrario.</li>
 	 * </ul>
 	 */
-	//FIXME Refactorizar para indicar el tiempo en nanosegundos y mantener la coherencia
-	//con el método {@link Dinamico#actua(long)}
-	public boolean modificar(float steep);
+	public boolean modificar( long nanos );
 }

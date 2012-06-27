@@ -48,6 +48,8 @@ import org.sam.jspacewars.servidor.elementos.SingletonObjetivos;
  */
 public class TestColisiones implements Runnable{
 
+	private static final String pathElementos = "resources/elementos-instancias3D-stream-sh.xml";
+	
 	private final Cache<Elemento> cache;
 	private final Collection<Collection<? extends Elemento>> elementos;
 
@@ -63,30 +65,29 @@ public class TestColisiones implements Runnable{
 	private final PantallaTestColisiones pantalla;
 	
 	private TestColisiones( PantallaTestColisiones pantalla ) throws IOException{
-		
-		cache = new Cache<Elemento>(1000);
-		Loader.loadData(cache);
-		
-		elementos = new LinkedList<Collection<? extends Elemento>>();
-		
-		navesProtagonistas = new LinkedList<Elemento>();
-		elementos.add(navesProtagonistas);
-		
-		disparosProtagonistas = new LinkedList<Disparo>();
-		elementos.add(disparosProtagonistas);
 
-		
+		cache = new Cache<Elemento>( 1000 );
+		Loader.loadData( pathElementos, cache );
+
+		elementos = new LinkedList<Collection<? extends Elemento>>();
+
+		navesProtagonistas = new LinkedList<Elemento>();
+		elementos.add( navesProtagonistas );
+
+		disparosProtagonistas = new LinkedList<Disparo>();
+		elementos.add( disparosProtagonistas );
+
 		navesEnemigas = new LinkedList<Elemento>();
-		elementos.add(navesEnemigas);
-		
+		elementos.add( navesEnemigas );
+
 		disparosEnemigos = new LinkedList<Disparo>();
-		elementos.add(disparosEnemigos);
-		
-		elementosOrdenados = new TreeSet<Elemento>(Elemento.COMPARADOR_POSICIONES);
-		comprobador = new ComprobadorDeColisones(250);
-		
+		elementos.add( disparosEnemigos );
+
+		elementosOrdenados = new TreeSet<Elemento>( Elemento.COMPARADOR_POSICIONES );
+		comprobador = new ComprobadorDeColisones( 250 );
+
 		this.pantalla = pantalla;
-		
+
 		initData();
 	}
 
@@ -95,7 +96,7 @@ public class TestColisiones implements Runnable{
 		
 		nave = (NaveUsuario) cache.newObject(0x03);
 		nave.setDstDisparos( disparosProtagonistas );
-		nave.iniciar();
+		nave.init();
 		nave.setPosicion( -3, 0 );
 		float ratio = ( 30 * 4.0f / 32 ) / ( 3.0f - 4 * 4.0f / 32 ); // ratio 4/3 sin bordes GUI
 		float h = 2.9f;
