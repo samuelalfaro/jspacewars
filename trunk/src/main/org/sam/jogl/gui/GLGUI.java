@@ -32,6 +32,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -39,20 +42,12 @@ import javax.media.opengl.GLEventListener;
 import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point2f;
-import javax.vecmath.Vector3f;
 
 import org.sam.elementos.Initializable;
+import org.sam.elementos.Modificable;
 import org.sam.elementos.Modificador;
-import org.sam.interpoladores.GettersFactory;
-import org.sam.interpoladores.MetodoDeInterpolacion;
-import org.sam.jogl.Apariencia;
-import org.sam.jogl.AtributosTextura;
-import org.sam.jogl.AtributosTransparencia;
+import org.sam.jogl.Nodo;
 import org.sam.jogl.NodoTransformador;
-import org.sam.jogl.Textura;
-import org.sam.jogl.particulas.Emisor;
-import org.sam.jogl.particulas.FactoriaDeParticulas;
-import org.sam.jogl.particulas.Particulas;
 import org.sam.util.Imagen;
 
 public class GLGUI implements Initializable{
@@ -79,10 +74,34 @@ public class GLGUI implements Initializable{
 		
 		private transient final Matrix4f transform;
 		private transient NodoTransformador cursor;
-		private transient Modificador modificador;
+		private transient Modificador modificadores[];
 		
 		CursorRenderer( Matrix4f transform ){
 			this.transform = transform;
+		}
+		
+		boolean isAssigned(){
+			return cursor != null;
+		}
+		
+		void setCursor( Nodo cursor ){
+			if( cursor == null )
+				return;
+			
+			this.cursor = new NodoTransformador( transform, cursor );
+			
+			Deque<Nodo> stack = new LinkedList<Nodo>();
+			Collection<Modificador> modificadores = new LinkedList<Modificador>();
+			stack.push( cursor );
+			do{
+				Nodo actual = stack.pop();
+				if( actual instanceof Modificable )
+					modificadores.add( ( (Modificable)actual ).getModificador() );
+				for( Nodo nodo: actual.getChilds() )
+					stack.push( nodo );
+			}while( !stack.isEmpty() );
+			if( !modificadores.isEmpty() )
+				this.modificadores = modificadores.toArray( new Modificador[modificadores.size()] );
 		}
 		
 		/* (non-Javadoc)
@@ -90,88 +109,8 @@ public class GLGUI implements Initializable{
 		 */
 		@Override
 		public void init( GLAutoDrawable glDrawable ){
-			GL2 gl = glDrawable.getGL().getGL2();
-			
-			Apariencia ap = new Apariencia();
-			
-			ap.setTextura( new Textura( gl, Textura.Format.ALPHA, Imagen.cargarToBufferedImage( "resources/texturas/smok.png" ), true ) );
-			ap.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER);
-			ap.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
-			
-			ap.setAtributosTextura( new AtributosTextura() );
-			
-			ap.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
-			ap.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
-			ap.getAtributosTextura().setCombineRgbSource0(
-					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
-			);
-			ap.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
-			ap.getAtributosTextura().setCombineAlphaSource0(
-					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_ALPHA
-			);
-			ap.getAtributosTextura().setCombineAlphaSource1(
-					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
-			);			
-			
-			ap.setAtributosTransparencia( 
-					new AtributosTransparencia( 
-							AtributosTransparencia.Equation.ADD,
-							AtributosTransparencia.SrcFunc.SRC_ALPHA,
-							AtributosTransparencia.DstFunc.ONE
-					) 
-			);
-			
-			FactoriaDeParticulas.setOptimizedFor2D( true );
-			
-			Particulas estela = FactoriaDeParticulas.createParticulas( 50 );
-			
-			Matrix4f t1 = new Matrix4f();
-			t1.setIdentity();
-			t1.rotX( (float)(Math.PI /2) );
-			
-			Matrix4f t2 = new Matrix4f();
-			t2.setIdentity();
-			t2.rotZ( (float)(Math.PI /4) );
-			t2.mul( t1 );
-			
-			t1 = new Matrix4f();
-			t1.setIdentity();
-			t1.setTranslation( new Vector3f( 8, 8, 0 ) );
-			t1.mul( t2 );
-			
-			estela.setEmisor( new Emisor.Cache( new Emisor.Transformador( new Emisor.Puntual( 0.25f, -0.25f, 45 ), t1 ), 256 ) );
-			
-			estela.setEmision( Particulas.Emision.CONTINUA );
-			estela.setRangoDeEmision( 1.0f );
-			estela.setVelocidad( 300.0f, 20.0f, false );
-			estela.setTiempoVida( 0.25f );
-			estela.setGiroInicial( 0, 180, true );
-			estela.setVelocidadGiro( 30.0f, 15.0f, true );
-			estela.setColor(
-					0.16f,
-					0.24f,
-					0.08f,
-					GettersFactory.Float.create( 
-						new float[] { 0.25f, 1.0f },
-						new float[] { 1.0f, 0.0f },
-						MetodoDeInterpolacion.Predefinido.COSENOIDAL
-					)
-			);
-			estela.setRadio( 	
-					GettersFactory.Float.create( 
-						new float[] { 0.0f, 0.25f },
-						new float[] { 0.0f, 8.0f },
-						MetodoDeInterpolacion.Predefinido.COSENOIDAL
-					)
-			);
-			estela.init();
-			estela.setApariencia( ap );
-		
-			modificador = estela.getModificador();
-			cursor = new NodoTransformador( transform, estela );
-			
 		}
-
+		
 		private transient long tAnterior, tActual;
 		
 		/* (non-Javadoc)
@@ -194,12 +133,15 @@ public class GLGUI implements Initializable{
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 			
-			modificador.modificar( incT );
+			if( modificadores != null )
+				for( Modificador m: modificadores )
+					m.modificar( incT );
 			cursor.draw( gl );
-			gl.glFlush();
-			
+		
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPopMatrix();
+			
+			gl.glFlush();
 		}
 
 		/* (non-Javadoc)
@@ -382,7 +324,7 @@ public class GLGUI implements Initializable{
 		 */
 		@Override
 		public void mouseEntered( MouseEvent e ){
-			if( contentPane == null |!contentPane.isEnabled() )
+			if( contentPane == null || !contentPane.isEnabled() )
 				return;
 			Point2f cursorPosition = toVirtualPosition( e.getPoint() );
 			if( contentPane.contains( cursorPosition ) ){
@@ -491,12 +433,14 @@ public class GLGUI implements Initializable{
 		cursorRenderer = new CursorRenderer( tLocal );
 		cursorListener = new CursorListener( tLocal );
 		
-		Rectangle viewport = new Rectangle();
+		Rectangle viewport = new Rectangle( 0, 0, 1, 1 );
 		guiRenderer = new GUIRenderer( viewport );
 		guiListener = new GUIListener( viewport );
 		
-		setVirtualAreaDimesions( 1024, 768 );
-		//setVirtualAreaDimesions( 640, 480 );
+		//setVirtualAreaDimesions( 1024, 768 );
+		setVirtualAreaDimesions( 640, 480 );
+		
+		UIManager.registerInitializable( this );
 	}
 	
 	public void setVirtualAreaDimesions( int width, int height ){
@@ -517,27 +461,44 @@ public class GLGUI implements Initializable{
 		return this.contentPane;
 	}
 	
-	public void bind( GLAutoDrawable glDrawable ){
-	
-		glDrawable.addGLEventListener( guiRenderer );
-		glDrawable.addGLEventListener( cursorRenderer );
+	void bindInitialized( GLAutoDrawable glDrawable ){
 		
+		glDrawable.addGLEventListener( guiRenderer );
 		Component component = ((Component)glDrawable);
 			
 		component.addMouseListener( guiListener );
 		component.addMouseMotionListener( guiListener );
 		component.addMouseWheelListener( guiListener );
 		
-//		component.addMouseListener( cursorListener );
-//		component.addMouseMotionListener( cursorListener );
-		
+		if( cursorRenderer.isAssigned() ){
+			glDrawable.addGLEventListener( cursorRenderer );
+			component.addMouseListener( cursorListener );
+			component.addMouseMotionListener( cursorListener );
+		}
 		component.setCursor( spaceshipCursor );
 	}
 	
-	public void unbind( GLAutoDrawable glDrawable ){
+	public void bind( final GLAutoDrawable glDrawable ){
+	
+		if( UIManager.isInitialized() )
+			bindInitialized( glDrawable );
+		else
+			glDrawable.addGLEventListener( new GLEventListener(){
+				public void init( GLAutoDrawable glDrawable ){
+					UIManager.Init( glDrawable.getGL().getGL2() );
+					glDrawable.removeGLEventListener( this );
+					bindInitialized( glDrawable );
+				}
+				public void reshape( GLAutoDrawable glDrawable, int x, int y, int w, int h ){}
+				
+				public void display( GLAutoDrawable glDrawable ){}
+
+				public void dispose( GLAutoDrawable glDrawable ){}
+			} );
+	}
 		
+	public void unbind( GLAutoDrawable glDrawable ){
 		glDrawable.removeGLEventListener( guiRenderer );
-		glDrawable.removeGLEventListener( cursorRenderer );
 		
 		Component component = ((Component)glDrawable);
 		
@@ -545,9 +506,11 @@ public class GLGUI implements Initializable{
 		component.removeMouseMotionListener( guiListener );
 		component.removeMouseWheelListener( guiListener );
 		
-//		component.removeMouseListener( cursorListener );
-//		component.removeMouseMotionListener( cursorListener );
-		
+		if( cursorRenderer.isAssigned() ){
+			glDrawable.removeGLEventListener( cursorRenderer );
+			component.removeMouseListener( cursorListener );
+			component.removeMouseMotionListener( cursorListener );
+		}
 		component.setCursor( blankCursor );
 	}
 
@@ -556,5 +519,6 @@ public class GLGUI implements Initializable{
 	 */
 	@Override
 	public void init(){
+		cursorRenderer.setCursor( UIManager.getNodo( "Cursor.decorator" ) );
 	}
 }

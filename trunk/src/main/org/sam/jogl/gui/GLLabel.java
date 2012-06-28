@@ -46,7 +46,11 @@ public class GLLabel extends GLComponent{
 		this.setPadding( 10 );
 	}
 	
-	protected void initComponent(){
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Initializable#init()
+	 */
+	@Override
+	public void init(){
 		this.setBackground( UIManager.getBackground( "Label.background.default" ) );
 		this.setBorder( UIManager.getBorder( "Label.border.default" ) );
 		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Label.properties.default" ) );
@@ -155,7 +159,7 @@ public class GLLabel extends GLComponent{
 	public String getText(){
 		return text;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.sam.jogl.gui.GLComponent#drawComponent(javax.media.opengl.GL2)
 	 */

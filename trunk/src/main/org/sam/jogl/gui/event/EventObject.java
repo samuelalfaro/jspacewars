@@ -1,6 +1,5 @@
 package org.sam.jogl.gui.event;
 
-
 /**
  * The base class for SuiEvents.
  * 
@@ -10,14 +9,14 @@ package org.sam.jogl.gui.event;
 @SuppressWarnings( "serial" )
 public class EventObject implements java.io.Serializable {
     
-	/** The source object that created this event. */
-	protected Object source;
-
-	/** The unique ID for this event. */
-	protected int id;
-
 	/** If the no ID is specified, an ID_UNDEFINED id will be used. */
 	public static final int ID_UNDEFINED = 0;
+	
+	/** The source object that created this event. */
+	public final Object source;
+
+	/** The unique ID for this event. */
+	public final int id;
 
 	/**
 	 * Creates a new event with the specified params. IDs passed
@@ -27,8 +26,9 @@ public class EventObject implements java.io.Serializable {
 	 * @param id the id for this event
 	 */
 	public EventObject( Object source, int id ){
-		this.id = id;
+//		System.out.println( this.getClass().getSimpleName() + ":\t" + source.getClass().getSimpleName() + " ->\t" + id );
 		this.source = source;
+		this.id = id;
 	}
 
 	/**
@@ -39,24 +39,6 @@ public class EventObject implements java.io.Serializable {
 	 * @param source the container which created this event
 	 */
 	public EventObject( Object source ){
-		this( source, 0 );
-	}
-
-	/**
-	 * Gets the unique ID for this event.
-	 * 
-	 * @return the event ID
-	 */
-	public int getID(){
-		return id;
-	}
-
-	/**
-	 * Gets the source object for this event.
-	 * 
-	 * @return the object that created this event
-	 */
-	public Object getSource(){
-		return source;
+		this( source, ID_UNDEFINED );
 	}
 }

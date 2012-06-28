@@ -42,13 +42,13 @@ public class MouseEvent extends EventObject {
     public static final int NOBUTTON = java.awt.event.MouseEvent.NOBUTTON;
     
     /** The button for this event. */
-    private int button;
+    public final int button;
     
     /** The local x position for this event. */
-    private float x;
+    public final float x;
     
     /** The local y position for this event. */
-    private float y;
+    public final float y;
     
     /**
      * Creates a new mouse event with the specified params.
@@ -79,36 +79,5 @@ public class MouseEvent extends EventObject {
      */
     public MouseEvent(Object source, int id, float x, float y ) {
         this(source, id, NOBUTTON, x, y);
-    }
-    
-    /**
-     * Gets the x position relative to the parent container.
-     *
-     * @return the x position in the container's local space
-     */
-    public float getX() {
-        return x;
-    }
-    
-    /**
-     * Gets the y position relative to the parent container.
-     *
-     * @return the y position in the container's local space
-     */
-    public float getY() {
-        return y;
-    }
-    
-    /**
-     * Gets the button that initiated the event, or NOBUTTON if no
-     * mouse button was used.
-     *
-     * @return the button index (starting at 0, 
-     *              conforming to the button 
-     *              constants BUTTON1, BUTTON2 and BUTTON3)
-     *          or NOBUTTON (-1) if it's unknown
-     */
-    public int getButton() {
-        return button;
     }
 }

@@ -28,6 +28,7 @@ import java.util.ResourceBundle;
 
 import org.sam.jogl.gui.ButtonAction;
 import org.sam.jogl.gui.GLButton;
+import org.sam.jogl.gui.GLComponent;
 import org.sam.jogl.gui.GLContainer;
 import org.sam.jogl.gui.event.ActionEvent;
 import org.sam.jogl.gui.event.ActionListener;
@@ -47,13 +48,10 @@ public class GameMenu extends GLContainer {
 		 */
 		@Override
 		public void actionPerformed( ActionEvent e ){
-			actions.get( ( (GLButton)e.getSource() ).getActionName() ).run();
+			actions.get( ( (GLButton)e.source ).getActionName() ).run();
 		}
 	}
 
-	private final GLButton player1, player2, server, client, options, quit;
-	private final GLButton sound, graphics, network, back;
-	
 	public GameMenu( Map<String, ButtonAction> actions ){
 		
 		Locale locale = Locale.getDefault(); 
@@ -61,87 +59,88 @@ public class GameMenu extends GLContainer {
 		ResourceBundle basic = ResourceBundle.getBundle("com.sun.swing.internal.plaf.basic.resources.basic", locale);
 		
 		MyListener listener = new MyListener( actions );
+		
+		final GLComponent[] mainMenu = new GLComponent[] {
+				new GLButton( "player1", bundle, listener ),
+				new GLButton( "player2", bundle, listener ),
+				new GLButton( "options", bundle, listener ),
+				new GLButton( "quit", bundle, listener )
+		};
+		
+		final GLComponent[] towPlayersMenu = new GLComponent[] {
+				new GLButton( "server", bundle, listener ),
+				new GLButton( "client", bundle, listener ),
+				new GLButton( "back", bundle, listener ),
+		};
+		
+		final GLComponent[] optionsMenu = new GLComponent[] {
+				new GLButton( "sound", bundle, listener ),
+				new GLButton( "graphics", bundle, listener ),
+				new GLButton( "network", bundle, listener ),
+				new GLButton( "back", bundle, listener ),
+		};
+		
 		ButtonAction action;
 
-		player1 = new GLButton( "player1", bundle, listener );
-
-		player2 = new GLButton( "player2", bundle, listener );
 		action = new ButtonAction( "player2" ){
 			public void run(){
-				GameMenu.this.buildTowPlayersMenu();
+				GameMenu.this.buildMenu( towPlayersMenu, 300, 50, 20 );
 			}
 		};
 		actions.put( action.getName(), action );
-
-		server = new GLButton( "server", bundle, listener );
-		client = new GLButton( "client", bundle, listener );
-
+		
 		action = new ButtonAction( "options" ){
 			public void run(){
-				GameMenu.this.buildOptionsMenu();
+				GameMenu.this.buildMenu( optionsMenu, 300, 50, 20 );
 			}
 		};
-		options = new GLButton( action.getName(), bundle, listener );
 		actions.put( action.getName(), action );
-
+		
+		action = new ButtonAction( "quit" ){
+			public void run(){
+				System.exit( 0 );
+			}
+		};
+		actions.put( action.getName(), action );
+		
+		action = new ButtonAction( "back" ){
+			public void run(){
+				GameMenu.this.buildMenu( mainMenu, 300, 50, 20 );
+			}
+		};
+		actions.put( action.getName(), action );
+		
 		action = new ButtonAction( "sound" ){
 			public void run(){
 			}
 		};
-		sound = new GLButton( action.getName(), bundle, listener );
 		actions.put( action.getName(), action );
 
 		action = new ButtonAction( "graphics" ){
 			public void run(){
 			}
 		};
-		graphics = new GLButton( action.getName(), bundle, listener );
 		actions.put( action.getName(), action );
 
 		action = new ButtonAction( "network" ){
 			public void run(){
 			}
 		};
-		network = new GLButton( action.getName(), bundle, listener );
 		actions.put( action.getName(), action );
-
-		action = new ButtonAction( "back" ){
-			public void run(){
-				GameMenu.this.buildMainMenu();
-			}
-		};
-		back = new GLButton( action.getName(), bundle, listener );
-		actions.put( action.getName(), action );
-
-		action = new ButtonAction( "quit" ){
-			public void run(){
-				System.exit( 0 );
-			}
-		};
-		quit = new GLButton( action.getName(), bundle, listener );
-		actions.put( action.getName(), action );
+		
+		buildMenu( mainMenu, 300, 50, 20 );
 	}
 
-	void buildMainMenu() {
+	void buildMenu( GLComponent[] components, float buttonsWidth, float buttonsHeight, float padding ){
+		if( components == null || components.length == 0 )
+			return;
 		this.removeAll();
-		this.add( player1 );
-		this.add( player2 );
-		this.add( options );
-		this.add( quit );
-	}
-
-	void buildTowPlayersMenu() {
-		this.removeAll();
-		this.add( server );
-		this.add( client );
-		this.add( back );
-	}
-	
-	void buildOptionsMenu() {
-		this.removeAll();
-		this.add( graphics );
-		this.add( sound );
-		this.add( network );
-		this.add( back );
+		this.setBounds( 2 * padding + buttonsWidth, padding + components.length * ( padding + buttonsHeight ) );
+		float posY = padding;
+		for( GLComponent c: components ){
+			c.setBounds( padding, posY, buttonsWidth, buttonsHeight );
+			posY += padding + buttonsHeight;
+			this.add( c );
+		}
 	}
 }
