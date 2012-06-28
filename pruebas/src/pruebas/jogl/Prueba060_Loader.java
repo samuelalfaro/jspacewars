@@ -176,6 +176,7 @@ public class Prueba060_Loader{
 			data.instancias[index].reset();
 			
 			renderer = new GLTextRenderer();
+			renderer.setFont( TextUtils.getDefaultFont( gl ) );
 
 			tActual = System.nanoTime();
 			iniciado = true;

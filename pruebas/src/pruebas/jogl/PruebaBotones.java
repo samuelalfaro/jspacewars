@@ -38,6 +38,7 @@ import org.sam.jogl.gui.GLGUI;
 import org.sam.jogl.gui.GLLabel;
 import org.sam.jogl.gui.GLTextRenderer.HorizontalAlignment;
 import org.sam.jogl.gui.GLTextRenderer.VerticalAlignment;
+import org.sam.jogl.gui.event.ActionEvent;
 
 import com.jogamp.opengl.util.Animator;
 
@@ -63,7 +64,7 @@ public class PruebaBotones{
 		frame.setVisible( true );
 		
 		GLContainer container = new GLContainer();
-		container.setBounds( 350, 350 );
+		container.setBounds( 350, 325 );
 		
 		GLLabel component;
 		
@@ -73,7 +74,7 @@ public class PruebaBotones{
 				System.out.println("Botón 1 pulsado");
 			}
 		});
-		component.setBounds( 50, 50, 200, 50 );
+		component.setBounds( 25, 25, 300, 50 );
 		component.setVerticalAlignment( VerticalAlignment.TOP );
 		component.setHorizontalAlignment( HorizontalAlignment.LEFT );
 		container.add( component );
@@ -84,23 +85,26 @@ public class PruebaBotones{
 				System.out.println("Botón 2 pulsado");
 			}
 		});
-		component.setBounds( 50, 125, 200, 50 );
+		component.setBounds( 25, 100, 300, 50 );
 		component.setVerticalAlignment( VerticalAlignment.CENTER);
 		component.setHorizontalAlignment( HorizontalAlignment.CENTER );
 		container.add( component );
 		
 		component = new GLLabel( "Etiqueta" );
-		component.setBounds( 50, 200, 200, 50 );
+		component.setBounds( 25, 175, 300, 50 );
 		component.setVerticalAlignment( VerticalAlignment.BOTTOM );
 		container.add( component );
 		
-		component = new GLButton( new ButtonAction("Botón 3"){
+		component = new GLButton( new ButtonAction("Salir"){
+			@Override
+			public void actionPerformed( ActionEvent e ){
+				((GLButton)e.source).getParent().setEnabled( false );
+			}
 			@Override
 			public void run(){
-				System.out.println("Botón 3 pulsado");
 			}
 		});
-		component.setBounds( 50, 275, 200, 50 );
+		component.setBounds( 25, 250, 300, 50 );
 		component.setVerticalAlignment( VerticalAlignment.BASE_LINE );
 		component.setHorizontalAlignment( HorizontalAlignment.RIGHT );
 		container.add( component );
