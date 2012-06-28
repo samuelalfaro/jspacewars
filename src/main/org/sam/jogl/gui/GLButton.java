@@ -38,23 +38,23 @@ public class GLButton extends GLLabel{
 	private static final MouseListener ButtonMouseListener = new MouseAdapter(){
 
 		public void mouseEntered( MouseEvent e ){
-			((GLButton)e.getSource()).setHovered( true );
+			((GLButton)e.source).setHovered( true );
 		}
 
 		public void mouseExited( MouseEvent e ){
-			GLButton source = (GLButton)e.getSource();
+			GLButton source = (GLButton)e.source;
 			source.setHovered( false );
 			source.setPressed( false );
 		}
 
 		public void mousePressed( MouseEvent e ){
-			if( e.getButton() == MouseEvent.BUTTON1 )
-				((GLButton)e.getSource()).setPressed( true );
+			if( e.button == MouseEvent.BUTTON1 )
+				((GLButton)e.source).setPressed( true );
 		}
 
 		public void mouseReleased( MouseEvent e ){
-			GLButton source = (GLButton)e.getSource();
-			if( source.isPressed() && e.getButton() == MouseEvent.BUTTON1 ){
+			GLButton source = (GLButton)e.source;
+			if( source.isPressed() && e.button == MouseEvent.BUTTON1 ){
 				source.setPressed( false );
 				source.fireActionPerformed( source.getActionName() );
 			}
@@ -65,7 +65,7 @@ public class GLButton extends GLLabel{
 
 		@Override
 		public void stateChanged( ChangeEvent e ){
-			GLButton source = (GLButton)e.getSource();
+			GLButton source = (GLButton)e.source;
 			if( !source.isEnabled() ){
 				// desactivado
 				source.setBackground( UIManager.getBackground( "Button.background.disabled" ) );
@@ -133,7 +133,11 @@ public class GLButton extends GLLabel{
 		this( action.getName(), null, action );
 	}
 
-	protected void initComponent(){
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Initializable#init()
+	 */
+	@Override
+	public void init(){
 		this.setBackground( UIManager.getBackground( "Button.background.default" ) );
 		this.setBorder( UIManager.getBorder( "Button.border.default" ) );
 		this.setTextRendererProperties( UIManager.getTextRendererProperties( "Button.properties.default" ) );
@@ -152,7 +156,7 @@ public class GLButton extends GLLabel{
 			 return this.getText();
 		 return actionName;
 	 }
-	
+	 
 	/**
 	 * Adds the specified listener to the list.
 	 * 

@@ -53,7 +53,7 @@ public class Button extends Label{
 		public void mousePressed( MouseEvent e ){
 			if( !isEnabled() )
 				return;
-			if( e.getButton() == MouseEvent.BUTTON1 ){
+			if( e.button == MouseEvent.BUTTON1 ){
 				state = DOWN;
 			}
 		}
@@ -62,7 +62,7 @@ public class Button extends Label{
 		public void mouseReleased( MouseEvent e ){
 			if( !isEnabled() )
 				return;
-			if( state == DOWN && e.getButton() == MouseEvent.BUTTON1 ){
+			if( state == DOWN && e.button == MouseEvent.BUTTON1 ){
 				state = ROLLOVER;
 				fireActionPerformed( actionCommand );
 			}
@@ -71,7 +71,7 @@ public class Button extends Label{
 		public void mouseDragged( MouseEvent e ){
 			if( !isEnabled() )
 				return;
-			state = Button.this.contains( e.getX(), e.getY() ) ? DOWN: UP;
+			state = Button.this.contains( e.x, e.y ) ? DOWN: UP;
 		}
 	}
 

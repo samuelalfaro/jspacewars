@@ -30,8 +30,12 @@ import java.util.Queue;
 
 import javax.media.opengl.GL2;
 import javax.vecmath.Color4f;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 import org.sam.elementos.Initializable;
+import org.sam.interpoladores.GettersFactory;
+import org.sam.interpoladores.MetodoDeInterpolacion;
 import org.sam.jogl.Apariencia;
 import org.sam.jogl.AtributosTextura;
 import org.sam.jogl.AtributosTransparencia;
@@ -39,23 +43,75 @@ import org.sam.jogl.Nodo;
 import org.sam.jogl.Textura;
 import org.sam.jogl.Textura.MagFilter;
 import org.sam.jogl.Textura.MinFilter;
+import org.sam.jogl.particulas.Emisor;
+import org.sam.jogl.particulas.FactoriaDeParticulas;
+import org.sam.jogl.particulas.Particulas;
 import org.sam.util.Imagen;
 
 /**
- * 
+ * Clase encargada de cargar y proporcionar los datos necerarios a los distintos
+ * compnentes del GUI.
+ * TODO Cargar estos datos a partir de un fichero de recursos. Quitar todo el hard code.
  */
 public final class UIManager{
+	
+	private static final String fontDef          = "resources/texturas/fonts/saved.xml";
+	private static final String font1Texture     = "resources/texturas/fonts/saved.png";
+	private static final String font2Texture     = "resources/texturas/fonts/saved-blur.png";
+	private static final String font3Texture     = "resources/texturas/fonts/saved-neon.png";
+	private static final String componentTexture = "resources/bordes_prueba.png";
+	
+	private static final AtributosTransparencia BLEND_ATT = new AtributosTransparencia( 
+		AtributosTransparencia.Equation.ADD,
+		AtributosTransparencia.SrcFunc.SRC_ALPHA,
+		AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
+	);
+	
+	private static final AtributosTransparencia ADD_ATT = new AtributosTransparencia( 
+		AtributosTransparencia.Equation.ADD,
+		AtributosTransparencia.SrcFunc.SRC_ALPHA,
+		AtributosTransparencia.DstFunc.ONE
+	);
+	
+	private static final AtributosTransparencia MOD_ATT = new AtributosTransparencia( 
+		AtributosTransparencia.Equation.ADD,
+		AtributosTransparencia.SrcFunc.ZERO,
+		AtributosTransparencia.DstFunc.SRC_COLOR
+	);
+	
+	private static final AtributosTextura ALPHA_MODULATE_ATT = new AtributosTextura();
+	
+	private static final AtributosTextura ALPHA_INTERPOLATE_ATT = new AtributosTextura();
 	
 	private static final Apariencia BLEND = new Apariencia();
 	
 	static{
-		BLEND.setAtributosTransparencia( 
-				new AtributosTransparencia( 
-						AtributosTransparencia.Equation.ADD,
-						AtributosTransparencia.SrcFunc.SRC_ALPHA,
-						AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
-				)
+		
+		ALPHA_MODULATE_ATT.setMode( AtributosTextura.Mode.COMBINE );
+		ALPHA_MODULATE_ATT.setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
+		ALPHA_MODULATE_ATT.setCombineRgbSource0(
+				AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
 		);
+		ALPHA_MODULATE_ATT.setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
+		ALPHA_MODULATE_ATT.setCombineAlphaSource0(
+				AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_ALPHA
+		);
+		ALPHA_MODULATE_ATT.setCombineAlphaSource1(
+				AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
+		);
+		
+		ALPHA_INTERPOLATE_ATT.setEnvColor( 1.0f, 1.0f, 1.0f, 1.0f );
+		ALPHA_INTERPOLATE_ATT.setMode( AtributosTextura.Mode.COMBINE );
+		ALPHA_INTERPOLATE_ATT.setCombineRgbMode( AtributosTextura.CombineMode.INTERPOLATE );
+		// C' = S0 * S2 + S1*(1-S2)
+		ALPHA_INTERPOLATE_ATT.setCombineRgbSource0( AtributosTextura.CombineSrc.OBJECT,
+				AtributosTextura.CombineOperand.SRC_COLOR );
+		ALPHA_INTERPOLATE_ATT.setCombineRgbSource1( AtributosTextura.CombineSrc.CONSTANT,
+				AtributosTextura.CombineOperand.SRC_COLOR );
+		ALPHA_INTERPOLATE_ATT.setCombineRgbSource2( AtributosTextura.CombineSrc.TEXTURE,
+				AtributosTextura.CombineOperand.SRC_ALPHA );
+		
+		BLEND.setAtributosTransparencia( BLEND_ATT );
 	}
 	
 	private UIManager(){}
@@ -65,125 +121,153 @@ public final class UIManager{
 	private static Hashtable<Object,Object> hashtable = null;
 	
 	private static void loadFonts( GL2 gl, Hashtable<Object, Object> hashtable ){
-		
-		final String fontDef      = "resources/texturas/fonts/abduction.xml";
-		final String font1Texture = "resources/texturas/fonts/abduction.png";
-		final String font2Texture = "resources/texturas/fonts/abduction-blur.png";
-		final String font3Texture = "resources/texturas/fonts/abduction-neon.png";
-		
 		try{
+			BufferedImage img;
+			Textura textura;
 			TextureFont font = new TextureFont( gl, new FileInputStream( fontDef ) );
-
-			BufferedImage img = Imagen.cargarToBufferedImage( font1Texture );
-
+			
 			Apariencia apFont = new Apariencia();
-
-			apFont.setTextura( new Textura( gl, MinFilter.NEAREST, MagFilter.LINEAR, Textura.Format.ALPHA, img, false ) );
-			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
-			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
-
-			apFont.setAtributosTextura( new AtributosTextura() );
-
-			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
-			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
-			apFont.getAtributosTextura().setCombineRgbSource0(
-					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
-			);
-			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
-			apFont.getAtributosTextura().setCombineAlphaSource0(
-					AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_ALPHA
-			);
-			apFont.getAtributosTextura().setCombineAlphaSource1(
-					AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
-			);
 			
-			apFont.setAtributosTransparencia( new AtributosTransparencia(
-					AtributosTransparencia.Equation.ADD, 
-					AtributosTransparencia.SrcFunc.SRC_ALPHA,
-					AtributosTransparencia.DstFunc.ONE_MINUS_SRC_ALPHA
-			) );
+			img = Imagen.cargarToBufferedImage( font1Texture );
+			textura = new Textura( gl, MinFilter.NEAREST, MagFilter.LINEAR, Textura.Format.ALPHA, img, false );
+			textura.setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
+			textura.setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
 			
+			apFont.setTextura( textura );
+			apFont.setAtributosTextura( ALPHA_MODULATE_ATT );
+			apFont.setAtributosTransparencia( BLEND_ATT );
 			font.setApariencia( apFont );
 			
 			hashtable.put( "Font.default", font.deriveFont( .25f ) );
-			
 			hashtable.put( "Font.Component.default", font.deriveFont( .5f ) );
 			
 			img = Imagen.cargarToBufferedImage( font2Texture );
+			
 			apFont = new Apariencia();
+			
+			img = Imagen.cargarToBufferedImage( font2Texture );
+			textura = new Textura( gl, MinFilter.LINEAR, MagFilter.LINEAR, Textura.Format.ALPHA, img, false );
+			textura.setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
+			textura.setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
 
-			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
-			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
-			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
-
-			apFont.setAtributosTextura( new AtributosTextura() );
-			apFont.getAtributosTextura().setEnvColor( 1.0f, 1.0f, 1.0f, 1.0f );
-			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
-			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.INTERPOLATE );
-			// C' = S0 * S2 + S1*(1-S2)
-			apFont.getAtributosTextura().setCombineRgbSource0( AtributosTextura.CombineSrc.OBJECT,
-					AtributosTextura.CombineOperand.SRC_COLOR );
-			apFont.getAtributosTextura().setCombineRgbSource1( AtributosTextura.CombineSrc.CONSTANT,
-					AtributosTextura.CombineOperand.SRC_COLOR );
-			apFont.getAtributosTextura().setCombineRgbSource2( AtributosTextura.CombineSrc.TEXTURE,
-					AtributosTextura.CombineOperand.SRC_ALPHA );
-			apFont.setAtributosTransparencia(
-				new AtributosTransparencia(
-					AtributosTransparencia.Equation.ADD,
-					AtributosTransparencia.SrcFunc.ZERO,
-					AtributosTransparencia.DstFunc.SRC_COLOR
-				)
-			);
+			apFont.setTextura( textura );
+			apFont.setAtributosTextura( ALPHA_INTERPOLATE_ATT );
+			apFont.setAtributosTransparencia( MOD_ATT );
 			
 			hashtable.put( "Font.Component.shadow", font.deriveFont( .5f ).deriveFont( apFont ) );
 			
-			img = Imagen.cargarToBufferedImage( font3Texture );
 			apFont = new Apariencia();
-
-			apFont.setTextura( new Textura( gl, Textura.Format.ALPHA, img, false ) );
-			apFont.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
-			apFont.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
-
-			apFont.setAtributosTextura( new AtributosTextura() );
-
-			apFont.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
-			apFont.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
-			apFont.getAtributosTextura().setCombineRgbSource0(
-				AtributosTextura.CombineSrc.OBJECT, 
-				AtributosTextura.CombineOperand.SRC_COLOR
-			);
-			apFont.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
-			apFont.getAtributosTextura().setCombineAlphaSource0(
-				AtributosTextura.CombineSrc.OBJECT,
-				AtributosTextura.CombineOperand.SRC_ALPHA
-			);
-			apFont.getAtributosTextura().setCombineAlphaSource1(
-				AtributosTextura.CombineSrc.TEXTURE,
-				AtributosTextura.CombineOperand.SRC_ALPHA
-			);
-			apFont.setAtributosTransparencia(
-				new AtributosTransparencia(
-					AtributosTransparencia.Equation.ADD,
-					AtributosTransparencia.SrcFunc.SRC_ALPHA,
-					AtributosTransparencia.DstFunc.ONE
-				)
-			);
-			hashtable.put( "Font.Component.fx", font.deriveFont( .5f ).deriveFont( apFont ) );
 			
+			apFont.setTextura( textura );
+			apFont.setAtributosTextura( ALPHA_MODULATE_ATT );
+			apFont.setAtributosTransparencia( ADD_ATT );
 			
+			hashtable.put( "Font.Component.fx1", font.deriveFont( .5f ).deriveFont( apFont ) );
+
+			apFont = new Apariencia();
+			
+			img = Imagen.cargarToBufferedImage( font3Texture );
+			textura = new Textura( gl, MinFilter.LINEAR, MagFilter.LINEAR, Textura.Format.ALPHA, img, false );
+			textura.setWrap_s( Textura.Wrap.CLAMP_TO_BORDER );
+			textura.setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
+			
+			apFont.setTextura( textura );
+			apFont.setAtributosTextura( ALPHA_MODULATE_ATT );
+			apFont.setAtributosTransparencia( ADD_ATT );
+			
+			hashtable.put( "Font.Component.fx2", font.deriveFont( .5f ).deriveFont( apFont ) );
+
 		}catch( FileNotFoundException e ){
 			e.printStackTrace();
 		}
 	}
 	
-	private static void loadTextures( GL2 gl, Hashtable<Object, Object> hashtable ){
+	private static Nodo generateCursorDecorator( GL2 gl ){
+		
+		Apariencia ap = new Apariencia();
+		
+		ap.setTextura( new Textura( gl, Textura.Format.ALPHA, Imagen.cargarToBufferedImage( "resources/texturas/smok.png" ), true ) );
+		ap.getTextura().setWrap_s( Textura.Wrap.CLAMP_TO_BORDER);
+		ap.getTextura().setWrap_t( Textura.Wrap.CLAMP_TO_BORDER );
+		
+		ap.setAtributosTextura( new AtributosTextura() );
+		
+		ap.getAtributosTextura().setMode( AtributosTextura.Mode.COMBINE );
+		ap.getAtributosTextura().setCombineRgbMode( AtributosTextura.CombineMode.REPLACE );
+		ap.getAtributosTextura().setCombineRgbSource0(
+				AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_COLOR
+		);
+		ap.getAtributosTextura().setCombineAlphaMode( AtributosTextura.CombineMode.MODULATE );
+		ap.getAtributosTextura().setCombineAlphaSource0(
+				AtributosTextura.CombineSrc.OBJECT, AtributosTextura.CombineOperand.SRC_ALPHA
+		);
+		ap.getAtributosTextura().setCombineAlphaSource1(
+				AtributosTextura.CombineSrc.TEXTURE, AtributosTextura.CombineOperand.SRC_ALPHA
+		);			
+		
+		ap.setAtributosTransparencia( 
+				new AtributosTransparencia( 
+						AtributosTransparencia.Equation.ADD,
+						AtributosTransparencia.SrcFunc.SRC_ALPHA,
+						AtributosTransparencia.DstFunc.ONE
+				) 
+		);
+		
+		FactoriaDeParticulas.setOptimizedFor2D( true );
+		
+		Particulas estela = FactoriaDeParticulas.createParticulas( 50 );
+		
+		Matrix4f t1 = new Matrix4f();
+		t1.setIdentity();
+		t1.rotX( (float)(Math.PI /2) );
+		
+		Matrix4f t2 = new Matrix4f();
+		t2.setIdentity();
+		t2.rotZ( (float)(Math.PI /4) );
+		t2.mul( t1 );
+		
+		t1 = new Matrix4f();
+		t1.setIdentity();
+		t1.setTranslation( new Vector3f( 8, 8, 0 ) );
+		t1.mul( t2 );
+		
+		estela.setEmisor( new Emisor.Cache( new Emisor.Transformador( new Emisor.Puntual( 0.25f, -0.25f, 45 ), t1 ), 256 ) );
+		
+		estela.setEmision( Particulas.Emision.CONTINUA );
+		estela.setRangoDeEmision( 1.0f );
+		estela.setVelocidad( 300.0f, 20.0f, false );
+		estela.setTiempoVida( 0.25f );
+		estela.setGiroInicial( 0, 180, true );
+		estela.setVelocidadGiro( 30.0f, 15.0f, true );
+		estela.setColor(
+				0.16f,
+				0.24f,
+				0.08f,
+				GettersFactory.Float.create( 
+					new float[] { 0.25f, 1.0f },
+					new float[] { 1.0f, 0.0f },
+					MetodoDeInterpolacion.Predefinido.COSENOIDAL
+				)
+		);
+		estela.setRadio( 	
+				GettersFactory.Float.create( 
+					new float[] { 0.0f, 0.25f },
+					new float[] { 0.0f, 8.0f },
+					MetodoDeInterpolacion.Predefinido.COSENOIDAL
+				)
+		);
+		estela.init();
+		estela.setApariencia( ap );
+		
+		return estela;
+	}
+	
+	private static void generateBorderAndBackgrounds( GL2 gl, Hashtable<Object, Object> hashtable ){
 		
 		Border border;
 		Background background;
 		
-		String texture1 = "resources/bordes_prueba.png";
-		
-		BufferedImage img = Imagen.cargarToBufferedImage( texture1 );
+		BufferedImage img = Imagen.cargarToBufferedImage( componentTexture );
 
 		Apariencia ap1 = new Apariencia();
 
@@ -193,11 +277,11 @@ public final class UIManager{
 
 		ap1.setAtributosTextura( new AtributosTextura() );
 		ap1.getAtributosTextura().setMode( AtributosTextura.Mode.REPLACE );
-		ap1.setAtributosTransparencia( BLEND.getAtributosTransparencia() );
+		ap1.setAtributosTransparencia( BLEND_ATT );
 		
 		background = new Background.Textured( 16, 16, 48, 48, 64, 64 );
 		background.setApariencia( ap1 );
-		//hashtable.put( "Container.background.default", background );
+		hashtable.put( "Container.background.default", background );
 		
 		border = new Border.Textured( new Insets( 16 ), 64, 64 );
 		border.setOuterInsets( new Insets( 4 ) );
@@ -233,8 +317,10 @@ public final class UIManager{
 		if( isInitialized() )
 			return;
 		hashtable = new Hashtable<Object, Object>();
+		
 		loadFonts( gl, hashtable );
-		loadTextures( gl, hashtable );
+		generateBorderAndBackgrounds( gl, hashtable );
+		hashtable.put( "Cursor.decorator", generateCursorDecorator( gl ) );
 		
 		hashtable.put( "Color.Text.default", new Color4f( 0.5f, 0.5f, 0.5f, 1.0f ) );
 		hashtable.put( "Color.Text.shadow",  new Color4f( 0.1f, 0.0f, 0.2f, 1.0f ) );
@@ -242,8 +328,10 @@ public final class UIManager{
 		
 		TextRendererProperties properties;
 		
-//		hashtable.put( "Label.background.disabled",  UIManager.getBackground( "Background.default" ) );
-//		hashtable.put( "Label.border.disabled",  UIManager.getBorder( "Border.default" ) );
+		Object nullObject = new Object();
+		
+		hashtable.put( "Label.background.disabled",  nullObject );
+		hashtable.put( "Label.border.disabled",  nullObject );
 		properties = new TextRendererProperties();
 		properties.shadowFont   = UIManager.getFont(  "Font.Component.shadow" );
 		properties.shadowColor  = UIManager.getColor( "Color.Text.shadow" );
@@ -253,8 +341,9 @@ public final class UIManager{
 		properties.color        = UIManager.getColor( "Color.Text.default" );
 		hashtable.put( "Label.properties.disabled", properties );
 		
-//		hashtable.put( "Label.background.default",  UIManager.getBackground( "Background.default" ) );
-//		hashtable.put( "Label.border.default",  UIManager.getBorder( "Border.default" ) );
+		hashtable.put( "Label.background.default",  nullObject );
+		hashtable.put( "Label.border.default",  nullObject );
+		
 		properties = new TextRendererProperties();
 		properties.shadowFont   = UIManager.getFont(  "Font.Component.shadow" );
 		properties.shadowColor  = UIManager.getColor( "Color.Text.shadow" );
@@ -262,7 +351,7 @@ public final class UIManager{
 		properties.shadowOfsetY = 2.5f;
 		properties.font         = UIManager.getFont(  "Font.Component.default" );
 		properties.color        = UIManager.getColor( "Color.Text.default" );
-		properties.fxFont       = UIManager.getFont(  "Font.Component.fx" );
+		properties.fxFont       = UIManager.getFont(  "Font.Component.fx2" );
 		properties.fxColor      = UIManager.getColor( "Color.Text.fx" );
 		properties.fxOfsetX     = 0.0f;
 		properties.fxOfsetY     = 0.0f;
@@ -282,12 +371,12 @@ public final class UIManager{
 		hashtable.put( "Button.background.hovered",  UIManager.getBackground( "Background.default" ) );
 		hashtable.put( "Button.border.hovered",  UIManager.getBorder( "Border.default" ) );
 		properties = new TextRendererProperties();
-		properties.shadowFont   = UIManager.getFont(  "Font.Component.fx" ).deriveFont( 1.25f, 1.20f );
+		properties.shadowFont   = UIManager.getFont(  "Font.Component.fx1" ).deriveFont( 1.25f, 1.20f );
 		properties.shadowColor  = new Color4f( 0.5f, 0.5f, 0.1f, 0.5f );
 		properties.shadowOfsetX = 0.0f;
 		properties.shadowOfsetY = 0.0f;
-		properties.font         = UIManager.getFont(  "Font.Component.fx" ).deriveFont( 1.20f, 1.175f );
-		properties.color        = new Color4f( 0.5f, 0.5f, 0.1f, 0.5f );
+		properties.font         = UIManager.getFont(  "Font.Component.fx1" ).deriveFont( 1.20f, 1.175f );
+		properties.color        = new Color4f( 0.5f, 0.5f, 0.1f, 0.75f );
 		properties.fxFont       = UIManager.getFont(  "Font.Component.default" ).deriveFont( 1.15f );
 		properties.fxColor      = UIManager.getColor( "Color.Text.default" );
 		properties.fxOfsetX     = 0.0f;
@@ -303,7 +392,7 @@ public final class UIManager{
 		properties.shadowOfsetY = 2.5f;
 		properties.font         = UIManager.getFont(  "Font.Component.default" );
 		properties.color        = UIManager.getColor( "Color.Text.default" );
-		properties.fxFont       = UIManager.getFont(  "Font.Component.fx" );
+		properties.fxFont       = UIManager.getFont(  "Font.Component.fx2" );
 		properties.fxColor      = UIManager.getColor( "Color.Text.fx" );
 		properties.fxOfsetX     = 0.0f;
 		properties.fxOfsetY     = 0.0f;
@@ -318,7 +407,7 @@ public final class UIManager{
 		properties.shadowOfsetY = 2.5f;
 		properties.font         = UIManager.getFont(  "Font.Component.default" ).deriveFont( 1.05f );
 		properties.color        = UIManager.getColor( "Color.Text.default" );
-		properties.fxFont       = UIManager.getFont(  "Font.Component.fx" ).deriveFont( 1.05f );
+		properties.fxFont       = UIManager.getFont(  "Font.Component.fx2" ).deriveFont( 1.05f );
 		properties.fxColor      = new Color4f( 1.0f, 0.5f, 0.1f, 1.0f );
 		properties.fxOfsetX     = 0.0f;
 		properties.fxOfsetY     = 0.0f;

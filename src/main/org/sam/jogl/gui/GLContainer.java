@@ -26,6 +26,8 @@ import java.util.List;
 
 import javax.media.opengl.GL2;
 
+import org.sam.jogl.gui.event.ChangeEvent;
+import org.sam.jogl.gui.event.ChangeListener;
 import org.sam.jogl.gui.event.MouseEvent;
 import org.sam.jogl.gui.event.MouseListener;
 
@@ -33,110 +35,123 @@ import org.sam.jogl.gui.event.MouseListener;
  * 
  */
 public class GLContainer extends GLComponent{
-	
-	private class GLContainerMouseListener implements MouseListener{
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.event.MouseListener#mouseMoved(org.sam.jogl.gui.event.MouseEvent)
-		 */
+	private static final MouseListener ContainerMouseListener = new MouseListener(){
+
 		@Override
 		public void mouseMoved( MouseEvent e ){
-			for( GLComponent c: GLContainer.this.childs() )
+			GLContainer source = (GLContainer)e.source;
+			for( GLComponent c: source.childs() )
 				if( c.isVisible() && c.isEnabled() ){
-					if( c.contains( e.getX(), e.getY() ) ){
+					if( c.contains( e.x, e.y ) ){
 						if( !c.isHovered() )
-							c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), e.getX(), e.getY() );
+							c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.x, e.y );
 						else
-							c.processMouseEvent( MouseEvent.MOUSE_MOVED, e.getButton(), e.getX(), e.getY() );
+							c.processMouseEvent( MouseEvent.MOUSE_MOVED, e.x, e.y );
 					}else
 						if( c.isHovered() )
-							c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
+							c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.x, e.y );
 				}
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.event.MouseListener#mouseDragged(org.sam.jogl.gui.event.MouseEvent)
-		 */
 		@Override
 		public void mouseDragged( MouseEvent e ){
-			for( GLComponent c: GLContainer.this.childs() )
+			GLContainer source = (GLContainer)e.source;
+			for( GLComponent c: source.childs() )
 				if( c.isVisible() && c.isEnabled() ){
-					if( c.contains( e.getX(), e.getY() ) ){
+					if( c.contains( e.x, e.y ) ){
 						if( !c.isHovered() )
-							c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getButton(), e.getX(), e.getY() );
+							c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.button, e.x, e.y );
 						else
-							c.processMouseEvent( MouseEvent.MOUSE_DRAGGED, e.getButton(), e.getX(), e.getY() );
+							c.processMouseEvent( MouseEvent.MOUSE_DRAGGED, e.button, e.x, e.y );
 					}else
 						if( c.isHovered() )
-							c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
+							c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.button, e.x, e.y );
 				}
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.event.MouseListener#mousePressed(org.sam.jogl.gui.event.MouseEvent)
-		 */
 		@Override
 		public void mousePressed( MouseEvent e ){
-			for( GLComponent c: GLContainer.this.childs() )
-				if( c.isVisible() && c.isEnabled() && c.contains( e.getX(), e.getY() ) )
-					c.processMouseEvent( MouseEvent.MOUSE_PRESSED, e.getButton(), e.getX(), e.getY() );
+			GLContainer source = (GLContainer)e.source;
+			for( GLComponent c: source.childs() )
+				if( c.isVisible() && c.isEnabled() && c.contains( e.x, e.y ) )
+					c.processMouseEvent( MouseEvent.MOUSE_PRESSED, e.button, e.x, e.y );
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.event.MouseListener#mouseReleased(org.sam.jogl.gui.event.MouseEvent)
-		 */
 		@Override
 		public void mouseReleased( MouseEvent e ){
-			for( GLComponent c: GLContainer.this.childs() )
-				if( c.isVisible() && c.isEnabled() && c.contains( e.getX(), e.getY() ) )
-					c.processMouseEvent( MouseEvent.MOUSE_RELEASED, e.getButton(), e.getX(), e.getY() );
+			GLContainer source = (GLContainer)e.source;
+			for( GLComponent c: source.childs() )
+				if( c.isVisible() && c.isEnabled() && c.contains( e.x, e.y ) )
+					c.processMouseEvent( MouseEvent.MOUSE_RELEASED, e.button, e.x, e.y );
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.event.MouseListener#mouseEntered(org.sam.jogl.gui.event.MouseEvent)
-		 */
 		@Override
 		public void mouseEntered( MouseEvent e ){
-			GLContainer.this.setHovered( true );
-			for( GLComponent c: GLContainer.this.childs() )
-				if( c.isVisible() && c.isEnabled() && !c.isHovered() && c.contains( e.getX(), e.getY() ) )
-					c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.getX(), e.getY() );
+			GLContainer source = (GLContainer)e.source;
+			source.setHovered( true );
+			for( GLComponent c: source.childs() )
+				if( c.isVisible() && c.isEnabled() && !c.isHovered() && c.contains( e.x, e.y ) )
+					c.processMouseEvent( MouseEvent.MOUSE_ENTERED, e.x, e.y );
 		}
 
-		/* (non-Javadoc)
-		 * @see org.sam.jogl.gui.event.MouseListener#mouseExited(org.sam.jogl.gui.event.MouseEvent)
-		 */
 		@Override
 		public void mouseExited( MouseEvent e ){
-			GLContainer.this.setHovered( false );
-			for( GLComponent c: GLContainer.this.childs() )
+			GLContainer source = (GLContainer)e.source;
+			source.setHovered( false );
+			for( GLComponent c: source.childs() )
 				if(	c.isVisible() && c.isEnabled() && c.isHovered() )
-					c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.getX(), e.getY() );
+					c.processMouseEvent( MouseEvent.MOUSE_EXITED, e.x, e.y );
 		}
-	}
+	};
 	
-	List<GLComponent> components;
+	private static final ChangeListener ContainerChangeListener = new ChangeListener(){
+		@Override
+		public void stateChanged( ChangeEvent e ){
+			GLContainer source = (GLContainer)e.source;
+			if( !source.isEnabled() ){
+				// desactivado
+				source.setBackground( UIManager.getBackground( "Button.background.disabled" ) );
+				source.setBorder( UIManager.getBorder( "Button.border.disabled" ) );
+			}else{
+				// default
+				source.setBackground( UIManager.getBackground( "Button.background.default" ) );
+				source.setBorder( UIManager.getBorder( "Button.border.default" ) );
+			}
+		}
+	};
+	
+	private List<GLComponent> components;
 
 	public GLContainer(){
 		components = new ArrayList<GLComponent>();
-		addMouseListener( new GLContainerMouseListener() );
+		addMouseListener( ContainerMouseListener );
+		//addChangeListener( ContainerChangeListener );
 	}
 	
-	protected void initComponent(){
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Initializable#init()
+	 */
+	@Override
+	public void init(){
 		this.setBackground( UIManager.getBackground( "Container.background.default" ) );
 		this.setBorder( UIManager.getBorder( "Container.border.default" ) );
 	}
 
 	public void add( GLComponent component ){
+		component.setParent( this );
 		component.setPosition( x1 + component.x1, y1 + component.y1 );
 		components.add( component );
 	}
 
 	public void remove( GLComponent component ){
-		components.remove( component );
+		if( components.remove( component ) )
+			component.setParent( null );
 	}
 
 	public void removeAll(){
+		for( GLComponent c: components )
+			c.setParent( null );
 		components.clear();
 	}
 

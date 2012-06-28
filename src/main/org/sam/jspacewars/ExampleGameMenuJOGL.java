@@ -249,6 +249,8 @@ public class ExampleGameMenuJOGL {
 
 		animator.add( canvas );
 		mostrar( frame, canvas );
+		
+		displayGUI.setContentPane( new GameMenu( actions ) );
 		displayGUI.bind( canvas );
 		animator.start();
 	}

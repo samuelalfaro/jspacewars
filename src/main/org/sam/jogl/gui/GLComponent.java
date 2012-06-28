@@ -39,9 +39,10 @@ public abstract class GLComponent extends GLRectangle implements Initializable{
 	
 	protected static final GLTextRenderer TEXT_RENDERER = new GLTextRenderer();
 	
-	private boolean initialized;
 	protected int state;
 	protected EventListenerList listenerList = new EventListenerList();
+	
+	private   GLContainer parent;
 	
 	protected Border border;
 	protected Background background;
@@ -49,19 +50,9 @@ public abstract class GLComponent extends GLRectangle implements Initializable{
 	protected Insets padding;
 	
 	public GLComponent(){
-		this.initialized = false;
 		this.state = StateConstants.STATE_VISIBLE | StateConstants.STATE_DEFAULT;
 		UIManager.registerInitializable( this );
 	}
-	
-	public final void init(){
-		if( initialized )
-			return;
-		initialized = true;
-		initComponent();
-	}
-	
-	protected abstract void initComponent();
 	
 	protected final void setStateBit( boolean newState, int stateBit ){
 		int stateMask = ~stateBit;
@@ -112,6 +103,27 @@ public abstract class GLComponent extends GLRectangle implements Initializable{
 	
 	public final boolean isHovered(){
 		return ( state & StateConstants.STATE_HOVERED ) != 0;
+	}
+	
+	/**
+	 * Método que asigna el contenedor que contiene este componente.
+	 * 
+	 * @param parent valor del parent asignado.
+	 * @throws IllegalStateException Si se trata de añadir el componente a más de un contenedor.
+	 */
+	final void setParent( GLContainer parent ) throws IllegalStateException{
+		if( parent != null && this.parent != null )
+			throw new IllegalStateException();
+		this.parent = parent;
+	}
+	
+	/**
+	 * Método que devuelve el contenedor que contiene este componente.
+	 * 
+	 * @return el parent solicitado.
+	 */
+	public final GLContainer getParent(){
+		return parent;
 	}
 	
 	public final void setPadding( float padding ){

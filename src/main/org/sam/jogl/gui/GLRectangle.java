@@ -41,7 +41,7 @@ public abstract class GLRectangle implements Dibujable{
 	}
 	
 	public final void setBounds( float w, float h ){
-		setCorners( 0, 0, w, h );
+		setCorners( x1, y1, x1 + w, y1 + h );
 	}
 	
 	public void setBounds( float x, float y, float w, float h ){

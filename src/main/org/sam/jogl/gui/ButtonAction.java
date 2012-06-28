@@ -40,7 +40,7 @@ public abstract class ButtonAction implements ActionListener, Runnable{
 		return this.name;
 	}
 
-	public final void actionPerformed( ActionEvent e ){
+	public void actionPerformed( ActionEvent e ){
 		this.run();
 	}
 }
