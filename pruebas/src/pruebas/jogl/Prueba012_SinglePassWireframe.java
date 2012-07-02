@@ -135,19 +135,21 @@ public class Prueba012_SinglePassWireframe{
 
 			Shader shader = new Shader( gl, "shaders/wireframe.vert", "shaders/wireframe.frag" );
 
-//			shader.bindAttribLocation( gl,  8, "vertice0" );
-//			shader.bindAttribLocation( gl,  9, "vertice1" );
-//			shader.bindAttribLocation( gl, 10, "vertice2" );
-//			shader.bindAttribLocation( gl, 11, "vertice3" );
+//			shader.bindAttribLocation( gl,  1, "vertice0" );
+//			shader.bindAttribLocation( gl,  2, "vertice1" );
+//			shader.bindAttribLocation( gl,  3, "vertice2" );
+//			shader.bindAttribLocation( gl,  4, "vertice3" );
 			System.out.println( "vertice0:" + shader.getAttribLocation( gl, "vertice0" ) );
 			System.out.println( "vertice1:" + shader.getAttribLocation( gl, "vertice1" ) );
 			System.out.println( "vertice2:" + shader.getAttribLocation( gl, "vertice2" ) );
 			System.out.println( "vertice3:" + shader.getAttribLocation( gl, "vertice3" ) );
 
-			shader.addUniform( gl, "viewport", viewport );
+			
 			shader.addUniform( gl, "solid_width", 0.5f );
 			shader.addUniform( gl, "translucid_width", 1.5f );
-			shader.addUniform( gl, "empty_color", new Color4f( 0.0f, 0.0f, 0.55f, 1.0f ) );
+			shader.addUniform( gl, "empty_color", new Color4f( 0.0f, 1.0f, 0.55f, 1.0f ) );
+			
+			shader.addUniform( gl, "viewport", viewport );
 
 			forma.getApariencia().setShader( shader );
 

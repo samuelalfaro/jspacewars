@@ -8,6 +8,3 @@ void main(void){
 	float luminance = texel.r * 0.299 + texel.g * 0.587 + texel.b * 0.114;
   	gl_FragColor = vec4( luminance >= corte ? pow( texel.rgb, vec3(1.0/bloom) ) : vec3(0.0), texel.a );
 }
-
-
-  

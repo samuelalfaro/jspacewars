@@ -184,10 +184,10 @@ public class Prueba050_Shaders{
 
 					nave.getApariencia().setShader( shader );
 				}
-				nave.getApariencia().setAtributosTransparencia(
-					//new AtributosTransparencia( Equation.ADD, SrcFunc.ALPHA_SATURATE, DstFunc.ONE )
-					new AtributosTransparencia( Equation.ADD, SrcFunc.SRC_ALPHA, DstFunc.ONE_MINUS_SRC_ALPHA )
-				);
+//				nave.getApariencia().setAtributosTransparencia(
+//					//new AtributosTransparencia( Equation.ADD, SrcFunc.ALPHA_SATURATE, DstFunc.ONE )
+//					new AtributosTransparencia( Equation.ADD, SrcFunc.SRC_ALPHA, DstFunc.ONE_MINUS_SRC_ALPHA )
+//				);
 
 				childs = new Grupo();
 				childs.add( new NodoCompartido( nave ) );

@@ -14,5 +14,6 @@ void main(){
 	float c2 = min_d > solid_width + translucid_width ? 1.0 : 0.0;
     // si c1 == 0 && c2 == 0 -> c3 = 1 sino c3 = 0    
     float c3 = ( c1 - 1.0 )*( c2 - 1.0 ); 
-	gl_FragColor = c1 * gl_Color + c2 * empty_color + c3 * mix( gl_Color, empty_color, pow( ( min_d - solid_width ) / translucid_width, 2.0 ) );
+	//gl_FragColor = c1 * gl_Color + c2 * empty_color + c3 * mix( gl_Color, empty_color, pow( ( min_d - solid_width ) / translucid_width, 2.0 ) );
+    gl_FragColor = empty_color;
 }
