@@ -313,13 +313,13 @@ public class Shader{
 			vertexShader = gl.glCreateShaderObjectARB( GL2ES2.GL_VERTEX_SHADER );
 			gl.glShaderSourceARB( vertexShader, 1, new String[] { loadShader( vertexFile ) }, (int[])null, 0 );
 			gl.glCompileShaderARB( vertexShader );
-			checkLogInfo( gl, vertexShader );
+			checkLogInfo( gl, "Vertex Shader >>      ", vertexShader );
 
 			fragmentShader = gl.glCreateShaderObjectARB( GL2ES2.GL_FRAGMENT_SHADER );
 			gl.glShaderSourceARB( fragmentShader, 1, new String[] { loadShader( fragmentFile ) }, (int[])null, 0 );
 			gl.glCompileShaderARB( fragmentShader );
 
-			checkLogInfo( gl, fragmentShader );
+			checkLogInfo( gl, "Fragment Shader >>    ", fragmentShader );
 			ok = true;
 
 		}catch( FileNotFoundException e ){
@@ -327,7 +327,6 @@ public class Shader{
 		}catch( IOException e ){
 			e.printStackTrace();
 		}
-
 		if( ok ){
 			programObject = gl.glCreateProgramObjectARB();
 
@@ -337,8 +336,7 @@ public class Shader{
 
 			gl.glValidateProgramARB( programObject );
 
-			checkLogInfo( gl, programObject );
-
+			checkLogInfo( gl, "Program Validation >> ", programObject );
 		}else{
 			programObject = 0;
 		}
@@ -358,14 +356,16 @@ public class Shader{
 		return shaderWriter.getBuffer().toString();
 	}
 
-	private static void checkLogInfo( GL2 gl, int obj ){
+	private static void checkLogInfo( GL2 gl, String title, int obj ){
 		IntBuffer iVal = Buffers.newDirectIntBuffer( 1 );
 		gl.glGetObjectParameterivARB( obj, GL2.GL_OBJECT_INFO_LOG_LENGTH_ARB, iVal );
 
 		int length = iVal.get();
 
-		if( length <= 1 )
+		if( length <= 1 ){
+			System.out.println( title );
 			return;
+		}
 
 		ByteBuffer infoLog = Buffers.newDirectByteBuffer( length );
 
@@ -374,7 +374,7 @@ public class Shader{
 
 		byte[] infoBytes = new byte[length];
 		infoLog.get( infoBytes );
-		System.out.println( "GLSL Validation >> " + new String( infoBytes, 0, length - 1 ) );
+		System.out.println( title + new String( infoBytes, 0, length - 1 ) );
 	}
 
 	/**
@@ -385,6 +385,7 @@ public class Shader{
 	 */
 	public void addUniform( GL2 gl, String name, Object value ){
 		int id = gl.glGetUniformLocation( programObject, name );
+		System.err.println( "Program Id: " + programObject +" " + name+ " Id: " + id );
 		uniforms.put( name, Atributo.getAtributo( id, value ) );
 	}
 

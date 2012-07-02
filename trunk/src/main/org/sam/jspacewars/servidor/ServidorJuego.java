@@ -26,12 +26,17 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedByInterruptException;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.Pipe;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.Pipe.SinkChannel;
 import java.nio.channels.Pipe.SourceChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -228,7 +233,7 @@ public class ServidorJuego {
 	private transient SinkChannel localChannelServerOut;
 
 	private transient DatagramChannel remoteChannelInOut;
-
+	
 	private void initLocalChannel() throws IOException{
 		selector = Selector.open();
 
@@ -263,7 +268,6 @@ public class ServidorJuego {
 	private static final int TIME_STEP = 2000000; // 500 ciclos por segundo en nanos
 	
 	private void calcularAcciones(){
-
 		elementosOrdenados1_pos.clear();
 		for( Collection<Disparo> listaDisparo: listasDeDisparosProtagonistas )
 			for( Disparo d: listaDisparo )
@@ -288,6 +292,7 @@ public class ServidorJuego {
 		}
 	}
 	
+	
 	private long calcularAcciones( long nanos ){
 		int steps = (int)( ( nanos + TIME_STEP / 2 ) / TIME_STEP );
 		for( int i = 0; i < steps; i++ )
@@ -302,7 +307,22 @@ public class ServidorJuego {
 		return nanos - TIME_STEP * steps;
 	}
 
-	private void almacenarDatosNave( ByteBuffer buff, int vidas, int bombas, int puntos, NaveUsuario nave ){
+	
+	private static void read( ReadableByteChannel channelIn, ByteBuffer buff ) throws IOException{
+		try{
+			buff.clear();
+			channelIn.read( buff );
+			buff.flip();
+		}catch(	ClosedByInterruptException e){
+			e.printStackTrace();
+		}catch(	AsynchronousCloseException e){
+			e.printStackTrace();
+		}catch( ClosedChannelException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private static void almacenarDatosNave( ByteBuffer buff, int vidas, int bombas, int puntos, NaveUsuario nave ){
 		buff.putInt( vidas );
 		buff.putInt( bombas );
 		buff.putInt( puntos );
@@ -316,12 +336,39 @@ public class ServidorJuego {
 		buff.putInt( nave.getGradoNave() );
 	}
 
-	private void almacenarElementos( ByteBuffer buff ){
-		buff.putInt( elementosOrdenados_id.size() );
-		for( Elemento elemento: elementosOrdenados_id )
+	private static void almacenarElementos( ByteBuffer buff, Set<Elemento> elementos ){
+		buff.putInt( elementos.size() );
+		for( Elemento elemento: elementos )
 			elemento.enviar( buff );
 	}
+	
+	private static void almacenar( ByteBuffer buff, int vidas, int bombas, int puntos, NaveUsuario nave, Set<Elemento> elementos ){
+		buff.clear();
+		almacenarDatosNave( buff, vidas, bombas, puntos, nave );
+		almacenarElementos( buff, elementos );
+		buff.flip();
+	}
+	
+	private long atenderCliente( long tAnterior, ByteBuffer buffIn, ByteBuffer buffOut, NaveUsuario nave ){
+		nave.setKeyState( buffIn.getInt() );
+		long tActual = System.nanoTime();
+		long timeOffset = calcularAcciones( tActual - tAnterior );
+		almacenar( buffOut, 2, 1, 0, nave, elementosOrdenados_id );
+		return tActual - timeOffset;
+	}
 
+	private static void write( WritableByteChannel channelOut, ByteBuffer buff ) throws IOException{
+		try{
+			channelOut.write( buff );
+		}catch(	ClosedByInterruptException e){
+			e.printStackTrace();
+		}catch(	AsynchronousCloseException e){
+			e.printStackTrace();
+		}catch( ClosedChannelException e){
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Método encargado de atender a los clientes de la forma descirta en
 	 * la documentación de la clase.
@@ -333,81 +380,34 @@ public class ServidorJuego {
 		ByteBuffer buffOut = ByteBuffer.allocateDirect( TAM_DATAGRAMA );
 
 		long tActual = System.nanoTime();
-		long tAnterior = tActual;
 
-		if( nave2 == null ){ // La nave2 no se ha inciado porque solo hay un jugador
-			while( true ){
-				selector.select();
-				Set<SelectionKey> selectedKeys = selector.selectedKeys();
-				if( !selectedKeys.isEmpty() ){
-					selectedKeys.clear();
-					buffIn.clear();
-					localChannelServerIn.read( buffIn );
-					buffIn.flip();
-					nave1.setKeyState( buffIn.getInt() );
-
-					tActual = System.nanoTime();
-					long timeOffset = calcularAcciones( tActual - tAnterior );
-					tAnterior = tActual - timeOffset;
-
-					int vidas = 2;
-					int bombas = 1;
-					int puntos = 0;
-
-					buffOut.clear();
-					almacenarDatosNave( buffOut, vidas, bombas, puntos, nave1 );
-					almacenarElementos( buffOut );
-					buffOut.flip();
-
-					localChannelServerOut.write( buffOut );
-				}
-			}
-		}
+//		if( nave2 == null ){ // La nave2 no se ha inciado porque solo hay un jugador
+//			while( true ){
+//				selector.select();
+//				Set<SelectionKey> selectedKeys = selector.selectedKeys();
+//				if( !selectedKeys.isEmpty() ){
+//					selectedKeys.clear();
+//					read( localChannelServerIn, buffIn );
+//					tActual = atenderCliente( tActual, buffIn, buffOut, nave1 );
+//					write( localChannelServerOut, buffOut );
+//				}
+//			}
+//		}
 		while( true ){
 			selector.select();
 			Iterator<SelectionKey> it = selector.selectedKeys().iterator();
 			while( it.hasNext() ){
 				SelectionKey key = it.next();
 				if( key.channel() == localChannelServerIn ){
-					buffIn.clear();
-					localChannelServerIn.read( buffIn );
-					buffIn.flip();
-					nave1.setKeyState( buffIn.getInt() );
-
-					tActual = System.nanoTime();
-					long timeOffset = calcularAcciones( tActual - tAnterior );
-					tAnterior = tActual - timeOffset;
-
-					int vidas = 2;
-					int bombas = 1;
-					int puntos = 0;
-
-					buffOut.clear();
-					almacenarDatosNave( buffOut, vidas, bombas, puntos, nave1 );
-					almacenarElementos( buffOut );
-					buffOut.flip();
-
-					localChannelServerOut.write( buffOut );
+					read( localChannelServerIn, buffIn );
+					tActual = atenderCliente( tActual, buffIn, buffOut, nave1 );
+					write( localChannelServerOut, buffOut );
 				}else if( key.channel() == remoteChannelInOut ){
 					buffIn.clear();
 					SocketAddress sa = remoteChannelInOut.receive( buffIn );
 					if( sa != null ){
 						buffIn.flip();
-						nave2.setKeyState( buffIn.getInt() );
-
-						tActual = System.nanoTime();
-						long timeOffset = calcularAcciones( tActual - tAnterior );
-						tAnterior = tActual - timeOffset;
-
-						int vidas = 2;
-						int bombas = 1;
-						int puntos = 0;
-
-						buffOut.clear();
-						almacenarDatosNave( buffOut, vidas, bombas, puntos, nave2 );
-						almacenarElementos( buffOut );
-						buffOut.flip();
-
+						tActual = atenderCliente( tActual, buffIn, buffOut, nave2 );
 						remoteChannelInOut.send( buffOut, sa );
 					}
 				}

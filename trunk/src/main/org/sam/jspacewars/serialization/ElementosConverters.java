@@ -43,7 +43,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ElementosConverters {
 	
-private static class PoligonoConverter implements Converter {
+	private static class PoligonoConverter implements Converter {
 		
 		private static float getFloatAttribute( HierarchicalStreamReader reader, String att, float defecto ){
 			try{
@@ -89,24 +89,24 @@ private static class PoligonoConverter implements Converter {
 
 	public static void register(XStream xStream) {
 
-		InterpoladoresConverters.register(xStream);
+		InterpoladoresConverters.register( xStream );
 
-		xStream.useAttributeFor(Elemento.class, "type");
-		
-		xStream.alias("Poligono", Poligono.class);
-		xStream.registerConverter(new PoligonoConverter());
-		
-		xStream.alias("NaveUsuario", NaveUsuario.class);
-		xStream.alias("Canion", Canion.class);
-		xStream.alias("CanionLineal", CanionLineal.class);
-		xStream.alias("DisparoLineal", DisparoLineal.class);
-		xStream.alias("CanionInterpolado", CanionInterpolado.class);
-		xStream.alias("DisparoInterpolado", DisparoInterpolado.class);
-		xStream.alias("LanzaMisiles", LanzaMisiles.class);
-		xStream.alias("Misil", Misil.class);
-		xStream.alias("NaveEnemiga", NaveEnemiga.class);
-		
-		xStream.registerConverter(new Ignorado());
-		xStream.alias("Instancia3D", Ignorado.class);
+		xStream.useAttributeFor( Elemento.class, "type" );
+
+		xStream.alias( "Poligono", Poligono.class );
+		xStream.registerConverter( new PoligonoConverter() );
+
+		xStream.alias( "NaveUsuario", NaveUsuario.class );
+		xStream.alias( "Canion", Canion.class );
+		xStream.alias( "CanionLineal", CanionLineal.class );
+		xStream.alias( "DisparoLineal", DisparoLineal.class );
+		xStream.alias( "CanionInterpolado", CanionInterpolado.class );
+		xStream.alias( "DisparoInterpolado", DisparoInterpolado.class );
+		xStream.alias( "LanzaMisiles", LanzaMisiles.class );
+		xStream.alias( "Misil", Misil.class );
+		xStream.alias( "NaveEnemiga", NaveEnemiga.class );
+
+		xStream.registerConverter( new Ignorado() );
+		xStream.alias( "Instancia3D", Ignorado.class );
 	}
 }
