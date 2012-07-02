@@ -22,9 +22,11 @@
  */
 package org.sam.jspacewars.cliente;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.NonWritableChannelException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.ListIterator;
@@ -38,7 +40,7 @@ import org.sam.jspacewars.DataGame;
 public class Cliente extends Thread {
 
 	/**
-	 * Método estático que lee desde un {@code ByteBuffer} los datos que se reciben del
+	 * Método estático que interpreta desde un {@code ByteBuffer} los datos recibidos del
 	 * {@link org.sam.jspacewars.servidor.ServidorJuego  ServidorJuego} y los almacena en un objecto {@code ClientData}
 	 * para mostrarlo en pantalla a través de {@link org.sam.jspacewars.cliente.Renderer Renderer}.
 	 * 
@@ -47,7 +49,7 @@ public class Cliente extends Thread {
 	 * @param cache {@code Cache} desde donde se recuperarán los nuevos elementos necesarios,
 	 * o se almacenarán temporarlmente los elementos desechados.
 	 */
-	private static void recibir(ByteBuffer productor, ClientData consumidor, Cache<Instancia3D> cache) {
+	private static void interpretar( ByteBuffer productor, ClientData consumidor, Cache<Instancia3D> cache ){
 		consumidor.nBombas = productor.getInt();
 		consumidor.nVidas = productor.getInt();
 		consumidor.puntos = productor.getInt();
@@ -74,32 +76,32 @@ public class Cliente extends Thread {
 			Instancia3D almacenado = iConsumidor.next();
 
 			do{
-				if( almacenado.getType() < tipo || (almacenado.getType() == tipo && almacenado.getId() < id) ){
+				if( almacenado.getType() < tipo || ( almacenado.getType() == tipo && almacenado.getId() < id ) ){
 					if( almacenado.getModificador() != null )
-						consumidor.modificadores.remove(almacenado.getModificador());
-					cache.cached(almacenado);
+						consumidor.modificadores.remove( almacenado.getModificador() );
+					cache.cached( almacenado );
 					iConsumidor.remove();
 					if( !iConsumidor.hasNext() ){
-						Instancia3D nuevo = cache.newObject(tipo);
+						Instancia3D nuevo = cache.newObject( tipo );
 						if( nuevo.getModificador() != null )
-							consumidor.modificadores.add(nuevo.getModificador());
-						nuevo.setId(id);
-						nuevo.recibir(productor);
-						consumidor.elementos.add(nuevo);
+							consumidor.modificadores.add( nuevo.getModificador() );
+						nuevo.setId( id );
+						nuevo.recibir( productor );
+						consumidor.elementos.add( nuevo );
 						break;
 					}
 					almacenado = iConsumidor.next();
-				}else if( almacenado.getType() > tipo || (almacenado.getType() == tipo && almacenado.getId() > id) ){
-					Instancia3D nuevo = cache.newObject(tipo);
+				}else if( almacenado.getType() > tipo || ( almacenado.getType() == tipo && almacenado.getId() > id ) ){
+					Instancia3D nuevo = cache.newObject( tipo );
 					if( nuevo.getModificador() != null )
-						consumidor.modificadores.add(nuevo.getModificador());
-					nuevo.setId(id);
-					nuevo.recibir(productor);
-					iConsumidor.add(nuevo);
+						consumidor.modificadores.add( nuevo.getModificador() );
+					nuevo.setId( id );
+					nuevo.recibir( productor );
+					iConsumidor.add( nuevo );
 					if( i == nElementos ){
 						if( almacenado.getModificador() != null )
-							consumidor.modificadores.remove(almacenado.getModificador());
-						cache.cached(almacenado);
+							consumidor.modificadores.remove( almacenado.getModificador() );
+						cache.cached( almacenado );
 						iConsumidor.remove();
 						break;
 					}
@@ -107,7 +109,7 @@ public class Cliente extends Thread {
 					id = productor.getShort();
 					i++;
 				}else{
-					almacenado.recibir(productor);
+					almacenado.recibir( productor );
 					if( i == nElementos || !iConsumidor.hasNext() )
 						break;
 					tipo = productor.getShort();
@@ -120,23 +122,23 @@ public class Cliente extends Thread {
 		// Si se reciben mas elementos de los que hay, se crean.
 		while( i < nElementos ){
 			i++;
-			Instancia3D nuevo = cache.newObject(productor.getShort());
+			Instancia3D nuevo = cache.newObject( productor.getShort() );
 			if( nuevo.getModificador() != null )
-				consumidor.modificadores.add(nuevo.getModificador());
-			nuevo.setId(productor.getShort());
-			nuevo.recibir(productor);
-			consumidor.elementos.add(nuevo);
+				consumidor.modificadores.add( nuevo.getModificador() );
+			nuevo.setId( productor.getShort() );
+			nuevo.recibir( productor );
+			consumidor.elementos.add( nuevo );
 		}
 		// Si queda mas elementos de los que se reciben se eliminan
 		while( iConsumidor.hasNext() ){
 			Instancia3D viejo = iConsumidor.next();
-			cache.cached(viejo);
+			cache.cached( viejo );
 			if( viejo.getModificador() != null )
-				consumidor.modificadores.remove(viejo.getModificador());
+				consumidor.modificadores.remove( viejo.getModificador() );
 			iConsumidor.remove();
 		}
 		if( consumidor.elementos.size() != nElementos )
-			System.out.println("Error: " + nElementos + "\t" + consumidor.elementos.size());
+			System.out.println( "Error: " + nElementos + "\t" + consumidor.elementos.size() );
 	}
 
 	private transient ReadableByteChannel channelIn;
@@ -161,8 +163,6 @@ public class Cliente extends Thread {
 		this.data = new ClientData();
 		this.canvas = canvas;
 
-		this.canvas.setBackground( Color.BLACK );
-		this.canvas.setIgnoreRepaint( true );
 		this.canvas.addGLEventListener( new Renderer( dataGame.getFondo(), data, dataGame.getGui() ) );
 		this.canvas.addKeyListener( new GameKeyListener( data ) );
 	}
@@ -170,41 +170,51 @@ public class Cliente extends Thread {
 	/**
 	 * @param channelIn valor del channelIn asignado.
 	 */
-	public void setChannelIn(ReadableByteChannel channelIn) {
+	public void setChannelIn( ReadableByteChannel channelIn ){
 		this.channelIn = channelIn;
 	}
 
 	/**
 	 * @param channelOut valor del channelOut asignado.
 	 */
-	public void setChannelOut(WritableByteChannel channelOut) {
+	public void setChannelOut( WritableByteChannel channelOut ){
 		this.channelOut = channelOut;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void run() {
-//		System.out.println("Iniciando cliente");
+	public void run(){
+		//		System.out.println("Iniciando cliente");
 		while( true ){
-//			System.out.println("Enviando");
+			//			System.out.println("Enviando");
 			buff.clear();
-			buff.putInt(data.key_state);
+			buff.putInt( data.key_state );
 			buff.flip();
+
 			try{
-				channelOut.write(buff);
+				channelOut.write( buff );
+			}catch( AsynchronousCloseException e ){
+				e.printStackTrace();
+			}catch( ClosedChannelException e ){
+				e.printStackTrace();
 			}catch( IOException e ){
 				e.printStackTrace();
 			}
-//			System.out.println("Leyendo");
+			//			System.out.println("Leyendo");
 			buff.clear();
 			try{
-				channelIn.read(buff);
+				channelIn.read( buff );
+			}catch( AsynchronousCloseException e ){
+				e.printStackTrace();
+			}catch( ClosedChannelException e ){
+				e.printStackTrace();
 			}catch( IOException e ){
 				e.printStackTrace();
 			}
 			buff.flip();
-			recibir(buff, data, cache );
 			
+			interpretar( buff, data, cache );
+
 			canvas.display();
 		}
 	}

@@ -23,6 +23,7 @@
 package org.sam.jspacewars;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
@@ -70,29 +71,33 @@ public class ExampleGameMenuJOGL {
 	
 	private static Window getFullScreenFrame(){
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		Frame frame = new Frame(myDevice.getDefaultConfiguration());
-		frame.setUndecorated(true);
-		frame.setResizable(false);
+		
+		Frame frame = new Frame( myDevice.getDefaultConfiguration() );
+		frame.setBackground( Color.BLACK );
+		frame.setAlwaysOnTop( true );
+		frame.setUndecorated( true );
+//		frame.setIgnoreRepaint(true);
+		frame.setResizable( false );
 
 		if( myDevice.isFullScreenSupported() ){
-			myDevice.setFullScreenWindow(frame);
+			myDevice.setFullScreenWindow( frame );
 			if( myDevice.isDisplayChangeSupported() ){
 				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
 				/*
-				 currentDisplayMode = new DisplayMode(640, 400,
+				 currentDisplayMode = new DisplayMode(800, 600,
 				 currentDisplayMode.getBitDepth(),
 				 currentDisplayMode.getRefreshRate());
-				 */
+				 //*/
 				try{
-					myDevice.setDisplayMode(currentDisplayMode);
-					frame.setSize(currentDisplayMode.getWidth(), currentDisplayMode.getHeight());
+					myDevice.setDisplayMode( currentDisplayMode );
+					frame.setSize( currentDisplayMode.getWidth(), currentDisplayMode.getHeight() );
 				}catch( IllegalArgumentException e ){
-					System.err.println("Display Mode: not supported!!");
+					System.err.println( "Display Mode: not supported!!" );
 				}
 			}
 		}else{
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			frame.setBounds(0, 0, dim.width, dim.height);
+			frame.setBounds( 0, 0, dim.width, dim.height );
 		}
 		return frame;
 	}
@@ -125,9 +130,7 @@ public class ExampleGameMenuJOGL {
 	}
 	
 	public static void main( String[] args ){
-		//TODO Inicializar, y unir
-		final GLGUI displayGUI = new GLGUI();
-		
+
 		final ClientServer clientServer = new ClientServer();
 
 		final DataGame dataGame = new DataGame();
@@ -147,29 +150,28 @@ public class ExampleGameMenuJOGL {
 
 		final Animator animator = new Animator();
 		animator.setRunAsFastAsPossible( true );
-		//animator.setPrintExceptions( true );
+
 		splashWindow.waitForLoading();
 		splashWindow.setVisible( false );
 
 		final GLCanvas canvas = new GLCanvas( null, null, splashCanvas.getContext(), null );
-
-		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer( dataGame.getFondo() );
+		canvas.setBackground( Color.BLACK );
 		
-		Map<String, ButtonAction> actions = new Hashtable<String, ButtonAction>();
-
+		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer( dataGame.getFondo() );
 		canvas.addGLEventListener( backgroundRenderer );
 
 		splashWindow = null;
 		System.gc();
 
-		final Window frame = getFullScreenFrame();
+		final GLGUI displayGUI = new GLGUI();
+		Map<String, ButtonAction> actions = new Hashtable<String, ButtonAction>();
 
 		ButtonAction action = new ButtonAction( "player1" ){
 			public void run(){
 				try{
-					displayGUI.unbind( canvas );
 					animator.stop();
 					animator.remove( canvas );
+					displayGUI.unbind( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
 
 					clientServer.server = new ServidorJuego( cache );
@@ -198,9 +200,9 @@ public class ExampleGameMenuJOGL {
 		action = new ButtonAction( "server" ){
 			public void run(){
 				try{
-					displayGUI.unbind( canvas );
 					animator.stop();
 					animator.remove( canvas );
+					displayGUI.unbind( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
 
 					clientServer.server = new ServidorJuego( cache, getPort() );
@@ -230,10 +232,11 @@ public class ExampleGameMenuJOGL {
 		action = new ButtonAction( "client" ){
 			public void run(){
 				try{
-					displayGUI.unbind( canvas );
 					animator.stop();
 					animator.remove( canvas );
+					displayGUI.unbind( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
+					
 					DatagramChannel canalCliente = DatagramChannel.open();
 					canalCliente.connect( new InetSocketAddress( getHostName(), getPort() ) );
 					clientServer.cliente = new Cliente( dataGame, canvas );
@@ -246,12 +249,12 @@ public class ExampleGameMenuJOGL {
 			}
 		};
 		actions.put( action.getName(), action );
-
-		animator.add( canvas );
-		mostrar( frame, canvas );
-		
 		displayGUI.setContentPane( new GameMenu( actions ) );
 		displayGUI.bind( canvas );
+
+		animator.add( canvas );
+		
+		mostrar( getFullScreenFrame(), canvas );
 		animator.start();
 	}
 }

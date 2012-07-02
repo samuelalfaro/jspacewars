@@ -60,7 +60,6 @@ import org.sam.util.Reflexion;
 
 import com.thoughtworks.xstream.MarshallingStrategy;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.alias.ClassMapper;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.ConverterLookup;
 import com.thoughtworks.xstream.converters.DataHolder;
@@ -246,20 +245,6 @@ public final class GrafoEscenaConverters {
 				marshaller = new ReferenceByXPathMarshaller( writer, converterLookup, mapper, mode );
 			marshaller.start( obj, dataHolder );
 		}
-	    
-	    /**
-	     * @deprecated As of 1.2, use {@link #unmarshal(Object, HierarchicalStreamReader, DataHolder, ConverterLookup, Mapper)}
-	     */
-	    public Object unmarshal(Object root, HierarchicalStreamReader reader, DataHolder dataHolder, DefaultConverterLookup converterLookup, ClassMapper classMapper) {
-	        return unmarshal(root, reader, dataHolder, (ConverterLookup)converterLookup, (Mapper)classMapper);
-	    }
-
-	    /**
-	     * @deprecated As of 1.2, use {@link #marshal(HierarchicalStreamWriter, Object, ConverterLookup, Mapper, DataHolder)}
-	     */
-	    public void marshal(HierarchicalStreamWriter writer, Object obj, DefaultConverterLookup converterLookup, ClassMapper classMapper, DataHolder dataHolder) {
-	        marshal(writer, obj, converterLookup, (Mapper)classMapper, dataHolder);
-	    }
 	}
 	
 	private static class Utils{

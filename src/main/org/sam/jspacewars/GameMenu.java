@@ -51,7 +51,7 @@ public class GameMenu extends GLContainer {
 			actions.get( ( (GLButton)e.source ).getActionName() ).run();
 		}
 	}
-
+/*
 	public GameMenu( Map<String, ButtonAction> actions ){
 		
 		Locale locale = Locale.getDefault(); 
@@ -128,6 +128,31 @@ public class GameMenu extends GLContainer {
 		};
 		actions.put( action.getName(), action );
 		
+		buildMenu( mainMenu, 300, 50, 20 );
+	}
+	*/
+	
+	public GameMenu( Map<String, ButtonAction> actions ){
+		
+		Locale locale = Locale.getDefault(); 
+		ResourceBundle bundle = null; //ResourceBundle.getBundle("org.sam.gui.translations.messages", locale);
+		ResourceBundle basic = ResourceBundle.getBundle("com.sun.swing.internal.plaf.basic.resources.basic", locale);
+		
+		MyListener listener = new MyListener( actions );
+		
+		final GLComponent[] mainMenu = new GLComponent[] {
+				new GLButton( "player1", bundle, listener ),
+				new GLButton( "server", bundle, listener ),
+				new GLButton( "client", bundle, listener ),
+				new GLButton( "quit", bundle, listener )
+		};
+		
+		ButtonAction action = new ButtonAction( "quit" ){
+			public void run(){
+				System.exit( 0 );
+			}
+		};
+		actions.put( action.getName(), action );
 		buildMenu( mainMenu, 300, 50, 20 );
 	}
 
