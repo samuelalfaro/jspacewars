@@ -22,34 +22,35 @@
  */
 package org.sam.jspacewars.serialization;
 
+import org.sam.jogl.Instancia3D;
+
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+/**
+ * {@code Converter} que devuelve siempre null, para evitar cargar determinados
+ * datos.<br/>
+ * <u>Ejemplo:</u><pre><tt>
+ * 	xStream.registerConverter( new Ignorado() );
+ * 	xStream.alias( "datos_a_ignorar", Ignorado.class );
+ * 	xStream.alias( "otros_datos_a_ignorar", Ignorado.class );
+ * </tt></pre>
+ */
 public class Ignorado implements Converter {
 	
-//	private static String tabs ="";
-	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings( "rawtypes" )
 	public boolean canConvert( Class clazz ){
-		return Ignorado.class == clazz;
+		return Ignorado.class.isAssignableFrom( clazz );
 	}
 
 	public void marshal( Object value, HierarchicalStreamWriter writer, MarshallingContext context ){
 	}
 
-	public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-//		System.out.println(tabs+'<'+reader.getNodeName()+'>');
-		while( reader.hasMoreChildren() ){
-//			tabs = tabs.concat("   ");
-			reader.moveDown();
-			unmarshal( reader, context );
-			reader.moveUp();
-//			tabs = tabs.substring(0, tabs.length()-3);
-		}
-//		System.out.println(tabs+"</"+reader.getNodeName()+'>');
+	public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ){
+//		System.out.println( '<' + reader.getNodeName() + "/>" );
 		return null;
 	}
 }

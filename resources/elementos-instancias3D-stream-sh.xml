@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <object-stream>
-	<!-- 01 Nave Prota 1 -->
+	<!-- 01 Nave Prota 1 Texturas 1 -->
 	<NaveUsuario type="0x01">
 		<forma class="Poligono" nLados="14" scale="1.35">
 			<Punto2F x="-0.44" y="-0.13"/>
@@ -792,7 +792,7 @@
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
-	<!-- 03 Nave Prota 2 -->
+	<!-- 03 Nave Prota 2 Texturas 1 -->
 	<NaveUsuario type="0x03">
 		<forma class="Poligono" nLados="14" scale="1.0">
 			<Punto2F x="-0.49878934" y="-0.25544795"/>
@@ -1654,7 +1654,7 @@
 		</Grupo>
 		<axis x="1.0" y="0.0" z="0.0"></axis>
 	</Instancia3D>
-	<!-- 05 Nave Prota 3 -->
+	<!-- 05 Nave Prota 3 Texturas 1 -->
 	<NaveUsuario type="0x05">
 		<forma class="Poligono" nLados="16" scale="1.25">
 			<Punto2F x="-0.50121063" y="-0.041162226"/>
@@ -3606,7 +3606,6 @@
 			</Objeto3D>
 		</NodoCompartido>
 	</Instancia3D>
-	
 	<!-- 30 Disparos-->
 	<DisparoLineal type="0x88">
 		<forma class="Poligono" nLados="5" scaleX="0.333" scaleY="0.166">

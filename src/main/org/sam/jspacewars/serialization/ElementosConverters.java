@@ -43,8 +43,8 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class ElementosConverters {
 	
-	private static class PoligonoConverter implements Converter {
-		
+	private static class PoligonoConverter implements Converter{
+
 		private static float getFloatAttribute( HierarchicalStreamReader reader, String att, float defecto ){
 			try{
 				return Float.parseFloat( reader.getAttribute( att ) );
@@ -52,31 +52,32 @@ public class ElementosConverters {
 				return defecto;
 			}
 		}
-		
-		PoligonoConverter(){}
 
-		@SuppressWarnings("rawtypes")
-		public boolean canConvert(Class clazz) {
+		PoligonoConverter(){
+		}
+
+		@SuppressWarnings( "rawtypes" )
+		public boolean canConvert( Class clazz ){
 			return Poligono.class == clazz;
 		}
 
-		public void marshal(Object value, HierarchicalStreamWriter writer, MarshallingContext context) {
+		public void marshal( Object value, HierarchicalStreamWriter writer, MarshallingContext context ){
 		}
-		
-		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-			int nLados = Integer.parseInt(reader.getAttribute("nLados"));
-			float scale = getFloatAttribute(reader, "scale", 1.0f);
-			float scaleX = getFloatAttribute(reader, "scaleX", scale);
-			float scaleY = getFloatAttribute(reader, "scaleY", scale);
-			float offX  = getFloatAttribute(reader, "offX",  0.0f);
-			float offY  = getFloatAttribute(reader, "offY",  0.0f);
+
+		public Object unmarshal( HierarchicalStreamReader reader, UnmarshallingContext context ){
+			int nLados = Integer.parseInt( reader.getAttribute( "nLados" ) );
+			float scale = getFloatAttribute( reader, "scale", 1.0f );
+			float scaleX = getFloatAttribute( reader, "scaleX", scale );
+			float scaleY = getFloatAttribute( reader, "scaleY", scale );
+			float offX = getFloatAttribute( reader, "offX", 0.0f );
+			float offY = getFloatAttribute( reader, "offY", 0.0f );
 			float coordX[] = new float[nLados];
 			float coordY[] = new float[nLados];
 			int i = 0;
 			while( i < nLados && reader.hasMoreChildren() ){
 				reader.moveDown();
-				coordX[i] = Float.parseFloat(reader.getAttribute("x"))*scaleX + offX;
-				coordY[i] = Float.parseFloat(reader.getAttribute("y"))*scaleY + offY;
+				coordX[i] = Float.parseFloat( reader.getAttribute( "x" ) ) * scaleX + offX;
+				coordY[i] = Float.parseFloat( reader.getAttribute( "y" ) ) * scaleY + offY;
 				reader.moveUp();
 				i++;
 			}
@@ -87,7 +88,7 @@ public class ElementosConverters {
 	private ElementosConverters() {
 	}
 
-	public static void register(XStream xStream) {
+	public static void register( XStream xStream ){
 
 		InterpoladoresConverters.register( xStream );
 
