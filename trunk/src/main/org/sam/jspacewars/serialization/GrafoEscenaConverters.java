@@ -218,7 +218,7 @@ public final class GrafoEscenaConverters {
 				unmarshaller = new ReferenceByXPathUnmarshaller( root, reader, converterLookup, mapper ){
 					// TODO Mirar en futuras vesiones para quitar esta ñapa que adapta las referencias
 					protected Object getReferenceKey( String reference ){
-						//	    			System.out.println( reference );
+//						System.out.print( reference );
 						if( reference.startsWith( "/Instancia3D[" ) ){
 							String number = reference.substring( "/Instancia3D[".length(), reference.indexOf( ']' ) );
 							String resto = reference.substring( reference.indexOf( "]/" ) + 2 );
@@ -234,10 +234,15 @@ public final class GrafoEscenaConverters {
 							newReference.append( reference.substring( "/Instancia3D".length() ) );
 							reference = newReference.toString();
 						}
-						return super.getReferenceKey( reference );
+//						System.out.println( " -->\n\t" + reference );
+						Object obj =  super.getReferenceKey( reference );
+//						System.out.println( obj != null ? obj.getClass().getSimpleName() + ": " + obj : "null" );
+						return obj;
 					}
 				};
-			return unmarshaller.start( dataHolder );
+			Object obj = unmarshaller.start( dataHolder );
+//			System.out.println( obj != null ? obj.getClass().getSimpleName() + ": " + obj : "null" );
+			return obj;
 	    }
 
 		public void marshal( HierarchicalStreamWriter writer, Object obj, ConverterLookup converterLookup, Mapper mapper, DataHolder dataHolder ){

@@ -9,7 +9,7 @@ set CLASSPATH=%CLASSPATH%;lib/jogl.all.jar
 set CLASSPATH=%CLASSPATH%;lib/jorbis-0.0.15.jar
 set CLASSPATH=%CLASSPATH%;lib/nativewindow.all.jar
 set CLASSPATH=%CLASSPATH%;lib/newt.all.jar
-set CLASSPATH=%CLASSPATH%;lib/xstream-1.3.jar
+set CLASSPATH=%CLASSPATH%;lib/xstream-1.4.2.jar
 set CLASSPATH=%CLASSPATH%;bin
 @echo on
 java -Djava.library.path=./native/windows-i586 org.sam.jspacewars.ExampleGameMenuJOGL

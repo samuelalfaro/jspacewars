@@ -385,7 +385,7 @@ public class Shader{
 	 */
 	public void addUniform( GL2 gl, String name, Object value ){
 		int id = gl.glGetUniformLocation( programObject, name );
-		System.err.println( "Program Id: " + programObject +" " + name+ " Id: " + id );
+//		System.err.println( "Program Id: " + programObject +" " + name+ " Id: " + id );
 		uniforms.put( name, Atributo.getAtributo( id, value ) );
 	}
 

@@ -46,7 +46,6 @@ public class Loader {
 				Object o = in.readObject();
 				if (o != null){
 					Elemento e = (Elemento)o;
-//					System.out.println(e+" -->"+e.getLimites());
 					cache.addPrototipo(e);
 				}
 			}
@@ -59,10 +58,11 @@ public class Loader {
 
 	static public void loadData( String path, Cache<Elemento> cache ) throws FileNotFoundException, IOException{
 
-		Canion.setCache( cache );
 		XStream xStream = new XStream( new DomDriver() );
-
 		ElementosConverters.register( xStream );
+		
 		loadToCache( xStream.createObjectInputStream( new FileReader( path ) ), cache );
+		
+		Canion.setCache( cache );
 	}
 }
