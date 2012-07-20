@@ -24,6 +24,7 @@ package pruebas.jogl;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.LayoutManager2;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.EOFException;
@@ -154,8 +155,6 @@ public class Prueba060_Loader{
 			GL2 gl = drawable.getGL().getGL2();
 			glu = new GLU();
 			
-			UIManager.Init( gl );
-
 			gl.glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 			gl.glEnable( GL.GL_DEPTH_TEST );
 			gl.glDepthFunc( GL.GL_LESS );
@@ -173,7 +172,7 @@ public class Prueba060_Loader{
 				elementos.clear();
 			}
 
-			data.instancias[index].reset();
+			data.instancias[index].init();
 			
 			renderer = new GLTextRenderer();
 			renderer.setFont( TextUtils.getDefaultFont( gl ) );
@@ -392,7 +391,6 @@ public class Prueba060_Loader{
 				if( !mostrarSilueta )
 					mostrarForma = true;
 				break;
-				
 			}
 		}
 
@@ -442,21 +440,22 @@ public class Prueba060_Loader{
 		frame.setLocationRelativeTo( null );
 		frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 
-		GLCanvas canvasLoader = new GLCanvas( new GLCapabilities( GLProfile.get( GLProfile.GL2 ) ) );
+		GLCanvas canvas = new GLCanvas( new GLCapabilities( GLProfile.get( GLProfile.GL2 ) ) );
 		Loader.Data data = new Loader.Data();
 		ModificableBoolean loading = new ModificableBoolean( true );
-		canvasLoader.addGLEventListener( new Loader( data, loading ) );
+		GLEventListener loader = new Loader( data, loading );
+		canvas.addGLEventListener( loader );
 
 		frame.getContentPane().setLayout( null );
 		frame.getContentPane().setBackground( Color.BLACK );
-		frame.getContentPane().add( canvasLoader );
+		frame.getContentPane().add( canvas );
 
 		Animator animator = new Animator();
-		// animator.setRunAsFastAsPossible(true);
-		animator.add( canvasLoader );
+		//animator.setRunAsFastAsPossible(true);
+		animator.add( canvas );
 
 		frame.setVisible( true );
-		canvasLoader.setBounds( ( frame.getContentPane().getWidth() - 400 ) / 2,
+		canvas.setBounds( ( frame.getContentPane().getWidth() - 400 ) / 2,
 				frame.getContentPane().getHeight() - 40, 400, 20 );
 
 		animator.start();
@@ -470,8 +469,8 @@ public class Prueba060_Loader{
 				}
 			}
 		}
-
-		GLCanvas canvas = new GLCanvas( null, null, data.context, null );
+		animator.stop();
+		canvas.removeGLEventListener( loader );
 
 		OrbitBehavior orbitBehavior = new OrbitBehavior();
 		orbitBehavior.setEyePos( 0.0f, 0.0f, 4.0f );
@@ -480,21 +479,13 @@ public class Prueba060_Loader{
 		Renderer renderer = new Renderer( data, elementos, orbitBehavior );
 		canvas.addGLEventListener( renderer );
 		canvas.addKeyListener( renderer );
-
-		animator.add( canvas );
-
-		frame.getContentPane().setLayout( new BorderLayout() );
-		frame.getContentPane().add( canvas, BorderLayout.CENTER );
-		frame.validate();
-
-		animator.remove( canvasLoader );
-		// Se muestra por lo menos una vez el canvas antes de quitar el canvasLoader para que no
-		// se liberen las texturas de memoria, al eliminarlo.
-		canvas.display();
-		frame.getContentPane().remove( canvasLoader );
-		// Se añade despues el canvas al animator, para evitar dos llamadas simultaneas al
-		// metodo display()
-		animator.add( canvas );
+		
+		BorderLayout layout = new BorderLayout();
+		layout.addLayoutComponent(canvas, BorderLayout.CENTER);
+		frame.getContentPane().setLayout( layout );
+		
+		animator.start();
 		canvas.requestFocusInWindow();
+		frame.validate();
 	}
 }

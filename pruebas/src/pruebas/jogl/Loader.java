@@ -133,7 +133,6 @@ public class Loader implements GLEventListener{
 	public void display( GLAutoDrawable drawable ){
 		GL2 gl = drawable.getGL().getGL2();
 		if( ciclo == 0 ){
-
 		}else if( data.apFondo == null ){
 			BufferedImage img = Imagen.cargarToBufferedImage( Properties.fondo );
 			data.apFondo = new Apariencia();
@@ -145,7 +144,7 @@ public class Loader implements GLEventListener{
 			try{
 				if( in == null ){
 					XStream xStream = new XStream( new DomDriver() );
-					xStream.setMode( XStream.XPATH_RELATIVE_REFERENCES );
+					xStream.setMode( XStream.XPATH_ABSOLUTE_REFERENCES );
 					GrafoEscenaConverters.register( xStream, true );
 
 					xStream.registerConverter( new Ignorado() );
@@ -157,6 +156,21 @@ public class Loader implements GLEventListener{
 
 					intanciasCollection = new LinkedList<Instancia3D>();
 					in = xStream.createObjectInputStream( new FileReader( Properties.instancias ) );
+					
+//					XStream xStream = new XStream( new DomDriver() );
+//					xStream.setMode( XStream.XPATH_ABSOLUTE_REFERENCES );
+//					GrafoEscenaConverters.register( xStream, true );
+//
+//					xStream.registerConverter( new Ignorado() );
+//					xStream.alias( "NaveUsuario", Ignorado.class );
+//					xStream.alias( "DisparoLineal", Ignorado.class );
+//					xStream.alias( "DisparoInterpolado", Ignorado.class );
+//					xStream.alias( "Misil", Ignorado.class );
+//					xStream.alias( "NaveEnemiga", Ignorado.class );
+//
+//					in = xStream.createObjectInputStream(
+//							new FileReader( "resources/elementos-instancias3D-stream-sh.xml" )
+//					);
 				}
 				if( !eof )
 					try{
