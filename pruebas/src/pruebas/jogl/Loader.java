@@ -24,14 +24,13 @@ package pruebas.jogl;
 
 import java.awt.image.BufferedImage;
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -59,20 +58,29 @@ public class Loader implements GLEventListener{
 
 	private static class Properties{
 		
-		private Properties(){}
+		static final String fondo;
+		static final String instancias;
 
-		private static final ResourceBundle BUNDLE = ResourceBundle.getBundle( "Loader" );
-
-		private static String getProperty( String key ){
+		static{
+			java.util.Properties properties = new java.util.Properties();
 			try{
-				return BUNDLE.getString( key );
-			}catch( MissingResourceException e ){
-				return '!' + key + '!';
+				String path =  Properties.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+				properties.load( new FileReader( new File( path, "Loader.properties" ) ) );
+			}catch( Exception e ){
+				System.err.println( "Defautls" );
+				properties = null;
+			}
+			
+			if ( properties != null ){
+				fondo = properties.getProperty( "Paths.fondo" );
+				instancias = properties.getProperty( "Paths.instancias" );
+			}else{
+				fondo = "resources/texturas/cielo512.jpg";
+				instancias = "resources/elementos-instancias3D-stream-sh.xml";
 			}
 		}
-
-		static final String fondo = getProperty( "Paths.fondo" );
-		static final String instancias = getProperty( "Paths.instancias" );
+		
+		private Properties(){}
 	}
 
 	public static class Data{
