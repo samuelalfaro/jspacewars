@@ -26,7 +26,7 @@ public class TrackerStreamer {
 			al = ALFactory.getAL();
 			al.alGetError();
 		}catch( ALException e ){
-			System.err.println("Error initializing OpenAL");
+			System.err.println( "Error initializing OpenAL" );
 			e.printStackTrace();
 		}
 	}
@@ -34,9 +34,9 @@ public class TrackerStreamer {
 	private static boolean debug = false;
 	private static int totalBytes = 0;
 
-	private static void debugMsg(String str) {
+	private static void debugMsg( String str ){
 		if( debug )
-			System.err.println(str);
+			System.err.println( str );
 	}
 
 	private TrackerInputStream data_input_stream;
@@ -67,7 +67,7 @@ public class TrackerStreamer {
 	 * Open the Ogg/Vorbis stream and initialize OpenAL based on the stream
 	 * properties
 	 */
-	public boolean open() {
+	public boolean open(){
 
 		try{
 			data_input_stream = new TrackerInputStream( new FileInputStream( "resources/sounds/side_effects.mod" ) );
@@ -92,19 +92,19 @@ public class TrackerStreamer {
 				format = ALConstants.AL_FORMAT_STEREO8;
 		}
 
-		rate = (int) audioFormat.getSampleRate();
+		rate = (int)audioFormat.getSampleRate();
 
-		al.alGenBuffers(NUM_BUFFERS, buffers, 0);
+		al.alGenBuffers( NUM_BUFFERS, buffers, 0 );
 		check();
-		al.alGenSources(1, source, 0);
+		al.alGenSources( 1, source, 0 );
 		check();
 
-		al.alSourcefv(source[0], ALConstants.AL_POSITION, sourcePos, 0);
-		al.alSourcefv(source[0], ALConstants.AL_VELOCITY, sourceVel, 0);
-		al.alSourcefv(source[0], ALConstants.AL_DIRECTION, sourceDir, 0);
+		al.alSourcefv( source[0], ALConstants.AL_POSITION, sourcePos, 0 );
+		al.alSourcefv( source[0], ALConstants.AL_VELOCITY, sourceVel, 0 );
+		al.alSourcefv( source[0], ALConstants.AL_DIRECTION, sourceDir, 0 );
 
-		al.alSourcef(source[0], ALConstants.AL_ROLLOFF_FACTOR, 0.0f);
-		al.alSourcei(source[0], ALConstants.AL_SOURCE_RELATIVE, ALConstants.AL_TRUE);
+		al.alSourcef( source[0], ALConstants.AL_ROLLOFF_FACTOR, 0.0f );
+		al.alSourcei( source[0], ALConstants.AL_SOURCE_RELATIVE, ALConstants.AL_TRUE );
 
 		return true;
 	}
@@ -112,12 +112,12 @@ public class TrackerStreamer {
 	/**
 	 * OpenAL cleanup
 	 */
-	public void release() {
-		al.alSourceStop(source[0]);
+	public void release(){
+		al.alSourceStop( source[0] );
 		empty();
 
 		for( int i = 0; i < NUM_BUFFERS; i++ ){
-			al.alDeleteSources(i, source, 0);
+			al.alDeleteSources( i, source, 0 );
 			check();
 		}
 	}
@@ -125,19 +125,19 @@ public class TrackerStreamer {
 	/**
 	 * Play the Ogg stream
 	 */
-	public boolean playback() {
+	public boolean playback(){
 		if( playing() )
 			return true;
 
-		debugMsg("playback(): stream all buffers");
+		debugMsg( "playback(): stream all buffers" );
 		for( int i = 0; i < NUM_BUFFERS; i++ ){
-			if( !stream(buffers[i]) )
+			if( !stream( buffers[i] ) )
 				return false;
 		}
 
-		debugMsg("playback(): queue all buffers & play source");
-		al.alSourceQueueBuffers(source[0], NUM_BUFFERS, buffers, 0);
-		al.alSourcePlay(source[0]);
+		debugMsg( "playback(): queue all buffers & play source" );
+		al.alSourceQueueBuffers( source[0], NUM_BUFFERS, buffers, 0 );
+		al.alSourcePlay( source[0] );
 
 		return true;
 	}
@@ -145,35 +145,35 @@ public class TrackerStreamer {
 	/**
 	 * Check if the source is playing
 	 */
-	public boolean playing() {
+	public boolean playing(){
 		int[] state = new int[1];
 
-		al.alGetSourcei(source[0], ALConstants.AL_SOURCE_STATE, state, 0);
+		al.alGetSourcei( source[0], ALConstants.AL_SOURCE_STATE, state, 0 );
 
-		return (state[0] == ALConstants.AL_PLAYING);
+		return( state[0] == ALConstants.AL_PLAYING );
 	}
 
 	/**
 	 * Update the stream if necessary
 	 */
-	public boolean update() {
+	public boolean update(){
 		int[] processed = new int[1];
 		boolean active = true;
 
-		debugMsg("update()");
-		al.alGetSourcei(source[0], ALConstants.AL_BUFFERS_PROCESSED, processed, 0);
+		debugMsg( "update()" );
+		al.alGetSourcei( source[0], ALConstants.AL_BUFFERS_PROCESSED, processed, 0 );
 
 		while( processed[0] > 0 ){
 			int[] buffer = new int[1];
 
-			al.alSourceUnqueueBuffers(source[0], 1, buffer, 0);
+			al.alSourceUnqueueBuffers( source[0], 1, buffer, 0 );
 			check();
-			debugMsg("update(): buffer unqueued => " + buffer[0]);
+			debugMsg( "update(): buffer unqueued => " + buffer[0] );
 
-			active = stream(buffer[0]);
+			active = stream( buffer[0] );
 
-			debugMsg("update(): buffer queued => " + buffer[0]);
-			al.alSourceQueueBuffers(source[0], 1, buffer, 0);
+			debugMsg( "update(): buffer queued => " + buffer[0] );
+			al.alSourceQueueBuffers( source[0], 1, buffer, 0 );
 			check();
 
 			processed[0]--;
@@ -185,7 +185,7 @@ public class TrackerStreamer {
 	/**
 	 * Reloads a buffer (reads in the next chunk)
 	 */
-	public boolean stream(int buffer) {
+	public boolean stream( int buffer ){
 		byte[] pcm = new byte[BUFFER_SIZE];
 		int size = 0;
 
@@ -210,12 +210,12 @@ public class TrackerStreamer {
 	/**
 	 * Empties the queue
 	 */
-	protected void empty() {
+	protected void empty(){
 		int[] queued = new int[1];
-		al.alGetSourcei(source[0], ALConstants.AL_BUFFERS_QUEUED, queued, 0);
+		al.alGetSourcei( source[0], ALConstants.AL_BUFFERS_QUEUED, queued, 0 );
 		while( queued[0] > 0 ){
 			int[] buffer = new int[1];
-			al.alSourceUnqueueBuffers(source[0], 1, buffer, 0);
+			al.alSourceUnqueueBuffers( source[0], 1, buffer, 0 );
 			check();
 			queued[0]--;
 		}
@@ -225,15 +225,15 @@ public class TrackerStreamer {
 	/**
 	 * Check for OpenAL errors...
 	 */
-	protected void check() {
+	protected void check(){
 		if( al.alGetError() != ALConstants.AL_NO_ERROR )
-			throw new ALException("OpenAL error raised...");
+			throw new ALException( "OpenAL error raised..." );
 	}
 
 	/**
 	 * The main loop to initialize and play the entire stream
 	 */
-	public boolean playstream() {
+	public boolean playstream(){
 		if( !open() )
 			return false;
 		// data_input_stream.dump();
@@ -244,7 +244,7 @@ public class TrackerStreamer {
 			// We will try sleeping for sometime so that we dont
 			// peg the CPU...
 			try{
-				Thread.sleep(sleepTime);
+				Thread.sleep( sleepTime );
 			}catch( Exception e ){
 				e.printStackTrace();
 			}
@@ -260,39 +260,39 @@ public class TrackerStreamer {
 	 * @param args
 	 *            the command line arguments
 	 */
-	public static void main(String[] args) {
+	public static void main( String[] args ){
 		if( al == null )
 			return;
 
 		try{
 			boolean played = false;
 			for( int i = 0; i < args.length; i++ ){
-				if( "-bs".equals(args[i]) ){
-					BUFFER_SIZE = Integer.valueOf(args[++i]).intValue();
+				if( "-bs".equals( args[i] ) ){
+					BUFFER_SIZE = Integer.valueOf( args[++i] ).intValue();
 					continue;
 				}
-				if( "-nb".equals(args[i]) ){
-					NUM_BUFFERS = Integer.valueOf(args[++i]).intValue();
+				if( "-nb".equals( args[i] ) ){
+					NUM_BUFFERS = Integer.valueOf( args[++i] ).intValue();
 					continue;
 				}
-				if( "-d".equals(args[i]) ){
+				if( "-d".equals( args[i] ) ){
 					debug = true;
 					continue;
 				}
-				System.err.println("Playing Ogg stream : " + args[i]);
+				System.err.println( "Playing Ogg stream : " + args[i] );
 
-				if( (new TrackerStreamer()).playstream() )
+				if( ( new TrackerStreamer() ).playstream() )
 					continue;
 
 				played = true;
-				System.err.println("ERROR!!");
+				System.err.println( "ERROR!!" );
 			}
 			if( !played ){
-				(new TrackerStreamer()).playstream();
+				( new TrackerStreamer() ).playstream();
 			}
 		}catch( Exception e ){
 			e.printStackTrace();
 		}
-		System.exit(0);
+		System.exit( 0 );
 	}
 }
