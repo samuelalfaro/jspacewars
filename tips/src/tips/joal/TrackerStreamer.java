@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import javax.sound.sampled.AudioFormat;
 
@@ -71,7 +70,8 @@ public class TrackerStreamer {
 	public boolean open() {
 
 		try{
-			data_input_stream = new TrackerInputStream(new FileInputStream("resources/sounds/side_effects.mod"), ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN);
+			data_input_stream = new TrackerInputStream( new FileInputStream( "resources/sounds/side_effects.mod" ) );
+			//data_input_stream = new OggInputStream( new FileInputStream( "resources/sounds/delinquentes.ogg" ) );
 		}catch( FileNotFoundException e ){
 			e.printStackTrace();
 		}catch( IOException e ){
@@ -190,7 +190,7 @@ public class TrackerStreamer {
 		int size = 0;
 
 		try{
-			if( (size = data_input_stream.read(pcm)) <= 0 )
+			if( ( size = data_input_stream.read( pcm ) ) <= 0 )
 				return false;
 		}catch( Exception e ){
 			e.printStackTrace();
@@ -198,11 +198,10 @@ public class TrackerStreamer {
 		}
 
 		totalBytes += size;
-		debugMsg("stream(): buffer data => " + buffer + " totalBytes:" + totalBytes);
+		debugMsg( "stream(): buffer data => " + buffer + " totalBytes:" + totalBytes );
 
-		ByteBuffer data = ByteBuffer.wrap(pcm, 0, size);
-		// al.alBufferi(ALConstants., arg1, arg2)
-		al.alBufferData(buffer, format, data, size, rate);
+		ByteBuffer data = ByteBuffer.wrap( pcm, 0, size );
+		al.alBufferData( buffer, format, data, size, rate );
 		check();
 
 		return true;
