@@ -70,8 +70,7 @@ public class TrackerStreamer {
 	public boolean open(){
 
 		try{
-			data_input_stream = new TrackerInputStream( new FileInputStream( "resources/sounds/side_effects.mod" ) );
-			//data_input_stream = new OggInputStream( new FileInputStream( "resources/sounds/delinquentes.ogg" ) );
+			data_input_stream = new TrackerInputStream( new FileInputStream( "resources/sounds/snow.xm" ) );
 		}catch( FileNotFoundException e ){
 			e.printStackTrace();
 		}catch( IOException e ){
@@ -182,11 +181,14 @@ public class TrackerStreamer {
 		return active;
 	}
 
+	byte[] pcm = new byte[BUFFER_SIZE];
+	ByteBuffer data = ByteBuffer.wrap( pcm, 0, BUFFER_SIZE );
+	
 	/**
 	 * Reloads a buffer (reads in the next chunk)
 	 */
 	public boolean stream( int buffer ){
-		byte[] pcm = new byte[BUFFER_SIZE];
+		
 		int size = 0;
 
 		try{
@@ -196,11 +198,10 @@ public class TrackerStreamer {
 			e.printStackTrace();
 			return false;
 		}
-
+		data.rewind();
 		totalBytes += size;
 		debugMsg( "stream(): buffer data => " + buffer + " totalBytes:" + totalBytes );
 
-		ByteBuffer data = ByteBuffer.wrap( pcm, 0, size );
 		al.alBufferData( buffer, format, data, size, rate );
 		check();
 

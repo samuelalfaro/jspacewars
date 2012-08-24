@@ -154,6 +154,7 @@ public class OggStreamer {
 		return (state[0] == ALConstants.AL_PLAYING);
 	}
 
+	
 	/**
 	 * Update the stream if necessary
 	 */
@@ -182,12 +183,15 @@ public class OggStreamer {
 
 		return active;
 	}
+	
+	byte[] pcm = new byte[BUFFER_SIZE];
+	ByteBuffer data = ByteBuffer.wrap( pcm, 0, BUFFER_SIZE );
 
 	/**
 	 * Reloads a buffer (reads in the next chunk)
 	 */
 	public boolean stream(int buffer) {
-		byte[] pcm = new byte[BUFFER_SIZE];
+		//byte[] pcm = new byte[BUFFER_SIZE];
 		int size = 0;
 
 		try{
@@ -201,7 +205,8 @@ public class OggStreamer {
 		totalBytes += size;
 		debugMsg("stream(): buffer data => " + buffer + " totalBytes:" + totalBytes);
 
-		ByteBuffer data = ByteBuffer.wrap(pcm, 0, size);
+		//ByteBuffer data = ByteBuffer.wrap(pcm, 0, size);
+		data.rewind();
 		al.alBufferData(buffer, format, data, size, rate);
 		check();
 
