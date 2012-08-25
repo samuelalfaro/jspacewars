@@ -22,70 +22,73 @@
  */
 package org.sam.util.sound;
 
-import java.io.*;
-import javax.sound.midi.*;
-import javax.sound.sampled.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
-/**
- * 
- *
- */
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequencer;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 public class Sounds{
-	private static final long serialVersionUID = 1L;
 
-	public static void playMidi(String fileName){
+	public static void playMidi( String fileName ){
 		try{
 			//MidiFileFormat mff2=MidiSystem.getMidiFileFormat(f2);
 			Sequencer sequencer = MidiSystem.getSequencer();
 			sequencer.open();
-			sequencer.setSequence(MidiSystem.getSequence(new File(fileName)));
-			sequencer.setLoopCount(Clip.LOOP_CONTINUOUSLY);
+			sequencer.setSequence( MidiSystem.getSequence( new File( fileName ) ) );
+			sequencer.setLoopCount( Clip.LOOP_CONTINUOUSLY );
 			sequencer.start();
-		}catch(MidiUnavailableException e){
+		}catch( MidiUnavailableException e ){
 			e.printStackTrace();
-		}catch(InvalidMidiDataException e){
+		}catch( InvalidMidiDataException e ){
 			e.printStackTrace();
-		}catch(IOException e){
+		}catch( IOException e ){
 			e.printStackTrace();
 		}
 	}
 
-	static void play(final InputStream data_input_stream, AudioFormat output_format) throws LineUnavailableException{
-	//		final SourceDataLine output_line = AudioSystem.getSourceDataLine(output_format);
-			final SourceDataLine output_line = (SourceDataLine) AudioSystem.getLine(new DataLine.Info(SourceDataLine.class, output_format));
-			output_line.open();
+	private static void play( final InputStream data_input_stream, AudioFormat output_format ) throws LineUnavailableException{
+		final SourceDataLine output_line = (SourceDataLine)AudioSystem.getLine( 
+				new DataLine.Info( SourceDataLine.class, output_format )
+		);
+		output_line.open();
 	
-			// Reproduccion
-	//		new Thread(){
-	//			public void run(){
-					output_line.start();
-					int tBuff = 4<<10; 
-					byte[] output_buffer = new byte[ tBuff ];
-					try {
-						while( data_input_stream.available() > 0 ) {
-							int read = data_input_stream.read(output_buffer, 0, tBuff);
-							output_line.write( output_buffer, 0, read );
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					output_line.drain();
-					output_line.close();
-	//			}
-	//		}.start();
+		// Reproduccion
+//		new Thread(){
+//			public void run(){
+		output_line.start();
+		int tBuff = 4 << 10;
+		byte[] output_buffer = new byte[tBuff];
+		try{
+			while( data_input_stream.available() > 0 ){
+				int read = data_input_stream.read( output_buffer, 0, tBuff );
+				output_line.write( output_buffer, 0, read );
+			}
+		}catch( IOException e ){
+			e.printStackTrace();
 		}
+		output_line.drain();
+		output_line.close();
+//			}
+//		}.start();
+	}
 
 	public static void playWav(String fileName){
 		try{
-			File sf = new File(fileName);
-			play(AudioSystem.getAudioInputStream(sf), AudioSystem.getAudioFileFormat(sf).getFormat());
-			/*int bufferSize = (int)( ais.getFrameLength() * output_format.getFrameSize());
-			DataLine.Info info = new DataLine.Info( Clip.class, ais.getFormat(), bufferSize);
-			Clip ol = (Clip)AudioSystem.getLine(info);
-			ol.open(ais);
-			ol.loop(Clip.LOOP_CONTINUOUSLY);
-			System.out.println("reprodución empezada, apretar CTRL-C para interrumpir");
-			*/
+			File sf = new File( fileName );
+			play( AudioSystem.getAudioInputStream( sf ), AudioSystem.getAudioFileFormat( sf ).getFormat() );
 		}catch(UnsupportedAudioFileException e){
 			e.printStackTrace();
 		}catch(IOException e){
@@ -96,49 +99,49 @@ public class Sounds{
 	}
 	
 	public static void playTracker( String filename ){
-		try {
-			TrackerInputStream data_input_stream = new TrackerInputStream( new FileInputStream( filename ));
-			play(data_input_stream, data_input_stream.getAudioFormat());
-		} catch (FileNotFoundException e) {
+		try{
+			TrackerInputStream data_input_stream = new TrackerInputStream( new FileInputStream( filename ) );
+			play( data_input_stream, data_input_stream.getAudioFormat() );
+		}catch( FileNotFoundException e ){
 			e.printStackTrace();
-		} catch (IOException e) {
+		}catch( IOException e ){
 			e.printStackTrace();
-		} catch (LineUnavailableException e) {
+		}catch( LineUnavailableException e ){
 			e.printStackTrace();
 		}
 	}
 
 	public static void playVorbisOgg( String filename ){
-		try {
-			OggInputStream data_input_stream = new OggInputStream( new FileInputStream( filename ));
-			play(data_input_stream, data_input_stream.getAudioFormat());
-		} catch (FileNotFoundException e) {
+		try{
+			OggInputStream data_input_stream = new OggInputStream( new FileInputStream( filename ) );
+			play( data_input_stream, data_input_stream.getAudioFormat() );
+		}catch( FileNotFoundException e ){
 			e.printStackTrace();
-		} catch (IOException e) {
+		}catch( IOException e ){
 			e.printStackTrace();
-		} catch (LineUnavailableException e) {
+		}catch( LineUnavailableException e ){
 			e.printStackTrace();
 		}
 	}
 
-	public static void play(String filename){
+	public static void play( String filename ){
 		String filenameUpperCase = filename.toUpperCase();
-		if(filenameUpperCase.endsWith(".MID") || filenameUpperCase.endsWith(".MIDI") )
-			playMidi(filename);
-		else if ( filenameUpperCase.endsWith(".WAV") )
-			playWav(filename);
-		else if ( filenameUpperCase.endsWith(".OGG") )
-			playVorbisOgg(filename);
+		if( filenameUpperCase.endsWith( ".MID" ) || filenameUpperCase.endsWith( ".MIDI" ) )
+			playMidi( filename );
+		else if( filenameUpperCase.endsWith( ".WAV" ) )
+			playWav( filename );
+		else if( filenameUpperCase.endsWith( ".OGG" ) )
+			playVorbisOgg( filename );
 		else if ( filenameUpperCase.endsWith(".MOD") || filenameUpperCase.endsWith(".S3M") || filenameUpperCase.endsWith(".XM"))
-			playTracker(filename);
+			playTracker( filename );
 	}
 	
 	public static void main(String arrgs[]){
-//		play("resources/sounds/midis/AC-DC_-_Thunderstruck.mid");
-//		play("resources/sounds/Riff.wav");
-//		play("resources/sounds/delinquentes.ogg");
-		play("resources/sounds/nstalgia.s3m");
-		play("resources/sounds/snow.xm");
-		play("resources/sounds/side_effects.mod");
+//		play( "resources/sounds/midis/AC-DC_-_Thunderstruck.mid" );
+//		play( "resources/sounds/Riff.wav" );
+//		play( "resources/sounds/delinquentes.ogg" );
+		play( "resources/sounds/nstalgia.s3m" );
+		play( "resources/sounds/snow.xm" );
+		play( "resources/sounds/side_effects.mod" );
 	}
 }

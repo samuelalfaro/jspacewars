@@ -138,7 +138,10 @@ public class Cliente extends Thread {
 			iConsumidor.remove();
 		}
 		if( consumidor.elementos.size() != nElementos )
-			System.out.println( "Error: " + nElementos + "\t" + consumidor.elementos.size() );
+			System.err.println(
+				"Error recibiendo datos\n" +
+				"\t[" + Cliente.class.getName() +"]\n" +
+				"\tSe esperaban " + nElementos + " elementos y se han recibido " + consumidor.elementos.size() + "." );
 	}
 
 	private transient ReadableByteChannel channelIn;

@@ -33,7 +33,6 @@
 package org.sam.util.sound;
 
 import java.io.*;
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import javax.sound.sampled.AudioFormat;
@@ -55,7 +54,7 @@ import com.jcraft.jorbis.*;
  * data directly into a native buffer.
  */
 public class OggInputStream extends FilterInputStream {
-	public static final String INVALID_OGG_MESSAGE="Input does not appear to be an Ogg bitstream.";
+	public static final String INVALID_OGG_MESSAGE = "Input does not appear to be an Ogg bitstream.";
 	private static final boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
 	
 	/** The mono 16 bit format */
@@ -116,12 +115,12 @@ public class OggInputStream extends FilterInputStream {
 	/**
 	 * Creates an OggInputStream that decompressed the specified ogg file.
 	 */
-	public OggInputStream(InputStream input) throws IOException{
-		super(input);
-		try {
+	public OggInputStream( InputStream input ) throws IOException{
+		super( input );
+		try{
 			initVorbis();
 			_index = new int[info.channels];
-		} catch (IOException e) {
+		}catch( IOException e ){
 			eos = true;
 			throw e;
 		}
@@ -134,72 +133,45 @@ public class OggInputStream extends FilterInputStream {
 	/**
 	 * Gets the format of the ogg file. Is either FORMAT_MONO16 or FORMAT_STEREO16
 	 */
-	public int getFormat() {
-		if (info.channels == 1) {
+	public int getFormat(){
+		if( info.channels == 1 ){
 			return FORMAT_MONO16;
-		} 
-		return FORMAT_STEREO16;        
+		}
+		return FORMAT_STEREO16;
 	}
 
 	/**
 	 * Gets the rate of the pcm audio.
 	 */
-	public int getRate() {
+	public int getRate(){
 		return info.rate;
 	}
 
 	/* (non-Javadoc)
 	 * @see java.io.FilterInputStream#read()
 	 */
-	public int read() throws IOException {
-		int retVal = read(readDummy, 0, 1);
-		return (retVal == -1 ? -1 : readDummy[0]);
+	public int read() throws IOException{
+		int retVal = read( readDummy, 0, 1 );
+		return( retVal == -1 ? -1: readDummy[0] );
 	}
 
 	/* (non-Javadoc)
 	 * @see java.io.FilterInputStream#read(byte[], int, int)
 	 */
-	public int read(byte b[], int off, int len) throws IOException {
-		if (eos) {
+	public int read( byte b[], int off, int len ) throws IOException{
+		if( eos ){
 			return -1;
 		}
 		int bytesRead = 0;
-		while (!eos && (len > 0)) {
+		while( !eos && ( len > 0 ) ){
 			fillConvbuffer();
-			if (!eos) {
-				int bytesToCopy = Math.min(len, convbufferSize-convbufferOff);
-				System.arraycopy(convbuffer, convbufferOff, b, off, bytesToCopy);
+			if( !eos ){
+				int bytesToCopy = Math.min( len, convbufferSize - convbufferOff );
+				System.arraycopy( convbuffer, convbufferOff, b, off, bytesToCopy );
 				convbufferOff += bytesToCopy;
 				bytesRead += bytesToCopy;
 				len -= bytesToCopy;
 				off += bytesToCopy;
-			}
-		}
-		return bytesRead;
-	}
-
-	/**
-	 * Reads up to len bytes of data from the input stream into a ByteBuffer.
-	 * @param b the buffer into which the data is read.
-	 * @param off the start offset of the data.
-	 * @param len the maximum number of bytes read.
-	 * @return the total number of bytes read into the buffer, or -1 if there is
-	 *         no more data because the end of the stream has been reached. 
-	 */
-	public int read(ByteBuffer b, int off, int len) throws IOException {
-		if (eos) {
-			return -1;
-		}
-		b.position(off);
-		int bytesRead = 0;
-		while (!eos && (len > 0)) {
-			fillConvbuffer();
-			if (!eos) {
-				int bytesToCopy = Math.min(len, convbufferSize-convbufferOff);
-				b.put(convbuffer, convbufferOff, bytesToCopy);
-				convbufferOff += bytesToCopy;
-				bytesRead += bytesToCopy;
-				len -= bytesToCopy;
 			}
 		}
 		return bytesRead;
@@ -471,12 +443,12 @@ public class OggInputStream extends FilterInputStream {
 							val = -32768;
 						if(val<0)
 							val |= 0x8000;
-						if(OggInputStream.BIG_ENDIAN){
-							convbuffer[ptr++]=(byte)(val>>>8);
-							convbuffer[ptr++]=(byte)(val);
+						if( OggInputStream.BIG_ENDIAN ){
+							convbuffer[ptr++] = (byte)( val >>> 8 );
+							convbuffer[ptr++] = (byte)( val );
 						}else{
-							convbuffer[ptr++]=(byte)(val);
-							convbuffer[ptr++]=(byte)(val>>>8);
+							convbuffer[ptr++] = (byte)( val );
+							convbuffer[ptr++] = (byte)( val >>> 8 );
 						}
 					}
 				}
@@ -490,13 +462,13 @@ public class OggInputStream extends FilterInputStream {
 	 * Decodes the next packet.
 	 * @return bytes read into convbuffer of -1 if end of file
 	 */
-	private int lazyDecodePacket() throws IOException {
-		int result = getNextPacket(packet);
-		if (result == -1) {
+	private int lazyDecodePacket() throws IOException{
+		int result = getNextPacket( packet );
+		if( result == -1 ){
 			return -1;
 		}
 		// we have a packet.  Decode it
-		return decodePacket(packet);
+		return decodePacket( packet );
 	}
 
 	/**
@@ -537,13 +509,13 @@ public class OggInputStream extends FilterInputStream {
 	/**
 	 * Copys data from input stream to syncState.
 	 */
-	private void fetchData() throws IOException {
-		if (!eos) {
+	private void fetchData() throws IOException{
+		if( !eos ){
 			// copy (bufsize) bytes from compressed stream to syncState.
-			int index = syncState.buffer(bufsize);
-			int bytes = in.read(syncState.data, index, bufsize);
-			syncState.wrote(bytes); 
-			if (bytes == 0) {
+			int index = syncState.buffer( bufsize );
+			int bytes = in.read( syncState.data, index, bufsize );
+			syncState.wrote( bytes );
+			if( bytes == 0 ){
 				eos = true;
 			}
 		}
