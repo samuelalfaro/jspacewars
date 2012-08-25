@@ -25,13 +25,14 @@ package org.sam.jspacewars;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.Container;
 import java.awt.DisplayMode;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
+import java.awt.Rectangle;
 import java.awt.Window;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -43,6 +44,7 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JFrame;
 
 import org.sam.elementos.Cache;
 import org.sam.jogl.fondos.GLEventListenerBackgroundRenderer;
@@ -57,64 +59,153 @@ import com.jogamp.opengl.util.Animator;
 
 public class ExampleGameMenuJOGL {
 	
-	static String getPathElementos(){
-		return "resources/elementos-instancias3D-stream-sh.xml";
-	}
+	private static class Properties{
+		
+		static final String  elementos;
+		
+		static final boolean fullScreen;
+		static final boolean hideToolBar;
+		static final int     width;
+		static final int     height;
+		
+		static final int     port;
+		static final String  hostName;
+		
+		private static int getProperty( java.util.Properties properties, String key, int defaultValue ){
+			try{
+				return Integer.parseInt( properties.getProperty( key ) );
+			}catch( Exception e ){
+				return defaultValue;
+			}
+		}
+		
+		private static boolean getProperty( java.util.Properties properties, String key, boolean defaultValue ){
+			try{
+				String val = properties.getProperty( key );
+				if( val != null && val.length() > 0 )
+					return val.equalsIgnoreCase( "true" ) || val.equalsIgnoreCase( "yes" );
+				return defaultValue;
+			}catch( Exception e ){
+				return defaultValue;
+			}
+		}
+		
+		private static String getProperty( java.util.Properties properties, String key, String defaultValue ){
+			try{
+				String val = properties.getProperty( key );
+				if( val != null && val.length() > 0 )
+					return val;
+				return defaultValue;
+			}catch( Exception e ){
+				return defaultValue;
+			}
+		}
+		
+		static{
+			java.util.Properties properties = new java.util.Properties();
+			try{
+				//File path = new File( Properties.class.getProtectionDomain().getCodeSource().getLocation().getPath() ).getParentFile();
+				properties.load( new FileInputStream( "jspacewars.properties" ) );
+			}catch( Exception e ){
+				System.err.println( "Defautls" );
+				properties = null;
+			}
 
-	static int getPort(){
-		return 1111;
+			elementos   = getProperty ( properties, "Elements.path", "resources/elementos-instancias3D-stream-sh.xml" );
+			
+			fullScreen  = getProperty ( properties, "Graphics.fullScreen", true );
+			hideToolBar = getProperty ( properties, "Graphics.hideToolBar", false );
+			width       = getProperty ( properties, "Graphics.width", -1 );
+			height      = getProperty ( properties, "Graphics.height", -1 );
+				
+			port        = getProperty ( properties, "Network.port", 1111 );
+			hostName    = getProperty ( properties, "Network.hostName", "localhost" );
+		}
+		
+		private Properties(){}
 	}
 	
-	static String getHostName(){
-		return "localhost";
-	}
-	
-	private static Window getFullScreenFrame(){
+	private static Window getFrame(){
 		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		
 		Frame frame = new Frame( myDevice.getDefaultConfiguration() );
 		frame.setBackground( Color.BLACK );
-		frame.setAlwaysOnTop( true );
-		frame.setUndecorated( true );
-//		frame.setIgnoreRepaint(true);
+		
+		frame.setIgnoreRepaint(true);
 		frame.setResizable( false );
 
-		if( myDevice.isFullScreenSupported() ){
+		if( Properties.fullScreen && myDevice.isFullScreenSupported() ){
+			frame.setUndecorated( true );
 			myDevice.setFullScreenWindow( frame );
 			if( myDevice.isDisplayChangeSupported() ){
 				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
-				/*
-				 currentDisplayMode = new DisplayMode(800, 600,
-				 currentDisplayMode.getBitDepth(),
-				 currentDisplayMode.getRefreshRate());
-				 //*/
+				if( ( Properties.width > 0 && Properties.height > 0 ) &&
+				    ( Properties.width != currentDisplayMode.getWidth() ||
+				    Properties.height != currentDisplayMode.getHeight() )
+				)
 				try{
-					myDevice.setDisplayMode( currentDisplayMode );
-					frame.setSize( currentDisplayMode.getWidth(), currentDisplayMode.getHeight() );
+					myDevice.setDisplayMode(
+						new DisplayMode(
+								Properties.width,
+								Properties.height,
+								currentDisplayMode.getBitDepth(),
+								currentDisplayMode.getRefreshRate()
+						)
+					);
 				}catch( IllegalArgumentException e ){
 					System.err.println( "Display Mode: not supported!!" );
 				}
 			}
+		}
+		Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		
+		boolean windowed = !Properties.fullScreen && 
+				Properties.width > 0 && Properties.width < maxBounds.width  && 
+				Properties.height > 0 && Properties.height < maxBounds.height;
+				
+		System.err.println( windowed );
+
+		frame.setAlwaysOnTop( !windowed && frame.isAlwaysOnTopSupported() );
+		if( windowed ){
+			frame.setTitle( "jSpaceWars" );
+			frame.setBounds(
+					maxBounds.x + ( maxBounds.width  - Properties.width ) / 2,
+					maxBounds.y + ( maxBounds.height - Properties.height ) / 2,
+					Properties.width,
+					Properties.height
+			);
 		}else{
-			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			frame.setBounds( 0, 0, dim.width, dim.height );
+			if( !frame.isDisplayable() )
+				frame.setUndecorated( true );
+			
+			if( Properties.hideToolBar )
+				frame.setSize( myDevice.getDisplayMode().getWidth(), myDevice.getDisplayMode().getHeight() );
+			else
+				frame.setBounds( maxBounds );
 		}
 		return frame;
 	}
 	
-	private static void mostrar( Window frame, Component component ){
-//		if( Container.class.isAssignableFrom(component.getClass()) ){
-//			frame.setContentPane((Container) component);
-//		}else{
-//			if( !(frame.getContentPane().getLayout() instanceof BorderLayout) )
-//				frame.getContentPane().setLayout(new BorderLayout());
-//			frame.getContentPane().removeAll();
-//			frame.getContentPane().add(component, BorderLayout.CENTER);
-//		}
-		if( !( frame.getLayout() instanceof BorderLayout ) )
-			frame.setLayout( new BorderLayout() );
-		frame.removeAll();
-		frame.add( component, BorderLayout.CENTER );
+	private static void mostrar( Component component ){
+		
+		Window frame = getFrame();
+		
+		if( JFrame.class.isAssignableFrom( frame.getClass() ) ){
+			JFrame jFrame = (JFrame)frame;
+			if( Container.class.isAssignableFrom( component.getClass() ) )
+				jFrame.setContentPane( (Container)component );
+			else{
+				if( !( jFrame.getContentPane().getLayout() instanceof BorderLayout ) )
+					jFrame.getContentPane().setLayout( new BorderLayout() );
+				jFrame.getContentPane().removeAll();
+				jFrame.getContentPane().add( component, BorderLayout.CENTER );
+			}
+		}else{
+			if( !( frame.getLayout() instanceof BorderLayout ) )
+				frame.setLayout( new BorderLayout() );
+			frame.removeAll();
+			frame.add( component, BorderLayout.CENTER );
+		}
 		frame.validate();
 		if( !frame.isVisible() ){
 			frame.setVisible( true );
@@ -141,7 +232,7 @@ public class ExampleGameMenuJOGL {
 
 		final Cache<Elemento> cache = new Cache<Elemento>( 1000 );
 		try{
-			Loader.loadData( getPathElementos(), cache );
+			Loader.loadData( Properties.elementos, cache );
 		}catch( FileNotFoundException e1 ){
 			e1.printStackTrace();
 		}catch( IOException e1 ){
@@ -152,16 +243,12 @@ public class ExampleGameMenuJOGL {
 		animator.setRunAsFastAsPossible( true );
 
 		splashWindow.waitForLoading();
-		splashWindow.setVisible( false );
-
+		
 		final GLCanvas canvas = new GLCanvas( null, null, splashCanvas.getContext(), null );
 		canvas.setBackground( Color.BLACK );
 		
 		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer( dataGame.getFondo() );
 		canvas.addGLEventListener( backgroundRenderer );
-
-		splashWindow = null;
-		System.gc();
 
 		final GLGUI displayGUI = new GLGUI();
 		Map<String, ButtonAction> actions = new Hashtable<String, ButtonAction>();
@@ -205,7 +292,7 @@ public class ExampleGameMenuJOGL {
 					displayGUI.unbind( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
 
-					clientServer.server = new ServidorJuego( cache, getPort() );
+					clientServer.server = new ServidorJuego( cache, Properties.port );
 
 					clientServer.cliente = new Cliente( dataGame, canvas );
 					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
@@ -238,7 +325,7 @@ public class ExampleGameMenuJOGL {
 					canvas.removeGLEventListener( backgroundRenderer );
 					
 					DatagramChannel canalCliente = DatagramChannel.open();
-					canalCliente.connect( new InetSocketAddress( getHostName(), getPort() ) );
+					canalCliente.connect( new InetSocketAddress( Properties.hostName, Properties.port ) );
 					clientServer.cliente = new Cliente( dataGame, canvas );
 					clientServer.cliente.setChannelIn( canalCliente );
 					clientServer.cliente.setChannelOut( canalCliente );
@@ -254,7 +341,12 @@ public class ExampleGameMenuJOGL {
 
 		animator.add( canvas );
 		
-		mostrar( getFullScreenFrame(), canvas );
+		mostrar( canvas );
+		
+		splashWindow.setVisible( false );
+		splashWindow = null;
+		System.gc();
+		
 		animator.start();
 	}
 }

@@ -169,20 +169,20 @@ public class ServidorJuego {
 		listasDeDisparosProtagonistas.add( disparosNave );
 		elementos.add( disparosNave );
 		nave1.init();
-		nave1.setPosicion( 0, 0 );
+		nave1.setPosicion( -3, 1 );
 
 		nave1.setLimites( LIMITE_HORIZONTAL, LIMITE_VERTICAL );
 
 		navesProtagonistas.add( nave1 );
 
 		if( !localOnly ){
-			nave2 = (NaveUsuario)cache.newObject( 0x01 );
+			nave2 = (NaveUsuario)cache.newObject( 0x04 );
 			disparosNave = new LinkedList<Disparo>();
 			nave2.setDstDisparos( disparosNave );
 			listasDeDisparosProtagonistas.add( disparosNave );
 			elementos.add( disparosNave );
 			nave2.init();
-			nave2.setPosicion( 0, -1 );
+			nave2.setPosicion( -3, -1 );
 			nave2.setLimites( LIMITE_HORIZONTAL, LIMITE_VERTICAL );
 			navesProtagonistas.add( nave2 );
 		}
