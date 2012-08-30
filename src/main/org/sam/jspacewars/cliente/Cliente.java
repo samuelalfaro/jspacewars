@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.ClosedChannelException;
-import java.nio.channels.NonWritableChannelException;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.ListIterator;
@@ -67,6 +66,7 @@ public class Cliente extends Thread {
 		consumidor.grado = productor.getInt();
 
 		int i = 0, nElementos = productor.getInt();
+		//System.out.println( "Cliente: recibiendo " + nElementos + " elementos" );
 		ListIterator<Instancia3D> iConsumidor = consumidor.elementos.listIterator();
 
 		if( iConsumidor.hasNext() && i < nElementos ){
@@ -184,12 +184,15 @@ public class Cliente extends Thread {
 		this.channelOut = channelOut;
 	}
 
-	/** {@inheritDoc} */
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run(){
-		//		System.out.println("Iniciando cliente");
+		//System.out.println("Iniciando cliente");
 		while( true ){
-			//			System.out.println("Enviando");
+			//System.out.println("Cliente: Enviando");
 			buff.clear();
 			buff.putInt( data.key_state );
 			buff.flip();
@@ -203,10 +206,12 @@ public class Cliente extends Thread {
 			}catch( IOException e ){
 				e.printStackTrace();
 			}
-			//			System.out.println("Leyendo");
+			
 			buff.clear();
 			try{
+				//System.out.print("Cliente: Leyendo... ");
 				channelIn.read( buff );
+				//System.out.println("ok");
 			}catch( AsynchronousCloseException e ){
 				e.printStackTrace();
 			}catch( ClosedChannelException e ){

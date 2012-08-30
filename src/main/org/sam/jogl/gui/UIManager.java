@@ -117,6 +117,7 @@ public final class UIManager{
 	private UIManager(){}
 	
 	private static final Queue<Initializable> initializables = new ArrayDeque<Initializable>();
+	private static final Queue<Runnable> actions = new ArrayDeque<Runnable>();
 	
 	private static Hashtable<Object,Object> hashtable = null;
 	
@@ -284,8 +285,8 @@ public final class UIManager{
 		hashtable.put( "Container.background.default", background );
 		
 		border = new Border.Textured( new Insets( 16 ), 64, 64 );
-		border.setOuterInsets( new Insets( 4 ) );
-		border.setInnerInsets( new Insets( 4 ) );
+		border.setOuterInsets( new Insets( 16 ) );
+		border.setInnerInsets( new Insets( 0 ) );
 		border.setApariencia( ap1 );
 		
 		hashtable.put( "Container.border.default", border );
@@ -313,7 +314,7 @@ public final class UIManager{
 		return hashtable != null;
 	}
 	
-	public static void Init( GL2 gl ){
+	public static void init( GL2 gl ){
 		if( isInitialized() )
 			return;
 		hashtable = new Hashtable<Object, Object>();
@@ -473,5 +474,24 @@ public final class UIManager{
 	public static Nodo getNodo( Object key ){
         Object value = get(key);
 		return (value instanceof Nodo) ? (Nodo)value : null;
+	}
+	
+	public static void invokeLater( Runnable action ){
+		if( action == null )
+			throw new IllegalArgumentException();
+		actions.add( action );
+	}
+	
+	static void runActions(){
+		if( actions.peek() == null )
+			return;
+		Runnable action = actions.poll();
+		while( action != null ){
+			if( Thread.class.isAssignableFrom( action.getClass() ) )
+				( (Thread)action ).start();
+			else
+				action.run();
+			action = actions.poll();
+		}
 	}
 }

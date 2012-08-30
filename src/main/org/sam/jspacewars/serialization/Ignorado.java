@@ -22,8 +22,6 @@
  */
 package org.sam.jspacewars.serialization;
 
-import org.sam.jogl.Instancia3D;
-
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
@@ -34,9 +32,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * {@code Converter} que devuelve siempre null, para evitar cargar determinados
  * datos.<br/>
  * <u>Ejemplo:</u><pre><tt>
- * 	xStream.registerConverter( new Ignorado() );
- * 	xStream.alias( "datos_a_ignorar", Ignorado.class );
- * 	xStream.alias( "otros_datos_a_ignorar", Ignorado.class );
+ * xStream.registerConverter( new Ignorado() );
+ * xStream.alias( "datos_a_ignorar", Ignorado.class );
+ * xStream.alias( "otros_datos_a_ignorar", Ignorado.class );
  * </tt></pre>
  */
 public class Ignorado implements Converter {

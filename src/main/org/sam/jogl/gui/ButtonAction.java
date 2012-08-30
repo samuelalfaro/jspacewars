@@ -30,17 +30,34 @@ import org.sam.jogl.gui.event.ActionListener;
  */
 public abstract class ButtonAction implements ActionListener, Runnable{
 
-	private final String name;
+	private final boolean multiThread;
+	private final String  name;
 
-	public ButtonAction( String name ){
+	public ButtonAction( boolean multiThread, String name ){
+		this.multiThread = multiThread;
 		this.name = name;
+	}
+	
+	public ButtonAction( String name ){
+		this( false, name );
+	}
+	
+	public final boolean isMultiThread(){
+		return multiThread;
 	}
 
 	public final String getName(){
 		return this.name;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.jogl.gui.event.ActionListener#actionPerformed(org.sam.jogl.gui.event.ActionEvent)
+	 */
+	@Override
 	public void actionPerformed( ActionEvent e ){
-		this.run();
+		if( multiThread )
+			new Thread( this ).start();
+		else
+			this.run();
 	}
 }

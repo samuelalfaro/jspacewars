@@ -28,9 +28,13 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
+import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.Window;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
@@ -54,45 +58,152 @@ import org.sam.jspacewars.servidor.elementos.Elemento;
 @Deprecated
 public class Launcher{
 
-	private static final String pathElementos = "resources/elementos-instancias3D-stream-sh.xml";
-	
-	private static JFrame getFullScreenFrame(){
-		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-		JFrame frame = new JFrame( myDevice.getDefaultConfiguration() );
-		frame.setUndecorated( true );
-		frame.setResizable( false );
-		frame.setBackground( Color.BLACK );
+	private static class Properties{
+		
+		static final String  elementos;
+		
+		static final boolean fullScreen;
+		static final boolean hideToolBar;
+		static final int     width;
+		static final int     height;
+		
+		static final int     port;
+		static final String  hostName;
+		
+		private static int getProperty( java.util.Properties properties, String key, int defaultValue ){
+			try{
+				return Integer.parseInt( properties.getProperty( key ) );
+			}catch( Exception e ){
+				return defaultValue;
+			}
+		}
+		
+		private static boolean getProperty( java.util.Properties properties, String key, boolean defaultValue ){
+			try{
+				String val = properties.getProperty( key );
+				if( val != null && val.length() > 0 )
+					return val.equalsIgnoreCase( "true" ) || val.equalsIgnoreCase( "yes" );
+				return defaultValue;
+			}catch( Exception e ){
+				return defaultValue;
+			}
+		}
+		
+		private static String getProperty( java.util.Properties properties, String key, String defaultValue ){
+			try{
+				String val = properties.getProperty( key );
+				if( val != null && val.length() > 0 )
+					return val;
+				return defaultValue;
+			}catch( Exception e ){
+				return defaultValue;
+			}
+		}
+		
+		static{
+			java.util.Properties properties = new java.util.Properties();
+			try{
+				//File path = new File( Properties.class.getProtectionDomain().getCodeSource().getLocation().getPath() ).getParentFile();
+				properties.load( new FileInputStream( "jspacewars.properties" ) );
+			}catch( Exception e ){
+				System.err.println( "Defautls" );
+				properties = null;
+			}
 
-		if( myDevice.isFullScreenSupported() ){
+			elementos   = getProperty ( properties, "Elements.path", "resources/elementos-instancias3D-stream-sh.xml" );
+			
+			fullScreen  = getProperty ( properties, "Graphics.fullScreen", false );
+			hideToolBar = getProperty ( properties, "Graphics.hideToolBar", false );
+			width       = getProperty ( properties, "Graphics.width", -1 );
+			height      = getProperty ( properties, "Graphics.height", -1 );
+				
+			port        = getProperty ( properties, "Network.port", 1111 );
+			hostName    = getProperty ( properties, "Network.hostName", "localhost" );
+		}
+		
+		private Properties(){}
+	}
+	
+	private static Window getFrame(){
+		GraphicsDevice myDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+		
+		Frame frame = new Frame( myDevice.getDefaultConfiguration() );
+		frame.setBackground( Color.BLACK );
+		
+		frame.setIgnoreRepaint(true);
+		frame.setResizable( false );
+
+		if( Properties.fullScreen && myDevice.isFullScreenSupported() ){
+			frame.setUndecorated( true );
 			myDevice.setFullScreenWindow( frame );
 			if( myDevice.isDisplayChangeSupported() ){
 				DisplayMode currentDisplayMode = myDevice.getDisplayMode();
-				/*
-				 * currentDisplayMode = new DisplayMode(640, 400, currentDisplayMode.getBitDepth(),
-				 * currentDisplayMode.getRefreshRate());
-				 */
+				if( ( Properties.width > 0 && Properties.height > 0 ) &&
+				    ( Properties.width != currentDisplayMode.getWidth() ||
+				    Properties.height != currentDisplayMode.getHeight() )
+				)
 				try{
-					myDevice.setDisplayMode( currentDisplayMode );
-					frame.setSize( currentDisplayMode.getWidth(), currentDisplayMode.getHeight() );
+					myDevice.setDisplayMode(
+						new DisplayMode(
+								Properties.width,
+								Properties.height,
+								currentDisplayMode.getBitDepth(),
+								currentDisplayMode.getRefreshRate()
+						)
+					);
 				}catch( IllegalArgumentException e ){
 					System.err.println( "Display Mode: not supported!!" );
 				}
 			}
+		}
+		Rectangle maxBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		
+		boolean windowed = !Properties.fullScreen && 
+				Properties.width > 0 && Properties.width < maxBounds.width  && 
+				Properties.height > 0 && Properties.height < maxBounds.height;
+				
+		System.err.println( windowed );
+
+		frame.setAlwaysOnTop( !windowed && frame.isAlwaysOnTopSupported() );
+		if( windowed ){
+			frame.setTitle( "jSpaceWars" );
+			frame.setBounds(
+					maxBounds.x + ( maxBounds.width  - Properties.width ) / 2,
+					maxBounds.y + ( maxBounds.height - Properties.height ) / 2,
+					Properties.width,
+					Properties.height
+			);
 		}else{
-			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			frame.setBounds( 0, 0, dim.width, dim.height );
+			if( !frame.isDisplayable() )
+				frame.setUndecorated( true );
+			
+			if( Properties.hideToolBar )
+				frame.setSize( myDevice.getDisplayMode().getWidth(), myDevice.getDisplayMode().getHeight() );
+			else
+				frame.setBounds( maxBounds );
 		}
 		return frame;
 	}
-
-	private static void mostrar( JFrame frame, Component component ){
-		if( Container.class.isAssignableFrom( component.getClass() ) ){
-			frame.setContentPane( (Container)component );
+	
+	private static void mostrar( Component component ){
+		
+		Window frame = getFrame();
+		
+		if( JFrame.class.isAssignableFrom( frame.getClass() ) ){
+			JFrame jFrame = (JFrame)frame;
+			if( Container.class.isAssignableFrom( component.getClass() ) )
+				jFrame.setContentPane( (Container)component );
+			else{
+				if( !( jFrame.getContentPane().getLayout() instanceof BorderLayout ) )
+					jFrame.getContentPane().setLayout( new BorderLayout() );
+				jFrame.getContentPane().removeAll();
+				jFrame.getContentPane().add( component, BorderLayout.CENTER );
+			}
 		}else{
-			if( !( frame.getContentPane().getLayout() instanceof BorderLayout ) )
-				frame.getContentPane().setLayout( new BorderLayout() );
-			frame.getContentPane().removeAll();
-			frame.getContentPane().add( component, BorderLayout.CENTER );
+			if( !( frame.getLayout() instanceof BorderLayout ) )
+				frame.setLayout( new BorderLayout() );
+			frame.removeAll();
+			frame.add( component, BorderLayout.CENTER );
 		}
 		frame.validate();
 		if( !frame.isVisible() ){
@@ -110,7 +221,7 @@ public class Launcher{
 			splashWindow.setVisible( true );
 
 			Cache<Elemento> cache = new Cache<Elemento>( 1000 );
-			Loader.loadData( pathElementos, cache );
+			Loader.loadData( Properties.elementos, cache );
 
 			ServidorJuego server = new ServidorJuego( cache );
 			splashWindow.waitForLoading();
@@ -119,13 +230,12 @@ public class Launcher{
 			splashWindow = null;
 			System.gc();
 
-			final JFrame frame = getFullScreenFrame();
 			final GLCanvas canvas = new GLCanvas( null, null, splashCanvas.getContext(), null );
 
 			Cliente cliente = new Cliente( dataGame, canvas );
 			cliente.setChannelIn( server.getLocalChannelClientIn() );
 			cliente.setChannelOut( server.getLocalChannelClientOut() );
-			mostrar( frame, canvas );
+			mostrar( canvas );
 
 			cliente.start();
 			server.atenderClientes();
@@ -143,7 +253,7 @@ public class Launcher{
 			splashWindow.setVisible( true );
 
 			Cache<Elemento> cache = new Cache<Elemento>( 1000 );
-			Loader.loadData( pathElementos, cache );
+			Loader.loadData( Properties.elementos, cache );
 
 			ServidorJuego server = new ServidorJuego( cache, port );
 			splashWindow.waitForLoading();
@@ -157,7 +267,7 @@ public class Launcher{
 			Cliente cliente = new Cliente( dataGame, canvas );
 			cliente.setChannelIn( server.getLocalChannelClientIn() );
 			cliente.setChannelOut( server.getLocalChannelClientOut() );
-			mostrar( getFullScreenFrame(), canvas );
+			mostrar( canvas );
 
 			cliente.start();
 			server.atenderClientes();
@@ -188,9 +298,8 @@ public class Launcher{
 			cliente.setChannelIn( canalCliente );
 			cliente.setChannelOut( canalCliente );
 
-			mostrar( getFullScreenFrame(), canvas );
+			mostrar( canvas );
 			cliente.start();
-			cliente.run();
 
 		}catch( SocketException e ){
 			e.printStackTrace();

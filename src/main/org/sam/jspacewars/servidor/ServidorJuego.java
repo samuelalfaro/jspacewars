@@ -77,6 +77,7 @@ public class ServidorJuego {
 	private static final float LIMITE_VERTICAL =  2.9f;
 	private static final float LIMITE_HORIZONTAL = ratio * LIMITE_VERTICAL;
 	
+	//Limites de la pantalla
 	private static final float X_MIN = -8.0f;
 	private static final float X_MAX = 10.0f;
 	private static final float Y_MIN = -4.0f;
@@ -292,7 +293,6 @@ public class ServidorJuego {
 		}
 	}
 	
-	
 	private long calcularAcciones( long nanos ){
 		int steps = (int)( ( nanos + TIME_STEP / 2 ) / TIME_STEP );
 		for( int i = 0; i < steps; i++ )
@@ -306,7 +306,6 @@ public class ServidorJuego {
 		}
 		return nanos - TIME_STEP * steps;
 	}
-
 	
 	private static void read( ReadableByteChannel channelIn, ByteBuffer buff ) throws IOException{
 		try{
@@ -381,33 +380,39 @@ public class ServidorJuego {
 
 		long tActual = System.nanoTime();
 
-//		if( nave2 == null ){ // La nave2 no se ha inciado porque solo hay un jugador
-//			while( true ){
-//				selector.select();
-//				Set<SelectionKey> selectedKeys = selector.selectedKeys();
-//				if( !selectedKeys.isEmpty() ){
-//					selectedKeys.clear();
-//					read( localChannelServerIn, buffIn );
-//					tActual = atenderCliente( tActual, buffIn, buffOut, nave1 );
-//					write( localChannelServerOut, buffOut );
-//				}
-//			}
-//		}
+		if( nave2 == null ){ // La nave2 no se ha inciado porque solo hay un jugador
+			while( true ){
+				selector.select();
+				Set<SelectionKey> selectedKeys = selector.selectedKeys();
+				if( !selectedKeys.isEmpty() ){
+					selectedKeys.clear();
+					//System.out.println("Servidor: Leyendo pipe");
+					read( localChannelServerIn, buffIn );
+					tActual = atenderCliente( tActual, buffIn, buffOut, nave1 );
+					//System.out.println("Servidor: Enviando pipe");
+					write( localChannelServerOut, buffOut );
+				}
+			}
+		}
 		while( true ){
 			selector.select();
 			Iterator<SelectionKey> it = selector.selectedKeys().iterator();
 			while( it.hasNext() ){
 				SelectionKey key = it.next();
 				if( key.channel() == localChannelServerIn ){
+					//System.out.println("Servidor: Leyendo pipe");
 					read( localChannelServerIn, buffIn );
 					tActual = atenderCliente( tActual, buffIn, buffOut, nave1 );
+					//System.out.println("Servidor: Enviando pipe");
 					write( localChannelServerOut, buffOut );
 				}else if( key.channel() == remoteChannelInOut ){
 					buffIn.clear();
+					//System.out.println("Servidor: Leyendo Socket");
 					SocketAddress sa = remoteChannelInOut.receive( buffIn );
 					if( sa != null ){
 						buffIn.flip();
 						tActual = atenderCliente( tActual, buffIn, buffOut, nave2 );
+						//System.out.println("Servidor: Enviando Socket");
 						remoteChannelInOut.send( buffOut, sa );
 					}
 				}

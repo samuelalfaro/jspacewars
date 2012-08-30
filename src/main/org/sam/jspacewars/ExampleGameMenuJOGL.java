@@ -40,10 +40,16 @@ import java.nio.channels.DatagramChannel;
 import java.util.Hashtable;
 import java.util.Map;
 
+import javax.media.opengl.GLAnimatorControl;
+import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLCapabilitiesChooser;
+import javax.media.opengl.GLContext;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.GLRunnable;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import org.sam.elementos.Cache;
@@ -113,7 +119,7 @@ public class ExampleGameMenuJOGL {
 
 			elementos   = getProperty ( properties, "Elements.path", "resources/elementos-instancias3D-stream-sh.xml" );
 			
-			fullScreen  = getProperty ( properties, "Graphics.fullScreen", true );
+			fullScreen  = getProperty ( properties, "Graphics.fullScreen", false );
 			hideToolBar = getProperty ( properties, "Graphics.hideToolBar", false );
 			width       = getProperty ( properties, "Graphics.width", -1 );
 			height      = getProperty ( properties, "Graphics.height", -1 );
@@ -163,9 +169,8 @@ public class ExampleGameMenuJOGL {
 				Properties.width > 0 && Properties.width < maxBounds.width  && 
 				Properties.height > 0 && Properties.height < maxBounds.height;
 				
-		System.err.println( windowed );
-
 		frame.setAlwaysOnTop( !windowed && frame.isAlwaysOnTopSupported() );
+		frame.setIconImage( new ImageIcon("splash2.png").getImage() );
 		if( windowed ){
 			frame.setTitle( "jSpaceWars" );
 			frame.setBounds(
@@ -220,6 +225,60 @@ public class ExampleGameMenuJOGL {
 		ClientServer(){}
 	}
 	
+	private static class DebugCanvas extends GLCanvas{
+		DebugCanvas(){
+			super();
+		}
+
+		DebugCanvas( GLCapabilities capabilities ){
+			super( capabilities );
+		}
+
+		DebugCanvas( GLCapabilities capabilities, GLCapabilitiesChooser chooser, GLContext shareWith,
+				GraphicsDevice device ){
+			super( capabilities, chooser, shareWith, device );
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see javax.media.opengl.awt.GLCanvas#addGLEventListener(javax.media.opengl.GLEventListener)
+		 */
+		@Override
+		public void addGLEventListener( GLEventListener listener ){
+			super.addGLEventListener( listener );
+			System.err.println( "addGLEventListener: " + listener.getClass().getName() );
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see javax.media.opengl.awt.GLCanvas#removeGLEventListener(javax.media.opengl.GLEventListener)
+		 */
+		@Override
+		public void removeGLEventListener( GLEventListener listener ){
+			super.removeGLEventListener( listener );
+			System.err.println( "removeGLEventListener: " + listener.getClass().getName() );
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.media.opengl.awt.GLCanvas#setAnimator(javax.media.opengl.GLAnimatorControl)
+		 */
+		@Override
+		public void setAnimator(GLAnimatorControl animatorControl){
+			System.err.println( "setAnimator: " + animatorControl );
+			super.setAnimator( animatorControl );
+		}
+		
+		/*
+		 * (non-Javadoc)
+		 * @see javax.media.opengl.awt.GLCanvas#display()
+		 */
+		@Override
+		public void display(){
+			super.display();
+			//System.err.println( "Display canvas" );
+		}
+	}
+	
 	public static void main( String[] args ){
 
 		final ClientServer clientServer = new ClientServer();
@@ -239,47 +298,87 @@ public class ExampleGameMenuJOGL {
 			e1.printStackTrace();
 		}
 
-		final Animator animator = new Animator();
-		animator.setRunAsFastAsPossible( true );
-
 		splashWindow.waitForLoading();
 		
-		final GLCanvas canvas = new GLCanvas( null, null, splashCanvas.getContext(), null );
+		final GLCanvas canvas = new DebugCanvas( null, null, splashCanvas.getContext(), null );
 		canvas.setBackground( Color.BLACK );
+		
+		Animator animator = new Animator();
+		animator.setRunAsFastAsPossible( true );
+		animator.add( canvas );
 		
 		final GLEventListener backgroundRenderer = new GLEventListenerBackgroundRenderer( dataGame.getFondo() );
 		canvas.addGLEventListener( backgroundRenderer );
 
 		final GLGUI displayGUI = new GLGUI();
-		Map<String, ButtonAction> actions = new Hashtable<String, ButtonAction>();
+		Map<String, Runnable> actions = new Hashtable<String, Runnable>();
 
 		ButtonAction action = new ButtonAction( "player1" ){
 			public void run(){
-				try{
-					animator.stop();
-					animator.remove( canvas );
-					displayGUI.unbind( canvas );
-					canvas.removeGLEventListener( backgroundRenderer );
-
-					clientServer.server = new ServidorJuego( cache );
-					clientServer.cliente = new Cliente( dataGame, canvas );
-					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
-					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
-					clientServer.cliente.start();
-
-					new Thread(){
-						public void run(){
-							try{
-								clientServer.server.atenderClientes();
-							}catch( IOException e ){
-								e.printStackTrace();
+//				try{
+//					
+//					animator.remove( canvas );
+//					animator.stop();
+//					
+//					displayGUI.unbind( canvas );
+//					canvas.removeGLEventListener( backgroundRenderer );
+//
+//					clientServer.server = new ServidorJuego( cache );
+//					clientServer.cliente = new Cliente( dataGame, canvas );
+//					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
+//					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
+//					
+//					new Thread(){
+//						public void run(){
+//							try{
+//								clientServer.server.atenderClientes();
+//							}catch( IOException e ){
+//								e.printStackTrace();
+//							}
+//						}
+//					}.start();
+//					clientServer.cliente.start();
+//
+//				}catch( IOException exception ){
+//					exception.printStackTrace();
+//				}
+				
+				canvas.invoke( false, new GLRunnable(){ 
+					@Override
+					public void run( GLAutoDrawable autoDrawable ){
+						System.err.println( "1 Player button pressed" );
+						try{
+							GLAnimatorControl animator = autoDrawable.getAnimator();
+							if( animator != null ){
+								if( animator.isStarted()  )
+									animator.stop();
+								animator.remove( autoDrawable );
 							}
-						}
-					}.start();
+							
+							canvas.removeGLEventListener( backgroundRenderer );
+							displayGUI.unbind( autoDrawable );
 
-				}catch( IOException exception ){
-					exception.printStackTrace();
-				}
+							clientServer.server = new ServidorJuego( cache );
+							clientServer.cliente = new Cliente( dataGame, (GLCanvas)autoDrawable );
+							clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
+							clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
+
+							new Thread(){
+								public void run(){
+									try{
+										clientServer.server.atenderClientes();
+									}catch( IOException e ){
+										e.printStackTrace();
+									}
+								}
+							}.start();
+							clientServer.cliente.start();
+
+						}catch( IOException exception ){
+							exception.printStackTrace();
+						}
+					}
+				});
 			}
 		};
 		actions.put( action.getName(), action );
@@ -287,8 +386,14 @@ public class ExampleGameMenuJOGL {
 		action = new ButtonAction( "server" ){
 			public void run(){
 				try{
-					animator.stop();
-					animator.remove( canvas );
+					
+					GLAnimatorControl animator = canvas.getAnimator();
+					if( animator != null ){
+						if( animator.isStarted()  )
+							animator.stop();
+						animator.remove( canvas );
+					}
+					
 					displayGUI.unbind( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
 
@@ -297,7 +402,6 @@ public class ExampleGameMenuJOGL {
 					clientServer.cliente = new Cliente( dataGame, canvas );
 					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
 					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
-					clientServer.cliente.start();
 
 					new Thread(){
 						public void run(){
@@ -308,6 +412,8 @@ public class ExampleGameMenuJOGL {
 							}
 						}
 					}.start();
+					clientServer.cliente.start();
+					
 
 				}catch( IOException exception ){
 					exception.printStackTrace();
@@ -319,8 +425,14 @@ public class ExampleGameMenuJOGL {
 		action = new ButtonAction( "client" ){
 			public void run(){
 				try{
-					animator.stop();
-					animator.remove( canvas );
+					
+					GLAnimatorControl animator = canvas.getAnimator();
+					if( animator != null ){
+						if( animator.isStarted()  )
+							animator.stop();
+						animator.remove( canvas );
+					}
+					
 					displayGUI.unbind( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
 					
@@ -339,14 +451,12 @@ public class ExampleGameMenuJOGL {
 		displayGUI.setContentPane( new GameMenu( actions ) );
 		displayGUI.bind( canvas );
 
-		animator.add( canvas );
-		
 		mostrar( canvas );
 		
 		splashWindow.setVisible( false );
 		splashWindow = null;
 		System.gc();
 		
-		animator.start();
+		canvas.getAnimator().start();
 	}
 }
