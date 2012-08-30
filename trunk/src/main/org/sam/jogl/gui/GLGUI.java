@@ -269,6 +269,9 @@ public class GLGUI implements Initializable{
 			
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPopMatrix();
+			
+			//FIXME llamar en otro hilo
+			UIManager.runActions();
 		}
 
 		/* (non-Javadoc)
@@ -461,7 +464,7 @@ public class GLGUI implements Initializable{
 		return this.contentPane;
 	}
 	
-	void bindInitialized( GLAutoDrawable glDrawable ){
+	void _bind( GLAutoDrawable glDrawable ){
 		
 		glDrawable.addGLEventListener( guiRenderer );
 		Component component = ((Component)glDrawable);
@@ -481,13 +484,13 @@ public class GLGUI implements Initializable{
 	public void bind( final GLAutoDrawable glDrawable ){
 	
 		if( UIManager.isInitialized() )
-			bindInitialized( glDrawable );
+			_bind( glDrawable );
 		else
 			glDrawable.addGLEventListener( new GLEventListener(){
 				public void init( GLAutoDrawable glDrawable ){
-					UIManager.Init( glDrawable.getGL().getGL2() );
+					UIManager.init( glDrawable.getGL().getGL2() );
 					glDrawable.removeGLEventListener( this );
-					bindInitialized( glDrawable );
+					_bind( glDrawable );
 				}
 				public void reshape( GLAutoDrawable glDrawable, int x, int y, int w, int h ){}
 				

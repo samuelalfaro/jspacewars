@@ -455,8 +455,8 @@ public class Prueba060_Loader{
 		animator.add( canvas );
 
 		frame.setVisible( true );
-		canvas.setBounds( ( frame.getContentPane().getWidth() - 400 ) / 2,
-				frame.getContentPane().getHeight() - 40, 400, 20 );
+		canvas.setBounds( ( frame.getContentPane().getWidth() - 400 ) / 2, frame.getContentPane().getHeight() - 40,
+				400, 20 );
 
 		animator.start();
 
@@ -479,11 +479,11 @@ public class Prueba060_Loader{
 		Renderer renderer = new Renderer( data, elementos, orbitBehavior );
 		canvas.addGLEventListener( renderer );
 		canvas.addKeyListener( renderer );
-		
+
 		BorderLayout layout = new BorderLayout();
-		layout.addLayoutComponent(canvas, BorderLayout.CENTER);
+		layout.addLayoutComponent( canvas, BorderLayout.CENTER );
 		frame.getContentPane().setLayout( layout );
-		
+
 		animator.start();
 		canvas.requestFocusInWindow();
 		frame.validate();

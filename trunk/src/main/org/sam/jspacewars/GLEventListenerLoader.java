@@ -101,7 +101,7 @@ class GLEventListenerLoader implements GLEventListener {
 		if( ciclo == 0 ){
 		}
 		else if( !UIManager.isInitialized() )
-			UIManager.Init( gl );
+			UIManager.init( gl );
 		else if( dataGame.getGui() == null ){
 			dataGame.setGui( MarcoDeIndicadores.getMarco( 0 ) );
 		}else if( !dataGame.getGui().isLoadComplete() ){

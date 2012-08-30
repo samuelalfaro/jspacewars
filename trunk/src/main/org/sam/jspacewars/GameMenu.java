@@ -30,6 +30,7 @@ import org.sam.jogl.gui.ButtonAction;
 import org.sam.jogl.gui.GLButton;
 import org.sam.jogl.gui.GLComponent;
 import org.sam.jogl.gui.GLContainer;
+import org.sam.jogl.gui.UIManager;
 import org.sam.jogl.gui.event.ActionEvent;
 import org.sam.jogl.gui.event.ActionListener;
 
@@ -37,9 +38,9 @@ public class GameMenu extends GLContainer {
 
 	private static class MyListener implements ActionListener{
 		
-		final Map<String, ButtonAction> actions;
+		final Map<String, Runnable> actions;
 
-		MyListener( Map<String, ButtonAction> actions ){
+		MyListener( Map<String, Runnable> actions ){
 			this.actions = actions;
 		}
 
@@ -48,11 +49,18 @@ public class GameMenu extends GLContainer {
 		 */
 		@Override
 		public void actionPerformed( ActionEvent e ){
-			actions.get( ( (GLButton)e.source ).getActionName() ).run();
+			Runnable action = actions.get( ( (GLButton)e.source ).getActionName() );
+			if( action != null ){
+				if( ButtonAction.class.isAssignableFrom( action.getClass() ) && ( (ButtonAction)action ).isMultiThread() )
+					UIManager.invokeLater( new Thread( action ) );
+				else
+					UIManager.invokeLater( action );
+			}
 		}
 	}
-/*
-	public GameMenu( Map<String, ButtonAction> actions ){
+
+	//*
+	public GameMenu( Map<String, Runnable> actions ){
 		
 		Locale locale = Locale.getDefault(); 
 		ResourceBundle bundle = null; //ResourceBundle.getBundle("org.sam.gui.translations.messages", locale);
@@ -96,7 +104,7 @@ public class GameMenu extends GLContainer {
 		};
 		actions.put( action.getName(), action );
 		
-		action = new ButtonAction( "quit" ){
+		action = new ButtonAction( true, "quit" ){
 			public void run(){
 				System.exit( 0 );
 			}
@@ -130,8 +138,7 @@ public class GameMenu extends GLContainer {
 		
 		buildMenu( mainMenu, 300, 50, 20 );
 	}
-	*/
-	
+	/*/
 	public GameMenu( Map<String, ButtonAction> actions ){
 		
 		Locale locale = Locale.getDefault(); 
@@ -147,7 +154,7 @@ public class GameMenu extends GLContainer {
 				new GLButton( "quit", bundle, listener )
 		};
 		
-		ButtonAction action = new ButtonAction( "quit" ){
+		action = new ButtonAction( true, "quit" ){
 			public void run(){
 				System.exit( 0 );
 			}
@@ -155,6 +162,7 @@ public class GameMenu extends GLContainer {
 		actions.put( action.getName(), action );
 		buildMenu( mainMenu, 300, 50, 20 );
 	}
+	//*/
 
 	void buildMenu( GLComponent[] components, float buttonsWidth, float buttonsHeight, float padding ){
 		if( components == null || components.length == 0 )

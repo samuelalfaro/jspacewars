@@ -59,7 +59,7 @@ public class PruebaGameMenu{
 		frame.setVisible( true );
 		
 		GLGUI gui = new GLGUI();
-		gui.setContentPane( new GameMenu( new Hashtable<String, ButtonAction>() ) );
+		gui.setContentPane( new GameMenu( new Hashtable<String, Runnable>() ) );
 		gui.bind( canvas );
 		
 		Animator animator = new Animator();
