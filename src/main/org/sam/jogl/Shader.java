@@ -334,13 +334,26 @@ public class Shader{
 			gl.glAttachObjectARB( programObject, fragmentShader );
 			gl.glLinkProgramARB( programObject );
 
-			gl.glValidateProgramARB( programObject );
-
-			checkLogInfo( gl, "Program Validation >> ", programObject );
+//			gl.glValidateProgramARB( programObject );
+//			checkLogInfo( gl, "Program Validation >> ", programObject );
 		}else{
 			programObject = 0;
 		}
 		uniforms = new HashMap<String, Atributo<? extends Object>>( 0 );
+	}
+	
+	/**
+	 * Método que valida este {@code Shader}.
+	 * 
+	 * @param gl Contexto gráfico en el que se realiza a acción.
+	 */
+	public void validate( GL2 gl ){
+		gl.glLinkProgramARB( programObject );
+		for( Atributo<?> atributo: uniforms.values() )
+			atributo.Uniform( gl );
+		gl.glValidateProgramARB( programObject );
+		checkLogInfo( gl, "Program Validation >> ", programObject );
+
 	}
 
 	private static String loadShader( String filename ) throws FileNotFoundException, IOException{
@@ -353,6 +366,7 @@ public class Shader{
 			shaderWriter.write( line );
 			shaderWriter.write( "\n" );
 		}
+		shaderReader.close();
 		return shaderWriter.getBuffer().toString();
 	}
 
@@ -385,7 +399,7 @@ public class Shader{
 	 */
 	public void addUniform( GL2 gl, String name, Object value ){
 		int id = gl.glGetUniformLocation( programObject, name );
-//		System.err.println( "Program Id: " + programObject +" " + name+ " Id: " + id );
+		//System.err.println( "Program Id: " + programObject +" " + name+ " Id: " + id );
 		uniforms.put( name, Atributo.getAtributo( id, value ) );
 	}
 

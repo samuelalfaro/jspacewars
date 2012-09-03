@@ -37,7 +37,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.DatagramChannel;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 import javax.media.opengl.GLAnimatorControl;
@@ -226,17 +228,145 @@ public class ExampleGameMenuJOGL {
 	}
 	
 	private static class DebugCanvas extends GLCanvas{
+		
+		private static class MultiGLEventListener implements GLEventListener{
+			
+			private final List<GLEventListener> listeners;
+			private final Object lock;
+			private boolean busy, waiting;
+			
+			
+			MultiGLEventListener(){
+				listeners = new ArrayList<GLEventListener>();
+				lock = new Object();
+				busy = false;
+				waiting = false;
+			}
+
+			/* (non-Javadoc)
+			 * @see javax.media.opengl.GLEventListener#init(javax.media.opengl.GLAutoDrawable)
+			 */
+			@Override
+			public void init( GLAutoDrawable drawable ){
+				busy = true;
+				for( GLEventListener listener: listeners )
+					listener.init( drawable );
+				if( waiting ){
+					System.err.println("Notificando ... ");
+					synchronized( lock ){
+						lock.notifyAll();
+					}
+				}
+				busy = false;
+			}
+			
+			/* (non-Javadoc)
+			 * @see javax.media.opengl.GLEventListener#display(javax.media.opengl.GLAutoDrawable)
+			 */
+			@Override
+			public void display( GLAutoDrawable drawable ){
+				busy = true;
+				for( GLEventListener listener: listeners )
+					listener.display( drawable );
+				drawable.getGL().glFlush();
+				if( waiting ){
+					System.err.println("Notificando ... ");
+					synchronized( lock ){
+						lock.notifyAll();
+					}
+				}
+				busy = false;
+			}
+			
+			/* (non-Javadoc)
+			 * @see javax.media.opengl.GLEventListener#reshape(javax.media.opengl.GLAutoDrawable, int, int, int, int)
+			 */
+			@Override
+			public void reshape( GLAutoDrawable drawable, int x, int y, int w, int h ){
+				busy = true;
+				for( GLEventListener listener: listeners )
+					listener.reshape( drawable, x, y, w, h );
+				if( waiting ){
+					System.err.println("Notificando ... ");
+					synchronized( lock ){
+						lock.notifyAll();
+					}
+				}
+				busy = false;
+			}
+
+			/* (non-Javadoc)
+			 * @see javax.media.opengl.GLEventListener#dispose(javax.media.opengl.GLAutoDrawable)
+			 */
+			@Override
+			public void dispose( GLAutoDrawable drawable ){
+				busy = true;
+				for( GLEventListener listener: listeners )
+					listener.dispose( drawable );
+				if( waiting ){
+					System.err.println("Notificando ... ");
+					synchronized( lock ){
+						lock.notifyAll();
+					}
+				}
+				busy = false;
+			}
+			
+			public void add( GLEventListener listener ){
+				System.err.println( "addGLEventListener: " + listener.getClass().getName() );
+				if( busy ){
+					System.err.println("Esperando ... ");
+					synchronized( lock ){
+						waiting = true;
+						try{
+							lock.wait();
+						}catch( InterruptedException ignorada ){
+						}
+						waiting = false;
+					}
+				}
+				listeners.add( listener );
+			}
+
+			public void remove( GLEventListener listener ){
+				System.err.println( "removeGLEventListener: " + listener.getClass().getName() );
+				if( busy ){
+					System.err.println("Esperando ... ");
+					synchronized( lock ){
+						waiting = true;
+						try{
+							lock.wait();
+						}catch( InterruptedException ignorada ){
+						}
+						waiting = false;
+					}
+				}
+				listeners.remove( listener );
+			}
+		}
+		
+		private final MultiGLEventListener multilistener;
+		
 		DebugCanvas(){
 			super();
+			multilistener = new MultiGLEventListener();
+			super.addGLEventListener( multilistener );
 		}
 
 		DebugCanvas( GLCapabilities capabilities ){
 			super( capabilities );
+			multilistener = new MultiGLEventListener();
+			super.addGLEventListener( multilistener );
 		}
 
 		DebugCanvas( GLCapabilities capabilities, GLCapabilitiesChooser chooser, GLContext shareWith,
 				GraphicsDevice device ){
 			super( capabilities, chooser, shareWith, device );
+			System.out.println("AutoSwapBufferMode: " + this.getAutoSwapBufferMode());
+		//	this.isRealized()
+			
+			multilistener = new MultiGLEventListener();
+			super.addGLEventListener( multilistener );
 		}
 
 		/*
@@ -245,8 +375,7 @@ public class ExampleGameMenuJOGL {
 		 */
 		@Override
 		public void addGLEventListener( GLEventListener listener ){
-			super.addGLEventListener( listener );
-			System.err.println( "addGLEventListener: " + listener.getClass().getName() );
+			multilistener.add( listener );
 		}
 
 		/*
@@ -255,8 +384,7 @@ public class ExampleGameMenuJOGL {
 		 */
 		@Override
 		public void removeGLEventListener( GLEventListener listener ){
-			super.removeGLEventListener( listener );
-			System.err.println( "removeGLEventListener: " + listener.getClass().getName() );
+			multilistener.remove( listener );
 		}
 
 		/* (non-Javadoc)
@@ -274,12 +402,16 @@ public class ExampleGameMenuJOGL {
 		 */
 		@Override
 		public void display(){
+//			//System.err.println( "Display canvas" );
 			super.display();
-			//System.err.println( "Display canvas" );
+			//multilistener.display( this );
 		}
 	}
 	
 	public static void main( String[] args ){
+		
+//		Toolkit.getDefaultToolkit().setDynamicLayout(true);
+//		System.setProperty("sun.awt.noerasebackground", "true");
 
 		final ClientServer clientServer = new ClientServer();
 
@@ -300,7 +432,11 @@ public class ExampleGameMenuJOGL {
 
 		splashWindow.waitForLoading();
 		
-		final GLCanvas canvas = new DebugCanvas( null, null, splashCanvas.getContext(), null );
+		GLCapabilities caps = new GLCapabilities( GLProfile.get( GLProfile.GL2 ) );
+		caps.setDoubleBuffered( true );
+		
+		//final GLCanvas canvas = new DebugCanvas( caps, null, splashCanvas.getContext(), null );
+		final GLCanvas canvas = new GLCanvas( caps, null, splashCanvas.getContext(), null );
 		canvas.setBackground( Color.BLACK );
 		
 		Animator animator = new Animator();
@@ -345,7 +481,7 @@ public class ExampleGameMenuJOGL {
 				
 				canvas.invoke( false, new GLRunnable(){ 
 					@Override
-					public void run( GLAutoDrawable autoDrawable ){
+					public boolean run( GLAutoDrawable autoDrawable ){
 						System.err.println( "1 Player button pressed" );
 						try{
 							GLAnimatorControl animator = autoDrawable.getAnimator();
@@ -354,10 +490,9 @@ public class ExampleGameMenuJOGL {
 									animator.stop();
 								animator.remove( autoDrawable );
 							}
-							
-							canvas.removeGLEventListener( backgroundRenderer );
 							displayGUI.unbind( autoDrawable );
-
+							canvas.removeGLEventListener( backgroundRenderer );
+							
 							clientServer.server = new ServidorJuego( cache );
 							clientServer.cliente = new Cliente( dataGame, (GLCanvas)autoDrawable );
 							clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
@@ -377,16 +512,16 @@ public class ExampleGameMenuJOGL {
 						}catch( IOException exception ){
 							exception.printStackTrace();
 						}
+						return true;
 					}
 				});
 			}
 		};
 		actions.put( action.getName(), action );
 
-		action = new ButtonAction( "server" ){
+		action = new ButtonAction( true, "server" ){
 			public void run(){
 				try{
-					
 					GLAnimatorControl animator = canvas.getAnimator();
 					if( animator != null ){
 						if( animator.isStarted()  )
@@ -396,7 +531,7 @@ public class ExampleGameMenuJOGL {
 					
 					displayGUI.unbind( canvas );
 					canvas.removeGLEventListener( backgroundRenderer );
-
+					
 					clientServer.server = new ServidorJuego( cache, Properties.port );
 
 					clientServer.cliente = new Cliente( dataGame, canvas );
@@ -422,7 +557,7 @@ public class ExampleGameMenuJOGL {
 		};
 		actions.put( action.getName(), action );
 
-		action = new ButtonAction( "client" ){
+		action = new ButtonAction( true, "client" ){
 			public void run(){
 				try{
 					
