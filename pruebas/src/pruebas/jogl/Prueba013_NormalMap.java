@@ -117,7 +117,9 @@ public class Prueba013_NormalMap{
 			forma.getApariencia().setTextura( bump );
 			Shader shader = new Shader( gl, "shaders/normal2.vert", "shaders/normal2.frag" );
 			shader.bindAttribLocation( gl, 1, "vTangent" );
+			//gl.glUniform1i( gl.glGetUniformLocation( shaderReader., "normalMap" ), 0 );
 			shader.addUniform( gl, "normalMap", 0 );
+			shader.validate( gl );
 
 			forma.getApariencia().setShader( shader );
 

@@ -200,7 +200,7 @@ public class Prueba002_VBO{
 			gl.glMatrixMode( GLMatrixFunc.GL_MODELVIEW );
 			gl.glLoadIdentity();
 
-			texture1.bind();
+			texture1.bind(gl);
 
 			gl.glEnableClientState( GLPointerFunc.GL_VERTEX_ARRAY );
 			gl.glEnableClientState( GLPointerFunc.GL_COLOR_ARRAY );

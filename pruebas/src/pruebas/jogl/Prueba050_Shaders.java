@@ -178,10 +178,12 @@ public class Prueba050_Shaders{
 				if( extensions.indexOf( "GL_ARB_vertex_shader" ) != -1 ){
 					Shader shader = new Shader( gl, "resources/shaders/reflexion.vert",
 							"resources/shaders/reflexion.frag" );
-					shader.addUniform( gl, "difuseMap", 0 );
+					shader.addUniform( gl, "difuseMap",    0 );
 					shader.addUniform( gl, "reflexionMap", 1 );
 					shader.addUniform( gl, "reflexionEnv", 2 );
 
+					shader.validate( gl );
+					
 					nave.getApariencia().setShader( shader );
 				}
 //				nave.getApariencia().setAtributosTransparencia(
