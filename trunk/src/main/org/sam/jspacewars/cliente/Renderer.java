@@ -92,6 +92,7 @@ class Renderer implements GLEventListener {
 	public void display( GLAutoDrawable drawable ){
 		
 		if( !iniciado ){
+			System.out.println( "Cliente: inciando renderer .......");
 			reshape( drawable, 0, 0, drawable.getWidth(), drawable.getHeight() );
 			init( drawable );
 		}
@@ -99,8 +100,6 @@ class Renderer implements GLEventListener {
 		tAnterior = tActual;
 		tActual = System.nanoTime();
 		long incT = tActual - tAnterior;
-		
-		System.out.println( "Cliente: dibujando ......." + incT );
 		
 		fondo.getModificador().modificar( incT );
 		for( Modificador modificador: data.modificadores )
@@ -120,7 +119,7 @@ class Renderer implements GLEventListener {
 			elemento.draw( gl );
 		marco.draw( gl );
 		
-		gl.glFlush();
+		//gl.glFlush(); FIXME
 	}
 
 	private final transient Rectangle2D.Float aWH = new Rectangle2D.Float();

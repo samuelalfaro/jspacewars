@@ -30,11 +30,11 @@ public class Sincronizador {
 	/**
 	 * Bloquea a la hebra llamante hasta que es notificada.
 	 */
-	public void esperar() {
-		synchronized(this){
-			try {
+	public void esperar(){
+		synchronized( this ){
+			try{
 				wait();
-			} catch (InterruptedException e) {
+			}catch( InterruptedException e ){
 				e.printStackTrace();
 			}
 		}
@@ -45,11 +45,11 @@ public class Sincronizador {
 	 * 
 	 * @param milis máximo tiempo de espera en milisegundos.
 	 */
-	public void esperar(long milis) {
-		synchronized(this){
-			try {
-				wait(milis);
-			} catch (InterruptedException e) {
+	public void esperar( long milis ){
+		synchronized( this ){
+			try{
+				wait( milis );
+			}catch( InterruptedException e ){
 				e.printStackTrace();
 			}
 		}
@@ -58,8 +58,8 @@ public class Sincronizador {
 	/**
 	 * Notifica a las hebras bloquadas por los métodos {@linkplain #esperar()} o {@linkplain #esperar(long)} que continuen.
 	 */
-	public void notificar() {
-		synchronized(this){
+	public void notificar(){
+		synchronized( this ){
 			notifyAll();
 		}
 	}

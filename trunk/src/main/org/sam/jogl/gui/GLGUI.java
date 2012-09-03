@@ -141,7 +141,7 @@ public class GLGUI implements Initializable{
 			gl.glMatrixMode( GLMatrixFunc.GL_PROJECTION );
 			gl.glPopMatrix();
 			
-			gl.glFlush();
+			//gl.glFlush(); FIXME
 		}
 
 		/* (non-Javadoc)

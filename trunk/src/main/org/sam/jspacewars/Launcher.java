@@ -26,13 +26,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -66,9 +64,6 @@ public class Launcher{
 		static final boolean hideToolBar;
 		static final int     width;
 		static final int     height;
-		
-		static final int     port;
-		static final String  hostName;
 		
 		private static int getProperty( java.util.Properties properties, String key, int defaultValue ){
 			try{
@@ -116,9 +111,6 @@ public class Launcher{
 			hideToolBar = getProperty ( properties, "Graphics.hideToolBar", false );
 			width       = getProperty ( properties, "Graphics.width", -1 );
 			height      = getProperty ( properties, "Graphics.height", -1 );
-				
-			port        = getProperty ( properties, "Network.port", 1111 );
-			hostName    = getProperty ( properties, "Network.hostName", "localhost" );
 		}
 		
 		private Properties(){}
