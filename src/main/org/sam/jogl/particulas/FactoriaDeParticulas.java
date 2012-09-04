@@ -40,7 +40,7 @@ public class FactoriaDeParticulas{
 	}
 
 	/**
-	 * @param pointSpritesEnabled ignorado operacion no soportada
+	 * @param pointSpritesEnabled ignorado operacion no soportada.
 	 */
 	public static void setPointSpritesEnabled( boolean pointSpritesEnabled ){
 		throw new UnsupportedOperationException();
@@ -53,7 +53,7 @@ public class FactoriaDeParticulas{
 	}
 
 	/**
-	 * @param shadersEnabled ignorado operacion no soportada
+	 * @param shadersEnabled ignorado operacion no soportada.
 	 */
 	public static void setShadersEnabled( boolean shadersEnabled ){
 		throw new UnsupportedOperationException();
