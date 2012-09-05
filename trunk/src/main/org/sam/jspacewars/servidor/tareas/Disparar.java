@@ -25,23 +25,28 @@ package org.sam.jspacewars.servidor.tareas;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
 /**
- * @author samuel
- *
+ * Clase que define la {@code Tarea} de disparar un cañon, durante un periodo de tiempo.
  */
 public class Disparar extends TareaAbs {
 
 	private int canion;
 	
-	public Disparar(int canion, long duracion) {
-		super(duracion);
+	/**
+	 * Constructor que asigna los valores necesarios para realizar la {@code Tarea} de disparar un cañon.
+	 *  
+	 * @param canion Índice que indica el cañon disparado.
+	 * @param duracion Tiempo que dura la tarea de disparar.
+	 */
+	public Disparar( int canion, long duracion ){
+		super( duracion );
 		this.canion = canion;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga, long, long)
 	 */
 	@Override
-	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
+	public void realizar( NaveEnemiga owner, long startTime, long stopTime ){
 		// TODO hacer realmente
 		realizarTest( startTime, stopTime );
 	}

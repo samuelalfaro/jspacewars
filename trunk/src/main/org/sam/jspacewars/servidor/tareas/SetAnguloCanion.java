@@ -25,24 +25,29 @@ package org.sam.jspacewars.servidor.tareas;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
 /**
- * @author samuel
- *
+ * Clase que define la {@code Accion} de asignar a un cañon un determinado ángulo de orientación.
  */
 public class SetAnguloCanion extends Accion {
 
-	int canion;
-	float angulo;
+	private int canion;
+	private float angulo;
 	
-	public SetAnguloCanion(int canion, float angulo) {
+	/**
+	 * Constructor que asigna nos valores necesarios para realizar la {@code Accion}.
+	 *  
+	 * @param canion Índice que indica el cañon orientado.
+	 * @param angulo Ángulo de orientación del cañon.
+	 */
+	public SetAnguloCanion( int canion, float angulo ){
 		this.canion = canion;
 		this.angulo = angulo;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Accion#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga)
 	 */
 	@Override
-	public void realizar(NaveEnemiga owner) {
+	public void realizar( NaveEnemiga owner ){
 		// TODO hacer realmente
 		realizarTest();
 	}
@@ -52,7 +57,7 @@ public class SetAnguloCanion extends Accion {
 	 */
 	@Override
 	public String toString(){
-		return String.format("Asignando angulo %4.1f al cañon %d", angulo, canion );
+		return String.format( "Asignando angulo %4.1f al cañon %d", angulo, canion );
 	}
 	
 }

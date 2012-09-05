@@ -22,18 +22,25 @@
  */
 package org.sam.jspacewars.servidor.tareas;
 
+/**
+ * Implementación Abstracta del interface {@code Tarea}.
+ */
 public abstract class TareaAbs implements Tarea {
 	
 	final private long duracion;
 	
-	public TareaAbs(long duracion){
-		if(duracion < 0)
-			throw new IllegalArgumentException("Duracion < 0");
+	/**
+	 * Constructor que asigna la duración de la tarea.
+	 * @param duracion Tiempo que dura la {@code Tarea}.
+	 */
+	public TareaAbs( long duracion ){
+		if( duracion < 0 )
+			throw new IllegalArgumentException( "Duracion < 0" );
 		this.duracion = duracion;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#getDuracion()
 	 */
 	@Override
 	final public long getDuracion() {
@@ -41,14 +48,19 @@ public abstract class TareaAbs implements Tarea {
 	}
 	
 	/**
-	 * Metodo que muestra por consola las llamadas para test.
+	 * Método que simula la realización de la {@code Tarea} durante el periodo comprendido
+	 * entre {@code startTime} y {@code stopTime}, ambos relativos a la duracion de dicha {@code Tarea}.
+	 * Mostrando por consola las llamadas para test.
 	 * 
-	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(long, long)
+	 * @param startTime Tiempo inicial.<br/>
+	 * @param stopTime Tiempo final.<br/>
+	 * 
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga, long, long)
 	 */
-	final protected void realizarTest(long startTime, long stopTime){
-		long desfase =  startTime;
-		long tTrabajo = Math.min(this.getDuracion() - startTime, stopTime - startTime);
-		long tEspera =  stopTime -tTrabajo - desfase;
+	final protected void realizarTest( long startTime, long stopTime ){
+		long desfase = startTime;
+		long tTrabajo = Math.min( this.getDuracion() - startTime, stopTime - startTime );
+		long tEspera = stopTime - tTrabajo - desfase;
 		System.out.format("   %-22s [ %2d, %2d ] [ %2d : %2d nanosegundos : %2d ]\n", toString(), startTime, stopTime, desfase, tTrabajo, tEspera );
 	}
 }

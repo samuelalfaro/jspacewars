@@ -25,13 +25,13 @@ package org.sam.jspacewars.servidor.tareas;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
 /**
- * @author samuel
+ * Clase que define una {@code Tarea} instantánea.
  */
 public abstract class Accion implements Tarea {
 
 	/**
-	 * {@inheritDoc}<br/>
-	 * Como una {@code Accion} se considera una {@code Tarea} instantenea, devuelve simpre 0.
+	 * Método que devuelve la duración de la {@code Tarea}, como se considera {@code Accion} a una {@code Tarea} instantánea,
+	 * devuelve simpre 0.
 	 * @return 0
 	 */
 	@Override
@@ -40,33 +40,36 @@ public abstract class Accion implements Tarea {
 	}
 	
 	/**
-	 * {@inheritDoc}<br/>
-	 * Como una {@code Accion} se considera una {@code Tarea} instantenea, este metodo, encapsula una llamada
-	 * al metodo abstracto {@link org.sam.jspacewars.servidor.tareas.Accion#realizar() realizar()},
-	 * ignorando los parametros {@code startTime} y {@code stopTime}.
+	 * Método que realiza la {@code Tarea} durante el periodo comprendido entre {@code startTime} y {@code stopTime},
+	 * como se considera {@code Accion} a una {@code Tarea} instantánea, este método, hace una llamada
+	 * al método abstracto
+	 * {@link org.sam.jspacewars.servidor.tareas.Accion#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga)
+	 * realizar(NaveEnemiga owner)},
+	 * ignorando los parámetros {@code startTime} y {@code stopTime}.
 	 * 
+	 * @param owner {@code NaveEnemiga} que realiza la {@code Tarea}.
 	 * @param startTime ignorado
 	 * @param stopTime ignorado
 	 */
 	@Override
-	final public void realizar(NaveEnemiga owner, long startTime, long stopTime){
-		realizar(owner);
+	final public void realizar( NaveEnemiga owner, long startTime, long stopTime ){
+		realizar( owner );
 	}
 	
 	/**
-	 * Realiza la  {@code Accion}.
+	 * Método que realiza la {@code Accion}.
 	 * 
 	 * @param owner {@code NaveEnemiga} que realiza la {@code Accion}.
 	 */
-	public abstract void realizar(NaveEnemiga owner);
+	public abstract void realizar( NaveEnemiga owner );
 	
 	/**
-	 * Metodo que muestra por consola las llamadas para test.
+	 *  Método que simula la realización de la {@code Accion}, mostrando por consola las llamadas para test.
 	 * 
-	 * @see org.sam.jspacewars.servidor.tareas.Accion#realizar()
+	 * @see org.sam.jspacewars.servidor.tareas.Accion#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga)
 	 */
-	final protected void realizarTest() {
-		System.out.println(" * "+this.toString());
+	final protected void realizarTest(){
+		System.out.println( " * " + this.toString() );
 	}
 	
 }

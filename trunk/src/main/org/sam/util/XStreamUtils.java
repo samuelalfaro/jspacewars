@@ -23,9 +23,6 @@ package org.sam.util;
 
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 
-/**
- * 
- */
 public final class XStreamUtils{
 	
 	private XStreamUtils(){}

@@ -25,22 +25,26 @@ package org.sam.jspacewars.servidor.tareas;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
 /**
- * @author samuel
- *
+ * Clase que define la {@code Tarea} de mover la nave por una trayectoria, durante un periodo de tiempo.
  */
 public class Mover extends TareaAbs {
 
-	public Mover(long duracion) {
-		super(duracion);
+	/**
+	 * Constructor que asigna los valores necesarios para mover la nave.
+	 *  
+	 * @param duracion Tiempo que dura el movimiento.
+	 */
+	public Mover( long duracion ){
+		super( duracion );
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga, long, long)
 	 */
 	@Override
-	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
+	public void realizar( NaveEnemiga owner, long startTime, long stopTime ){
 		// TODO hacer realmente
-		realizarTest( startTime, stopTime);
+		realizarTest( startTime, stopTime );
 	}
 	
 	/* (non-Javadoc)

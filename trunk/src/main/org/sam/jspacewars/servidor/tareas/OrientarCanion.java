@@ -25,27 +25,34 @@ package org.sam.jspacewars.servidor.tareas;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
 /**
- * @author samuel
- *
+ * Clase que define la {@code Tarea} de cambiar la orientación de un cañon, durante un periodo de tiempo.
  */
 public class OrientarCanion extends TareaAbs {
 
-	int canion;
-	float velocidadAngular;
+	private int canion;
+	@SuppressWarnings( "unused" )
+	private float velocidadAngular;
 	
-	public OrientarCanion(int canion, float velocidadAngular, long duracion) {
-		super(duracion);
+	/**
+	 * Constructor que asigna los valores necesarios para realizar la {@code Tarea} de orientar una cañon.
+	 *  
+	 * @param canion Índice que indica el cañon orientado.
+	 * @param velocidadAngular Velocidad con la que se modificará la orientación del cañon.
+	 * @param duracion Tiempo que dura la tarea de orientar.
+	 */
+	public OrientarCanion( int canion, float velocidadAngular, long duracion ){
+		super( duracion );
 		this.canion = canion;
 		this.velocidadAngular = velocidadAngular;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga, long, long)
 	 */
 	@Override
-	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
+	public void realizar( NaveEnemiga owner, long startTime, long stopTime ){
 		// TODO hacer realmente
-		realizarTest( startTime, stopTime);
+		realizarTest( startTime, stopTime );
 	}
 	
 	/* (non-Javadoc)

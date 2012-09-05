@@ -25,19 +25,30 @@ package org.sam.jspacewars.servidor.tareas;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
 /**
- * @author samuel
- * 
+ * Clase que define un periodo de espera que permite retrasar otras tareas posteriores.
  */
 public final class Esperar extends TareaAbs {
 
 	private final long duracionMin, duracionMax;
 	
-	public Esperar(long duracion) {
-		this(duracion, duracion);
+	/**
+	 * Constructor que asigna un tiempo espera fijo.
+	 *  
+	 * @param duracion Tiempo que dura la espera.
+	 */
+	public Esperar( long duracion ){
+		this( duracion, duracion );
 	}
 
-	public Esperar(long duracionMin, long duracionMax) {
-		super( (long)(Math.random() * (duracionMax - duracionMin) + 0.5) + duracionMin );
+	/**
+	 * Constructor que asigna un tiempo espera aleatorio comprendido entre los valores
+	 * que se pasan como parámetros.
+	 * 
+	 * @param duracionMin Tiempo de espera mínimo.
+	 * @param duracionMax Tiempo de espera máximo.
+	 */
+	public Esperar( long duracionMin, long duracionMax ){
+		super( (long)( Math.random() * ( duracionMax - duracionMin ) + 0.5 ) + duracionMin );
 		this.duracionMin = duracionMin;
 		this.duracionMax = duracionMax;
 	}
@@ -60,12 +71,13 @@ public final class Esperar extends TareaAbs {
 		return duracionMax;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga, long, long)
 	 */
 	@Override
-	public void realizar(NaveEnemiga owner, long startTime, long stopTime) {
-		realizarTest(startTime, stopTime);
+	public void realizar( NaveEnemiga owner, long startTime, long stopTime ){
+		// TODO hacer realmente
+		realizarTest( startTime, stopTime );
 	}
 
 	/* (non-Javadoc)
