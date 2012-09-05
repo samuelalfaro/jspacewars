@@ -44,7 +44,7 @@ public class FactoriaDeParticulas{
 	 */
 	public static void setPointSpritesEnabled( boolean pointSpritesEnabled ){
 		throw new UnsupportedOperationException();
-		//TODO implementar o eliminar completamente
+		//TODO implementar o eliminar completamente.
 		//FactoriaDeParticulas.pointSpritesEnabled = pointSpritesEnabled;
 	}
 

@@ -44,14 +44,14 @@ public interface Tarea {
 	 * 
 	 * @param startTime Tiempo inicial.<br/>
 	 * Si es negativo, o mayor de {@code stopTime}, el comportamiento no esta definido.<br/>
-	 * Si es mayor de la duracion de la {@code Tarea}, se interpreta que dicha {@code Tarea},
+	 * Si es mayor de la duración de la {@code Tarea}, se interpreta que dicha {@code Tarea},
 	 * se ha realizado en un periodo anterior, y no se hace nada.
 	 * 
 	 * @param stopTime Tiempo final.<br/>
 	 * Si negativo, o menor de {@code startTime}, el comportamiento no esta definido.<br/>
-	 * Si es mayor que la duracion que la {@code Tarea}, se completará dicha {@code Tarea},
+	 * Si es mayor que la duración que la {@code Tarea}, se completará dicha {@code Tarea},
 	 * teniendo en cuenta el tiempo transcurrido tras su finalización.
 	 */
-	public void realizar(NaveEnemiga owner, long startTime, long stopTime);
+	public void realizar( NaveEnemiga owner, long startTime, long stopTime );
 	
 }

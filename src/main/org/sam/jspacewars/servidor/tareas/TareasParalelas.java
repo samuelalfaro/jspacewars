@@ -24,38 +24,41 @@ package org.sam.jspacewars.servidor.tareas;
 
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
+/**
+ * Clase que representa una tarea formada por un conjunto de tareas, que se realizan
+ * en paralelo.
+ */
 public final class TareasParalelas extends TareaAbs {
 	
 	private final Tarea[] tareas;
 
-	private static long calcularDuracion(Tarea[] tareas){
+	private static long calcularDuracion( Tarea[] tareas ){
 		long max = -1;
-		for(Tarea t:tareas)
-			if(max < t.getDuracion())
+		for( Tarea t: tareas )
+			if( max < t.getDuracion() )
 				max = t.getDuracion();
 		return max;
 	}
 	
 	/**
-	 * Constructor de una tarea formada por un conjunto de tareas, que se realizan
-	 * en paralelo.
+	 * Constructor que asigna el conjunto de tareas.
 	 * 
-	 * @param tareas vector que contiene el conjunto de tareas a realizar.
+	 * @param tareas Vector que contiene el conjunto de tareas a realizar.
 	 */
 	public TareasParalelas( Tarea[] tareas ){
 		super( calcularDuracion(tareas) );
 		this.tareas = tareas;
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga, long, long)
 	 */
 	@Override
-	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
+	public void realizar( NaveEnemiga owner, long startTime, long stopTime ){
 		if( startTime >= this.getDuracion() )
 			return;
-		for(Tarea t:tareas)
-			if(startTime < t.getDuracion() )
-				t.realizar(owner, startTime, stopTime );
+		for( Tarea t: tareas )
+			if( startTime < t.getDuracion() )
+				t.realizar( owner, startTime, stopTime );
 	}
 }

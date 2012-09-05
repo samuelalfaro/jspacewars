@@ -28,9 +28,11 @@ package org.sam.elementos;
  * @param <T> Tipo genérico de los objetos devueltos por el método {@link Prototipo#clone()}.
  */
 public interface PrototipoCacheable<T> extends Prototipo<T>, Reseteable{
+	
 	/**
 	 * Devuelve un valor de un código hash para este objeto.
-	 * @return el valor del código hash correspondiente.
+	 * 
+	 * @return El valor del código hash solicitado.
 	 */
 	@Override
 	public int hashCode();

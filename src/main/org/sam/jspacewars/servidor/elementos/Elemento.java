@@ -37,27 +37,24 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	/**
 	 * {@code Comparator} que usa sus identificadores para que comparar dos elementos.
 	 */
-	public static Comparator<Elemento> COMPARADOR = new Comparator<Elemento>() {
-		public int compare(Elemento e1, Elemento e2) {
+	public static Comparator<Elemento> COMPARADOR = new Comparator<Elemento>(){
+		public int compare( Elemento e1, Elemento e2 ){
 			int comparacion = e1.type - e2.type;
 			return comparacion != 0 ? comparacion: e1.id - e2.id;
 		}
 	};
 	
-	private static int compareFloats(float f1, float f2){
-		return
-			f1 < f2 ? -1:
-			f1 > f2 ?  1:
-			0;
-	}
-	
 	/**
 	 * {@code Comparator} que usa sus posiciones para que comparar dos elementos.
 	 */
 	public static Comparator<Elemento> COMPARADOR_POSICIONES = new Comparator<Elemento>() {
+		
+		int compareFloats( float f1, float f2 ){
+			return f1 < f2 ? -1: f1 > f2 ? 1: 0;
+		}
 
-		public int compare(Elemento e1, Elemento e2) {
-			int comparacion = compareFloats(e1.getLimites().getXMin(), e2.getLimites().getXMin());
+		public int compare( Elemento e1, Elemento e2 ){
+			int comparacion = compareFloats( e1.getLimites().getXMin(), e2.getLimites().getXMin() );
 			return comparacion != 0 ? comparacion: e1.id - e2.id;
 		}
 	};
@@ -65,14 +62,15 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	private interface AutoIncrementable{
 		short getNextId();
 	}
+
 	private transient AutoIncrementable incrementador;
-	
+
 	private final AutoIncrementable getAutoIncrementable(){
-		if(incrementador == null)
+		if( incrementador == null )
 			incrementador = new AutoIncrementable(){
 				private transient short id = 0;
-	
-				public short getNextId() {
+
+				public short getNextId(){
 					if( ++id == Short.MAX_VALUE )
 						id = 1;
 					return id;
@@ -88,7 +86,7 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	private short id;
 	private transient float posX, posY;
 
-	Elemento(short type, Poligono forma) {
+	Elemento( short type, Poligono forma ){
 		this.prototipo = null;
 		this.type = type;
 		this.forma = forma;
@@ -102,7 +100,7 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 	 * datos de otro {@code Elemento} que sirve como prototipo.
 	 * @param prototipo {@code Elemento} prototipo.
 	 */
-	protected Elemento(Elemento prototipo) {
+	protected Elemento( Elemento prototipo ){
 		this.prototipo = prototipo;
 		this.type = prototipo.type;
 		this.forma = prototipo.forma.clone();
@@ -112,14 +110,19 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		this.posY = prototipo.posY;
 	}
 
+	/**
+	 * Método que sobreescribe el método {@code hashCode()} de la clase {@code Object}
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
 	public final int hashCode() {
 		return type;
 	}
 
-	public void setPosicion(float posX, float posY) {
+	public void setPosicion( float posX, float posY ){
 		this.posX = posX;
 		this.posY = posY;
-		this.forma.trasladar(posX, posY);
+		this.forma.trasladar( posX, posY );
 	}
 
 	/**
@@ -137,25 +140,25 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 		return this.posY;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Colisionable#getLimites()
 	 */
 	@Override
 	public final Limites getLimites(){
-		return forma == null ? null : forma.getLimites();
+		return forma == null ? null: forma.getLimites();
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Colisionable#hayColision(org.sam.colisiones.Colisionable)
 	 */
 	@Override
-	public final boolean hayColision(Colisionable otro){
+	public final boolean hayColision( Colisionable otro ){
 		// TODO mirar
-		return forma.hayColision(((Elemento)otro).forma);
+		return forma.hayColision( ( (Elemento)otro ).forma );
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.colisiones.Colisionable#colisionar(org.sam.colisiones.Colisionable)
 	 */
 	@Override
 	public final void colisionar(Colisionable otro) {
@@ -163,23 +166,29 @@ public abstract class Elemento implements PrototipoCacheable<Elemento>, Enviable
 			((Destruible)otro).recibirImpacto(1);
 	}
 	
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Enviable#enviar(java.nio.ByteBuffer)
 	 */
 	@Override
-	public void enviar(ByteBuffer buff) {
-		buff.putShort(type);
-		buff.putShort(id);
-		buff.putFloat(posX);
-		buff.putFloat(posY);
+	public void enviar( ByteBuffer buff ){
+		buff.putShort( type );
+		buff.putShort( id );
+		buff.putFloat( posX );
+		buff.putFloat( posY );
 	}
-	
+
 	/**
-	 * {@inheritDoc}
+	 * Método abstracto que sobreescribe el método {@code clone()} de la clase {@code Object}
+	 * para que deba ser implementado por las clases derivadas.
+	 * 
+	 * @see java.lang.Object#clone()
 	 */
 	@Override
 	public abstract Elemento clone();
 	
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Reseteable#reset()
+	 */
 	@Override
 	public final void reset() {
 		this.id = prototipo.getAutoIncrementable().getNextId();

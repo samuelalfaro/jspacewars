@@ -24,68 +24,71 @@ package org.sam.jspacewars.servidor.tareas;
 
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
+/**
+ * Clase que representa una tarea formada por un conjunto de tareas, que se realizan
+ * secuencialmente.
+ */
 public final class Secuencia extends TareaAbs {
 	
 	private final Tarea[] tareas;
 	private transient final long[] finales;
 
-	private static long calcularDuracion(Tarea[] tareas){
+	private static long calcularDuracion( Tarea[] tareas ){
 		long duracion = 0;
-		for(Tarea t:tareas)
+		for( Tarea t: tareas )
 			duracion += t.getDuracion();
 		return duracion;
 	}
 	
 	/**
-	 * Constructor de una tarea formada por un conjunto de tareas, que se realizan
-	 * secuencialmente.
+	 * Constructor que asigna el conjunto de tareas.
 	 * 
-	 * @param tareas vector que contiene el conjunto de tareas a realizar.
+	 * @param tareas Vector que contiene el conjunto de tareas a realizar.
 	 */
 	public Secuencia( Tarea[] tareas ){
-		super( calcularDuracion(tareas) );
+		super( calcularDuracion( tareas ) );
 		this.tareas = tareas;
 		this.finales = new long[tareas.length];
-		
+
 		finales[0] = tareas[0].getDuracion();
-		for(int i= 1; i < tareas.length; i++)
-			finales[i] = finales[i-1] + tareas[i].getDuracion();
+		for( int i = 1; i < tareas.length; i++ )
+			finales[i] = finales[i - 1] + tareas[i].getDuracion();
 		
 //		System.out.print("Finales: \t[");
 //		for(long f:finales)
 //			System.out.print(" "+f);
 //		System.out.println(" ]");
 	}
-	
-	/**
-	 * {@inheritDoc}
+
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.tareas.Tarea#realizar(org.sam.jspacewars.servidor.elementos.NaveEnemiga, long, long)
 	 */
 	@Override
-	public void realizar(NaveEnemiga owner, long startTime, long stopTime){
-		if(startTime < 0 || startTime >= this.getDuracion() )
+	public void realizar( NaveEnemiga owner, long startTime, long stopTime ){
+		if( startTime < 0 || startTime >= this.getDuracion() )
 			return;
 		// Se realiza una búsqueda secuencial pues puede haber valores repetidos 
-		// y no es acosejable una búsqueda dicotómica.
+		// y no es aconsejable una búsqueda dicotómica.
 		int tarea = 0;
 
 		long startTimeTarea = startTime, stopTimeTarea = stopTime;
-		if(startTime > 0){
-			while(finales[tarea] <= startTime)
-				tarea ++;
-			if( tarea > 0){
-				startTimeTarea -= finales[tarea-1];
-				stopTimeTarea  -= finales[tarea-1];
+		if( startTime > 0 ){
+			while( finales[tarea] <= startTime )
+				tarea++;
+			if( tarea > 0 ){
+				startTimeTarea -= finales[tarea - 1];
+				stopTimeTarea -= finales[tarea - 1];
 			}
 		}
-		
-		while(tarea < tareas.length){
-			if(stopTime < finales[tarea] ){
-				if(startTimeTarea != stopTimeTarea )
-					tareas[tarea].realizar(owner, startTimeTarea, stopTimeTarea);
+
+		while( tarea < tareas.length ){
+			if( stopTime < finales[tarea] ){
+				if( startTimeTarea != stopTimeTarea )
+					tareas[tarea].realizar( owner, startTimeTarea, stopTimeTarea );
 				break;
 			}
-			tareas[tarea].realizar(owner, startTimeTarea, stopTimeTarea);
-			stopTimeTarea  = stopTime - finales[tarea];
+			tareas[tarea].realizar( owner, startTimeTarea, stopTimeTarea );
+			stopTimeTarea = stopTime - finales[tarea];
 			startTimeTarea = 0;
 			tarea++;
 		}
