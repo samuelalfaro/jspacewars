@@ -80,11 +80,11 @@ public class AsignadorDeCabecera {
 		
 		String line;
 		boolean saltar = true;
-		while( ( line = fileReader.readLine()) != null ){
-			if(saltar)
-				saltar = !(line.contains("package") || line.contains("import") || line.contains("/**"));
-			if(!saltar)
-				fileWriter.println(line);
+		while( ( line = fileReader.readLine() ) != null ){
+			if( saltar )
+				saltar = !( line.contains( "package" ) || line.contains( "import" ) || line.contains( "/**" ) );
+			if( !saltar )
+				fileWriter.println( line );
 		}
 		fileReader.close();
 		fileWriter.close();
@@ -98,31 +98,31 @@ public class AsignadorDeCabecera {
 	/**
 	 * @param args ignorados
 	 */
-	public static void main(String[] args){
+	public static void main( String[] args ){
 
-		File f = new File("ruta del codigo fuente");
+		File f = new File( "ruta del codigo fuente" );
 
 		Queue<File> directorios = new LinkedList<File>();
-		directorios.add(f);
-		
-		while(!directorios.isEmpty()){
+		directorios.add( f );
+
+		while( !directorios.isEmpty() ){
 			File directorioActual = directorios.poll();
-			System.out.println(directorioActual);
-			for(File archivo: directorioActual.listFiles()){
+			System.out.println( directorioActual );
+			for( File archivo: directorioActual.listFiles() ){
 				if( !archivo.isHidden() ){
-					if( archivo.isDirectory())
-						directorios.add(archivo);
-					else if(archivo.getName().endsWith(".java"))
-						try {
+					if( archivo.isDirectory() )
+						directorios.add( archivo );
+					else if( archivo.getName().endsWith( ".java" ) )
+						try{
 							includeCabecera(
 								archivo,
 								"2008-2010",
 								"autor",
 								"nombre del proyecto"
 							);
-						} catch (FileNotFoundException e) {
+						}catch( FileNotFoundException e ){
 							e.printStackTrace();
-						} catch (IOException e) {
+						}catch( IOException e ){
 							e.printStackTrace();
 						}
 				}
