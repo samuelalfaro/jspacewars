@@ -231,7 +231,7 @@ public class SphereGenerator {
 		
 		OglList oglList = new OglList(gl);
 		
-		gl.glBegin((flags & Generator.GENERATE_NTB_MASK) != 0 ? GL.GL_LINES : GL2.GL_QUADS );
+		gl.glBegin((flags & Generator.GENERATE_BINORMALS_MASK) != 0 ? GL.GL_LINES : GL2.GL_QUADS );
 		
 		final Vector2f s = new Vector2f();
 		final Vector2f t = new Vector2f();
