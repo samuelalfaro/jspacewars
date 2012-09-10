@@ -38,8 +38,17 @@ import java.util.TreeMap;
  */
 public class Cache<T extends PrototipoCacheable<T>>{
 
+	/**
+	 * Clase que encapsula la excepción lanzada cuando se pretende
+	 * recuperar la caché un elemento del cual no tiene un prototipo.
+	 */
 	@SuppressWarnings("serial")
-	private static class PrototipoDesconocidoException extends RuntimeException{
+	public static class PrototipoDesconocidoException extends RuntimeException{
+		/**
+		 * Constructor que crea una nueva excepción con el mensaje detallado de
+		 * la causa.
+		 * @param str Mensaje detallado de la causa que ha producido la excepción.
+		 */
 		PrototipoDesconocidoException( String str ){
 			super( str );
 		}

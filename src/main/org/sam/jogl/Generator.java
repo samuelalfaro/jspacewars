@@ -37,17 +37,30 @@ import javax.vecmath.Vector4f;
  */
 public abstract class Generator {
 	
-	public static final int ONLY_VERTICES          = 0x00;
-	public static final int GENERATE_NORMALS       = 0x01;
-	public static final int GENERATE_TEXT_COORDS   = 0x02;
+	/** Indicador, por defecto, que marca que sólo se generarán los vértices de la primitiva. */
+	public static final int ONLY_VERTICES           = 0x00;
+	/** Indicador, que marca que deben generarse las normales de la primitiva. */
+	public static final int GENERATE_NORMALS        = 0x01;
+	/** Indicador, que marca que deben generarse las coordenadas de textura de la primitiva. */
+	public static final int GENERATE_TEXT_COORDS    = 0x02;
 	
-	public static final int WIREFRAME_MASK         = 0x04;
-	public static final int GENERATE_TANGENTS_MASK = 0x08;
-	public static final int GENERATE_NTB_MASK      = 0x10;
+	/** Máscara, que indica que deben generarse los atributos necesarios, para mostrar primitiva
+	 * en modo alambre. */
+	public static final int WIREFRAME_MASK          = 0x04;
+	/** Máscara, que indica que deben generarse las tangentes de la primitiva. */
+	public static final int GENERATE_TANGENTS_MASK  = 0x08;
+	/** Máscara, que indica que deben generarse las binormales de la primitiva. */
+	public static final int GENERATE_BINORMALS_MASK = 0x10;
 	
-	public static final int WIREFRAME              = GENERATE_NORMALS  | WIREFRAME_MASK;
-	public static final int GENERATE_TANGENTS      = GENERATE_NORMALS  | GENERATE_TEXT_COORDS | GENERATE_TANGENTS_MASK;
-	public static final int GENERATE_NTB           = GENERATE_TANGENTS | GENERATE_NTB_MASK;
+	/** Indicador, que marca que deben generarse tanto las normales, como los atributos necesarios,
+	 * para mostrar primitiva en modo alambre. */
+	public static final int WIREFRAME               = GENERATE_NORMALS  | WIREFRAME_MASK;
+	/** Indicador, que marca que deben generarse las tangentes de la primitiva. Para ello es necesario
+	 * generar también, tanto las normales, como las coordenadas de textura. */
+	public static final int GENERATE_TANGENTS       = GENERATE_NORMALS  | GENERATE_TEXT_COORDS | GENERATE_TANGENTS_MASK;
+	/** Indicador, que marca que deben generarse los sistemas de coordenadas, formados por la normal,
+	 * tangente y binormal, en cada vértice de la primitiva. */
+	public static final int GENERATE_NTB            = GENERATE_TANGENTS | GENERATE_BINORMALS_MASK;
 	
 	/**
 	 * Implementación de un {@code Generator}, que genera primitivas
