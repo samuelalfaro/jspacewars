@@ -550,11 +550,12 @@ public class ObjLoader {
 		}
 	}
 	
-	static float clearDist;
+	private static float clearDist;
 
 	@SuppressWarnings("serial")
 	private static Point3f readVertex( ObjParser st ) throws ParsingErrorException{
 		Point3f v = new Point3f(){
+			@SuppressWarnings( "synthetic-access" )
 			public boolean equals( Object t ){
 				try{
 					return VectorUtils.distance( this, (Tuple3f)t ) <= clearDist;
@@ -941,23 +942,31 @@ public class ObjLoader {
 		//t4f.set( uVec.x, uVec.y, uVec.z, dotcross( normal, uVec, vVec ) < 0.0f ? -1.0f : 1.0f );
 	}
 	
-	@SuppressWarnings("unused")
-	static void calculateTangent(Vector3f normal, Vector2f s, Vector2f t, Vector4f t4f){
+	/**
+	 * Método que genera la tangente a partir de la normal y los vectores de dirección de las
+	 * coordenadas de textura.
+	 * 
+	 * @param normal Vector normal. 
+	 * @param s Dirección de la coordenada S.
+	 * @param t Dirección de la coordenada T.
+	 * @param t4f Vector donde se almacena la tangente calculada.
+	 */
+	static void calculateTangent( Vector3f normal, Vector2f s, Vector2f t, Vector4f t4f ){
 		
 		Vector3f sDir = new Vector3f(
-				Math.abs(normal.z),
+				Math.abs( normal.z ),
 				0.0f,
-	            -normal.x * Math.signum(normal.z)
+				-normal.x * Math.signum( normal.z )
 		);
 		//sDir.normalize();
-		VectorUtils.orthogonalizeGramSchmidt(normal, sDir);
+		VectorUtils.orthogonalizeGramSchmidt( normal, sDir );
 		Vector3f tDir = new Vector3f(
 				0.0f,
 				1.0f,
 	            0.0f
 		);
-		VectorUtils.orthogonalizeGramSchmidt(normal, tDir);
-		t4f.set( sDir.x, sDir.y, sDir.z, dotcross( normal, sDir, tDir ) < 0.0f ? -1.0f : 1.0f );
+		VectorUtils.orthogonalizeGramSchmidt( normal, tDir );
+		t4f.set( sDir.x, sDir.y, sDir.z, dotcross( normal, sDir, tDir ) < 0.0f ? -1.0f: 1.0f );
 		//t4f.set( uVec.x, uVec.y, uVec.z, dotcross( normal, uVec, vVec ) < 0.0f ? -1.0f : 1.0f );
 	}
 

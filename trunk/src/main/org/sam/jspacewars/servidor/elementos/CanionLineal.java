@@ -25,7 +25,7 @@ package org.sam.jspacewars.servidor.elementos;
 import java.util.Collection;
 
 /**
- * Implementación de un {@link Canion} que lanza {@link DisparoLineal disparos} con una trayectoria recta.
+ * Implementacion de un {@link Canion cañón} que lanza {@link DisparoLineal disparos} con una trayectoria recta.
  */
 public class CanionLineal extends Canion {
 	/**
@@ -51,8 +51,8 @@ public class CanionLineal extends Canion {
 		this.angulo = prototipo.angulo;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.elementos.Canion#clone()
 	 */
 	@Override
 	public Canion clone() {
@@ -60,28 +60,28 @@ public class CanionLineal extends Canion {
 	}
 
 	/**
-	 * <i>Setter</i> que asigna el {@link #angulo ángulo}, en grados, de este {@code CanionLineal}.
+	 * <i>Setter</i> que asigna el ángulo, en grados, de este {@code CanionLineal}.
 	 * @param angulo Ángulo asignado.
 	 */
 	public void setAngulo(float angulo) {
 		this.angulo = (float) (angulo * Math.PI / 180.0 );
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.elementos.Canion#dispara(float, float, float, float, long, java.util.Collection)
 	 */
 	@Override
-	public void dispara(float mX, float nX, float mY, float nY, long nanos, long stopTime, Collection<? super Disparo> dst){
+	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst){
 
 		long t = tRecarga - tTranscurrido;
 
 		tTranscurrido += nanos;
 		while( tTranscurrido >= tRecarga ){
-			DisparoLineal disparo = (DisparoLineal) cache.newObject(idDisparo);
+			DisparoLineal disparo = (DisparoLineal)cache.newObject( idDisparo );
 
-			disparo.setValues(t * mX + nX + posX, t * mY + nY + posY, angulo, velocidad);
-			disparo.actua(nanos - t);
-			dst.add(disparo);
+			disparo.setValues( t * mX + nX + posX, t * mY + nY + posY, angulo, velocidad );
+			disparo.actua( nanos - t );
+			dst.add( disparo );
 			t += tRecarga;
 			tTranscurrido -= tRecarga;
 		}

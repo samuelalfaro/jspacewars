@@ -178,13 +178,15 @@ public abstract class Canion implements Prototipo<Canion> {
 	}
 
 	/**
-	 * @param mX
-	 * @param nX
-	 * @param mY
-	 * @param nY
-	 * @param nanos
-	 * @param stopTime
-	 * @param dst
+	 * Método que dispara este cañón durante un periodo de tiempo determinado. Interpolando linealmente
+	 * la posición del cañón en dicho periodo.
+	 * 
+	 * @param mX Pendiente, de la ecuación de la recta, usada para interporlar la posición X.
+	 * @param nX Ordenada al origen, de la ecuación de la recta, usada para interporlar la posición X.
+	 * @param mY Pendiente, de la ecuación de la recta, usada para interporlar la posición Y.
+	 * @param nY Ordenada al origen, de la ecuación de la recta, usada para interporlar la posición Y.
+	 * @param nanos Periodo en nanosegundos durante el cual es disparado el cañón.
+	 * @param dst Destino de los disparos generados por el cañón.
 	 */
-	public abstract void dispara(float mX, float nX, float mY, float nY, long nanos, long stopTime, Collection<? super Disparo> dst);
+	public abstract void dispara( float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst );
 }

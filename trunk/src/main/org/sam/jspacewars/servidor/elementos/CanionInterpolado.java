@@ -27,7 +27,7 @@ import java.util.Collection;
 import org.sam.interpoladores.Trayectoria;
 
 /**
- * Implementacion de un {@link Canion} que lanza {@link DisparoInterpolado disparos}
+ * Implementacion de un {@link Canion cañón} que lanza {@link DisparoInterpolado disparos}
  * con una trayectoria predefinida.
  */
 public class CanionInterpolado extends Canion {
@@ -78,11 +78,11 @@ public class CanionInterpolado extends Canion {
 		this.scaleY = scaleY;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.elementos.Canion#dispara(float, float, float, float, long, java.util.Collection)
 	 */
 	@Override
-	public void dispara(float mX, float nX, float mY, float nY, long nanos, long stopTime, Collection<? super Disparo> dst) {
+	public void dispara(float mX, float nX, float mY, float nY, long nanos, Collection<? super Disparo> dst) {
 		long t = tRecarga - tTranscurrido;
 
 		tTranscurrido += nanos;

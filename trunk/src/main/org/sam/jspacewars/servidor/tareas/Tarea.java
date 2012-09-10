@@ -25,8 +25,7 @@ package org.sam.jspacewars.servidor.tareas;
 import org.sam.jspacewars.servidor.elementos.NaveEnemiga;
 
 /**
- * @author Samuel Alfaro
- *
+ * Interface que representa una tarea, que permite definir el comportamiento de las naves enemigas.
  */
 public interface Tarea {
 	

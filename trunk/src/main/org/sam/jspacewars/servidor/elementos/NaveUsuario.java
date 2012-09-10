@@ -24,6 +24,9 @@ package org.sam.jspacewars.servidor.elementos;
 
 import org.sam.colisiones.Poligono;
 
+/**
+ * Clase que contiene los datos de las naves que manejan los usuarios del juego.
+ */
 public class NaveUsuario extends Nave {
 
 	private static final int I_VELOCIDAD = 0;
@@ -50,9 +53,31 @@ public class NaveUsuario extends Nave {
 
 	private transient int aumentadoresDeNivel = 0;
 
-	public NaveUsuario(short code,  Poligono forma, int[][] limitesDeNiveles, float[] velocidadesDisponibles,
-			Canion[][][] canionesDisponibles) {
-		super(code, forma);
+	/**
+	 *  Constructor que crea una {@code NaveUsuario} y le asigna los valores correspondientes.
+	 * 
+	 * @param code Código que identifica el tipo de elemento que es la nave.
+	 * @param forma Polígono que define la forma de la nave con que comprueban las colisiones.
+	 * @param limitesDeNiveles Vector bidimensional, que contiene los niveles iniciales, y los niveles máximos para cada grado de la nave.
+	 * @param velocidadesDisponibles Vector que contiene las velocidades para los distintos niveles de la nave.
+	 * @param canionesDisponibles Vector tridimensional, con los cañones primarios y secundarios, para cada nivel de la nave.
+	 * <tt><pre>
+	 * +-PRIMARIO
+	 * |   +--Nivel [   0   ][   1   ][   2   ][   3   ][   4   ][   5   ]
+	 * |            [ Cañón ][ Cañón ][ Cañón ][ Cañón ][ Cañón ][ Cañón ]
+	 * |                              [ Cañón ][ Cañón ][ Cañón ][ Cañón ]
+	 * |                                       [ Cañón ][ Cañón ][ Cañón ]
+	 * |                                                [ Cañón ][ Cañón ]
+	 * |                                                         [ Cañón ]
+	 * +-SECUNDARIO
+	 *     +--Nivel [   0   ][   1   ][   2   ][   3   ]
+	 *                       [ Cañón ][ Cañón ][ Cañón ]
+	 *                                [ Cañón ][ Cañón ]
+	 *                                         [ Cañón ]</pre></tt>
+	 */
+	public NaveUsuario( short code, Poligono forma, int[][] limitesDeNiveles, float[] velocidadesDisponibles,
+			Canion[][][] canionesDisponibles ){
+		super( code, forma );
 		this.limitesDeNiveles = limitesDeNiveles;
 		this.velocidadesDisponibles = velocidadesDisponibles;
 		this.canionesDisponibles = canionesDisponibles;
@@ -61,7 +86,7 @@ public class NaveUsuario extends Nave {
 	}
 	
 	/**
-	 * Construtor que crea una {@code NaveUsuario} copiando los
+	 * Constructor que crea una {@code NaveUsuario} copiando los
 	 * datos de otra {@code NaveUsuario} que sirve como prototipo.
 	 * @param prototipo {@code NaveUsuario} prototipo.
 	 */
@@ -75,6 +100,10 @@ public class NaveUsuario extends Nave {
 		init();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.sam.jspacewars.servidor.elementos.Elemento#clone()
+	 */
+	@Override
 	public NaveUsuario clone() {
 		return new NaveUsuario(this);
 	}
@@ -98,67 +127,97 @@ public class NaveUsuario extends Nave {
 
 		if( this.caniones == null )
 			this.caniones = new Canion[2][];
-		setCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_NUM_CANIONES_PRI]);
-		setGradoCaniones(I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI]);
-		setCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_NUM_CANIONES_SEC]);
-		setGradoCaniones(I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC]);
+		setCaniones( I_PRIMARIO, niveles[I_ACTUAL][I_NUM_CANIONES_PRI] );
+		setGradoCaniones( I_PRIMARIO, niveles[I_ACTUAL][I_POW_CANIONES_PRI] );
+		setCaniones( I_SECUNDARIO, niveles[I_ACTUAL][I_NUM_CANIONES_SEC] );
+		setGradoCaniones( I_SECUNDARIO, niveles[I_ACTUAL][I_POW_CANIONES_SEC] );
 	}
 
 	/**
 	 * 
-	 * @param iCanion
-	 *            Indice de origen/destino de los cañones(primarios/secundarios)
-	 * @param nivel
-	 *            Nivel de los cañones en la tabla de cañones disponibles
+	 * @param iCanion Indice de origen/destino de los cañones(primarios/secundarios)
+	 * @param nivel   Nivel de los cañones en la tabla de cañones disponibles
 	 */
-	private void setCaniones(int iCanion, int nivel) {
+	private void setCaniones( int iCanion, int nivel ){
 		int len = canionesDisponibles[iCanion][nivel].length;
 		caniones[iCanion] = new Canion[len];
 		for( int i = 0; i < len; i++ )
 			caniones[iCanion][i] = canionesDisponibles[iCanion][nivel][i].clone();
 	}
 
-	private void setGradoCaniones(int iCanion, int grado) {
+	private void setGradoCaniones( int iCanion, int grado ){
 		if( caniones[iCanion] != null )
 			for( Canion canion: caniones[iCanion] )
-				canion.setGrado(grado);
+				canion.setGrado( grado );
 	}
 
 	private transient float ancho, alto;
 
-	public void setLimites(float ancho, float alto) {
+	/**
+	 * <i>Setter</i> que asigna los límites por donde puede moverse la nave.
+	 * @param ancho anchura del área de movimiento.
+	 * @param alto altura del área de movimiento.
+	 */
+	public void setLimites( float ancho, float alto ){
 		this.ancho = ancho;
 		this.alto = alto;
 	}
 
 	private transient int key_state;
 
-	public void setKeyState(int key_state) {
+	/**
+	 * <i>Setter</i> que asigna el entero donde están enmascaradas las distintas teclas de control que están
+	 * siendo pulsadas.
+	 * @param key_state El Valor asignado.
+	 */
+	public void setKeyState( int key_state ){
 		this.key_state = key_state;
 	}
 
-	public int[] getNivelesFijos() {
+	/**
+	 * <i>Getter</i> que devuelve el vector con los niveles fijos de la nave.
+	 * @return el vector solicitado.
+	 */
+	public int[] getNivelesFijos(){
 		return niveles[I_FIJO];
 	}
 
-	public int[] getNivelesActuales() {
+	/**
+	 * <i>Getter</i> que devuelve el vector con los niveles actuales de la nave.
+	 * @return el vector solicitado.
+	 */
+	public int[] getNivelesActuales(){
 		return niveles[I_ACTUAL];
 	}
 
-	public int[] getNivelesDisponibles() {
+	/**
+	 * <i>Getter</i> que devuelve el vector con los niveles disponibles de la nave.
+	 * @return el vector solicitado.
+	 */
+	public int[] getNivelesDisponibles(){
 		return limitesDeNiveles[gradoNave];
 	}
 
-	public int getAumentadoresDeNivel() {
+	/**
+	 * <i>Getter</i> que devuelve el número de aumentadores. Éstos se obtienen cuando
+	 * se recoge una cápsula y permiten aumentar los niveles de la nave.
+	 * @return el valor solicitado.
+	 */
+	public int getAumentadoresDeNivel(){
 		return aumentadoresDeNivel;
 	}
 
-	public int getGradoNave() {
+	/**
+	 * <i>Getter</i> que devuelve el grado actual de la nave. Dependiendo del grado, las nave podrá
+	 * mejorar más sus niveles.
+	 * @return el valor solicitado.
+	 */
+	public int getGradoNave(){
 		return gradoNave;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/* (non-Javadoc)
+	 * @see org.sam.elementos.Dinamico#actua(long)
 	 */
 	@Override
 	public void actua(long nanos) {
@@ -173,7 +232,7 @@ public class NaveUsuario extends Nave {
 
 	private transient float posXant, posYant;
 	
-	private void mover(long nanos) {
+	private void mover( long nanos ){
 		float x = getX();
 		float y = getY();
 		posXant = x;
@@ -224,18 +283,18 @@ public class NaveUsuario extends Nave {
 		this.setPosicion(x, y);
 	}
 
-	private void dispara(long nanos) {
+	private void dispara( long nanos ){
 		float nX = posXant;
 		float nY = posYant;
-		float mX = (getX() - nX) / nanos;
-		float mY = (getY() - nY) / nanos;
+		float mX = ( getX() - nX ) / nanos;
+		float mY = ( getY() - nY ) / nanos;
 
 		for( Canion canion: caniones[I_PRIMARIO] )
-			canion.dispara(mX, nX, mY, nY, nanos, nanos, getDstDisparos());
+			canion.dispara( mX, nX, mY, nY, nanos, getDstDisparos() );
 
 		if( caniones[I_SECUNDARIO] != null )
 			for( Canion canion: caniones[I_SECUNDARIO] )
-				canion.dispara(mX, nX, mY, nY, nanos, nanos, getDstDisparos());
+				canion.dispara( mX, nX, mY, nY, nanos, getDstDisparos() );
 	}
 
 	private void lanzarBomba(long nanos) {
