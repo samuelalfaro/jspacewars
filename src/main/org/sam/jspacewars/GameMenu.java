@@ -59,7 +59,7 @@ public class GameMenu extends GLContainer {
 		}
 	}
 
-	//*
+	/*
 	public GameMenu( Map<String, Runnable> actions ){
 		
 		Locale locale = Locale.getDefault(); 
@@ -139,7 +139,7 @@ public class GameMenu extends GLContainer {
 		buildMenu( mainMenu, 300, 50, 20 );
 	}
 	/*/
-	public GameMenu( Map<String, ButtonAction> actions ){
+	public GameMenu( Map<String, Runnable> actions ){
 		
 		Locale locale = Locale.getDefault(); 
 		ResourceBundle bundle = null; //ResourceBundle.getBundle("org.sam.gui.translations.messages", locale);
@@ -154,7 +154,7 @@ public class GameMenu extends GLContainer {
 				new GLButton( "quit", bundle, listener )
 		};
 		
-		action = new ButtonAction( true, "quit" ){
+		ButtonAction action = new ButtonAction( true, "quit" ){
 			public void run(){
 				System.exit( 0 );
 			}
