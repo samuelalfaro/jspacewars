@@ -141,7 +141,7 @@ public class TestColisiones implements Runnable{
 	
 	private long calcularAcciones( long nanos, long timeStep ){
 		int steps = (int)( ( nanos + timeStep / 2 ) / timeStep );
-		System.out.println( steps );
+		//System.out.println( steps );
 		for( int i = 0; i < steps; i++ )
 			calcularAcciones( timeStep );
 		return nanos - timeStep * steps;
