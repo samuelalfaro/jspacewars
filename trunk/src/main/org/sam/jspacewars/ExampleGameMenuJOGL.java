@@ -448,9 +448,10 @@ public class ExampleGameMenuJOGL {
 
 		final GLGUI displayGUI = new GLGUI();
 		Map<String, Runnable> actions = new Hashtable<String, Runnable>();
+		ButtonAction action;
 
-		ButtonAction action = new ButtonAction( "player1" ){
-			public void run(){
+//		ButtonAction action = new ButtonAction( "player1" ){
+//			public void run(){
 //				try{
 //					
 //					animator.remove( canvas );
@@ -479,42 +480,79 @@ public class ExampleGameMenuJOGL {
 //					exception.printStackTrace();
 //				}
 				
-				canvas.invoke( false, new GLRunnable(){ 
-					@Override
-					public boolean run( GLAutoDrawable autoDrawable ){
-						System.err.println( "1 Player button pressed" );
-						try{
-							GLAnimatorControl animator = autoDrawable.getAnimator();
-							if( animator != null ){
-								if( animator.isStarted()  )
-									animator.stop();
-								animator.remove( autoDrawable );
-							}
-							displayGUI.unbind( autoDrawable );
-							canvas.removeGLEventListener( backgroundRenderer );
-							
-							clientServer.server = new ServidorJuego( cache );
-							clientServer.cliente = new Cliente( dataGame, (GLCanvas)autoDrawable );
-							clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
-							clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
-
-							new Thread(){
-								public void run(){
-									try{
-										clientServer.server.atenderClientes();
-									}catch( IOException e ){
-										e.printStackTrace();
-									}
-								}
-							}.start();
-							clientServer.cliente.start();
-
-						}catch( IOException exception ){
-							exception.printStackTrace();
-						}
-						return true;
+//				canvas.invoke( false, new GLRunnable(){ 
+//					@Override
+//					public boolean run( GLAutoDrawable autoDrawable ){
+//						System.err.println( "1 Player button pressed" );
+//						try{
+//							GLAnimatorControl animator = autoDrawable.getAnimator();
+//							if( animator != null ){
+//								if( animator.isStarted()  )
+//									animator.stop();
+//								animator.remove( autoDrawable );
+//							}
+//							displayGUI.unbind( autoDrawable );
+//							canvas.removeGLEventListener( backgroundRenderer );
+//							
+//							clientServer.server = new ServidorJuego( cache );
+//							clientServer.cliente = new Cliente( dataGame, (GLCanvas)autoDrawable );
+//							clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
+//							clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
+//
+//							new Thread(){
+//								public void run(){
+//									try{
+//										clientServer.server.atenderClientes();
+//									}catch( IOException e ){
+//										e.printStackTrace();
+//									}
+//								}
+//							}.start();
+//							clientServer.cliente.start();
+//
+//						}catch( IOException exception ){
+//							exception.printStackTrace();
+//						}
+//						return true;
+//					}
+//				});
+//			}
+//		};
+//		actions.put( action.getName(), action );
+		
+		action = new ButtonAction( true, "player1" ){
+			public void run(){
+				try{
+					GLAnimatorControl animator = canvas.getAnimator();
+					if( animator != null ){
+						if( animator.isStarted()  )
+							animator.stop();
+						animator.remove( canvas );
 					}
-				});
+					
+					displayGUI.unbind( canvas );
+					canvas.removeGLEventListener( backgroundRenderer );
+					
+					clientServer.server = new ServidorJuego( cache );
+					clientServer.cliente = new Cliente( dataGame, canvas );
+					clientServer.cliente.setChannelIn( clientServer.server.getLocalChannelClientIn() );
+					clientServer.cliente.setChannelOut( clientServer.server.getLocalChannelClientOut() );
+
+					new Thread(){
+						public void run(){
+							try{
+								clientServer.server.atenderClientes();
+							}catch( IOException e ){
+								e.printStackTrace();
+							}
+						}
+					}.start();
+					clientServer.cliente.start();
+					
+
+				}catch( IOException exception ){
+					exception.printStackTrace();
+				}
 			}
 		};
 		actions.put( action.getName(), action );
