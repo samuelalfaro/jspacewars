@@ -119,9 +119,9 @@ public class Prueba012_SinglePassWireframe{
 
 			gl.glClearColor( 0.0f, 0.0f, 0.5f, 0.0f );
 			//*
-			//forma = HelixGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 0.0f, 12, 1.25f, 0.05f, 36, 1.2f*2.8f, 9 );
+			forma = HelixGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 0.0f, 12, 1.25f, 0.05f, 36, 1.2f*2.8f, 9 );
 			//forma = HelixGenerator.generate( gl, Generator.WIREFRAME, 1.2f, 3.0f, 6 );
-			forma = generateQuad( gl, 6.0f );
+			//forma = generateQuad( gl, 6.0f );
 			/*/
 			Matrix4d mtd = new Matrix4d();
 			mtd.rotY( Math.PI / 2 );
